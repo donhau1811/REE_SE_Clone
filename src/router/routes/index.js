@@ -6,6 +6,7 @@ import { MonitoringRoutes } from './Monitoring'
 import { AlertRoutes } from './Alert'
 import { ReportRoutes } from './Report'
 import SwaggerRoutes from './Swagger'
+import { BillingRoutes } from './Billing'
 
 // ** Document title
 const TemplateTitle = '%s - REE Solar Monitoring'
@@ -21,7 +22,8 @@ const Routes = [
   ...MonitoringRoutes,
   ...ReportRoutes,
   ...SettingsRoutes,
-  ...SwaggerRoutes
+  ...SwaggerRoutes,
+  ...BillingRoutes
 ]
 
 export { DefaultRoute, TemplateTitle, Routes }

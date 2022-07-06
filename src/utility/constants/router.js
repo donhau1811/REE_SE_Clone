@@ -51,5 +51,6 @@ export const ROUTER_URL = {
   SETTINGS_DEVICE_TYPES: '/settings/device-types',
   ACCOUNT_SETTING: '/dashboard/account-settings',
   CHANGE_PASSWORD: '/change-password',
-  SWAGGER: '/swagger'
+  SWAGGER: '/swagger',
+  BILLING_OPERATION_UNIT: '/billing/operation-unit'
 }

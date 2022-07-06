@@ -1445,6 +1445,8 @@
   "system-alert": "Cảnh báo hệ thống",
   "request": "Yêu cầu",
   "users": "Người dùng",
+  "billing": "Billing & Invoices",
+  "operation-unit": "Công ty vận hành",
   "customers": "Khách hàng",
   "report": "Báo cáo",
   "yield": "SL",
@@ -1620,5 +1622,6 @@
   "phaseRotation": "Thứ tự pha",
   "vtErrorMagnitude": "Sai số biến áp",
   "ctErrorMagnitude": "Sai số biến dòng",
-  "reverseRunEventCount": "Số lần ngược pha"
+  "reverseRunEventCount": "Số lần ngược pha",
+  "operation-unit-list-search-input-placeholder":"Tìm theo tên, mã công ty, mã số thuế, địa chỉ...."
 }

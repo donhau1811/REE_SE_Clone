@@ -45,12 +45,12 @@ const Router = () => {
   const currentActiveItem = null
 
   // ** Return Filtered Array of Routes & Paths
-  const LayoutRoutesAndPaths = layout => {
+  const LayoutRoutesAndPaths = (layout) => {
     const LayoutRoutes = []
     const LayoutPaths = []
 
     if (Routes) {
-      Routes.filter(route => {
+      Routes.filter((route) => {
         // ** Checks if Route layout or Default layout matches current layout
         if (route.layout === layout || (route.layout === undefined && DefaultLayout === layout)) {
           LayoutRoutes.push(route)
@@ -70,7 +70,7 @@ const Router = () => {
   /**
    ** Final Route Component Checks for Login & User Role and then redirects to the route
    */
-  const FinalRoute = props => {
+  const FinalRoute = (props) => {
     const route = props.route
     let action, resource
 
@@ -99,13 +99,13 @@ const Router = () => {
        ** Then redirect user to login
        */
 
-      return <Redirect to={ROUTER_URL.LOGIN}/>
+      return <Redirect to={ROUTER_URL.LOGIN} />
     } else if (route.meta && route.meta.authRoute && isUserLoggedIn()) {
       // ** If route has meta and authRole and user is Logged in then redirect user to home page (DefaultRoute)
-      return <Redirect to='/'/>
+      return <Redirect to="/" />
     } else if (isUserLoggedIn() && !ability.can(action || 'read', resource)) {
       // ** If user is Logged in and doesn't have ability to visit the page redirect the user to Not Authorized
-      return <Redirect to={ROUTER_URL.UNAUTHORIZED}/>
+      return <Redirect to={ROUTER_URL.UNAUTHORIZED} />
     } else {
       // ** If none of the above render component
       return <route.component {...props} />
@@ -142,13 +142,13 @@ const Router = () => {
             currentActiveItem={currentActiveItem}
           >
             <Switch>
-              {LayoutRoutes.map(route => {
+              {LayoutRoutes.map((route) => {
                 return (
                   <Route
                     key={route.path}
                     path={route.path}
                     exact={route.exact === true}
-                    render={props => {
+                    render={(props) => {
                       // ** Assign props to routerProps
                       Object.assign(routerProps, {
                         ...props,
@@ -165,20 +165,20 @@ const Router = () => {
                             /* Conditional props */
                             /*eslint-disable */
                             {...(route.appLayout
-                                 ? {
-                                appLayout: route.appLayout
-                              }
-                                 : {})}
+                              ? {
+                                  appLayout: route.appLayout
+                                }
+                              : {})}
                             {...(route.meta
-                                 ? {
-                                routeMeta: route.meta
-                              }
-                                 : {})}
+                              ? {
+                                  routeMeta: route.meta
+                                }
+                              : {})}
                             {...(route.className
-                                 ? {
-                                wrapperClass: route.className
-                              }
-                                 : {})}
+                              ? {
+                                  wrapperClass: route.className
+                                }
+                              : {})}
                             /*eslint-enable */
                           >
                             <FinalRoute route={route} {...props} />
@@ -200,34 +200,30 @@ const Router = () => {
     <AppRouter basename={process.env.REACT_APP_BASENAME}>
       <Switch>
         {/*Redirect to login page at GCP path index.html*/}
-        <Route
-          exact
-          path='/index.html'
-          render={() => <Redirect to={ROUTER_URL.LOGIN}/>}
-        />
+        <Route exact path="/index.html" render={() => <Redirect to={ROUTER_URL.LOGIN} />} />
 
         {/* If user is logged in Redirect user to DefaultRoute else to login */}
         <Route
           exact
-          path='/'
+          path="/"
           render={() => {
-            return isUserLoggedIn() ? <Redirect to={DefaultRoute}/> : <Redirect to={ROUTER_URL.LOGIN}/>
+            return isUserLoggedIn() ? <Redirect to={DefaultRoute} /> : <Redirect to={ROUTER_URL.LOGIN} />
           }}
         />
         {/* Not Auth Route */}
         <Route
           exact
-          path='/misc/not-authorized'
+          path="/misc/not-authorized"
           render={() => (
             <Layouts.BlankLayout>
-              <NotAuthorized/>
+              <NotAuthorized />
             </Layouts.BlankLayout>
           )}
         />
         {ResolveRoutes()}
 
         {/* NotFound Error page */}
-        <Route path='*' component={Error}/>
+        <Route path="*" component={Error} />
       </Switch>
       {/*{ layoutStore.requestCount > 0 && <Spinner/> }*/}
     </AppRouter>
