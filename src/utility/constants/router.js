@@ -51,5 +51,11 @@ export const ROUTER_URL = {
   SETTINGS_DEVICE_TYPES: '/settings/device-types',
   ACCOUNT_SETTING: '/dashboard/account-settings',
   CHANGE_PASSWORD: '/change-password',
-  SWAGGER: '/swagger'
+  SWAGGER: '/swagger',
+  BILLING_OPERATION_UNIT: '/billing/operation-unit',
+  BILLING_OPERATION_UNIT_CREATE: '/billing/operation-unit/create-operation-unit',
+  BILLING_OPERATION_UNIT_UPDATE: '/billing/operation-unit/update-operation-unit',
+  BILLING_OPERATION_UNIT_DETAIL: '/billing/operation-unit/{operatingUnitId}',
+  BILLING_MASTER_DATA: '/billing/master-data',
+  BILLING_CUSTOMER: '/billing/customer'
 }

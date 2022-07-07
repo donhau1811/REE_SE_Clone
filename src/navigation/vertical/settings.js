@@ -33,6 +33,7 @@ export default [
       {
         id: 'projectSettings',
         title: 'Projects',
+        level: 2,
         children: [
           {
             id: 'projectGeneral',

@@ -1619,5 +1619,9 @@
   "phaseRotation": "Phase rotation",
   "vtErrorMagnitude": "VT error magnitude",
   "ctErrorMagnitude": "CT error magnitude",
-  "reverseRunEventCount": "Reverse run event count"
+  "reverseRunEventCount": "Reverse run event count",
+  "BillingInvoice": "Billing & Invoices",
+  "SolarMonitoring": "Solar Monitoring",
+  "OperatingCompany": "Operating Company",
+  "MasterData": "Configuration"
 }
