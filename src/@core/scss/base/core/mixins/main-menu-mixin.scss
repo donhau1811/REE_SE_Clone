@@ -215,7 +215,18 @@
           padding-left: 15px;
         }
         &.has-sub {
-          //padding-left: 15px;
+          padding-left: 15px;
+          > a {
+            padding-left: 35px;
+            margin-top: 5px;
+          }
+
+          > ul > li {
+            padding-left: 15px;
+          }
+        }
+        &.level-2 {
+          padding-left: 15px;
           > a {
             padding-left: 50px;
             margin-top: 5px;

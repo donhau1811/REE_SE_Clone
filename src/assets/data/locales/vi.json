@@ -1643,5 +1643,9 @@
   "Update Date":"Ngày cập nhật",
   "Edit Operation Unit":"Cập nhật đơn vị vận hành",
   "Delete Operation Unit":"Xoá đơn vị vận hành",
-  "Add new": "Thêm mới "
+  "Add new": "Thêm mới ",
+  "BillingInvoice": "Thanh toán & hóa đơn",
+  "SolarMonitoring": "Giám sát",
+  "OperatingCompany": "Công ty vận hành",
+  "MasterData": "Cấu hình"
 }
