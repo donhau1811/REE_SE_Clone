@@ -1626,6 +1626,7 @@
   "required-validate": "Thông tin bắt buộc nhập",
   "max-validate": "Thông tin vượt quá độ dài cho phép",
   "invalid-character-validate":"Ký tự không hợp lệ",
+  "dubplicated-validate":"Thông tin không được trùng",
   "operation-unit-list-search-input-placeholder": "Tìm theo tên, mã công ty, mã số thuế, địa chỉ....",
   "create-operation-unit": "Thêm công ty vận hành",
   "operation-unit-form-name": "Tên công ty",

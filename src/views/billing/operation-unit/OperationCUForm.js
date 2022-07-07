@@ -10,12 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { MOBILE_REGEX } from '@src/utility/constants'
 
-const OperationCUForm = ({
-  intl,
-  onSubmit = () => {},
-  onCancel = () => {},
-  initValues
-}) => {
+const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues }) => {
   const OPERATION_UNIT_STATUS_OPTS = [
     { value: OPERATION_UNIT_STATUS.INACTIVE, label: intl.formatMessage({ id: 'Active' }) },
     { value: OPERATION_UNIT_STATUS.ACTIVE, label: intl.formatMessage({ id: 'Inactive' }) }
@@ -33,7 +28,8 @@ const OperationCUForm = ({
       code: yup
         .string()
         .required(intl.formatMessage({ id: 'required-validate' }))
-        .max(15, intl.formatMessage({ id: 'max-validate' })),
+        .max(15, intl.formatMessage({ id: 'max-validate' }))
+        .test('dubplicated', intl.formatMessage({ id: 'dubplicated-validate' }), (value) => value !== 'aaa'),
 
       taxCode: yup
         .string()
@@ -52,7 +48,7 @@ const OperationCUForm = ({
   const { handleSubmit, getValues, errors, control, register } = useForm({
     mode: 'onChange',
     resolver: yupResolver(ValidateSchema),
-    defaultValues:initValues || initState
+    defaultValues: initValues || initState
   })
 
   return (
