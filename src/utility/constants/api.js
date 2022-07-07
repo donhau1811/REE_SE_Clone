@@ -116,3 +116,5 @@ export const API_GET_YIELD_CHART = `${BASE_API_URL}/glf_monitoring_yield_chart`
 
 export const API_GET_INVERTER_TYPES = `${BASE_API_URL}/glf_inverter_type`
 export const API_GET_PANEL_TYPES = `${BASE_API_URL}/glf_panel_type`
+
+export const API_OPERATION_UNIT = `${BASE_API_URL}/glf_operation_unit`
