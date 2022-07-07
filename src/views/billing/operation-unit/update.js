@@ -1,18 +1,9 @@
-const mockData = {
-  name: 'dungld',
-  code: 'gfdggd',
-  taxCode: 'dfdfsdfdfsfd',
-  address: 'tw4534545',
-  mobile: '098885',
-  status: {
-    value: 'INACTIVE',
-    label: 'Hoạt động'
-  }
-}
+
 import { ROUTER_URL } from '@src/utility/constants'
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom'
+import { mockData } from './mock-data'
 import OperationCUForm from './OperationCUForm'
 import { putOperationUnit } from './store/actions'
 

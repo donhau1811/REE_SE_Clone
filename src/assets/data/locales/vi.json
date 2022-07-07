@@ -1639,5 +1639,9 @@
   "operation-unit-form-address-placeholder": "Vd: tên tòa nhà, căn hộ,....",
   "operation-unit-form-mobile": "Số điện thoại",
   "operation-unit-form-mobile-placeholder": "Nhập số điện thoại liên hệ",
-  "update-operation-unit":"Cập nhật công ty vận hành"
+  "update-operation-unit":"Cập nhật công ty vận hành",
+  "Update Date":"Ngày cập nhật",
+  "Edit Operation Unit":"Cập nhật đơn vị vận hành",
+  "Delete Operation Unit":"Xoá đơn vị vận hành",
+  "Add new": "Thêm mới "
 }
