@@ -28,22 +28,23 @@ const OperationCUForm = ({
       name: yup
         .string()
         .required(intl.formatMessage({ id: 'required-validate' }))
-        .max(255, intl.formatMessage({ id: 'max-validate' }, { max: 255 })),
+        .max(255, intl.formatMessage({ id: 'max-validate' })),
 
       code: yup
         .string()
         .required(intl.formatMessage({ id: 'required-validate' }))
-        .max(15, intl.formatMessage({ id: 'max-validate' }, { max: 15 })),
+        .max(15, intl.formatMessage({ id: 'max-validate' })),
 
       taxCode: yup
         .string()
         .required(intl.formatMessage({ id: 'required-validate' }))
-        .max(20, intl.formatMessage({ id: 'max-validate' }, { max: 20 })),
+        .max(20, intl.formatMessage({ id: 'max-validate' })),
 
-      address: yup.string().max(255, intl.formatMessage({ id: 'max-validate' }, { max: 255 })),
+      address: yup.string().max(255, intl.formatMessage({ id: 'max-validate' })),
       mobile: yup
         .string()
-        .matches(MOBILE_REGEX, intl.formatMessage({ id: 'Phone number is invalid - max' }, { max: 15 }))
+        .matches(MOBILE_REGEX, intl.formatMessage({ id: 'invalid-character-validate' }))
+        .max(15, intl.formatMessage({ id: 'max-validate' }))
     },
     ['name', 'code', 'taxCode', 'address', 'mobile']
   )
