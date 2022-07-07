@@ -52,5 +52,7 @@ export const ROUTER_URL = {
   ACCOUNT_SETTING: '/dashboard/account-settings',
   CHANGE_PASSWORD: '/change-password',
   SWAGGER: '/swagger',
-  BILLING_OPERATION_UNIT: '/billing/operation-unit'
+  BILLING_OPERATION_UNIT: '/billing/operation-unit',
+  BILLING_OPERATION_UNIT_CREATE: '/billing/operation-unit/create-operation-unit',
+  BILLING_OPERATION_UNIT_UPDATE: '/billing/operation-unit/update-operation-unit'
 }

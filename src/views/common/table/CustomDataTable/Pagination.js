@@ -57,3 +57,5 @@ Pagination.propTypes = {
   rowsPerPageOptions: array,
   handlePerPage: func
 }
+
+export default Pagination

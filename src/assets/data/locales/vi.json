@@ -1623,5 +1623,21 @@
   "vtErrorMagnitude": "Sai số biến áp",
   "ctErrorMagnitude": "Sai số biến dòng",
   "reverseRunEventCount": "Số lần ngược pha",
-  "operation-unit-list-search-input-placeholder":"Tìm theo tên, mã công ty, mã số thuế, địa chỉ...."
+  "required-validate": "Thông tin bắt buộc nhập",
+  "max-validate": "Thông tin vượt quá độ dài cho phép",
+  "invalid-character-validate":"Ký tự không hợp lệ",
+  "dubplicated-validate":"Thông tin không được trùng",
+  "operation-unit-list-search-input-placeholder": "Tìm theo tên, mã công ty, mã số thuế, địa chỉ....",
+  "create-operation-unit": "Thêm công ty vận hành",
+  "operation-unit-form-name": "Tên công ty",
+  "operation-unit-form-name-placeholder": "Nhập tên công ty",
+  "operation-unit-form-code": "Mã công ty",
+  "operation-unit-form-code-placeholder": "Nhập mã công ty",
+  "operation-unit-form-taxCode": "Mã số thuế",
+  "operation-unit-form-taxCode-placeholder": "Nhập MST của công ty",
+  "operation-unit-form-address": "Địa chỉ",
+  "operation-unit-form-address-placeholder": "Vd: tên tòa nhà, căn hộ,....",
+  "operation-unit-form-mobile": "Số điện thoại",
+  "operation-unit-form-mobile-placeholder": "Nhập số điện thoại liên hệ",
+  "update-operation-unit":"Cập nhật công ty vận hành"
 }

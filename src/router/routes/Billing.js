@@ -10,5 +10,22 @@ export const BillingRoutes = [
       action: 'manage',
       resource: ROUTER_URL.BILLING_OPERATION_UNIT
     }
+  },
+  {
+    path: ROUTER_URL.BILLING_OPERATION_UNIT_CREATE,
+    exact: true,
+    component: lazy(() => import('../../views/billing/operation-unit/create')),
+    meta: {
+      action: 'manage',
+      resource: ROUTER_URL.BILLING_OPERATION_UNIT
+    }
+  },
+  {
+    path: ROUTER_URL.BILLING_OPERATION_UNIT_UPDATE,
+    component: lazy(() => import('../../views/billing/operation-unit/update')),
+    meta: {
+      action: 'manage',
+      resource: ROUTER_URL.BILLING_OPERATION_UNIT
+    }
   }
 ]

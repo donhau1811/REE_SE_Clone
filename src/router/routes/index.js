@@ -13,7 +13,6 @@ const TemplateTitle = '%s - REE Solar Monitoring'
 
 // ** Default Route
 const DefaultRoute = '/dashboard'
-
 // ** Merge Routes
 const Routes = [
   ...DashboardRoutes,
