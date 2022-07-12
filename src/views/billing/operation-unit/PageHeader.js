@@ -18,7 +18,7 @@ const PageHeader = ({ intl }) => {
   }
   return (
     <>
-      <Row className="mb-1">
+      <Row className="mb-2">
         <Col lg="4" md="8" className="my-lg-0 mb-1 d-flex justify-content-end align-items-center">
           <span className="mr-2">
             <IconFilter />

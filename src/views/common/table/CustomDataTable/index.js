@@ -2,8 +2,9 @@ import classNames from 'classnames'
 import { array, func, number } from 'prop-types'
 import React from 'react'
 import DataTable from 'react-data-table-component'
-import { ChevronDown } from 'react-feather'
+import { Code } from 'react-feather'
 import Pagination from './Pagination'
+import './style.scss'
 
 const Table = ({
   data,
@@ -38,7 +39,11 @@ const Table = ({
         fixedHeader
         fixedHeaderScrollHeight="calc(100vh - 340px)"
         columns={columns}
-        sortIcon={<ChevronDown size={10} />}
+        sortIcon={
+          <div className="custom-sort-icon">
+            <Code  />
+          </div>
+        }
         paginationComponent={PaginationCOM}
         data={data || []}
         persistTableHead

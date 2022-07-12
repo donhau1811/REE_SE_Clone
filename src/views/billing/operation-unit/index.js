@@ -1,7 +1,7 @@
 import React from 'react'
-import { Card, Col, Row, UncontrolledTooltip, Badge } from 'reactstrap'
+import {  Col, Row, UncontrolledTooltip, Badge } from 'reactstrap'
 
-import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit.svg'
+import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { object } from 'prop-types'
@@ -37,7 +37,8 @@ const OperationUnit = ({ intl }) => {
     {
       name: intl.formatMessage({ id: 'operation-unit-form-name' }),
       selector: 'name',
-      cell: (row) => <span>{row.name}</span>
+      cell: (row) => <span>{row.name}</span>,
+      center: true
     },
     {
       name: intl.formatMessage({ id: 'operation-unit-form-taxCode' }),
@@ -55,9 +56,11 @@ const OperationUnit = ({ intl }) => {
             <div id={`view_name${row.id}`}>
               {row?.address?.length > 150 ? `${row.address.slice(0, 150)}...` : row.address}
             </div>
-            <UncontrolledTooltip placement="auto" target={`view_name${row.id}`}>
-              <FormattedMessage id={row.address} />
-            </UncontrolledTooltip>
+            {row?.address?.length > 150 && (
+              <UncontrolledTooltip placement="auto" target={`view_name${row.id}`}>
+                <FormattedMessage id={row.address} />
+              </UncontrolledTooltip>
+            )}
           </>
         )
       },
@@ -95,12 +98,11 @@ const OperationUnit = ({ intl }) => {
     {
       name: intl.formatMessage({ id: 'Actions' }),
       selector: '#',
-      sortable: true,
       cell: (row) => (
         <>
           {' '}
           <Badge onClick={handleRedirectToUpdatePage(row.id)}>
-            <IconEdit id={`editBtn_${row.id}`} />
+            <IconView id={`editBtn_${row.id}`} />
           </Badge>
           <UncontrolledTooltip placement="auto" target={`editBtn_${row.id}`}>
             <FormattedMessage id="Edit Operation Unit" />
@@ -121,10 +123,8 @@ const OperationUnit = ({ intl }) => {
     <>
       <Row>
         <Col sm="12">
-          <Card className="p-2 mb-0">
-            <PageHeader />
-            <Table columns={columns} data={operationUnitArray} />
-          </Card>
+          <PageHeader />
+          <Table columns={columns} data={operationUnitArray} />
         </Col>
       </Row>
     </>
