@@ -36,7 +36,10 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
         .required(intl.formatMessage({ id: 'required-validate' }))
         .max(20, intl.formatMessage({ id: 'max-validate' })),
 
-      address: yup.string().max(255, intl.formatMessage({ id: 'max-validate' })),
+      address: yup
+        .string()
+        .required(intl.formatMessage({ id: 'required-validate' }))
+        .max(255, intl.formatMessage({ id: 'max-validate' })),
       mobile: yup
         .string()
         .matches(MOBILE_REGEX, intl.formatMessage({ id: 'invalid-character-validate' }))
@@ -115,6 +118,7 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
             <FormGroup>
               <Label for="address">
                 <FormattedMessage id="operation-unit-form-address" />
+                <span className="text-danger">&nbsp;*</span>
               </Label>
               <Input
                 id="address"
@@ -168,14 +172,14 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
               />
             </FormGroup>
           </Col>
-        </Row>
-        <Row className="d-flex justify-content-end align-items-center">
-          <Button type="submit" color="primary" className="mr-1 px-3">
-            {intl.formatMessage({ id: 'Save' })}
-          </Button>{' '}
-          <Button color="secondary" onClick={onCancel}>
-            {intl.formatMessage({ id: 'Cancel' })}
-          </Button>{' '}
+          <Col md={8} className='d-flex justify-content-end align-items-end'>
+            <Button type="submit" color="primary" className="mr-1 px-3">
+              {intl.formatMessage({ id: 'Save' })}
+            </Button>{' '}
+            <Button color="secondary" onClick={onCancel}>
+              {intl.formatMessage({ id: 'Cancel' })}
+            </Button>{' '}
+          </Col>
         </Row>
       </Form>
     </>
