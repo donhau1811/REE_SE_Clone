@@ -4,14 +4,19 @@ import TextField from '@mui/material/TextField'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
-import { object } from 'prop-types'
-import  { ReactComponent as carlendar }  from '@src/assets/images/svg/carlendar.svg'
+import { object, func } from 'prop-types'
+import  { ReactComponent as Carlendar }  from '@src/assets/images/svg/carlendar.svg'
+import './scss/Filter.scss'
+import { DISPLAY_DATE_FORMAT_CALENDAR } from '@src/utility/constants'
+import {  injectIntl } from 'react-intl'
 
-const Fillter = ({ children }) => {
-  const [modalStatus, setModalStatus] = useState(false)
+const Filter = ({intl, children, onSubmit = () => {} }) => {
+
+  
+  const [isOpen, setIsOpen] = useState(false)
   const [startDate, setstartDate] = useState()
   const [endDate, setendDate] = useState()
-
+  const [status, setStatus] = useState()
   const handleStartDateChange = (newValue) => {
     setstartDate(newValue)
   }
@@ -21,35 +26,41 @@ const Fillter = ({ children }) => {
   }
 
   const toggle = () => {
-    setModalStatus(!modalStatus)
+    setIsOpen(!isOpen)
   }
 
+  const handleStatusChange = (e) => {
+
+    setStatus(e.target.value)
+  }
+
+  
   return (
     <>
       <Modal
-        isOpen={modalStatus}
+        isOpen={isOpen}
         toggle={toggle}
         zIndex={500}
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
-        <ModalHeader toggle={toggle}>Lọc Thông Tin Công Ty Vận Hành</ModalHeader>
+        <ModalHeader  toggle={toggle}>{intl.formatMessage({ id: 'OperatingCompany' })}</ModalHeader>
         <ModalBody>
           <Row>
             <Col md={12}>
-              <Label style={{ fontWeight: 'bold', color:'#000000' }} for="exampleSelect">
-                Trạng thái
+              <Label className="text-bold" for="exampleSelect">
+              {intl.formatMessage({ id: 'Status' })}
               </Label>
 
-              <Input type="select" name="select" id="exampleSelect">
-                <option>Tất cả trạng thái</option>
-                <option>Hoàn thành</option>
-                <option>Chưa hoàn </option>
+              <Input value={status} onChange={handleStatusChange} type="select" name="select" id="exampleSelect">
+                <option>{intl.formatMessage({ id: 'AllStatus' })}</option>
+                <option>{intl.formatMessage({ id: 'Active' })}</option>
+                <option>{intl.formatMessage({ id: 'Inactive' })}</option>
               </Input>
             </Col>
             <Col md={12} className="mt-3">
-              <Label style={{ fontWeight: 'bold', color:'#000000' }} for="exampleSelect">
-                Ngày cập nhật
+              <Label className='text-bold' for="exampleSelect">
+              {intl.formatMessage({ id: 'UpdateDate' })}
               </Label>
 
               <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -57,16 +68,16 @@ const Fillter = ({ children }) => {
                   <Col md={6}>
                     <DesktopDatePicker
                        components={{
-                        OpenPickerIcon: carlendar
+                        OpenPickerIcon: Carlendar
                       }}
                       inputVariant="outlined"
                       label=""
-                      inputFormat="MM/dd/yyyy"
+                      inputFormat={DISPLAY_DATE_FORMAT_CALENDAR}
                       value={startDate}
                       onChange={handleStartDateChange}
                       renderInput={(params) => (
                         <TextField
-                          style={{ border: '1px solid rgba(0, 0, 0, 0.25)', borderRadius: '3px' }}
+                        className='border border-secondary rounded'
                           {...params}
                         />
                       )}
@@ -76,15 +87,15 @@ const Fillter = ({ children }) => {
                   <Col md={6}>
                     <DesktopDatePicker
                       components={{
-                        OpenPickerIcon: carlendar
+                        OpenPickerIcon: Carlendar
                       }}
                       label=""
-                      inputFormat="MM/dd/yyyy"
+                      inputFormat={DISPLAY_DATE_FORMAT_CALENDAR}
                       value={endDate}
                       onChange={handleEndDateChange}
                       renderInput={(params) => (
                         <TextField
-                          style={{ border: '1px solid rgba(0, 0, 0, 0.25)', borderRadius: '3px' }}
+                        className='border border-secondary rounded'
                           {...params}
                         />
                       )}
@@ -97,11 +108,11 @@ const Fillter = ({ children }) => {
           </Row>
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" onClick={toggle}>
-            Hoàn tất
+          <Button color="primary" onClick={onSubmit}>
+          {intl.formatMessage({ id: 'Finish' })}
           </Button>{' '}
           <Button color="secondary" onClick={toggle}>
-            Hủy bỏ
+          {intl.formatMessage({ id: 'Cancel' })}
           </Button>
         </ModalFooter>
       </Modal>
@@ -109,8 +120,12 @@ const Fillter = ({ children }) => {
     </>
   )
 }
-Fillter.propTypes = {
-  children: object
+Filter.propTypes = {
+  children: object,
+  onSubmit: func,
+  intl: object.isRequired
+
+
 }
 
-export default Fillter
+export default injectIntl(Filter)
