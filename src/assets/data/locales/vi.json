@@ -1650,5 +1650,15 @@
   "MasterData": "Cấu hình",
   "Customer Company": "Tên công ty khách hàng",
   "Company Type":"Loại KH",
-  "billing-customer-list-taxCode":"MST"
+  "billing-customer-list-taxCode":"MST",
+  "Company-Types":"Loại Khách Hàng",
+  "All-customer":"Tất cả khách hàng",
+  "All-status":"Tất cả trạng thái",
+  "CreatedDate":"Ngày tạo",
+  "ModifyDate":"Ngày cập nhật",
+  "FIlterCustomer":"LỌC THÔNG TIN KHÁCH HÀNG ",
+  "AllStatus":"Tất cả trạng thái"
+
+
+  
 }

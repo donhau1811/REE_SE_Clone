@@ -1623,5 +1623,12 @@
   "BillingInvoice": "Billing & Invoices",
   "SolarMonitoring": "Solar Monitoring",
   "OperatingCompany": "Operating Company",
-  "MasterData": "Configuration"
+  "MasterData": "Configuration",
+  "Company-Types":"Company Type",
+  "All-customer":"All Customer",
+  "All-status":"All status",
+  "CreatedDate":"Created Date",
+  "ModifyDate":"Modify Date",
+  "FIlterCustomer":"FILTER INFORMATION CUSTOMER"
+
 }
