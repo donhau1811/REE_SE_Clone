@@ -9,10 +9,12 @@ import { ReactComponent as IconSearch } from '@src/assets/images/svg/table/ic-se
 import { ReactComponent as IconFilter } from '@src/assets/images/svg/table/ic-filter.svg'
 import { useHistory } from 'react-router-dom'
 import { ROUTER_URL } from '@src/utility/constants'
+import Filter from './Filter'
 
 const PageHeader = ({ intl }) => {
   const history = useHistory()
-
+  const onSubmit = () => {
+  }
   const handleRedirectToAddNewPage = () => {
     history.push(ROUTER_URL.BILLING_OPERATION_UNIT_CREATE)
   }
@@ -20,9 +22,12 @@ const PageHeader = ({ intl }) => {
     <>
       <Row className="mb-2">
         <Col lg="4" md="8" className="my-lg-0 mb-1 d-flex justify-content-end align-items-center">
-          <span className="mr-2">
-            <IconFilter />
-          </span>
+          <Filter onSubmit={onSubmit}>
+            <span className="mr-2">
+              <IconFilter />
+            </span>
+          </Filter>
+
           <InputGroup className="input-group-merge">
             <Input
               className=""
