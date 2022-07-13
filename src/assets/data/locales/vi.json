@@ -1647,5 +1647,9 @@
   "BillingInvoice": "Thanh toán & hóa đơn",
   "SolarMonitoring": "Giám sát",
   "OperatingCompany": "Công ty vận hành",
-  "MasterData": "Cấu hình"
+  "MasterData": "Cấu hình",
+  "FilterCompany": "Lọc thông tin công ty vận hành ",
+  "AllStatus" :"Tất cả trạng thái",
+  "UpdateDate":"Ngày cập nhật"
+  
 }
