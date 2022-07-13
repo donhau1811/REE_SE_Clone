@@ -3,7 +3,7 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Label, Input, Col, 
 import TextField from '@mui/material/TextField'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker'
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 import { object, func } from 'prop-types'
 import  { ReactComponent as Carlendar }  from '@src/assets/images/svg/carlendar.svg'
 import './scss/Filter.scss'
@@ -52,7 +52,7 @@ const Filter = ({intl, children, onSubmit = () => {} }) => {
               {intl.formatMessage({ id: 'Status' })}
               </Label>
 
-              <Input value={status} onChange={handleStatusChange} type="select" name="select" id="exampleSelect">
+              <Input className='filter-input' value={status} onChange={handleStatusChange} type="select" name="select" id="exampleSelect">
                 <option>{intl.formatMessage({ id: 'AllStatus' })}</option>
                 <option>{intl.formatMessage({ id: 'Active' })}</option>
                 <option>{intl.formatMessage({ id: 'Inactive' })}</option>
@@ -63,7 +63,7 @@ const Filter = ({intl, children, onSubmit = () => {} }) => {
               {intl.formatMessage({ id: 'UpdateDate' })}
               </Label>
 
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <LocalizationProvider dateAdapter={AdapterMoment}>
                 <Row>
                   <Col md={6}>
                     <DesktopDatePicker
@@ -77,7 +77,7 @@ const Filter = ({intl, children, onSubmit = () => {} }) => {
                       onChange={handleStartDateChange}
                       renderInput={(params) => (
                         <TextField
-                        className='border border-secondary rounded'
+                        className='border border-secondary rounded filter-input'
                           {...params}
                         />
                       )}
@@ -95,7 +95,7 @@ const Filter = ({intl, children, onSubmit = () => {} }) => {
                       onChange={handleEndDateChange}
                       renderInput={(params) => (
                         <TextField
-                        className='border border-secondary rounded'
+                        className='border border-secondary rounded filter-input'
                           {...params}
                         />
                       )}
