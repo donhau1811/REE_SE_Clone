@@ -1629,6 +1629,9 @@
   "All-status":"All status",
   "CreatedDate":"Created Date",
   "ModifyDate":"Modify Date",
-  "FIlterCustomer":"FILTER INFORMATION CUSTOMER"
+  "FIlterCustomer":"FILTER INFORMATION CUSTOMER",
+  "PatternBillElectricity":"Electricity bill notification form"
+
+
 
 }
