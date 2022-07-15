@@ -7,7 +7,7 @@ import { FETCH_COMPANY_REQUEST } from '@constants/billing'
 // ** Initial State
 const initialState = {
   data: [],
-  total: 1,
+  total: 0,
   params: {
     page: 1,
     rowsPerPage: ROWS_PER_PAGE_DEFAULT,
