@@ -1,22 +1,22 @@
-import { API_OPERATION_UNIT } from '@src/utility/constants'
+import { API_CUSTOMER_V2 } from '@src/utility/constants'
 import axios from 'axios'
-import withReactContent from 'sweetalert2-react-content'
 import SweetAlert from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 import { ReactComponent as CicleSuccess } from '@src/assets/images/svg/circle-success.svg'
 import { ReactComponent as CicleFailed } from '@src/assets/images/svg/circle-failed.svg'
 import classNames from 'classnames'
 
 const MySweetAlert = withReactContent(SweetAlert)
 
-export const postOperationUnit = ({ params, callback, skin, intl }) => {
+export const postCustomer = ({ params, callback, skin, intl }) => {
   return async () => {
     await axios
-      .post(API_OPERATION_UNIT, { params })
+      .post(API_CUSTOMER_V2, { params })
       .then((response) => {
         if (response.data && response.data.status && response.data.data) {
           MySweetAlert.fire({
             iconHtml: <CicleSuccess />,
-            text: intl.formatMessage({ id: 'Operation unit is added successfully' }),
+            text: intl.formatMessage({ id: 'New customer is added successfully' }),
             customClass: {
               popup: classNames({
                 'sweet-alert-popup--dark': skin === 'dark'
@@ -30,7 +30,7 @@ export const postOperationUnit = ({ params, callback, skin, intl }) => {
           })
           if (callback) callback()
         } else {
-          throw new Error(response.data.message)
+          throw new Error(response.data?.message)
         }
       })
       .catch((err) => {
@@ -52,10 +52,11 @@ export const postOperationUnit = ({ params, callback, skin, intl }) => {
       })
   }
 }
-export const putOperationUnit = ({ params, callback, intl, skin }) => {
+
+export const putCustomer = ({ params, callback, skin, intl }) => {
   return async () => {
     await axios
-      .put(API_OPERATION_UNIT, { params })
+      .put(API_CUSTOMER_V2, { params })
       .then((response) => {
         if (response.data && response.data.status && response.data.data) {
           MySweetAlert.fire({
@@ -74,7 +75,7 @@ export const putOperationUnit = ({ params, callback, intl, skin }) => {
           })
           if (callback) callback()
         } else {
-          throw new Error(response.data.message)
+          throw new Error(response.data?.message)
         }
       })
       .catch((err) => {

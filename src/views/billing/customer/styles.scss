@@ -1,0 +1,12 @@
+
+@import '@src/@core/scss/base/bootstrap-extended/_variables.scss';
+
+.add-contact-button {
+  background-color: #026894 !important;
+  border: 0;
+  border-radius: 3px;
+}
+
+.tabs-border-bottom {
+  border-bottom: 1px solid $text-sub;
+}

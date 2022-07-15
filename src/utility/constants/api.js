@@ -118,3 +118,4 @@ export const API_GET_INVERTER_TYPES = `${BASE_API_URL}/glf_inverter_type`
 export const API_GET_PANEL_TYPES = `${BASE_API_URL}/glf_panel_type`
 
 export const API_OPERATION_UNIT = `${BASE_API_URL}/glf_operation_unit`
+export const API_CUSTOMER_V2 = `${BASE_API_URL}/glf_customer_v2`

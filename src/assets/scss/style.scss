@@ -69,7 +69,6 @@ body {
     .w-120 {
       width: 120px;
     }
-
   }
 }
 
@@ -142,7 +141,8 @@ body {
 
 .dark-layout {
   .sidebar-project {
-    .project-name, .level1 {
+    .project-name,
+    .level1 {
       color: $text-body;
     }
   }
@@ -350,7 +350,6 @@ body {
   overflow-y: auto;
 
   .collapse-default {
-
   }
 
   [class*='collapse-'] .card:not(:last-of-type) {
@@ -370,7 +369,8 @@ body {
     }
   }
 
-  .custom-checkbox.custom-control, .custom-radio.custom-control {
+  .custom-checkbox.custom-control,
+  .custom-radio.custom-control {
     padding-left: 30px;
   }
 
@@ -393,7 +393,9 @@ body {
 
   &.container {
     &__all {
-      .collapse, .collapsing, .show {
+      .collapse,
+      .collapsing,
+      .show {
         .checkbox-tree-container {
           padding-left: 0;
         }
@@ -410,7 +412,8 @@ body {
     border-radius: $border-radius;
     margin-bottom: 10px;
 
-    label, .custom-control-Primary {
+    label,
+    .custom-control-Primary {
       color: $sidebar;
       font-size: 14px;
       font-weight: 600;
@@ -424,7 +427,9 @@ body {
     }
   }
 
-  .collapse, .collapsing, .show {
+  .collapse,
+  .collapsing,
+  .show {
     .checkbox-tree-container {
       padding-left: 20px;
     }
@@ -440,7 +445,6 @@ body {
       }
     }
   }
-
 }
 
 // Drop down menu at alert page
@@ -459,7 +463,8 @@ body {
 .alert-time-picker {
   &--dark {
     div {
-      input, button {
+      input,
+      button {
         color: $text-body;
       }
     }
@@ -523,7 +528,8 @@ body.dark-layout {
 }
 
 //menu
-.main-menu.menu-light .navigation > li ul .open > a, .main-menu.menu-light .navigation > li ul .sidebar-group-active > a {
+.main-menu.menu-light .navigation > li ul .open > a,
+.main-menu.menu-light .navigation > li ul .sidebar-group-active > a {
   color: $sidebarColor;
 }
 
@@ -545,7 +551,8 @@ body.dark-layout {
     color: $sidebarTextDark;
   }
 
-  .main-menu.menu-dark .navigation > li ul .open > a, .main-menu.menu-dark .navigation > li ul .sidebar-group-active > a {
+  .main-menu.menu-dark .navigation > li ul .open > a,
+  .main-menu.menu-dark .navigation > li ul .sidebar-group-active > a {
     color: $sidebarTextDark;
   }
 }
@@ -721,7 +728,10 @@ footer.footer {
   }
 }
 
-.dataTable-filter, .dataTable-select, .select__control, .form-control {
+.dataTable-filter,
+.dataTable-select,
+.select__control,
+.form-control {
   border-radius: $border-radius;
   border: 1px solid $border-color;
   background: none;
@@ -814,7 +824,8 @@ footer.footer {
       line-height: 16px;
     }
 
-    .form-control, .input-group-append {
+    .form-control,
+    .input-group-append {
       // Fix autofill change background and text color
       /* Change the white to any color */
       &:-webkit-autofill,
@@ -831,7 +842,8 @@ footer.footer {
       }
     }
 
-    input, .form-control {
+    input,
+    .form-control {
       min-height: 40px;
       height: auto;
       border: none;
@@ -843,11 +855,12 @@ footer.footer {
       line-height: 14px;
       color: $body-color;
 
-      &::placeholder, .select__placeholder {
+      &::placeholder,
+      .select__placeholder {
         color: rgba($body-color, 0.3);
       }
 
-      div[class*="-Input"] {
+      div[class*='-Input'] {
         margin: 0;
         padding: 0;
       }
@@ -866,7 +879,9 @@ footer.footer {
       }
     }
 
-    .input-group-append, .input-group-prepend, .input-group-text {
+    .input-group-append,
+    .input-group-prepend,
+    .input-group-text {
       border-radius: 0;
       border: 0;
       border-bottom: solid 1px $border-color;
@@ -915,7 +930,8 @@ footer.footer {
     line-height: 16px;
   }
 
-  input, .form-control {
+  input,
+  .form-control {
     min-height: 40px;
     height: auto;
     border: none;
@@ -927,7 +943,8 @@ footer.footer {
     line-height: 14px;
     color: $body-color;
 
-    &::placeholder, .select__placeholder {
+    &::placeholder,
+    .select__placeholder {
       color: rgba($body-color, 0.3);
     }
   }
@@ -947,7 +964,7 @@ footer.footer {
         padding: 0;
         height: 100%;
 
-        div[class*="-Input"] {
+        div[class*='-Input'] {
           margin: 0;
           padding: 0;
         }
@@ -965,7 +982,9 @@ footer.footer {
     }
   }
 
-  .input-group-append, .input-group-prepend, .input-group-text {
+  .input-group-append,
+  .input-group-prepend,
+  .input-group-text {
     border-radius: 0;
     border: 0;
     border-bottom: solid 1px $border-color;
@@ -974,7 +993,8 @@ footer.footer {
   }
 
   // Fix autofill in dark mode
-  .form-control, .input-group-append {
+  .form-control,
+  .input-group-append {
     // Fix autofill change background and text color
     /* Change the white to any color */
     &:-webkit-autofill,
@@ -1072,7 +1092,8 @@ footer.footer {
     font-size: 14px;
     padding: 0 20px;
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       border-color: $sidebarBorderColor;
     }
 
@@ -1110,7 +1131,9 @@ footer.footer {
       margin-bottom: 10px;
     }
 
-    input, .form-control, .input-group {
+    input,
+    .form-control,
+    .input-group {
       border: solid 1px $border-color;
       padding: 0 15px;
       border-radius: $border-radius;
@@ -1123,7 +1146,9 @@ footer.footer {
     }
 
     .input-group {
-      input, .input-group-append, .input-group-text {
+      input,
+      .input-group-append,
+      .input-group-text {
         border: 0;
         padding: 0;
         background: transparent;
@@ -1228,7 +1253,8 @@ footer.footer {
         color: $theme-dark-body-color;
       }
 
-      .form-control, .input-group-append {
+      .form-control,
+      .input-group-append {
         // Fix autofill change background and text color
         /* Change the white to any color */
         &:-webkit-autofill,
@@ -1245,11 +1271,15 @@ footer.footer {
         }
       }
 
-      input, .select__control, .form-control, .react-select__control {
+      input,
+      .select__control,
+      .form-control,
+      .react-select__control {
         border-bottom: solid 1px $theme-dark-border-color;
         color: $theme-dark-body-color;
 
-        &::placeholder, .select__placeholder {
+        &::placeholder,
+        .select__placeholder {
           color: rgba($body-color, 0.3);
         }
 
@@ -1274,7 +1304,9 @@ footer.footer {
         padding: 0;
       }
 
-      .input-group-append, .input-group-prepend, .input-group-text {
+      .input-group-append,
+      .input-group-prepend,
+      .input-group-text {
         border-bottom: solid 1px $theme-dark-border-color;
       }
 
@@ -1342,12 +1374,14 @@ footer.footer {
     .header {
       background: $dark-3;
 
-      label, .custom-control-Primary {
+      label,
+      .custom-control-Primary {
         color: $theme-dark-body-color;
       }
     }
 
-    .collapse, .collapsing {
+    .collapse,
+    .collapsing {
       .header {
         background: transparent;
       }
@@ -1369,7 +1403,8 @@ footer.footer {
 
   // Fix autofill in dark mode
   .form-group {
-    .form-control, .input-group-append {
+    .form-control,
+    .input-group-append {
       // Fix autofill change background and text color
       /* Change the white to any color */
       &:-webkit-autofill,
@@ -1437,4 +1472,20 @@ footer.footer {
       caret-color: $theme-dark-body-color;
     }
   }
+}
+
+.typo-section {
+  color: $sub-text-level2;
+}
+
+.general-label {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #000000;
+}
+.general-tab {
+  text-transform: none !important;
+  font-size: 1rem !important;
+  outline: none !important;
 }
