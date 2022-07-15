@@ -6,6 +6,7 @@ import auth from './auth'
 import navbar from './navbar'
 import layout from './layout'
 import customer from '@src/views/settings/customers/store/reducer'
+import billingCustomer from '@src/views/billing/customer/store/reducer'
 import customerProject from '@src/views/monitoring/projects/store/reducer'
 import project from '@src/views/settings/projects/store/reducer'
 import user from '@src/views/settings/users/store/reducer'
@@ -41,6 +42,7 @@ const rootReducer = combineReducers({
   deviceTypeInverter,
   deviceTypePanel,
   sensorSetting,
+  billingCustomer,
   company
 })
 

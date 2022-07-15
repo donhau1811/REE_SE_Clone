@@ -1,40 +1,22 @@
-
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Col, Row, UncontrolledTooltip, Badge } from 'reactstrap'
+
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { object } from 'prop-types'
 import Table from '@src/views/common/table/CustomDataTable'
+import { operationUnitArray } from './mock-data'
 import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
-import moment from 'moment'
-import { DISPLAY_DATE_FORMAT, ROUTER_URL } from '@src/utility/constants'
+import { ROUTER_URL } from '@src/utility/constants'
 import { useHistory } from 'react-router-dom'
 import PageHeader from './PageHeader'
-import { useDispatch, useSelector } from 'react-redux'
-import { getAllCompany } from './store/actions/index'
-import { STATE as STATUS } from '@constants/common'
-
 
 const OperationUnit = ({ intl }) => {
   const history = useHistory()
-  const dispatch = useDispatch()
-  const data = useSelector((state) => state.company)
-
-  useEffect(() => {
-    Promise.all([
-      dispatch(
-        getAllCompany({
-          fk: '*',
-          state: [STATUS.ACTIVE].toString(),
-          rowsPerPage: -1
-        })
-      )
-    ])
-  }, [])
 
   const handleRedirectToUpdatePage = (id) => () => {
-    if (id) history.push(`${ROUTER_URL.BILLING_OPERATION_UNIT_UPDATE}?id=${id}`)
+    if (id) history.push(`${ROUTER_URL.BILLING_CUSTOMER_UPDATE}?id=${id}`)
   }
   const columns = [
     {
@@ -45,20 +27,27 @@ const OperationUnit = ({ intl }) => {
       maxWidth: '50px'
     },
     {
-      name: intl.formatMessage({ id: 'operation-unit-form-code' }),
+      name: intl.formatMessage({ id: 'Customer Code' }),
       selector: 'code',
       sortable: true,
-      center: true,
       maxWidth: '100px'
     },
     {
-      name: intl.formatMessage({ id: 'operation-unit-form-name' }),
-      selector: 'name',
-      cell: (row) => <span>{row.name}</span>,
+      name: intl.formatMessage({ id: 'Customer Company' }),
+      selector: 'fullName',
+      center: true,
+      sortable: true,
+      cell: (row) => <span>{row.fullName}</span>,
+      minWidth: '20%'
+    },
+    {
+      name: intl.formatMessage({ id: 'Company Type Short' }),
+      selector: 'type',
+      sortable: true,
       center: true
     },
     {
-      name: intl.formatMessage({ id: 'operation-unit-form-taxCode' }),
+      name: intl.formatMessage({ id: 'billing-customer-list-taxCode' }),
       selector: 'taxCode',
       sortable: true,
       center: true
@@ -91,10 +80,10 @@ const OperationUnit = ({ intl }) => {
     },
     {
       name: intl.formatMessage({ id: 'Status' }),
-      selector: 'status',
+      selector: 'state',
       sortable: true,
       cell: (row) => {
-        return row.status?.value === OPERATION_UNIT_STATUS.ACTIVE ? (
+        return row.state === OPERATION_UNIT_STATUS.ACTIVE ? (
           <Badge pill color="light-success">
             <FormattedMessage id="Active" />
           </Badge>
@@ -105,13 +94,7 @@ const OperationUnit = ({ intl }) => {
         )
       }
     },
-    {
-      name: intl.formatMessage({ id: 'Update Date' }),
-      selector: 'modifiedDate',
-      sortable: true,
-      cell: (row) => moment(row.modifiedDate).format(DISPLAY_DATE_FORMAT),
-      center: true
-    },
+
     {
       name: intl.formatMessage({ id: 'Actions' }),
       selector: '#',
@@ -121,27 +104,21 @@ const OperationUnit = ({ intl }) => {
           <Badge onClick={handleRedirectToUpdatePage(row.id)}>
             <IconView id={`editBtn_${row.id}`} />
           </Badge>
-          <UncontrolledTooltip placement="auto" target={`editBtn_${row.id}`}>
-            <FormattedMessage id="Edit Operation Unit" />
-          </UncontrolledTooltip>
           <Badge>
             <IconDelete id={`deleteBtn_${row.id}`} />
           </Badge>
-          <UncontrolledTooltip placement="auto" target={`deleteBtn_${row.id}`}>
-            <FormattedMessage id="Delete Operation Unit" />
-          </UncontrolledTooltip>
         </>
       ),
       center: true
     }
   ]
+
   return (
     <>
- 
       <Row>
         <Col sm="12">
           <PageHeader />
-          <Table columns={columns} data={data.data} />
+          <Table columns={columns} data={operationUnitArray} />
         </Col>
       </Row>
     </>

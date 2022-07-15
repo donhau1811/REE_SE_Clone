@@ -120,6 +120,7 @@ export const getUserAbility = (userRole) => {
         { action: 'manage', subject: USER_ABILITY.CAN_UPDATE_SEND_EMAIL_TO_MANAGERS_SETTING },
         { action: 'manage', subject: USER_ABILITY.CAN_VIEW_USER_ACTIVITIES_REPORT },
         { action: 'manage', subject: ROUTER_URL.BILLING_OPERATION_UNIT },
+        { action: 'manage', subject: ROUTER_URL.BILLING_CUSTOMER },
         { action: 'manage', subject: USER_ABILITY.CAN_VIEW_USER_ACTIVITIES_REPORT }
       ]
     }

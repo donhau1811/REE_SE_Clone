@@ -1,23 +1,22 @@
-import { API_COMPANY_UNIT, API_OPERATION_UNIT } from '@src/utility/constants'
+import { API_CUSTOMER_V2 } from '@src/utility/constants'
 import axios from 'axios'
-import withReactContent from 'sweetalert2-react-content'
 import SweetAlert from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 import { ReactComponent as CicleSuccess } from '@src/assets/images/svg/circle-success.svg'
 import { ReactComponent as CicleFailed } from '@src/assets/images/svg/circle-failed.svg'
 import classNames from 'classnames'
-import { FETCH_COMPANY_REQUEST } from '@src/utility/constants/billing'
 
 const MySweetAlert = withReactContent(SweetAlert)
 
-export const postOperationUnit = ({ params, callback, skin, intl }) => {
+export const postCustomer = ({ params, callback, skin, intl }) => {
   return async () => {
     await axios
-      .post(API_OPERATION_UNIT, { params })
+      .post(API_CUSTOMER_V2, { params })
       .then((response) => {
         if (response.data && response.data.status && response.data.data) {
           MySweetAlert.fire({
             iconHtml: <CicleSuccess />,
-            text: intl.formatMessage({ id: 'Operation unit is added successfully' }),
+            text: intl.formatMessage({ id: 'New customer is added successfully' }),
             customClass: {
               popup: classNames({
                 'sweet-alert-popup--dark': skin === 'dark'
@@ -53,10 +52,11 @@ export const postOperationUnit = ({ params, callback, skin, intl }) => {
       })
   }
 }
-export const putOperationUnit = ({ params, callback, intl, skin }) => {
+
+export const putCustomer = ({ params, callback, skin, intl }) => {
   return async () => {
     await axios
-      .put(API_OPERATION_UNIT, { params })
+      .put(API_CUSTOMER_V2, { params })
       .then((response) => {
         if (response.data && response.data.status && response.data.data) {
           MySweetAlert.fire({
@@ -73,8 +73,7 @@ export const putOperationUnit = ({ params, callback, intl, skin }) => {
             showCloseButton: true,
             confirmButtonText: 'OK'
           })
-
-          callback?.()
+          if (callback) callback()
         } else {
           throw new Error(response.data?.message)
         }
@@ -95,27 +94,6 @@ export const putOperationUnit = ({ params, callback, intl, skin }) => {
           showCloseButton: true,
           confirmButtonText: intl.formatMessage({ id: 'Try again' })
         })
-      })
-  }
-}
-
-export const getAllCompany = (params) => {
-  return async (dispatch) => {
-    await axios
-      .get(API_COMPANY_UNIT, { params })
-      .then((response) => {
-        if (response.data && response.data.data) {
-          dispatch({
-            type: FETCH_COMPANY_REQUEST,
-            data: response.data.data,
-            total: response.data.total
-          })
-        } else {
-          throw new Error(response.data.message)
-        }
-      })
-      .catch((err) => {
-        console.log('err', err)
       })
   }
 }

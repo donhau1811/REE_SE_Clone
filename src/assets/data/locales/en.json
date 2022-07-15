@@ -1624,7 +1624,14 @@
   "SolarMonitoring": "Solar Monitoring",
   "OperatingCompany": "Operating Company",
   "MasterData": "Configuration",
+  "Company-Types":"Company Type",
+  "All-customer":"All Customer",
+  "All-status":"All status",
+  "CreatedDate":"Created Date",
+  "ModifyDate":"Modify Date",
+  "FIlterCustomer":"FILTER INFORMATION CUSTOMER",
   "FilterCompany": "Filter Information Operating  Company",
   "AllStatus" :"All Status",
-  "UpdateDate":"Update Date"
+  "UpdateDate":"Update Date",
+  "PatternBillElectricity":"Electricity bill notification form"
 }
