@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { Col, Row, UncontrolledTooltip, Badge } from 'reactstrap'
 
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
@@ -6,15 +6,28 @@ import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-de
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { object } from 'prop-types'
 import Table from '@src/views/common/table/CustomDataTable'
-import { operationUnitArray } from './mock-data'
 import { OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
 import { ROUTER_URL } from '@src/utility/constants'
 import { useHistory } from 'react-router-dom'
 import PageHeader from './PageHeader'
-
+import { useDispatch, useSelector } from 'react-redux'
+import { STATE as STATUS } from '@constants/common'
+import { getAllCustomer } from './store/actions'
 const OperationUnit = ({ intl }) => {
   const history = useHistory()
-
+  const dispatch = useDispatch()
+  const data = useSelector((state) => state.listCustomer)
+  useEffect(() => {
+    Promise.all([
+      dispatch(
+        getAllCustomer({
+          fk: '*',
+          state: [STATUS.ACTIVE].toString(),
+          rowsPerPage: -1
+        })
+      )
+    ])
+  }, [])
   const handleRedirectToUpdatePage = (id) => () => {
     if (id) history.push(`${ROUTER_URL.BILLING_CUSTOMER_UPDATE}?id=${id}`)
   }
@@ -112,13 +125,12 @@ const OperationUnit = ({ intl }) => {
       center: true
     }
   ]
-
   return (
     <>
       <Row>
         <Col sm="12">
           <PageHeader />
-          <Table columns={columns} data={operationUnitArray} />
+          <Table columns={columns} data={data.data} />
         </Col>
       </Row>
     </>

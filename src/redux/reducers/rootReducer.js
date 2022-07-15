@@ -21,6 +21,7 @@ import monitoringInverter from '@src/views/monitoring/devices/inverter/store/red
 import alert from '@src/views/alert/store/reducer'
 import report from '@src/views/report/store/reducer'
 import company from '@src/views/billing/operation-unit/store/reducer'
+import listCustomer from '@src/views/billing/customer/store/reducer'
 
 const rootReducer = combineReducers({
   auth,
@@ -41,7 +42,8 @@ const rootReducer = combineReducers({
   deviceTypeInverter,
   deviceTypePanel,
   sensorSetting,
-  company
+  company,
+  listCustomer
 })
 
 export default rootReducer
