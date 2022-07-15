@@ -1632,5 +1632,6 @@
   "FIlterCustomer":"FILTER INFORMATION CUSTOMER",
   "FilterCompany": "Filter Information Operating  Company",
   "AllStatus" :"All Status",
-  "UpdateDate":"Update Date"
+  "UpdateDate":"Update Date",
+  "PatternBillElectricity":"Electricity bill notification form"
 }
