@@ -1,61 +1,39 @@
 import React from 'react'
-import { Col, Row, UncontrolledTooltip, Badge } from 'reactstrap'
-
-import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
-import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
+import { Col, Row, UncontrolledTooltip } from 'reactstrap'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { object } from 'prop-types'
 import Table from '@src/views/common/table/CustomDataTable'
-import { operationUnitArray } from './mock-data'
-import { OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
-import { ROUTER_URL } from '@src/utility/constants'
-import { useHistory } from 'react-router-dom'
-import PageHeader from './PageHeader'
+import { billElectricArray } from './mock-data'
+import './scss/Filter.scss'
 
-const OperationUnit = ({ intl }) => {
-  const history = useHistory()
-
-  const handleRedirectToUpdatePage = (id) => () => {
-    if (id) history.push(`${ROUTER_URL.BILLING_CUSTOMER_UPDATE}?id=${id}`)
-  }
+const ProjectTable = ({ intl }) => {
   const columns = [
     {
       name: intl.formatMessage({ id: 'No.' }),
       sortable: true,
       cell: (row, index) => index + 1,
       center: true,
-      maxWidth: '50px'
+      maxWidth: '40px',
+      style: { fontSize: '18px' }
     },
     {
-      name: intl.formatMessage({ id: 'Customer Code' }),
-      selector: 'code',
+      name: intl.formatMessage({ id: 'projectCode' }),
+      selector: 'projectCode',
       sortable: true,
-      maxWidth: '100px'
+      maxWidth: '72px'
     },
     {
-      name: intl.formatMessage({ id: 'Customer Company' }),
-      selector: 'fullName',
+      name: intl.formatMessage({ id: 'projectName' }),
+      selector: 'name',
       center: true,
       sortable: true,
-      cell: (row) => <span>{row.fullName}</span>,
-      minWidth: '20%'
+      cell: (row) => <span>{row.name}</span>
     },
     {
-      name: intl.formatMessage({ id: 'Company Type' }),
-      selector: 'type',
-      sortable: true,
-      center: true
-    },
-    {
-      name: intl.formatMessage({ id: 'billing-customer-list-taxCode' }),
-      selector: 'taxCode',
-      sortable: true,
-      center: true
-    },
-    {
-      name: intl.formatMessage({ id: 'operation-unit-form-address' }),
+      name: intl.formatMessage({ id: 'Address' }),
       selector: 'address',
       sortable: true,
+      center: true,
       cell: (row) => {
         return (
           <>
@@ -69,46 +47,12 @@ const OperationUnit = ({ intl }) => {
             )}
           </>
         )
-      },
-      minWidth: '320px'
-    },
-    {
-      name: intl.formatMessage({ id: 'operation-unit-form-mobile' }),
-      selector: 'mobile',
-      sortable: true,
-      center: true
-    },
-    {
-      name: intl.formatMessage({ id: 'Status' }),
-      selector: 'state',
-      sortable: true,
-      cell: (row) => {
-        return row.state === OPERATION_UNIT_STATUS.ACTIVE ? (
-          <Badge pill color="light-success">
-            <FormattedMessage id="Active" />
-          </Badge>
-        ) : (
-          <Badge pill color="light-muted">
-            <FormattedMessage id="Inactive" />
-          </Badge>
-        )
       }
     },
-
     {
-      name: intl.formatMessage({ id: 'Actions' }),
-      selector: '#',
-      cell: (row) => (
-        <>
-          {' '}
-          <Badge onClick={handleRedirectToUpdatePage(row.id)}>
-            <IconView id={`editBtn_${row.id}`} />
-          </Badge>
-          <Badge>
-            <IconDelete id={`deleteBtn_${row.id}`} />
-          </Badge>
-        </>
-      ),
+      name: intl.formatMessage({ id: 'PatternBillElectricity' }),
+      selector: 'billElectric',
+      sortable: true,
       center: true
     }
   ]
@@ -117,16 +61,15 @@ const OperationUnit = ({ intl }) => {
     <>
       <Row>
         <Col sm="12">
-          <PageHeader />
-          <Table columns={columns} data={operationUnitArray} />
+          <Table columns={columns} data={billElectricArray} />
         </Col>
       </Row>
     </>
   )
 }
 
-OperationUnit.propTypes = {
+ProjectTable.propTypes = {
   intl: object.isRequired
 }
 
-export default injectIntl(OperationUnit)
+export default injectIntl(ProjectTable)
