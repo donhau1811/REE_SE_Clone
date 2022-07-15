@@ -7,5 +7,6 @@ import './cards/card-statistics'
 import './jwt'
 import './tables/datatables'
 import './tables/user-data'
+import './operationUnit/companyList'
 
 mock.onAny().passThrough()

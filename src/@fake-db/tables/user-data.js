@@ -92,7 +92,7 @@ const users = [
   }
 ]
 
-mock.onGet('/api/v1/glf_users').reply(config => {
+mock.onGet('/api/v1/compa').reply(config => {
   // eslint-disable-next-line object-curly-newline
   const { q = '', perPage = 10, page = 1 } = config
   /* eslint-enable */
