@@ -7,7 +7,7 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 import { object, func } from 'prop-types'
 import { ReactComponent as Carlendar } from '@src/assets/images/svg/carlendar.svg'
 import './scss/Filter.scss'
-import { DISPLAY_DATE_FORMAT_CALENDAR } from '@src/utility/constants'
+import { DISPLAY_DATE_FORMAT } from '@src/utility/constants'
 import { injectIntl } from 'react-intl'
 
 const intitValue = {
@@ -97,7 +97,7 @@ const FilterCustomer = ({ intl, children, onSubmit = () => {} }) => {
                       inputVariant="outlined"
                       label=""
                       name="fromCreatedDate"
-                      inputFormat={DISPLAY_DATE_FORMAT_CALENDAR}
+                      inputFormat={DISPLAY_DATE_FORMAT}
                       value={formData.fromCreatedDate}
                       onChange={handleChange('fromCreatedDate')}
                       renderInput={(params) => (
@@ -112,7 +112,7 @@ const FilterCustomer = ({ intl, children, onSubmit = () => {} }) => {
                         OpenPickerIcon: Carlendar
                       }}
                       label=""
-                      inputFormat={DISPLAY_DATE_FORMAT_CALENDAR}
+                      inputFormat={DISPLAY_DATE_FORMAT}
                       value={formData.toCreatedDate}
                       name="toCreatedDate"
                       onChange={handleChange('toCreatedDate')}
@@ -134,7 +134,7 @@ const FilterCustomer = ({ intl, children, onSubmit = () => {} }) => {
                       }}
                       inputVariant="outlined"
                       label=""
-                      inputFormat={DISPLAY_DATE_FORMAT_CALENDAR}
+                      inputFormat={DISPLAY_DATE_FORMAT}
                       value={formData.fromModifyDate}
                       onChange={handleChange('fromModifyDate')}
                       renderInput={(params) => (
@@ -149,7 +149,7 @@ const FilterCustomer = ({ intl, children, onSubmit = () => {} }) => {
                         OpenPickerIcon: Carlendar
                       }}
                       label=""
-                      inputFormat={DISPLAY_DATE_FORMAT_CALENDAR}
+                      inputFormat={DISPLAY_DATE_FORMAT}
                       value={formData.toModifyDate}
                       onChange={handleChange('toModifyDate')}
                       renderInput={(params) => (
