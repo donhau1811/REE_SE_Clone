@@ -1,6 +1,6 @@
 import mock from '../mock'
 import { paginateArray } from '../utils'
-import { OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
+import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
 import { API_COMPANY_UNIT } from '@src/utility/constants'
 
 const companies = [

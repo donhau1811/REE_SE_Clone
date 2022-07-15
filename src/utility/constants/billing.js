@@ -1,4 +1,4 @@
-export const OPERATION_UNIT_STATUS = {
+export const GENERAL_STATUS = {
   INACTIVE: 'INACTIVE',
   ACTIVE: 'ACTIVE'
 }

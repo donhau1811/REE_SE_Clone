@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react'
 import { Col, Row, UncontrolledTooltip, Badge } from 'reactstrap'
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
@@ -5,7 +6,7 @@ import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-de
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { object } from 'prop-types'
 import Table from '@src/views/common/table/CustomDataTable'
-import { OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
+import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
 import moment from 'moment'
 import { DISPLAY_DATE_FORMAT, ROUTER_URL } from '@src/utility/constants'
 import { useHistory } from 'react-router-dom'

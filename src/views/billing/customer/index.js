@@ -7,7 +7,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { object } from 'prop-types'
 import Table from '@src/views/common/table/CustomDataTable'
 import { operationUnitArray } from './mock-data'
-import { OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
+import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
 import { ROUTER_URL } from '@src/utility/constants'
 import { useHistory } from 'react-router-dom'
 import PageHeader from './PageHeader'
@@ -41,7 +41,7 @@ const OperationUnit = ({ intl }) => {
       minWidth: '20%'
     },
     {
-      name: intl.formatMessage({ id: 'Company Type' }),
+      name: intl.formatMessage({ id: 'Company Type Short' }),
       selector: 'type',
       sortable: true,
       center: true
