@@ -1657,8 +1657,7 @@
   "CreatedDate":"Ngày tạo",
   "ModifyDate":"Ngày cập nhật",
   "FIlterCustomer":"LỌC THÔNG TIN KHÁCH HÀNG ",
-  "AllStatus":"Tất cả trạng thái"
-
-
-  
+  "AllStatus":"Tất cả trạng thái",
+  "FilterCompany": "Lọc thông tin công ty vận hành ",
+  "UpdateDate":"Ngày cập nhật"
 }

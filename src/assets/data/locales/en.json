@@ -1629,6 +1629,8 @@
   "All-status":"All status",
   "CreatedDate":"Created Date",
   "ModifyDate":"Modify Date",
-  "FIlterCustomer":"FILTER INFORMATION CUSTOMER"
-
+  "FIlterCustomer":"FILTER INFORMATION CUSTOMER",
+  "FilterCompany": "Filter Information Operating  Company",
+  "AllStatus" :"All Status",
+  "UpdateDate":"Update Date"
 }
