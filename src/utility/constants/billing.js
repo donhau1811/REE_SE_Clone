@@ -3,3 +3,4 @@ export const GENERAL_STATUS = {
   ACTIVE: 'ACTIVE'
 }
 
+export const FETCH_COMPANY_REQUEST = "FETCH_COMPANY_REQUEST"

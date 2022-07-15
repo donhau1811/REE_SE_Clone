@@ -1,10 +1,11 @@
-import { API_OPERATION_UNIT } from '@src/utility/constants'
+import { API_COMPANY_UNIT, API_OPERATION_UNIT } from '@src/utility/constants'
 import axios from 'axios'
 import withReactContent from 'sweetalert2-react-content'
 import SweetAlert from 'sweetalert2'
 import { ReactComponent as CicleSuccess } from '@src/assets/images/svg/circle-success.svg'
 import { ReactComponent as CicleFailed } from '@src/assets/images/svg/circle-failed.svg'
 import classNames from 'classnames'
+import { FETCH_COMPANY_REQUEST } from '@src/utility/constants/billing'
 
 const MySweetAlert = withReactContent(SweetAlert)
 
@@ -30,7 +31,7 @@ export const postOperationUnit = ({ params, callback, skin, intl }) => {
           })
           if (callback) callback()
         } else {
-          throw new Error(response.data.message)
+          throw new Error(response.data?.message)
         }
       })
       .catch((err) => {
@@ -72,9 +73,10 @@ export const putOperationUnit = ({ params, callback, intl, skin }) => {
             showCloseButton: true,
             confirmButtonText: 'OK'
           })
-          if (callback) callback()
+
+          callback?.()
         } else {
-          throw new Error(response.data.message)
+          throw new Error(response.data?.message)
         }
       })
       .catch((err) => {
@@ -93,6 +95,27 @@ export const putOperationUnit = ({ params, callback, intl, skin }) => {
           showCloseButton: true,
           confirmButtonText: intl.formatMessage({ id: 'Try again' })
         })
+      })
+  }
+}
+
+export const getAllCompany = (params) => {
+  return async (dispatch) => {
+    await axios
+      .get(API_COMPANY_UNIT, { params })
+      .then((response) => {
+        if (response.data && response.data.data) {
+          dispatch({
+            type: FETCH_COMPANY_REQUEST,
+            data: response.data.data,
+            total: response.data.total
+          })
+        } else {
+          throw new Error(response.data.message)
+        }
+      })
+      .catch((err) => {
+        console.log('err', err)
       })
   }
 }
