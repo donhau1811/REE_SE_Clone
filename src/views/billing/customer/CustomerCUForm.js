@@ -11,7 +11,7 @@ import { MOBILE_REGEX } from '@src/utility/constants'
 import { GENERAL_STATUS } from '@src/utility/constants/billing'
 import SweetAlert from 'sweetalert2'
 import './styles.scss'
-import ContactManagement from './contact'
+import Contact from './contact'
 import withReactContent from 'sweetalert2-react-content'
 import classNames from 'classnames'
 import { useSelector } from 'react-redux'
@@ -264,7 +264,7 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
           </Col>
         </Row>
         <Input id="contacts" name="contacts" autoComplete="on" innerRef={register()} type="hidden" />
-        <ContactManagement onChange={handleSubmitContactForm} data={contacts} />
+        <Contact onChange={handleSubmitContactForm} data={contacts} />
 
         <Row>
           <Col className="d-flex justify-content-end align-items-center">

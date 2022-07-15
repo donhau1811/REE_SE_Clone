@@ -10,7 +10,7 @@ import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-de
 import ContactCUForm from './ContactCUForm'
 import { cloneDeep } from 'lodash'
 
-const ContactManagement = ({ data, onChange }) => {
+const Contact = ({ data, onChange }) => {
   const [currContact, setCurrContact] = useState(null)
 
   const handleAddContact = () => {
@@ -118,9 +118,9 @@ const ContactManagement = ({ data, onChange }) => {
     </>
   )
 }
-ContactManagement.propTypes = {
+Contact.propTypes = {
   data: array,
   onChange: func
 }
 
-export default ContactManagement
+export default Contact

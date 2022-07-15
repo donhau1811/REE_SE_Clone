@@ -13,7 +13,7 @@ import { positionMockData } from '../mock-data'
 
 function ContactCUForm({ contact, intl, onSubmit = () => {} }) {
   const [isOpen, setIsOpen] = useState(false)
-  const ValidateSchema = yup.object().shape(
+  const validateSchema = yup.object().shape(
     {
       name: yup
         .string()
@@ -37,7 +37,7 @@ function ContactCUForm({ contact, intl, onSubmit = () => {} }) {
 
   const { getValues, errors, register, control, handleSubmit, reset } = useForm({
     mode: 'onChange',
-    resolver: yupResolver(ValidateSchema),
+    resolver: yupResolver(validateSchema),
     defaultValues: contact || {}
   })
 
