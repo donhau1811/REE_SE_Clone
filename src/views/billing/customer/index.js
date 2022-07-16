@@ -6,7 +6,7 @@ import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-de
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { object } from 'prop-types'
 import Table from '@src/views/common/table/CustomDataTable'
-import { OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
+import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
 import { ROUTER_URL } from '@src/utility/constants'
 import { useHistory } from 'react-router-dom'
 import PageHeader from './PageHeader'
@@ -16,7 +16,7 @@ import { getAllCustomer } from './store/actions'
 const OperationUnit = ({ intl }) => {
   const history = useHistory()
   const dispatch = useDispatch()
-  const data = useSelector((state) => state.listCustomer)
+  const data = useSelector((state) => state.billingCustomer)
   useEffect(() => {
     Promise.all([
       dispatch(
@@ -54,7 +54,7 @@ const OperationUnit = ({ intl }) => {
       minWidth: '20%'
     },
     {
-      name: intl.formatMessage({ id: 'Company Type' }),
+      name: intl.formatMessage({ id: 'Company Type Short' }),
       selector: 'type',
       sortable: true,
       center: true
@@ -130,7 +130,7 @@ const OperationUnit = ({ intl }) => {
       <Row>
         <Col sm="12">
           <PageHeader />
-          <Table columns={columns} data={data.data} />
+          <Table columns={columns} data={data?.data || []} />
         </Col>
       </Row>
     </>

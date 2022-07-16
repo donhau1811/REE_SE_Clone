@@ -6,6 +6,7 @@ import auth from './auth'
 import navbar from './navbar'
 import layout from './layout'
 import customer from '@src/views/settings/customers/store/reducer'
+import billingCustomer from '@src/views/billing/customer/store/reducer'
 import customerProject from '@src/views/monitoring/projects/store/reducer'
 import project from '@src/views/settings/projects/store/reducer'
 import user from '@src/views/settings/users/store/reducer'
@@ -21,7 +22,6 @@ import monitoringInverter from '@src/views/monitoring/devices/inverter/store/red
 import alert from '@src/views/alert/store/reducer'
 import report from '@src/views/report/store/reducer'
 import company from '@src/views/billing/operation-unit/store/reducer'
-import listCustomer from '@src/views/billing/customer/store/reducer'
 
 const rootReducer = combineReducers({
   auth,
@@ -43,7 +43,7 @@ const rootReducer = combineReducers({
   deviceTypePanel,
   sensorSetting,
   company,
-  listCustomer
+  billingCustomer
 })
 
 export default rootReducer
