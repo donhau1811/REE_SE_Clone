@@ -1,7 +1,7 @@
 import mock from '../mock'
 import { paginateArray } from '../utils'
 import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
-import { API_COMPANY_UNIT } from '@src/utility/constants'
+import { API_COMPANY_UNIT, API_DELETE_OPERATING_COMPANY } from '@src/utility/constants'
 
 const companies = [
   {
@@ -83,6 +83,16 @@ const companies = [
     modifiedDate: '06/10/2000'
   }
 ]
+
+mock.onDelete(`${API_DELETE_OPERATING_COMPANY}/:id`).reply(config => {
+  return [
+    200,
+    {
+      data: config,
+      success: true
+    }
+  ]
+})
 
 mock.onGet(API_COMPANY_UNIT).reply(config => {
   // eslint-disable-next-line object-curly-newline

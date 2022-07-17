@@ -1,19 +1,19 @@
 /* eslint no-unused-vars: 0 */  // --> OFF
 // ** React Imports
 import { useEffect, useRef } from 'react'
-import { NavLink, useLocation, matchPath } from 'react-router-dom'
+import { matchPath, NavLink, useLocation } from 'react-router-dom'
 
 // ** Third Party Components
-import { Badge, UncontrolledTooltip } from 'reactstrap'
 import classnames from 'classnames'
-import { FormattedMessage } from 'react-intl'
 import PropTypes from 'prop-types'
+import { FormattedMessage } from 'react-intl'
+import { Badge, UncontrolledTooltip } from 'reactstrap'
 
 // ** Vertical Menu Array Of Items
 import navigation from '@src/navigation/vertical'
 
 // ** Utils
-import { isNavLinkActive, search, getAllParents } from '@layouts/utils'
+import { getAllParents, search } from '@layouts/utils'
 import { useSelector } from 'react-redux'
 
 const VerticalNavMenuLink = ({

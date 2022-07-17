@@ -8,5 +8,6 @@ import './jwt'
 import './tables/datatables'
 import './tables/user-data'
 import './operationUnit/companyList'
+import './customer/customersList'
 
 mock.onAny().passThrough()

@@ -42,8 +42,8 @@ const rootReducer = combineReducers({
   deviceTypeInverter,
   deviceTypePanel,
   sensorSetting,
-  billingCustomer,
-  company
+  company,
+  billingCustomer
 })
 
 export default rootReducer

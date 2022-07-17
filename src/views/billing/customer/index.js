@@ -1,22 +1,74 @@
-import React from 'react'
-import { Col, Row, UncontrolledTooltip, Badge } from 'reactstrap'
-
-import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
+import { STATE as STATUS } from '@constants/common'
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
-import { FormattedMessage, injectIntl } from 'react-intl'
-import { object } from 'prop-types'
-import Table from '@src/views/common/table/CustomDataTable'
-import { operationUnitArray } from './mock-data'
-import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
+import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
 import { ROUTER_URL } from '@src/utility/constants'
+import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
+import Table from '@src/views/common/table/CustomDataTable'
+import classnames from 'classnames'
+import { object } from 'prop-types'
+import { useEffect } from 'react'
+import { FormattedMessage, injectIntl } from 'react-intl'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import { Badge, Col, Row, UncontrolledTooltip } from 'reactstrap'
+import SweetAlert from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 import PageHeader from './PageHeader'
+import { deleteBillingCustomer, getAllCustomer } from './store/actions'
+import './styles.scss'
+
+const MySweetAlert = withReactContent(SweetAlert)
 
 const OperationUnit = ({ intl }) => {
   const history = useHistory()
-
+  const dispatch = useDispatch()
+  const {
+    layout: { skin }
+  } = useSelector((state) => state)
+  const data = useSelector((state) => state.billingCustomer)
+  useEffect(() => {
+    Promise.all([
+      dispatch(
+        getAllCustomer({
+          fk: '*',
+          state: [STATUS.ACTIVE].toString(),
+          rowsPerPage: -1
+        })
+      )
+    ])
+  }, [])
   const handleRedirectToUpdatePage = (id) => () => {
     if (id) history.push(`${ROUTER_URL.BILLING_CUSTOMER_UPDATE}?id=${id}`)
+  }
+  const handleDeleteCustomer = (id) => () => {
+    return MySweetAlert.fire({
+      title: intl.formatMessage({ id: 'Delete billing customer title' }),
+      html: intl.formatMessage({ id: 'Delete billing customer message' }),
+      showCancelButton: true,
+      showCloseButton: true,
+      confirmButtonText: intl.formatMessage({ id: 'Yes' }),
+      cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),
+      customClass: {
+        popup: classnames({
+          'sweet-alert-popup--dark': skin === 'dark',
+          'sweet-popup': true
+        }),
+        header: 'sweet-title',
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-outline-secondary ml-1',
+        actions: 'sweet-actions',
+        content: 'sweet-content'
+      },
+      buttonsStyling: false
+    }).then(({ isConfirmed }) => {
+      if (isConfirmed) {
+        dispatch(deleteBillingCustomer({
+          id,
+          skin,
+          intl
+        }))
+      }
+    })
   }
   const columns = [
     {
@@ -104,7 +156,7 @@ const OperationUnit = ({ intl }) => {
           <Badge onClick={handleRedirectToUpdatePage(row.id)}>
             <IconView id={`editBtn_${row.id}`} />
           </Badge>
-          <Badge>
+          <Badge onClick={handleDeleteCustomer(row.id)}>
             <IconDelete id={`deleteBtn_${row.id}`} />
           </Badge>
         </>
@@ -112,13 +164,12 @@ const OperationUnit = ({ intl }) => {
       center: true
     }
   ]
-
   return (
     <>
       <Row>
         <Col sm="12">
           <PageHeader />
-          <Table columns={columns} data={operationUnitArray} />
+          <Table columns={columns} data={data?.data || []} />
         </Col>
       </Row>
     </>
