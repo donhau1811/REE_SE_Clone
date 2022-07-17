@@ -1,25 +1,33 @@
 
-import React, { useEffect } from 'react'
-import { Col, Row, UncontrolledTooltip, Badge } from 'reactstrap'
-import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
-import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
-import { FormattedMessage, injectIntl } from 'react-intl'
-import { object } from 'prop-types'
-import Table from '@src/views/common/table/CustomDataTable'
-import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
-import moment from 'moment'
-import { DISPLAY_DATE_FORMAT, ROUTER_URL } from '@src/utility/constants'
-import { useHistory } from 'react-router-dom'
-import PageHeader from './PageHeader'
-import { useDispatch, useSelector } from 'react-redux'
-import { getAllCompany } from './store/actions/index'
 import { STATE as STATUS } from '@constants/common'
+import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
+import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
+import { DISPLAY_DATE_FORMAT, ROUTER_URL } from '@src/utility/constants'
+import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
+import Table from '@src/views/common/table/CustomDataTable'
+import classnames from 'classnames'
+import moment from 'moment'
+import { object } from 'prop-types'
+import { useEffect } from 'react'
+import { FormattedMessage, injectIntl } from 'react-intl'
+import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+import { Badge, Col, Row, UncontrolledTooltip } from 'reactstrap'
+import SweetAlert from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+import PageHeader from './PageHeader'
+import { deleteCompany, getAllCompany } from './store/actions/index'
+
+const MySweetAlert = withReactContent(SweetAlert)
 
 
 const OperationUnit = ({ intl }) => {
   const history = useHistory()
   const dispatch = useDispatch()
   const data = useSelector((state) => state.company)
+  const {
+    layout: { skin }
+  } = useSelector((state) => state)
 
   useEffect(() => {
     Promise.all([
@@ -35,6 +43,37 @@ const OperationUnit = ({ intl }) => {
 
   const handleRedirectToUpdatePage = (id) => () => {
     if (id) history.push(`${ROUTER_URL.BILLING_OPERATION_UNIT_UPDATE}?id=${id}`)
+  }
+
+  const handleDeleteOperationCompany = (id) => () => {
+    return MySweetAlert.fire({
+      title: intl.formatMessage({ id: 'Delete operating customer title' }),
+      html: intl.formatMessage({ id: 'Delete operating customer message' }),
+      showCancelButton: true,
+      showCloseButton: true,
+      confirmButtonText: intl.formatMessage({ id: 'Yes' }),
+      cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),
+      customClass: {
+        popup: classnames({
+          'sweet-alert-popup--dark': skin === 'dark',
+          'sweet-popup': true
+        }),
+        header: 'sweet-title',
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-outline-secondary ml-1',
+        actions: 'sweet-actions',
+        content: 'sweet-content'
+      },
+      buttonsStyling: false
+    }).then(({ isConfirmed }) => {
+      if (isConfirmed) {
+        dispatch(deleteCompany({
+          id,
+          skin,
+          intl
+        }))
+      }
+    })
   }
   const columns = [
     {
@@ -125,7 +164,7 @@ const OperationUnit = ({ intl }) => {
             <FormattedMessage id="Edit Operation Unit" />
           </UncontrolledTooltip>
           <Badge>
-            <IconDelete id={`deleteBtn_${row.id}`} />
+            <IconDelete onClick={handleDeleteOperationCompany(row.id)} id={`deleteBtn_${row.id}`} />
           </Badge>
           <UncontrolledTooltip placement="auto" target={`deleteBtn_${row.id}`}>
             <FormattedMessage id="Delete Operation Unit" />
@@ -137,7 +176,7 @@ const OperationUnit = ({ intl }) => {
   ]
   return (
     <>
- 
+
       <Row>
         <Col sm="12">
           <PageHeader />

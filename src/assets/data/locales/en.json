@@ -38,6 +38,7 @@
   "Company": "Company",
   "Save changes": "Save changes",
   "Cancel": "Cancel",
+  "No, Thanks": "No, Thanks",
   "Password": "Password",
   "Change Password": "Change Password",
   "Old Password": "Old Password",
@@ -1633,5 +1634,14 @@
   "FilterCompany": "Filter Information Operating  Company",
   "AllStatus" :"All Status",
   "UpdateDate":"Update Date",
-  "PatternBillElectricity":"Electricity bill notification form"
+  "Try again": "Try again",
+  "PatternBillElectricity":"Electricity bill notification form",
+  "Delete operating customer title": "Confirm delete operating customer?",
+  "Delete operating customer message": "Are you sure you want to delete this operating company?",
+  "Delete operating customer success": "Delete customer successfully",
+  "Delete operating customer failed": "Can not delete the operating companies that are managing the system!",
+  "Delete billing customer title": "Confirm delete customer?",
+  "Delete billing customer message": "Are you sure you want to delete this customer?",
+  "Delete billing customer success": "Delete customer successfully",
+  "Delete billing customer failed": "Can not delete the customer that are managing the project!"
 }

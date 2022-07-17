@@ -122,4 +122,8 @@ export const API_CUSTOMER_V2 = `${BASE_API_URL}/glf_customer_v2`
 
 export const API_COMPANY_UNIT = `${BASE_API_URL}/api/v1/companies`
 
+export const API_DELETE_OPERATING_COMPANY = `${BASE_API_URL}/api/v1/billing/companies`
+export const API_DELETE_BILLING_CUSTOMER = `${BASE_API_URL}/api/v1/billing/customer`
+
+
 export const API_BILLING_CUSTOMERS = `${BASE_API_URL}/api/v1/customers`

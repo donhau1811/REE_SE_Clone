@@ -50,6 +50,7 @@
   "Company": "Công ty",
   "Save changes": "Lưu thay đổi",
   "Cancel": "Huỷ bỏ",
+  "No, Thanks": "Không, cảm ơn",
   "Password": "Mật khẩu",
   "Code": "Code",
   "Change Password": "Thay đổi mật khẩu",
@@ -1682,5 +1683,14 @@
   "update-customer": "Cập nhật thông tin khách hàng",
   "Data is updated successfully":"Dữ liệu đã được cập nhật thành công",
   "Operation unit is added successfully":"Đơn vị vận hành đã được thêm mới thành công!",
-  "Customer info":"Thông tin khách hàng"
+  "Customer info":"Thông tin khách hàng",
+  "Delete operating customer title": "XÁC NHẬN XOÁ",
+  "Delete operating customer message": "Bạn có chắc chắn muốn xoá công ty vận hành này?",
+  "Delete operating customer success": "Dữ liệu đã được xóa thành công",
+  "Delete operating customer failed": "Không được xóa các công ty vận hành đang quản lý hệ thống!",
+  "UpdateDate":"Ngày cập nhật",
+  "Delete billing customer title": "XÁC NHẬN XOÁ",
+  "Delete billing customer message": "Bạn có chắc chắn muốn xoá khách hàng này?",
+  "Delete billing customer success": "Dữ liệu đã được xóa thành công",
+  "Delete billing customer failed": "Không được xóa các khách hàng đã có dự án!"
 }
