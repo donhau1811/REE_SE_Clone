@@ -46,6 +46,14 @@ export const BillingRoutes = [
     }
   },
   {
+    path: ROUTER_URL.BILLING_CUSTOMER_VIEW,
+    component: lazy(() => import('../../views/billing/customer/ViewDetail')),
+    meta: {
+      action: 'manage',
+      resource: ROUTER_URL.BILLING_CUSTOMER
+    }
+  },
+  {
     path: ROUTER_URL.BILLING_CUSTOMER_CREATE,
     exact: true,
     component: lazy(() => import('../../views/billing/customer/create')),

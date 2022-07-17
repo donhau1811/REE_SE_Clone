@@ -1682,5 +1682,6 @@
   "update-customer": "Cập nhật thông tin khách hàng",
   "Data is updated successfully":"Dữ liệu đã được cập nhật thành công",
   "Operation unit is added successfully":"Đơn vị vận hành đã được thêm mới thành công!",
-  "Customer info":"Thông tin khách hàng"
+  "Customer info":"Thông tin khách hàng",
+  "view-customer":"Xem thông tin chi tiết khách hàng"
 }

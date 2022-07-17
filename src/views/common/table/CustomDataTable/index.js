@@ -38,10 +38,10 @@ const Table = ({
         })}
         fixedHeader
         fixedHeaderScrollHeight="calc(100vh - 340px)"
-        columns={columns}
+        columns={columns.filter((item) => !item.isHidden)}
         sortIcon={
           <div className="custom-sort-icon">
-            <Code  />
+            <Code />
           </div>
         }
         paginationComponent={PaginationCOM}

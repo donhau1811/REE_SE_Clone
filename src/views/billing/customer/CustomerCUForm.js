@@ -1,4 +1,5 @@
-import { func, object } from 'prop-types'
+/* eslint-disable no-unused-vars */
+import { bool, func, object, string } from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -19,7 +20,7 @@ import { ReactComponent as CicleFailed } from '@src/assets/images/svg/circle-fai
 
 const MySweetAlert = withReactContent(SweetAlert)
 
-const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues }) => {
+const OperationCUForm = ({ intl, isViewed, onSubmit = () => {}, onCancel = () => {}, initValues, submitText }) => {
   const [contacts, setContacts] = useState([])
   const CUSTOMER_TYPE = [
     { value: 'Doanh nghiệp', label: 'Doanh nghiệp' },
@@ -84,7 +85,7 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
 
   const { handleSubmit, getValues, errors, control, register } = useForm({
     mode: 'onChange',
-    resolver: yupResolver(ValidateSchema),
+    resolver: yupResolver(isViewed ? yup.object().shape({}) : ValidateSchema),
     defaultValues: initValues || initState
   })
 
@@ -129,12 +130,13 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
         <Row>
           <Col className="mb-2" md={4}>
             <Label className="general-label" for="name">
-            <FormattedMessage id="Company name" />
+              <FormattedMessage id="Company name" />
               <span className="text-danger">&nbsp;(*)</span>
             </Label>
             <Input
               id="name"
               name="name"
+              disabled={isViewed}
               autoComplete="on"
               invalid={!!errors.name}
               valid={getValues('name')?.trim() && !errors.name}
@@ -152,6 +154,7 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
               id="code"
               name="code"
               autoComplete="on"
+              disabled={isViewed}
               innerRef={register()}
               invalid={!!errors.code}
               valid={getValues('code')?.trim() && !errors.code}
@@ -170,6 +173,7 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
               theme={selectThemeColors}
               name="type"
               id="type"
+              isDisabled={isViewed}
               innerRef={register()}
               options={CUSTOMER_TYPE}
               className="react-select"
@@ -190,6 +194,7 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
               name="taxCode"
               autoComplete="on"
               innerRef={register()}
+              disabled={isViewed}
               invalid={!!errors.taxCode}
               valid={getValues('taxCode')?.trim() && !errors.taxCode}
               placeholder={intl.formatMessage({ id: 'operation-unit-form-taxCode-placeholder' })}
@@ -206,6 +211,7 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
               name="address"
               autoComplete="on"
               innerRef={register()}
+              disabled={isViewed}
               invalid={!!errors.address}
               valid={getValues('address')?.trim() && !errors.address}
               placeholder={intl.formatMessage({ id: 'operation-unit-form-address-placeholder' })}
@@ -221,6 +227,7 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
               name="mobile"
               autoComplete="on"
               innerRef={register()}
+              disabled={isViewed}
               invalid={!!errors.mobile}
               valid={getValues('mobile')?.trim() && !errors.mobile}
               placeholder={intl.formatMessage({ id: 'operation-unit-form-mobile-placeholder' })}
@@ -239,6 +246,7 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
               theme={selectThemeColors}
               name="status"
               id="status"
+              isDisabled={isViewed}
               innerRef={register()}
               options={CUSTOMER_STATUS_OPTS}
               className="react-select"
@@ -255,6 +263,7 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
               id="note"
               name="note"
               autoComplete="on"
+              disabled={isViewed}
               innerRef={register()}
               invalid={!!errors.note}
               valid={getValues('note')?.trim() && !errors.note}
@@ -263,13 +272,12 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
             {errors?.note && <FormFeedback>{errors?.note?.message}</FormFeedback>}
           </Col>
         </Row>
-        <Input id="contacts" name="contacts" autoComplete="on" innerRef={register()} type="hidden" />
-        <Contact onChange={handleSubmitContactForm} data={contacts} />
+        <Contact disabled={isViewed} onChange={handleSubmitContactForm} data={contacts} />
 
         <Row>
           <Col className="d-flex justify-content-end align-items-center">
             <Button type="submit" color="primary" className="mr-1 px-3">
-              {intl.formatMessage({ id: 'Save' })}
+              {submitText || intl.formatMessage({ id: 'Save' })}
             </Button>{' '}
             <Button color="secondary" onClick={onCancel}>
               {intl.formatMessage({ id: 'Cancel' })}
@@ -285,7 +293,9 @@ OperationCUForm.propTypes = {
   intl: object.isRequired,
   onSubmit: func,
   onCancel: func,
-  initValues: object
+  initValues: object,
+  submitText: string,
+  isViewed: bool
 }
 
 export default injectIntl(OperationCUForm)

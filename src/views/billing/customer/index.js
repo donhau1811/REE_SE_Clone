@@ -16,7 +16,7 @@ const OperationUnit = ({ intl }) => {
   const history = useHistory()
 
   const handleRedirectToUpdatePage = (id) => () => {
-    if (id) history.push(`${ROUTER_URL.BILLING_CUSTOMER_UPDATE}?id=${id}`)
+    if (id) history.push(`${ROUTER_URL.BILLING_CUSTOMER_VIEW}?id=${id}`)
   }
   const columns = [
     {
