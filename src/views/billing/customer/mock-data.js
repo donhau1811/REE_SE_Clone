@@ -21,7 +21,7 @@ export const contactMockData = [
 export const mockData = {
   id: 15,
   state: 'ACTIVE',
-  fullName: 'Công ty Cổ phần đầu tư nước Tân Hiệp',
+  fullName: '  ty Cổ phần đầu tư nước Tân Hiệp',
   avatar: null,
   phone: '',
   mobile: null,

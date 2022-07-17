@@ -1,11 +1,11 @@
-import { API_COMPANY_UNIT, API_OPERATION_UNIT } from '@src/utility/constants'
+import { API_COMPANY_UNIT, API_DELETE_OPERATING_COMPANY, API_OPERATION_UNIT } from '@src/utility/constants'
 import axios from 'axios'
 import withReactContent from 'sweetalert2-react-content'
 import SweetAlert from 'sweetalert2'
 import { ReactComponent as CicleSuccess } from '@src/assets/images/svg/circle-success.svg'
 import { ReactComponent as CicleFailed } from '@src/assets/images/svg/circle-failed.svg'
 import classNames from 'classnames'
-import { FETCH_COMPANY_REQUEST } from '@src/utility/constants/billing'
+import { FETCH_COMPANY_REQUEST } from '@constants/actions'
 
 const MySweetAlert = withReactContent(SweetAlert)
 
@@ -116,6 +116,54 @@ export const getAllCompany = (params) => {
       })
       .catch((err) => {
         console.log('err', err)
+      })
+  }
+}
+
+export const deleteCompany = ({ id, skin, intl }) => {
+  return async (dispatch) => {
+    await axios
+      .delete(`${API_DELETE_OPERATING_COMPANY}/${id}`)
+      .then((response) => {
+        if (response.data && response.data.success) {
+          MySweetAlert.fire({
+            iconHtml: <CicleSuccess />,
+            text: intl.formatMessage({ id: 'Delete operating customer success' }),
+            customClass: {
+              popup: classNames({
+                'sweet-alert-popup--dark': skin === 'dark'
+              }),
+              confirmButton: 'btn btn-primary mt-2',
+              icon: 'border-0'
+            },
+            width: 'max-content',
+            showCloseButton: true,
+            confirmButtonText: 'OK'
+          })
+          dispatch({
+            type: FETCH_COMPANY_REQUEST,
+            data: response.data.data,
+            total: response.data.total
+          })
+        } else {
+          throw new Error(response.data.message)
+        }
+      })
+      .catch(() => {
+        MySweetAlert.fire({
+          iconHtml: <CicleFailed />,
+          text: intl.formatMessage({ id: 'Delete operating customer failed' }),
+          customClass: {
+            popup: classNames({
+              'sweet-alert-popup--dark': skin === 'dark'
+            }),
+            confirmButton: 'btn btn-primary mt-2',
+            icon: 'border-0'
+          },
+          width: 'max-content',
+          showCloseButton: true,
+          confirmButtonText: intl.formatMessage({ id: 'Yes' })
+        })
       })
   }
 }

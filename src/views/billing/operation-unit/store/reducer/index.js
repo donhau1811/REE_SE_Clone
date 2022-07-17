@@ -2,7 +2,7 @@ import {
   ROWS_PER_PAGE_DEFAULT
 
 } from '@constants/index'
-import { FETCH_COMPANY_REQUEST } from '@constants/billing'
+import { FETCH_COMPANY_REQUEST } from '@constants/actions'
 
 // ** Initial State
 const initialState = {

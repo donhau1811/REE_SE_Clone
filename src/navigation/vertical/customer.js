@@ -8,7 +8,7 @@ export default [
     title: 'Customer',
     icon: <img src={customer} alt='customer'/>,
     action: 'manage',
-    resource: ROUTER_URL.HOME,
-    navLink: ROUTER_URL.HOME
+    resource: ROUTER_URL.BILLING_CUSTOMER,
+    navLink: ROUTER_URL.BILLING_CUSTOMER
   }
 ]

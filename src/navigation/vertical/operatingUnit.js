@@ -8,7 +8,7 @@ export default [
     title: 'OperatingCompany',
     icon: <img src={operatingUnit} alt='operating-company'/>,
     action: 'manage',
-    resource: ROUTER_URL.HOME,
-    navLink: ROUTER_URL.HOME
+    resource: ROUTER_URL.BILLING_OPERATION_UNIT,
+    navLink:ROUTER_URL.BILLING_OPERATION_UNIT
   }
 ]
