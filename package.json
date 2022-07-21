@@ -124,7 +124,6 @@
     "swiper": "6.0.4",
     "uppy": "1.21.2",
     "uuid": "^8.3.2",
-    "webpack": "4.43.0",
     "wnumb": "1.2.0",
     "xlsx": "0.16.2",
     "yarn": "1.21.1",
@@ -142,7 +141,7 @@
     "eject": "react-app-rewired eject",
     "lint": "eslint src/**/*.js",
     "lint:fix": "eslint src/**/*.js --fix",
-    "serve": "serve -s build -l 4002",
+    "serve": "serve -s build -l 4000",
     "deploy:version": "yarn install && yarn build && gcloud app deploy --appyaml app.yaml --quiet --version dev-rsm",
     "deploy:uat": "yarn install && yarn build && gcloud app deploy --appyaml app_uat.yaml --quiet",
     "deploy:dev": "yarn install && yarn build:dev && gcloud app deploy --appyaml app_dev.yaml --quiet"
