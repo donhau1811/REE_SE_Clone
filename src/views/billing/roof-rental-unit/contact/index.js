@@ -7,7 +7,7 @@ import NoDataCOM from './NoDataCOM'
 import { array, func } from 'prop-types'
 import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit.svg'
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
-import ContactCUForm from './ContactCUForm'
+import InsertInformation from './ContactCUForm'
 import { cloneDeep } from 'lodash'
 
 const Contact = ({ data, onChange }) => {
@@ -35,33 +35,34 @@ const Contact = ({ data, onChange }) => {
       maxWidth: '50px'
     },
     {
-      name: <FormattedMessage id="Contact Name" />,
+      name: <FormattedMessage id="represent" />,
       selector: 'name',
       center: true,
-      cell: (row) => <span>{row.name}</span>
+      cell: (row) => <span>{row?.name}</span>
     },
     {
-      name: <FormattedMessage id="Position" />,
+      name: <FormattedMessage id="position" />,
       selector: 'position',
       center: true,
-      cell: (row) => <span>{row.position?.label}</span>
+      cell: (row) => <span>{row?.position?.label}</span>
     },
     {
       name: <FormattedMessage id="operation-unit-form-mobile" />,
-      selector: 'mobile',
+      selector: 'Phone',
+      sortable: true,
       center: true
     },
     {
       name: 'Email',
       selector: 'email',
       center: true,
-      cell: (row) => <span>{row.email}</span>
+      cell: (row) => <span>{row?.email}</span>
     },
     {
-      name: <FormattedMessage id="note" />,
+      name: <FormattedMessage id="Note" />,
       selector: 'note',
       center: true,
-      cell: (row) => <span>{row.note}</span>
+      cell: (row) => <span>{row?.note}</span>
     },
     {
       name: <FormattedMessage id="Actions" />,
@@ -95,7 +96,6 @@ const Contact = ({ data, onChange }) => {
     setCurrContact({})
     onChange?.(newData)
   }
-
   return (
     <>
       <Row className="mb-2">
@@ -115,7 +115,7 @@ const Contact = ({ data, onChange }) => {
           {!data?.length > 0 && <NoDataCOM />}
         </Col>
       </Row>
-      <ContactCUForm contact={currContact} onSubmit={handleSubmitContactForm}  />
+      <InsertInformation contact={currContact} onSubmit={handleSubmitContactForm} />
     </>
   )
 }

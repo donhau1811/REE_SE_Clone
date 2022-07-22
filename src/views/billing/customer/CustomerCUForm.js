@@ -115,7 +115,6 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
       contacts
     })
   }
-
   return (
     <>
       <Form key="customer-form" onSubmit={handleSubmit(handleSubmitCustomerForm)}>
@@ -129,7 +128,7 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
         <Row>
           <Col className="mb-2" md={4}>
             <Label className="general-label" for="name">
-            <FormattedMessage id="Company name" />
+              <FormattedMessage id="Company name" />
               <span className="text-danger">&nbsp;(*)</span>
             </Label>
             <Input

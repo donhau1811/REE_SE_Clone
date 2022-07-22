@@ -1706,7 +1706,10 @@
   "Enter-unit-note": "Nhập ghi chú cho đơn vị",
   "Enter-name-represent":"Nhập tên đại diện",
   "Enter-position-represent":"Nhập vị trí đại diện",
-  "Delete billing information message": "Bạn có chắc chắn muốn xoá thông tin này?"
+  "Delete billing information message": "Bạn có chắc chắn muốn xoá thông tin này?",
+  "Add contact info to create new roof rental unit":"Thêm mới liên hệ để hoàn tất việc thêm đơn vị cho thuê mái mới",
+  "create-rental-unit": "Thêm thông tin đơn vị thuê mái ",
+  "update-rental-unit": "Cập nhật thông tin đơn vị thuê mái "
 
 
 
