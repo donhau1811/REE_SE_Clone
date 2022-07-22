@@ -60,5 +60,6 @@ export const ROUTER_URL = {
   BILLING_CUSTOMER: '/billing/customers',
   BILLING_CUSTOMER_DETAIL: '/billing/customers/details',
   BILLING_CUSTOMER_CREATE: '/billing/customer/create-customer',
-  BILLING_CUSTOMER_UPDATE: '/billing/customers/update-customer'
+  BILLING_CUSTOMER_UPDATE: '/billing/customers/update-customer',
+  BILLING_ROOF_RENTAL_UNIT: '/billing/roof-rental-unit'
 }

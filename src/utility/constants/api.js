@@ -127,3 +127,6 @@ export const API_DELETE_BILLING_CUSTOMER = `${BASE_API_URL}/api/v1/billing/custo
 
 
 export const API_BILLING_CUSTOMERS = `${BASE_API_URL}/api/v1/customers`
+
+export const API_ROOF_RETAL_UNIT = `${BASE_API_URL}/api/v1/billing/roof`
+

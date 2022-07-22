@@ -69,5 +69,15 @@ export const BillingRoutes = [
       resource: ROUTER_URL.BILLING_CUSTOMER,
       navLink: ROUTER_URL.BILLING_CUSTOMER
     }
+  },
+  {
+    path: ROUTER_URL.BILLING_ROOF_RENTAL_UNIT,
+    component: lazy(() => import('../../views/billing/roof-rental-unit')),
+    exact: true,
+    meta: {
+      action: 'manage',
+      resource: ROUTER_URL.BILLING_ROOF_RENTAL_UNIT,
+      navLink: ROUTER_URL.BILLING_ROOF_RENTAL_UNIT
+    }
   }
 ]
