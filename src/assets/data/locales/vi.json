@@ -1684,6 +1684,7 @@
   "Data is updated successfully":"Dữ liệu đã được cập nhật thành công",
   "Operation unit is added successfully":"Đơn vị vận hành đã được thêm mới thành công!",
   "Customer info":"Thông tin khách hàng",
+  "view-customer":"Xem thông tin chi tiết khách hàng",
   "Delete operating customer title": "XÁC NHẬN XOÁ",
   "Delete operating customer message": "Bạn có chắc chắn muốn xoá công ty vận hành này?",
   "Delete operating customer success": "Dữ liệu đã được xóa thành công",

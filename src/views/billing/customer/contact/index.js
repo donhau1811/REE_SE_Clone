@@ -4,13 +4,13 @@ import { Badge, Button, Col, Row } from 'reactstrap'
 import { Plus } from 'react-feather'
 import Table from '@src/views/common/table/CustomDataTable'
 import NoDataCOM from './NoDataCOM'
-import { array, func } from 'prop-types'
+import { array, bool, func } from 'prop-types'
 import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit.svg'
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
 import ContactCUForm from './ContactCUForm'
 import { cloneDeep } from 'lodash'
 
-const Contact = ({ data, onChange }) => {
+const Contact = ({ data, onChange, disabled }) => {
   const [currContact, setCurrContact] = useState(null)
 
   const handleAddContact = () => {
@@ -67,13 +67,14 @@ const Contact = ({ data, onChange }) => {
       name: <FormattedMessage id="Actions" />,
       selector: '#',
       center: true,
+      isHidden: disabled,
       cell: (row) => (
         <>
           {' '}
           <Badge onClick={handleEditContact(row)}>
             <IconEdit id={`editBtn_${row.id}`} />
           </Badge>
-          <Badge onClick={handleDeleteContact(row)}>
+          <Badge onClick={handleDeleteContact(row)} disabled={disabled}>
             <IconDelete id={`deleteBtn_${row.id}`} />
           </Badge>
         </>
@@ -103,7 +104,12 @@ const Contact = ({ data, onChange }) => {
             <FormattedMessage id="Contact Information" />
           </h4>
 
-          <Button.Ripple color="primary" className="add-project add-contact-button" onClick={handleAddContact}>
+          <Button.Ripple
+            disabled={disabled}
+            color="primary"
+            className="add-project add-contact-button"
+            onClick={handleAddContact}
+          >
             <Plus className="mr-1" /> <FormattedMessage id="Add new contact" />
           </Button.Ripple>
         </Col>
@@ -120,7 +126,8 @@ const Contact = ({ data, onChange }) => {
 }
 Contact.propTypes = {
   data: array,
-  onChange: func
+  onChange: func,
+  disabled: bool
 }
 
 export default Contact
