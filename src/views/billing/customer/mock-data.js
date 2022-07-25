@@ -13,7 +13,8 @@ export const contactMockData = [
     position: positionMockData[0],
     mobile: '0917 478 994',
     email: 'vuong.ntm@gmail.com',
-    note: 'Aliquam erat volutpat'
+    note: 'Aliquam erat volutpat',
+    id: 1
   }
 ]
 

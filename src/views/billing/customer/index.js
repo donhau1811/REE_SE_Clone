@@ -38,7 +38,7 @@ const OperationUnit = ({ intl }) => {
     ])
   }, [])
   const handleRedirectToUpdatePage = (id) => () => {
-    if (id) history.push(`${ROUTER_URL.BILLING_CUSTOMER_UPDATE}?id=${id}`)
+    if (id) history.push(`${ROUTER_URL.BILLING_CUSTOMER_VIEW}?id=${id}`)
   }
   const handleDeleteCustomer = (id) => () => {
     return MySweetAlert.fire({
