@@ -58,7 +58,12 @@ export const ROUTER_URL = {
   BILLING_OPERATION_UNIT_DETAIL: '/billing/operation-units/{operatingUnitId}',
   BILLING_MASTER_DATA: '/billing/master-data',
   BILLING_CUSTOMER: '/billing/customers',
-  BILLING_CUSTOMER_VIEW: '/billing/customers/view-customer',
-  BILLING_CUSTOMER_CREATE: '/billing/customers/create-customer',
-  BILLING_CUSTOMER_UPDATE: '/billing/customers/update-customer'
+  BILLING_CUSTOMER_DETAIL: '/billing/customers/details',
+  BILLING_CUSTOMER_CREATE: '/billing/customer/create-customer',
+  BILLING_CUSTOMER_UPDATE: '/billing/customers/update-customer',
+  BILLING_ROOF_RENTAL_UNIT: '/billing/roof-rental-unit',
+  BILLING_ROOF_RENTAL_UNIT_CREATE: '/billing/roof-rental-unit/create-rental-unit',
+  BILLING_ROOF_RENTAL_UNIT_UPDATE: '/billing/roof-rental-unit/update-rental-unit',
+  BILLING_CUSTOMER_VIEW: '/billing/customers/view-customer'
+
 }

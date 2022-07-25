@@ -1643,5 +1643,22 @@
   "Delete billing customer title": "Confirm delete customer?",
   "Delete billing customer message": "Are you sure you want to delete this customer?",
   "Delete billing customer success": "Delete customer successfully",
-  "Delete billing customer failed": "Can not delete the customer that are managing the project!"
+  "Delete billing customer failed": "Can not delete the customer that are managing the project!",
+  "Roof rental unit name": "Roof rental unit name",
+  "Unit-code": "Unit code",
+  "represent":"Represent",
+  "position": "Position",
+  "Enter-unit-name": "Enter unit name",
+  "Enter-unit-code": "Enter unit code",
+  "Enter-unit-taxCode": "Enter unit taxCode",
+  "Enter-unit-address": "Enter unit address",
+  "Enter-unit-mobile": "Enter unit mobile",
+  "Enter-unit-email": "Enter unit email",
+  "Enter-unit-note": "Enter unit note",
+  "Enter-name-represent":"Enter the name represent",
+  "Enter-position-represent":"Enter the position represent",
+  "Delete billing information message": "Are you sure you want to delete this information?"
+
+
+
 }

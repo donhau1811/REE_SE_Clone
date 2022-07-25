@@ -1693,5 +1693,29 @@
   "Delete billing customer title": "XÁC NHẬN XOÁ",
   "Delete billing customer message": "Bạn có chắc chắn muốn xoá khách hàng này?",
   "Delete billing customer success": "Dữ liệu đã được xóa thành công",
-  "Delete billing customer failed": "Không được xóa các khách hàng đã có dự án!"
+  "Delete billing customer failed": "Không được xóa các khách hàng đã có dự án!",
+  "Delete billing roof rental unit": "Không được xóa đơn vị cho thuê mái đã có dự án!",
+  "Roof rental unit name": "Tên đơn vị cho thuê mái",
+  "Unit-code": "Mã đơn vị",
+  "represent":"Đại diện",
+  "position": "Chức vụ",
+  "Enter-unit-name": "Nhập tên đơn vị",
+  "Enter-unit-code": "Nhập mã đơn vị",
+  "Enter-unit-taxCode": "Nhập MST của đơn vị",
+  "Enter-unit-address": "Vd: tên tòa nhà, căn hộ,....",
+  "Enter-unit-mobile": "Nhập số điện thoại liên hệ",
+  "Enter-unit-email": "Nhập email cho đơn vị",
+  "Enter-unit-note": "Nhập ghi chú cho đơn vị",
+  "Enter-name-represent":"Nhập tên đại diện",
+  "Enter-position-represent":"Nhập vị trí đại diện",
+  "Delete billing information message": "Bạn có chắc chắn muốn xoá thông tin này?",
+  "Add contact info to create new roof rental unit":"Thêm mới liên hệ để hoàn tất việc thêm đơn vị cho thuê mái mới",
+  "create-rental-unit": "Thêm thông tin đơn vị thuê mái ",
+  "update-rental-unit": "Cập nhật thông tin đơn vị thuê mái ",
+  "roof-rental-unit":"Đơn vị cho thuê mái "
+
+
+
+
+
 }
