@@ -1693,6 +1693,7 @@
   "Delete billing customer message": "Bạn có chắc chắn muốn xoá khách hàng này?",
   "Delete billing customer success": "Dữ liệu đã được xóa thành công",
   "Delete billing customer failed": "Không được xóa các khách hàng đã có dự án!",
+  "Delete billing roof rental unit": "Không được xóa đơn vị cho thuê mái đã có dự án!",
   "Roof rental unit name": "Tên đơn vị cho thuê mái",
   "Unit-code": "Mã đơn vị",
   "represent":"Đại diện",
@@ -1709,7 +1710,8 @@
   "Delete billing information message": "Bạn có chắc chắn muốn xoá thông tin này?",
   "Add contact info to create new roof rental unit":"Thêm mới liên hệ để hoàn tất việc thêm đơn vị cho thuê mái mới",
   "create-rental-unit": "Thêm thông tin đơn vị thuê mái ",
-  "update-rental-unit": "Cập nhật thông tin đơn vị thuê mái "
+  "update-rental-unit": "Cập nhật thông tin đơn vị thuê mái ",
+  "roof-rental-unit":"Đơn vị cho thuê mái "
 
 
 

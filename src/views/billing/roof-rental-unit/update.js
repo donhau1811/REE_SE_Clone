@@ -6,6 +6,7 @@ import { useHistory, useLocation } from 'react-router-dom'
 import RoofUnit from './RoofUnitCUForm'
 import { mockUpdateForm } from './mock-data'
 import { Tab, Tabs } from '@mui/material'
+import ProjectTable from './ProjectTable'
 
 const UpdateRoofRentalUnit = ({ intl }) => {
   const history = useHistory()
@@ -43,7 +44,8 @@ const UpdateRoofRentalUnit = ({ intl }) => {
       {activeTab === 1 && (
         <RoofUnit onSubmit={handleUpdateRentalUnit} onCancel={handleCancel} initValues={mockUpdateForm} />
       )}
-    
+          {activeTab === 2 && <ProjectTable />}
+
     </>
   )
 }

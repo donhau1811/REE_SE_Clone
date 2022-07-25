@@ -13,7 +13,7 @@ const PageHeader = ({ intl }) => {
   const history = useHistory()
 
   const handleRedirectToAddNewPage = () => {
-    history.push(ROUTER_URL.BILLING_CUSTOMER_CREATE)
+    history.push(ROUTER_URL.BILLING_ROOF_RENTAL_UNIT_CREATE)
   }
   return (
     <>
