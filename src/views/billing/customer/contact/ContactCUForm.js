@@ -10,8 +10,7 @@ import Select from 'react-select'
 import { selectThemeColors } from '@src/utility/Utils'
 import { positionMockData } from '../mock-data'
 
-
-function ContactCUForm({ contact, intl, onSubmit = () => {} }) {
+function ContactCUForm({ contact, intl, onSubmit = () => {}, onCancel }) {
   const [isOpen, setIsOpen] = useState(false)
   const validateSchema = yup.object().shape(
     {
@@ -41,8 +40,9 @@ function ContactCUForm({ contact, intl, onSubmit = () => {} }) {
     defaultValues: contact || {}
   })
 
-  const toggle = () => {
+  const handleCancel = () => {
     setIsOpen((preState) => !preState)
+    onCancel?.()
   }
 
   useEffect(() => {
@@ -53,7 +53,7 @@ function ContactCUForm({ contact, intl, onSubmit = () => {} }) {
   return (
     <>
       <Modal isOpen={isOpen} className="modal-dialog-centered" backdrop="static">
-        <ModalHeader toggle={toggle}>
+        <ModalHeader>
           <FormattedMessage id={contact?.id ? 'Update contact' : 'Add new contact'} />
         </ModalHeader>
         <ModalBody>
@@ -149,7 +149,7 @@ function ContactCUForm({ contact, intl, onSubmit = () => {} }) {
                 <Button onClick={handleSubmit(onSubmit)} color="primary" className="mr-1 px-3">
                   {intl.formatMessage({ id: 'Save' })}
                 </Button>{' '}
-                <Button color="secondary" onClick={toggle}>
+                <Button color="secondary" onClick={handleCancel}>
                   {intl.formatMessage({ id: 'Cancel' })}
                 </Button>{' '}
               </Col>
@@ -164,7 +164,8 @@ function ContactCUForm({ contact, intl, onSubmit = () => {} }) {
 ContactCUForm.propTypes = {
   contact: object,
   intl: object,
-  onSubmit: func
+  onSubmit: func,
+  onCancel: func
 }
 
 export default injectIntl(ContactCUForm)

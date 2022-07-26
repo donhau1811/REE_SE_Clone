@@ -139,3 +139,4 @@ export const API_CONTACT_ROOF_RETAL_UNIT = `${BASE_API_URL}/api/v1/billing/roof-
 
 export const API_DELETE_ROOF_RETAL_UNIT = `${BASE_API_URL}/api/v1/billing/customer`
 
+export const API_BILLING_SETTING = `${BASE_API_URL}/api/v1/settings`

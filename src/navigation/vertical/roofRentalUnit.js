@@ -4,9 +4,9 @@ import React from 'react'
 
 export default [
   {
-    id: 'roofRentalUnit',
-    title: 'Roof Rental Unit',
-    icon: <img src={customer} alt='Roof Rental Unit'/>,
+    id: 'roofRentalCompany',
+    title: 'Roof Rental Company',
+    icon: <img src={customer} alt='Roof Rental Company'/>,
     action: 'manage',
     resource: ROUTER_URL.BILLING_ROOF_RENTAL_UNIT,
     navLink: ROUTER_URL.BILLING_ROOF_RENTAL_UNIT

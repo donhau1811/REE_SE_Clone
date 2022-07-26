@@ -108,5 +108,35 @@ export const BillingRoutes = [
       resource: ROUTER_URL.BILLING_ROOF_RENTAL_UNIT,
       navLink: ROUTER_URL.BILLING_ROOF_RENTAL_UNIT
     }
+  },
+  {
+    path: ROUTER_URL.BILLING_SETTING,
+    component: lazy(() => import('../../views/billing/settings/index')),
+    exact: true,
+    meta: {
+      action: 'manage',
+      resource: ROUTER_URL.BILLING_SETTING,
+      navLink: ROUTER_URL.BILLING_SETTING
+    }
+  },
+  {
+    path: ROUTER_URL.BILLING_SETTING_VIEW,
+    component: lazy(() => import('../../views/billing/settings/ViewDetail')),
+    exact: true,
+    meta: {
+      action: 'manage',
+      resource: ROUTER_URL.BILLING_SETTING,
+      navLink: ROUTER_URL.BILLING_SETTING
+    }
+  },
+  {
+    path: ROUTER_URL.BILLING_SETTING_UPDATE,
+    component: lazy(() => import('../../views/billing/settings/update')),
+    exact: true,
+    meta: {
+      action: 'manage',
+      resource: ROUTER_URL.BILLING_SETTING,
+      navLink: ROUTER_URL.BILLING_SETTING
+    }
   }
 ]

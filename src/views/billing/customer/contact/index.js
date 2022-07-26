@@ -15,7 +15,7 @@ const Contact = ({ data, onChange, disabled }) => {
 
   const handleAddContact = () => {
     setCurrContact({
-      id: new Date()
+      id: "-1"
     })
   }
 
@@ -82,6 +82,10 @@ const Contact = ({ data, onChange, disabled }) => {
     }
   ]
 
+  const handleCancelContactForm = () => {
+    setCurrContact({})
+  }
+
   const handleSubmitContactForm = (values) => {
     let newData = cloneDeep(data)
 
@@ -121,7 +125,7 @@ const Contact = ({ data, onChange, disabled }) => {
           {!data?.length > 0 && <NoDataCOM />}
         </Col>
       </Row>
-      <ContactCUForm contact={currContact} onSubmit={handleSubmitContactForm}  />
+      <ContactCUForm contact={currContact} onSubmit={handleSubmitContactForm} onCancel={handleCancelContactForm} />
     </>
   )
 }
