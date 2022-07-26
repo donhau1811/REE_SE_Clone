@@ -171,7 +171,7 @@ export const deleteOperationUnit = ({ id, skin, intl, callback }) => {
   return async () => {
     console.log('id', id)
     await axios
-      .delete(API_DELETE_OPERATING_COMPANY, { id })
+      .delete(`${API_DELETE_OPERATING_COMPANY}/${id}`)
       .then((response) => {
         if (response.status === 200 && response.data.data) {
           MySweetAlert.fire({
@@ -221,7 +221,7 @@ export const getOperationUnitById = ({ id, isSavedToState, callback }) => {
         if (response.status === 200 && response.data.data) {
           const payload = get(response, 'data.data', {})
           if (isSavedToState) {
-            console.log("dàvhg")
+            console.log('dàvhg')
             dispatch({
               type: SET_SELECTED_OPERATION_UNIT,
               payload

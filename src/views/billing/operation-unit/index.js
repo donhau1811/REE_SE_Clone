@@ -53,13 +53,14 @@ const OperationUnit = ({ intl }) => {
   const handleChangePage = (e) => {
     fetchOperationUnit({
       pagination: {
-        rowsPerPage: ROWS_PER_PAGE_DEFAULT,
+        ...pagination,
         currentPage: e.selected + 1
       }
     })
   }
 
   const handlePerPageChange = (e) => {
+    console.log('e', e)
     fetchOperationUnit({
       pagination: {
         rowsPerPage: e.value,
@@ -71,7 +72,7 @@ const OperationUnit = ({ intl }) => {
   const handleSearch = (value) => {
     fetchOperationUnit({
       pagination: {
-        rowsPerPage: ROWS_PER_PAGE_DEFAULT,
+        ...pagination,
         currentPage: 1
       },
       searchValue: value
@@ -81,7 +82,7 @@ const OperationUnit = ({ intl }) => {
   const handleFilter = (value) => {
     fetchOperationUnit({
       pagination: {
-        rowsPerPage: ROWS_PER_PAGE_DEFAULT,
+        ...pagination,
         currentPage: 1
       },
       searchValue: '',
