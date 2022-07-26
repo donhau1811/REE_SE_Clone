@@ -115,7 +115,6 @@ const OperationCUForm = ({ intl, isViewed, onSubmit = () => {}, onCancel = () =>
       contacts
     })
   }
-
   return (
     <>
       <Form key="customer-form" onSubmit={handleSubmit(handleSubmitCustomerForm)}>

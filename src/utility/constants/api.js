@@ -132,3 +132,10 @@ export const API_CUSTOMER_V2 = `${BASE_API_URL}/glf_customer_v2`
 export const API_DELETE_BILLING_CUSTOMER = `${BASE_API_URL}/api/v1/billing/customer`
 
 export const API_BILLING_CUSTOMERS = `${BASE_API_URL}/api/v1/customers`
+
+export const API_ROOF_RETAL_UNIT = `${BASE_API_URL}/api/v1/billing/roof`
+
+export const API_CONTACT_ROOF_RETAL_UNIT = `${BASE_API_URL}/api/v1/billing/roof-contact`
+
+export const API_DELETE_ROOF_RETAL_UNIT = `${BASE_API_URL}/api/v1/billing/customer`
+

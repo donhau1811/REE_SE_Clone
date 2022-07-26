@@ -8,9 +8,10 @@ import settings from './settings'
 import operatingUnit from './operatingUnit'
 import configuration from './configuration'
 import customer from './customer'
+import roofRentalUnit from './roofRentalUnit'
 
 const solarMonitoringItems = [...dashboards, ...monitoring, ...report, ...settings]
-const billingInvoicesItems = [...operatingUnit, ...configuration, ...customer]
+const billingInvoicesItems = [...operatingUnit, ...configuration, ...customer, ...roofRentalUnit]
 
 const solarMonitoring = [
     {
