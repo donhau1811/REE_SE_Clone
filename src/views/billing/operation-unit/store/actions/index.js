@@ -170,7 +170,7 @@ export const getListOperationUnit = (params = {}) => {
 export const deleteOperationUnit = ({ id, skin, intl, callback }) => {
   return async () => {
     await axios
-      .delete(`${API_DELETE_OPERATING_COMPANY}/${id}`)
+      .delete(`${API_DELETE_OPERATING_COMPANY}`, { data: { id } })
       .then((response) => {
         if (response.status === 200 && response.data.data) {
           MySweetAlert.fire({

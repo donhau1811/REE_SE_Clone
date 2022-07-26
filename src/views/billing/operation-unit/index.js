@@ -115,7 +115,10 @@ const OperationUnit = ({ intl }) => {
           deleteOperationUnit({
             id,
             skin,
-            intl
+            intl,
+            callback: () => {
+              fetchOperationUnit()
+            }
           })
         )
       }
