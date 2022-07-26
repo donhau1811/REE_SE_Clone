@@ -35,7 +35,6 @@ function ValueCUForm({ value, intl, onSubmit = () => {} }) {
     resolver: yupResolver(validateSchema),
     defaultValues: value || initState
   })
-console.log("huyydz", value)
   const toggle = () => {
     setIsOpen((preState) => !preState)
   }

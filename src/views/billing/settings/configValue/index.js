@@ -17,18 +17,18 @@ import { deleteSettingsValue } from '../store/actions/index'
 const MySweetAlert = withReactContent(SweetAlert)
 
 const ValueTable = ({ data, onChange, disabled, intl}) => {
-  const [currValue, setCurrValue] = useState(null)
+  const [currValue, setCurrentValue] = useState(null)
   const dispatch = useDispatch()
   const {
     layout: { skin }
   } = useSelector((state) => state)
   const handleAddValue = () => {
-    setCurrValue({
+    setCurrentValue({
       id: new Date()
     })
   }
   const handleEditValue = (Value) => () => {
-    setCurrValue(Value)
+    setCurrentValue(Value)
   }
 
   const handleDeleteValue = (Value) => () => {
@@ -133,7 +133,7 @@ const ValueTable = ({ data, onChange, disabled, intl}) => {
         return Value
       })
     }
-    setCurrValue({})
+    setCurrentValue({})
     onChange?.(newData)
   }
 

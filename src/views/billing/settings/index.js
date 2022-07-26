@@ -17,7 +17,6 @@ const OperationUnit = ({ intl }) => {
   const history = useHistory()
   const dispatch = useDispatch()
   const data = useSelector((state) => state.settings)
-  console.log("=============1", data)
 
   useEffect(() => {
     Promise.all([

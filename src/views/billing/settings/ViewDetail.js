@@ -18,7 +18,6 @@ const UpdateOperationUnit = ({ intl }) => {
   const id = searchParams.get('id')
   const dispatch = useDispatch()
   const data = useSelector((state) => state.settings).data[1]
-  console.log("===============", data)
   useEffect(() => {
     Promise.all([
       dispatch(
