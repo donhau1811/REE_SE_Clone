@@ -14,10 +14,9 @@ const CreateOperationUnit = ({ intl }) => {
     layout: { skin }
   } = useSelector((state) => state)
   const handleAddOperationUnit = (values) => {
-    console.log('values', values)
     dispatch(
       postOperationUnit({
-        params: values,
+        params: { ...values, state: values.state?.value },
         callback: () => {
           history.push(ROUTER_URL.BILLING_OPERATION_UNIT)
         },

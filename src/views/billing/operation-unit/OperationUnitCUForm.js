@@ -1,5 +1,5 @@
-import { func, object } from 'prop-types'
-import React from 'react'
+import { bool, func, object, string } from 'prop-types'
+import React, { useEffect } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Button, Col, Form, FormFeedback, Input, Label, Row } from 'reactstrap'
@@ -10,13 +10,13 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { MOBILE_REGEX } from '@src/utility/constants'
 
-const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues }) => {
+const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, isReadOnly, submitText }) => {
   const OPERATION_UNIT_STATUS_OPTS = [
-    { value: OPERATION_UNIT_STATUS.INACTIVE, label: intl.formatMessage({ id: 'Active' }) },
-    { value: OPERATION_UNIT_STATUS.ACTIVE, label: intl.formatMessage({ id: 'Inactive' }) }
+    { value: OPERATION_UNIT_STATUS.ACTIVE, label: intl.formatMessage({ id: 'Active' }) },
+    { value: OPERATION_UNIT_STATUS.INACTIVE, label: intl.formatMessage({ id: 'Inactive' }) }
   ]
   const initState = {
-    status: OPERATION_UNIT_STATUS_OPTS[0]
+    state: OPERATION_UNIT_STATUS_OPTS[0]
   }
   const ValidateSchema = yup.object().shape(
     {
@@ -48,11 +48,15 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
     ['name', 'code', 'taxCode', 'address', 'mobile']
   )
 
-  const { handleSubmit, getValues, errors, control, register } = useForm({
+  const { handleSubmit, getValues, errors, control, register, reset } = useForm({
     mode: 'onChange',
-    resolver: yupResolver(ValidateSchema),
+    resolver: yupResolver(isReadOnly ? yup.object().shape({}) : ValidateSchema),
     defaultValues: initValues || initState
   })
+
+  useEffect(() => {
+    reset({ ...initValues, state: OPERATION_UNIT_STATUS_OPTS.find((item) => item.value === initValues.state) })
+  }, [initValues])
 
   return (
     <>
@@ -66,6 +70,7 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
             <Input
               id="name"
               name="name"
+              disabled={isReadOnly}
               autoComplete="on"
               invalid={!!errors.name}
               valid={getValues('name')?.trim() && !errors.name}
@@ -84,6 +89,7 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
               name="code"
               autoComplete="on"
               innerRef={register()}
+              disabled={isReadOnly}
               invalid={!!errors.code}
               valid={getValues('code')?.trim() && !errors.code}
               placeholder={intl.formatMessage({ id: 'operation-unit-form-code-placeholder' })}
@@ -100,6 +106,7 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
               name="taxCode"
               autoComplete="on"
               innerRef={register()}
+              disabled={isReadOnly}
               invalid={!!errors.taxCode}
               valid={getValues('taxCode')?.trim() && !errors.taxCode}
               placeholder={intl.formatMessage({ id: 'operation-unit-form-taxCode-placeholder' })}
@@ -117,6 +124,7 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
               name="address"
               autoComplete="on"
               innerRef={register()}
+              disabled={isReadOnly}
               invalid={!!errors.address}
               valid={getValues('address')?.trim() && !errors.address}
               placeholder={intl.formatMessage({ id: 'operation-unit-form-address-placeholder' })}
@@ -131,6 +139,7 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
               id="mobile"
               name="mobile"
               autoComplete="on"
+              disabled={isReadOnly}
               innerRef={register()}
               invalid={!!errors.mobile}
               valid={getValues('mobile')?.trim() && !errors.mobile}
@@ -148,8 +157,9 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
               as={Select}
               control={control}
               theme={selectThemeColors}
-              name="status"
-              id="status"
+              name="state"
+              id="state"
+              isDisabled={isReadOnly}
               innerRef={register()}
               options={OPERATION_UNIT_STATUS_OPTS}
               className="react-select"
@@ -161,7 +171,7 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
         </Row>
         <Row className="d-flex justify-content-end align-items-center">
           <Button type="submit" color="primary" className="mr-1 px-3">
-            {intl.formatMessage({ id: 'Save' })}
+            {submitText || intl.formatMessage({ id: 'Save' })}
           </Button>{' '}
           <Button color="secondary" onClick={onCancel}>
             {intl.formatMessage({ id: 'Cancel' })}
@@ -176,7 +186,9 @@ OperationCUForm.propTypes = {
   intl: object.isRequired,
   onSubmit: func,
   onCancel: func,
-  initValues: object
+  initValues: object,
+  isReadOnly: bool,
+  submitText: string
 }
 
 export default injectIntl(OperationCUForm)

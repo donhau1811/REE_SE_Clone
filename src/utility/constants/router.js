@@ -54,7 +54,7 @@ export const ROUTER_URL = {
   SWAGGER: '/swagger',
   BILLING_OPERATION_UNIT: '/billing/operation-units',
   BILLING_OPERATION_UNIT_CREATE: '/billing/operation-units/create-operation-unit',
-  BILLING_OPERATION_UNIT_UPDATE: '/billing/operation-units/update-operation-unit',
+  BILLING_OPERATION_UNIT_UPDATE: '/billing/operation-units/:id',
   BILLING_OPERATION_UNIT_DETAIL: '/billing/operation-units/{operatingUnitId}',
   BILLING_MASTER_DATA: '/billing/master-data',
   BILLING_CUSTOMER: '/billing/customers',

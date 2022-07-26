@@ -1,5 +1,4 @@
-
-import { STATE as STATUS } from '@constants/common'
+// import { ROWS_PER_PAGE_DEFAULT } from '@constants/common'
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
 import { DISPLAY_DATE_FORMAT, ROUTER_URL } from '@src/utility/constants'
@@ -20,7 +19,6 @@ import { deleteCompany, getAllCompany } from './store/actions/index'
 
 const MySweetAlert = withReactContent(SweetAlert)
 
-
 const OperationUnit = ({ intl }) => {
   const history = useHistory()
   const dispatch = useDispatch()
@@ -34,15 +32,14 @@ const OperationUnit = ({ intl }) => {
       dispatch(
         getAllCompany({
           fk: '*',
-          state: [STATUS.ACTIVE].toString(),
-          rowsPerPage: -1
+          rowsPerPage: 2
         })
       )
     ])
   }, [])
 
   const handleRedirectToUpdatePage = (id) => () => {
-    if (id) history.push(`${ROUTER_URL.BILLING_OPERATION_UNIT_UPDATE}?id=${id}`)
+    if (id) history.push(`${ROUTER_URL.BILLING_OPERATION_UNIT}/${id}`)
   }
 
   const handleDeleteOperationCompany = (id) => () => {
@@ -67,11 +64,13 @@ const OperationUnit = ({ intl }) => {
       buttonsStyling: false
     }).then(({ isConfirmed }) => {
       if (isConfirmed) {
-        dispatch(deleteCompany({
-          id,
-          skin,
-          intl
-        }))
+        dispatch(
+          deleteCompany({
+            id,
+            skin,
+            intl
+          })
+        )
       }
     })
   }
@@ -176,7 +175,6 @@ const OperationUnit = ({ intl }) => {
   ]
   return (
     <>
-
       <Row>
         <Col sm="12">
           <PageHeader />

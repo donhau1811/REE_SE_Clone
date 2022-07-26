@@ -1,4 +1,4 @@
-/* eslint no-unused-vars: 0 */  // --> OFF
+/* eslint no-unused-vars: 0 */ // --> OFF
 // ** React Imports
 import React, { Fragment } from 'react'
 import { useHistory } from 'react-router-dom'
@@ -16,7 +16,7 @@ import { ROUTER_URL } from '@constants/router'
 import BreadCrumbs from '@src/views/common/breadcrumbs'
 import { useSelector } from 'react-redux'
 
-const ThemeNavbar = props => {
+const ThemeNavbar = (props) => {
   // ** Props
   const { skin, setSkin, setMenuVisibility, intl } = props
   const history = useHistory()
@@ -25,7 +25,10 @@ const ThemeNavbar = props => {
   // Remove 1st empty item
   breadCrumbItems.shift()
 
-  const { customerProject: { selectedProject } } = useSelector(state => state)
+  const {
+    customerProject: { selectedProject },
+    company: { selectedCompany }
+  } = useSelector((state) => state)
 
   const renderCustomNav = (pathname) => {
     switch (pathname) {
@@ -49,29 +52,35 @@ const ThemeNavbar = props => {
           { name: intl.formatMessage({ id: 'monitoring' }), link: ROUTER_URL.PROJECTS },
           { name: selectedProject?.name, link: '' }
         ]
-        return <BreadCrumbs
-          breadCrumbTitle={breadCrumbItems[0]}
-          breadCrumbItems={tempItems}
-        />
+
+        return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
+      }
+      case `${ROUTER_URL.BILLING_OPERATION_UNIT}/${selectedCompany?.id}`: {
+        const tempItems = [
+          { name: intl.formatMessage({ id: 'billing' }), link: '' },
+          { name: intl.formatMessage({ id: 'operation-units' }), link: ROUTER_URL.BILLING_OPERATION_UNIT },
+          { name: selectedCompany?.name, link: '' }
+        ]
+        return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
       }
 
       default:
-        return <BreadCrumbs
-          breadCrumbTitle={breadCrumbItems[0]}
-          breadCrumbItems={breadCrumbItems.map(item => ({
-            name: item ? intl.formatMessage({ id: item }) : '',
-            link: item === 'projects' ? ROUTER_URL.SETTINGS_PROJECTS : ''
-          }))}
-        />
+        return (
+          <BreadCrumbs
+            breadCrumbTitle={breadCrumbItems[0]}
+            breadCrumbItems={breadCrumbItems.map((item) => ({
+              name: item ? intl.formatMessage({ id: item }) : '',
+              link: item === 'projects' ? ROUTER_URL.SETTINGS_PROJECTS : ''
+            }))}
+          />
+        )
     }
   }
   return (
     <Fragment>
-      <div className='bookmark-wrapper d-flex align-items-center' id='navbarWrapper'>
+      <div className="bookmark-wrapper d-flex align-items-center" id="navbarWrapper">
         <NavbarBookmarks setMenuVisibility={setMenuVisibility} />
-        {
-          renderCustomNav(history.location.pathname)
-        }
+        {renderCustomNav(history.location.pathname)}
       </div>
       <NavbarUser skin={skin} setSkin={setSkin} />
     </Fragment>
