@@ -22,6 +22,7 @@ import Panels from '@src/views/monitoring/project/devices/panels'
 import ProjectSetting from '@src/views/monitoring/project/ProjectSetting'
 import ProjectChart from '@src/views/monitoring/project/chart'
 import { GET_PROJECT_MONITORING } from '@constants/actions'
+import AdjustInverter from '../devices/inverter/AdjustInverter'
 
 const ProjectDetail = () => {
   // ** history
@@ -37,40 +38,43 @@ const ProjectDetail = () => {
   const renderPage = (pathname) => {
     switch (pathname) {
       case ROUTER_URL.PROJECT_SINGLE_LINE:
-        return <SingleLine/>
+        return <SingleLine />
 
       case ROUTER_URL.PROJECT_INVERTER:
-        return <Inverters/>
+        return <Inverters />
 
       case ROUTER_URL.PROJECT_INVERTER_DETAIL:
-        return <InverterPanel/>
+        return <InverterPanel />
 
       case ROUTER_URL.PROJECT_METER:
-        return <Meters/>
+        return <Meters />
 
       case ROUTER_URL.PROJECT_METER_DETAIL:
-        return <MonitoringMeter/>
+        return <MonitoringMeter />
 
       case ROUTER_URL.PROJECT_PANEL:
-        return <Panels/>
+        return <Panels />
 
       case ROUTER_URL.PROJECT_ALARM:
-        return <AlertPage/>
+        return <AlertPage />
 
       case ROUTER_URL.PROJECT_INFO_GENERAL:
       case ROUTER_URL.PROJECT_INFO_COMMERCE:
       case ROUTER_URL.PROJECT_INFO_IMAGES:
       case ROUTER_URL.PROJECT_INFO_MAP:
-        return <ProjectInformation/>
+        return <ProjectInformation />
 
       case ROUTER_URL.PROJECT_CHART:
-        return <ProjectChart/>
+        return <ProjectChart />
 
       case ROUTER_URL.PROJECT_SETTING:
-        return <ProjectSetting/>
+        return <ProjectSetting />
 
       case ROUTER_URL.PROJECT_OVERVIEW:
-        return <ProjectOverview setIsShowSideBar={setIsShowSideBar}/>
+        return <ProjectOverview setIsShowSideBar={setIsShowSideBar} />
+
+      case ROUTER_URL.PROJECT_CONTROL: //add UI to control the inverters
+        return <AdjustInverter />
     }
   }
 
@@ -94,35 +98,30 @@ const ProjectDetail = () => {
 
   return (
     <>
-      <ProjectNavbar
-        projectId={projectId}
-      />
+      <ProjectNavbar projectId={projectId} />
       <Row
         className={classnames({
           ['bg-project']: history.location.pathname !== ROUTER_URL.PROJECT_OVERVIEW
         })}
       >
-        {
-          (
-            history.location.pathname !== ROUTER_URL.PROJECT_OVERVIEW
-            && history.location.pathname !== ROUTER_URL.PROJECT_INFO_COMMERCE
-            && history.location.pathname !== ROUTER_URL.PROJECT_SINGLE_LINE
-          ) && (
+        {history.location.pathname !== ROUTER_URL.PROJECT_OVERVIEW &&
+          history.location.pathname !== ROUTER_URL.PROJECT_INFO_COMMERCE &&
+          history.location.pathname !== ROUTER_URL.PROJECT_SINGLE_LINE && (
             <Col md={history.location.pathname === ROUTER_URL.PROJECT_CHART ? 3 : 2}>
-              <ProjectDetailSideBar/>
+              <ProjectDetailSideBar />
             </Col>
-          )
-        }
+          )}
 
         <Col
-          md={history.location.pathname !== ROUTER_URL.PROJECT_OVERVIEW
-          && history.location.pathname !== ROUTER_URL.PROJECT_INFO_COMMERCE
-          && history.location.pathname !== ROUTER_URL.PROJECT_SINGLE_LINE
-          && isShowSideBar
-            ? history.location.pathname === ROUTER_URL.PROJECT_CHART
-              ? 9
-              : 10
-            : 12
+          md={
+            history.location.pathname !== ROUTER_URL.PROJECT_OVERVIEW &&
+            history.location.pathname !== ROUTER_URL.PROJECT_INFO_COMMERCE &&
+            history.location.pathname !== ROUTER_URL.PROJECT_SINGLE_LINE &&
+            isShowSideBar
+              ? history.location.pathname === ROUTER_URL.PROJECT_CHART
+                ? 9
+                : 10
+              : 12
           }
         >
           {renderPage(history.location.pathname)}

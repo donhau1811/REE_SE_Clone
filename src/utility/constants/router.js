@@ -15,7 +15,7 @@ export const ROUTER_URL = {
   PROJECT_METER_DETAIL: '/operation/project/meter',
   PROJECT_PANEL: '/operation/project/panels',
   PROJECT_ALARM: '/operation/project/alarm',
-  PROJECT_CONTROL: '/operation/project/control',
+  PROJECT_CONTROL: '/operation/project/control', //create one nested route here //done
   PROJECT_INFO: '/operation/project/information',
   PROJECT_INFO_GENERAL: '/operation/project/information/general',
   PROJECT_INFO_COMMERCE: '/operation/project/information/commerce',
