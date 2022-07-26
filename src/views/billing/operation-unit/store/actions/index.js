@@ -169,7 +169,6 @@ export const getListOperationUnit = (params = {}) => {
 
 export const deleteOperationUnit = ({ id, skin, intl, callback }) => {
   return async () => {
-    console.log('id', id)
     await axios
       .delete(`${API_DELETE_OPERATING_COMPANY}/${id}`)
       .then((response) => {
