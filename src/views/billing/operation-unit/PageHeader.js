@@ -1,5 +1,6 @@
-import { object } from 'prop-types'
-import React from 'react'
+/* eslint-disable no-unused-vars */
+import { func, object, string } from 'prop-types'
+import React, { useEffect, useState } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Button, Col, Input, Row, UncontrolledTooltip } from 'reactstrap'
 import InputGroupAddon from 'reactstrap/es/InputGroupAddon'
@@ -10,20 +11,41 @@ import { ReactComponent as IconFilter } from '@src/assets/images/svg/table/ic-fi
 import { useHistory } from 'react-router-dom'
 import { ROUTER_URL } from '@src/utility/constants'
 import Filter from './Filter'
+import { i } from 'react-select/dist/index-2af9c02c.esm'
 
-const PageHeader = ({ intl }) => {
+const PageHeader = ({ intl, onSearch = () => {}, onFilter, searchValue }) => {
   const history = useHistory()
-  const onSubmit = () => {
-  }
+  const [value, setValue] = useState('')
+
+  useEffect(() => {
+    if (searchValue !== value) setValue(searchValue)
+  }, [searchValue])
+
   const handleRedirectToAddNewPage = () => {
     history.push(ROUTER_URL.BILLING_OPERATION_UNIT_CREATE)
   }
+
+  const handleClickToSearch = () => {
+    onSearch?.(value)
+  }
+
+  const handleSearchInputChange = (e) => {
+    setValue(e.target.value)
+  }
+
+  const handleSearchInputKeyDown = (event) => {
+    if (event.keyCode === 13) {
+      event.preventDefault()
+      onSearch?.(value)
+    }
+  }
+
   return (
     <>
       <Row className="mb-2">
         <Col lg="4" md="8" className="my-lg-0 mb-1 d-flex justify-content-end align-items-center">
-          <Filter onSubmit={onSubmit}>
-            <span className="mr-2">
+          <Filter onSubmit={onFilter}>
+            <span className="mr-2 " role="button">
               <IconFilter />
             </span>
           </Filter>
@@ -31,14 +53,16 @@ const PageHeader = ({ intl }) => {
           <InputGroup className="input-group-merge">
             <Input
               className=""
-              type="search"
               bsSize="sm"
               id="search-input"
               placeholder={intl.formatMessage({ id: 'operation-unit-list-search-input-placeholder' })}
+              value={value}
+              onChange={handleSearchInputChange}
+              onKeyDown={handleSearchInputKeyDown}
             />
-            <InputGroupAddon addonType="append">
+            <InputGroupAddon addonType="append" className="" role="button">
               <InputGroupText>
-                <IconSearch />
+                <IconSearch onClick={handleClickToSearch} />
               </InputGroupText>
             </InputGroupAddon>
           </InputGroup>
@@ -58,7 +82,10 @@ const PageHeader = ({ intl }) => {
 }
 
 PageHeader.propTypes = {
-  intl: object.isRequired
+  intl: object.isRequired,
+  onSearch: func,
+  onFilter: func,
+  searchValue: string
 }
 
 export default injectIntl(PageHeader)

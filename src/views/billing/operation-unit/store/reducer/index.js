@@ -1,7 +1,4 @@
-import {
-  ROWS_PER_PAGE_DEFAULT
-
-} from '@constants/index'
+import { ROWS_PER_PAGE_DEFAULT } from '@constants/index'
 import { FETCH_COMPANY_REQUEST, SET_SELECTED_OPERATION_UNIT } from '@constants/actions'
 
 // ** Initial State
@@ -10,17 +7,10 @@ const initialState = {
   total: 0,
   selectedCompany: {},
   params: {
-    page: 1,
-    rowsPerPage: ROWS_PER_PAGE_DEFAULT,
-    order: 'createDate desc',
-    state: '*',
-    fk: '["customers", "projects", "group"]'
-  },
-  paramsActivities: {
-    page: 1,
-    rowsPerPage: ROWS_PER_PAGE_DEFAULT,
-    state: '*',
-    fk: '*'
+    pagination: {
+      rowsPerPage: ROWS_PER_PAGE_DEFAULT,
+      currentPage: 1
+    }
   }
 }
 
@@ -29,19 +19,18 @@ const reducer = (state = initialState, action) => {
     case FETCH_COMPANY_REQUEST:
       return {
         ...state,
-        allData: action?.data ? action.data : state.allData,
         data: action?.data ? action.data : state.data,
-        total: action.total,
-        params: action.params ? { ...state.params, ...action.params } : state.params
+        params: action.params,
+        total: action.total
       }
-      case SET_SELECTED_OPERATION_UNIT:
-        return {
-          ...state,
-          selectedCompany: action.payload
-        }
-      default:
-        return state
-}
+    case SET_SELECTED_OPERATION_UNIT:
+      return {
+        ...state,
+        selectedCompany: action.payload
+      }
+    default:
+      return state
+  }
 }
 
 export default reducer

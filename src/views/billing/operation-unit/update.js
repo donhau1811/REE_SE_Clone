@@ -39,7 +39,7 @@ const UpdateOperationUnit = ({ intl }) => {
     } else {
       dispatch(
         putOperationUnit({
-          params: { ...values, state: values.state?.value },
+          params: { ...values, state: values.state?.value, id },
           callback: () => {
             history.push(ROUTER_URL.BILLING_OPERATION_UNIT)
           },

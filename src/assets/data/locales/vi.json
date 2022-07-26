@@ -1693,5 +1693,6 @@
   "Delete billing customer title": "XÁC NHẬN XOÁ",
   "Delete billing customer message": "Bạn có chắc chắn muốn xoá khách hàng này?",
   "Delete billing customer success": "Dữ liệu đã được xóa thành công",
-  "Delete billing customer failed": "Không được xóa các khách hàng đã có dự án!"
+  "Delete billing customer failed": "Không được xóa các khách hàng đã có dự án!",
+  "Filter operation  company": "Lọc thông tin công ty vận hành"
 }

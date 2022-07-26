@@ -8,7 +8,9 @@ import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/
 import { selectThemeColors } from '@src/utility/Utils'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { MOBILE_REGEX } from '@src/utility/constants'
+import { CHECK_DUPLICATE_OPRERATION_UNIT_CODE, MOBILE_REGEX } from '@src/utility/constants'
+import { debounce } from 'lodash'
+import axios from 'axios'
 
 const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, isReadOnly, submitText }) => {
   const OPERATION_UNIT_STATUS_OPTS = [
@@ -18,6 +20,19 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
   const initState = {
     state: OPERATION_UNIT_STATUS_OPTS[0]
   }
+
+  const validationFunction = async (value, resolve) => {
+    try {
+      const response = await axios.post(CHECK_DUPLICATE_OPRERATION_UNIT_CODE, { code: value, isNotCount: true })
+
+      resolve(!(response.status === 200 && response.data.data))
+    } catch (error) {
+      resolve(false)
+    }
+  }
+
+  const validationDebounced = debounce(validationFunction, 500)
+
   const ValidateSchema = yup.object().shape(
     {
       name: yup
@@ -29,7 +44,10 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
         .string()
         .required(intl.formatMessage({ id: 'required-validate' }))
         .max(15, intl.formatMessage({ id: 'max-validate' }))
-        .test('dubplicated', intl.formatMessage({ id: 'dubplicated-validate' }), (value) => value !== 'aaa'),
+        .test('dubplicated', intl.formatMessage({ id: 'dubplicated-validate' }), (value) => {
+          if (!value?.trim()) return false
+          return new Promise((resolve) => validationDebounced(value, resolve))
+        }),
 
       taxCode: yup
         .string()
@@ -37,7 +55,7 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
         .max(20, intl.formatMessage({ id: 'max-validate' })),
 
       address: yup.string().max(255, intl.formatMessage({ id: 'max-validate' })),
-      mobile: yup
+      phone: yup
         .string()
         .matches(MOBILE_REGEX, {
           message: intl.formatMessage({ id: 'invalid-character-validate' }),
@@ -45,7 +63,7 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
         })
         .max(15, intl.formatMessage({ id: 'max-validate' }))
     },
-    ['name', 'code', 'taxCode', 'address', 'mobile']
+    ['name', 'code', 'taxCode', 'address', 'phone']
   )
 
   const { handleSubmit, getValues, errors, control, register, reset } = useForm({
@@ -55,7 +73,7 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
   })
 
   useEffect(() => {
-    reset({ ...initValues, state: OPERATION_UNIT_STATUS_OPTS.find((item) => item.value === initValues.state) })
+    reset({ ...initValues, state: OPERATION_UNIT_STATUS_OPTS.find((item) => item.value === initValues?.state) })
   }, [initValues])
 
   return (
@@ -132,20 +150,20 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
             {errors?.address && <FormFeedback>{errors?.address?.message}</FormFeedback>}
           </Col>
           <Col className="mb-2" md={4}>
-            <Label className="general-label" for="mobile">
+            <Label className="general-label" for="phone">
               <FormattedMessage id="operation-unit-form-mobile" />
             </Label>
             <Input
-              id="mobile"
-              name="mobile"
+              id="phone"
+              name="phone"
               autoComplete="on"
               disabled={isReadOnly}
               innerRef={register()}
-              invalid={!!errors.mobile}
-              valid={getValues('mobile')?.trim() && !errors.mobile}
+              invalid={!!errors.phone}
+              valid={getValues('phone')?.trim() && !errors.phone}
               placeholder={intl.formatMessage({ id: 'operation-unit-form-mobile-placeholder' })}
             />
-            {errors?.mobile && <FormFeedback>{errors?.mobile?.message}</FormFeedback>}
+            {errors?.phone && <FormFeedback>{errors?.phone?.message}</FormFeedback>}
           </Col>
         </Row>
         <Row>

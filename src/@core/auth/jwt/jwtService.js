@@ -32,6 +32,7 @@ export default class JwtService {
 
     // ** Encode params (Fix space -> +)
     axios.defaults.paramsSerializer = (params) => {
+      console.log('params', params)
       return qs.stringify(params)
     }
 

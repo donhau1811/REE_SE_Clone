@@ -46,7 +46,7 @@ export const PLACEHOLDER = {
 }
 export const DEFAULT_AVATAR = require('@src/assets/images/avatars/avatar-blank.svg').default
 export const SHOW_ALL_ROWS = -1
-export const ROWS_PER_PAGE_DEFAULT = 25
+export const ROWS_PER_PAGE_DEFAULT = 2
 export const STANDARD_COAL_RATE = 0.268
 export const CO2_REDUCTION_RATE = 0.6612
 export const TREES_SAVED_RATE = 0.0361
@@ -158,7 +158,7 @@ export const GENERAL_REPORT_TYPE = {
 }
 
 export const ROWS_PER_PAGE_OPTIONS = [
-  { label: 10, value: 10 },
+  { label: 2, value: 2 },
   { label: 25, value: 25 },
   { label: 50, value: 50 },
   { label: 75, value: 75 },

@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { bool, func, object, string } from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
