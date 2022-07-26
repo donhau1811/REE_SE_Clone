@@ -1,4 +1,5 @@
 const BASE_API_URL = process.env.REACT_APP_BASE_API_URL
+const BASE_API_URL_V2 = process.env.REACT_APP_BASE_API_URL_V2
 
 export const API_GET_USERS = `${BASE_API_URL}/glf_user`
 export const API_GET_USERS_ACTIVITIES = `${BASE_API_URL}/glf_activity`
@@ -117,14 +118,18 @@ export const API_GET_YIELD_CHART = `${BASE_API_URL}/glf_monitoring_yield_chart`
 export const API_GET_INVERTER_TYPES = `${BASE_API_URL}/glf_inverter_type`
 export const API_GET_PANEL_TYPES = `${BASE_API_URL}/glf_panel_type`
 
-export const API_OPERATION_UNIT = `${BASE_API_URL}/glf_operation_unit`
+
+export const API_GET_OPERATION_UNIT = `${BASE_API_URL_V2}/operation-company/search`
+export const CHECK_DUPLICATE_OPRERATION_UNIT_CODE = `${BASE_API_URL_V2}/operation-company/check-code`
+export const API_CREATE_OPERATION_UNIT = `${BASE_API_URL_V2}/operation-company/create`
+export const API_UPDATE_OPERATION_UNIT = `${BASE_API_URL_V2}/operation-company/update`
+export const API_GET_OPERATION_UNIT_BY_ID = `${BASE_API_URL_V2}/operation-company/id`
+export const API_DELETE_OPERATING_COMPANY = `${BASE_API_URL_V2}/operation-company/delete`
+
 export const API_CUSTOMER_V2 = `${BASE_API_URL}/glf_customer_v2`
 
-export const API_COMPANY_UNIT = `${BASE_API_URL}/api/v1/companies`
 
-export const API_DELETE_OPERATING_COMPANY = `${BASE_API_URL}/api/v1/billing/companies`
 export const API_DELETE_BILLING_CUSTOMER = `${BASE_API_URL}/api/v1/billing/customer`
-
 
 export const API_BILLING_CUSTOMERS = `${BASE_API_URL}/api/v1/customers`
 

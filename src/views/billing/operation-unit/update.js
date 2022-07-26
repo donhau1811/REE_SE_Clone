@@ -1,21 +1,30 @@
 import { ROUTER_URL } from '@src/utility/constants'
 import { object } from 'prop-types'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { injectIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory, useLocation } from 'react-router-dom'
-import { mockData } from './mock-data'
+import { useHistory, useParams } from 'react-router-dom'
 import OperationCUForm from './OperationUnitCUForm'
-import { putOperationUnit } from './store/actions'
+import { getOperationUnitById, putOperationUnit } from './store/actions'
 
 const UpdateOperationUnit = ({ intl }) => {
   const history = useHistory()
   const dispatch = useDispatch()
-  const { search } = useLocation()
+  const [isReadOnly, setIsReadOnly] = useState(true)
+  const {
+    company: { selectedCompany }
+  } = useSelector((state) => state)
 
-  const searchParams = new URLSearchParams(search)
-  const id = searchParams.get('id')
-  console.log('id', id)
+  const { id } = useParams()
+  useEffect(() => {
+    dispatch(
+      getOperationUnitById({
+        id,
+        isSavedToState: true
+      })
+    )
+  }, [id])
+
   const handleCancel = () => {
     history.push(ROUTER_URL.BILLING_OPERATION_UNIT)
   }
@@ -25,21 +34,30 @@ const UpdateOperationUnit = ({ intl }) => {
   } = useSelector((state) => state)
 
   const handleUpdateOperationUnit = (values) => {
-    console.log('values', values)
-    dispatch(
-      putOperationUnit({
-        params: values,
-        callback: () => {
-          history.push(ROUTER_URL.BILLING_OPERATION_UNIT)
-        },
-        intl,
-        skin
-      })
-    )
+    if (isReadOnly) {
+      setIsReadOnly(false)
+    } else {
+      dispatch(
+        putOperationUnit({
+          params: { ...values, state: values.state?.value, id },
+          callback: () => {
+            history.push(ROUTER_URL.BILLING_OPERATION_UNIT)
+          },
+          intl,
+          skin
+        })
+      )
+    }
   }
   return (
     <>
-      <OperationCUForm onSubmit={handleUpdateOperationUnit} onCancel={handleCancel} initValues={mockData} />
+      <OperationCUForm
+        onSubmit={handleUpdateOperationUnit}
+        onCancel={handleCancel}
+        initValues={selectedCompany}
+        isReadOnly={isReadOnly}
+        submitText={intl.formatMessage({ id: isReadOnly ? 'Update' : 'Save' })}
+      />
     </>
   )
 }

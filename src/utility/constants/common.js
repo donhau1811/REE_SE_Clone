@@ -136,10 +136,7 @@ export const INTERVAL_BUTTON = {
   TOTAL: 'total'
 }
 
-export const MULTI_FORMAT_INPUT_DATE = [
-  'DD/MM/YYYY',
-  'DD-MM-YYYY'
-]
+export const MULTI_FORMAT_INPUT_DATE = ['DD/MM/YYYY', 'DD-MM-YYYY']
 
 export const REPORT_TYPE = {
   OPERATION: 'Operation report',

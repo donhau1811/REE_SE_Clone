@@ -10,11 +10,12 @@ const Table = ({
   data,
   columns,
   onSort,
-  total = 5,
+  total,
   rowsPerPage = 10,
   currentPage = 1,
   rowsPerPageOptions,
-  handlePerPage,
+  onPerPageChange,
+  onPageChange,
   className,
   ...rest
 }) => {
@@ -23,7 +24,8 @@ const Table = ({
     rowsPerPage,
     currentPage,
     rowsPerPageOptions,
-    handlePerPage
+    handlePerPage: onPerPageChange,
+    onPageChange
   }
 
   const PaginationCOM = () => <Pagination {...paginationProps} />
@@ -68,7 +70,8 @@ Table.propTypes = {
   rowsPerPage: number,
   currentPage: number,
   rowsPerPageOptions: array,
-  handlePerPage: func,
+  onPerPageChange: func,
+  onPageChange: func,
   className: string
 }
 
