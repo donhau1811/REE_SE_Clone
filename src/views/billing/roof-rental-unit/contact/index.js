@@ -15,7 +15,7 @@ const Contact = ({ data, onChange }) => {
 
   const handleAddContact = () => {
     setCurrContact({
-      id:'-1'
+      id: '-1'
     })
   }
 
@@ -26,6 +26,10 @@ const Contact = ({ data, onChange }) => {
   const handleDeleteContact = (contact) => () => {
     const newData = data.filter((item) => item.id !== contact.id)
     onChange?.(newData)
+  }
+
+  const handleCancelContactForm = () => {
+    setCurrContact({})
   }
   const columns = [
     {
@@ -115,7 +119,7 @@ const Contact = ({ data, onChange }) => {
           {!data?.length > 0 && <NoDataCOM />}
         </Col>
       </Row>
-      <InsertInformation contact={currContact} onSubmit={handleSubmitContactForm} />
+      <InsertInformation contact={currContact} onSubmit={handleSubmitContactForm} onCancel={handleCancelContactForm} />
     </>
   )
 }

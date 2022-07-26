@@ -22,9 +22,8 @@ import { selectThemeColors } from '@src/utility/Utils'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { positionMockData } from '../../customer/mock-data'
 
-const InsertInformation = ({ contact, intl, onSubmit = () => {} }) => {
+const InsertInformation = ({ contact, intl, onSubmit = () => {}, onCancel }) => {
   const [isOpen, setIsOpen] = useState(false)
-
 
   const ValidateSchema = yup.object().shape(
     {
@@ -53,6 +52,11 @@ const InsertInformation = ({ contact, intl, onSubmit = () => {} }) => {
     setIsOpen(!isOpen)
   }
 
+  const handleCancel = () => {
+    setIsOpen(false)
+    onCancel?.()
+  }
+
   useEffect(() => {
     setIsOpen(Boolean(contact?.id))
     if (contact?.id) reset(contact)
@@ -63,7 +67,7 @@ const InsertInformation = ({ contact, intl, onSubmit = () => {} }) => {
       <Modal isOpen={isOpen} toggle={toggle} zIndex={500} aria-labelledby="contained-modal-title-vcenter" centered>
         <ModalHeader>{intl.formatMessage({ id: 'Update contact' })}</ModalHeader>
         <ModalBody>
-          <Form >
+          <Form>
             <Row>
               <Col className="mb-2" md={12}>
                 <Label className="general-label" for="exampleSelect">
@@ -87,7 +91,6 @@ const InsertInformation = ({ contact, intl, onSubmit = () => {} }) => {
                 </Label>
 
                 <Controller
-                  
                   as={Select}
                   control={control}
                   theme={selectThemeColors}
@@ -148,20 +151,17 @@ const InsertInformation = ({ contact, intl, onSubmit = () => {} }) => {
               </Col>
             </Row>
             <Row className="d-flex justify-content-end align-items-center mt-3">
-          <Button type="button" color="primary" className="mr-1 px-3" onClick={handleSubmit(onSubmit)}>
-            {intl.formatMessage({ id: 'Save' })}
-          </Button>
-          <Button onClick={toggle} color="secondary">
-            {intl.formatMessage({ id: 'Cancel' })}
-          </Button>
-        </Row>
+              <Button type="button" color="primary" className="mr-1 px-3" onClick={handleSubmit(onSubmit)}>
+                {intl.formatMessage({ id: 'Save' })}
+              </Button>
+              <Button onClick={handleCancel} color="secondary">
+                {intl.formatMessage({ id: 'Cancel' })}
+              </Button>
+            </Row>
           </Form>
         </ModalBody>
-        <ModalFooter>
-
-        </ModalFooter>
+        <ModalFooter></ModalFooter>
       </Modal>
-
     </>
   )
 }
@@ -169,7 +169,8 @@ InsertInformation.propTypes = {
   onSubmit: func,
   intl: object.isRequired,
   initValues: object,
-  contact: object
+  contact: object,
+  onCancel: func
 }
 
 export default injectIntl(InsertInformation)
