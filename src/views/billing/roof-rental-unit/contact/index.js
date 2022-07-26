@@ -4,13 +4,13 @@ import { Badge, Button, Col, Row } from 'reactstrap'
 import { Plus } from 'react-feather'
 import Table from '@src/views/common/table/CustomDataTable'
 import NoDataCOM from './NoDataCOM'
-import { array, bool, func } from 'prop-types'
+import { array, func } from 'prop-types'
 import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit.svg'
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
-import ContactCUForm from './ContactCUForm'
+import InsertInformation from './ContactCUForm'
 import { cloneDeep } from 'lodash'
 
-const Contact = ({ data, onChange, disabled }) => {
+const Contact = ({ data, onChange }) => {
   const [currContact, setCurrContact] = useState(null)
 
   const handleAddContact = () => {
@@ -35,46 +35,46 @@ const Contact = ({ data, onChange, disabled }) => {
       maxWidth: '50px'
     },
     {
-      name: <FormattedMessage id="Contact Name" />,
+      name: <FormattedMessage id="represent" />,
       selector: 'name',
       center: true,
-      cell: (row) => <span>{row.name}</span>
+      cell: (row) => <span>{row?.name}</span>
     },
     {
-      name: <FormattedMessage id="Position" />,
+      name: <FormattedMessage id="position" />,
       selector: 'position',
       center: true,
-      cell: (row) => <span>{row.position?.label}</span>
+      cell: (row) => <span>{row?.position?.label}</span>
     },
     {
       name: <FormattedMessage id="operation-unit-form-mobile" />,
-      selector: 'mobile',
+      selector: 'Phone',
+      sortable: true,
       center: true
     },
     {
       name: 'Email',
       selector: 'email',
       center: true,
-      cell: (row) => <span>{row.email}</span>
+      cell: (row) => <span>{row?.email}</span>
     },
     {
-      name: <FormattedMessage id="note" />,
+      name: <FormattedMessage id="Note" />,
       selector: 'note',
       center: true,
-      cell: (row) => <span>{row.note}</span>
+      cell: (row) => <span>{row?.note}</span>
     },
     {
       name: <FormattedMessage id="Actions" />,
       selector: '#',
       center: true,
-      isHidden: disabled,
       cell: (row) => (
         <>
           {' '}
           <Badge onClick={handleEditContact(row)}>
             <IconEdit id={`editBtn_${row.id}`} />
           </Badge>
-          <Badge onClick={handleDeleteContact(row)} disabled={disabled}>
+          <Badge onClick={handleDeleteContact(row)}>
             <IconDelete id={`deleteBtn_${row.id}`} />
           </Badge>
         </>
@@ -96,7 +96,6 @@ const Contact = ({ data, onChange, disabled }) => {
     setCurrContact({})
     onChange?.(newData)
   }
-
   return (
     <>
       <Row className="mb-2">
@@ -105,12 +104,7 @@ const Contact = ({ data, onChange, disabled }) => {
             <FormattedMessage id="Contact Information" />
           </h4>
 
-          <Button.Ripple
-            disabled={disabled}
-            color="primary"
-            className="add-project add-contact-button"
-            onClick={handleAddContact}
-          >
+          <Button.Ripple color="primary" className="add-project add-contact-button" onClick={handleAddContact}>
             <Plus className="mr-1" /> <FormattedMessage id="Add new contact" />
           </Button.Ripple>
         </Col>
@@ -121,14 +115,13 @@ const Contact = ({ data, onChange, disabled }) => {
           {!data?.length > 0 && <NoDataCOM />}
         </Col>
       </Row>
-      <ContactCUForm contact={currContact} onSubmit={handleSubmitContactForm}  />
+      <InsertInformation contact={currContact} onSubmit={handleSubmitContactForm} />
     </>
   )
 }
 Contact.propTypes = {
   data: array,
-  onChange: func,
-  disabled: bool
+  onChange: func
 }
 
 export default Contact

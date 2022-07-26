@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { array, func, number } from 'prop-types'
+import { array, func, number, string } from 'prop-types'
 import React from 'react'
 import DataTable from 'react-data-table-component'
 import { Code } from 'react-feather'
@@ -15,6 +15,7 @@ const Table = ({
   currentPage = 1,
   rowsPerPageOptions,
   handlePerPage,
+  className,
   ...rest
 }) => {
   const paginationProps = {
@@ -30,18 +31,21 @@ const Table = ({
   return (
     <>
       <DataTable
+      style={{ overflow:'auto'}}
         noHeader
         pagination
         paginationServer
-        className={classNames('react-dataTable react-dataTable--customers hover', {
-          'overflow-hidden': data?.length <= 0
+        className={classNames('table-height react-dataTable react-dataTable--customers hover', {
+          'overflow-hidden': data?.length <= 0,
+          className
         })}
+        
         fixedHeader
         fixedHeaderScrollHeight="calc(100vh - 340px)"
-        columns={columns}
+        columns={columns.filter((item) => !item.isHidden)}
         sortIcon={
           <div className="custom-sort-icon">
-            <Code  />
+            <Code />
           </div>
         }
         paginationComponent={PaginationCOM}
@@ -64,7 +68,8 @@ Table.propTypes = {
   rowsPerPage: number,
   currentPage: number,
   rowsPerPageOptions: array,
-  handlePerPage: func
+  handlePerPage: func,
+  className: string
 }
 
 export default Table

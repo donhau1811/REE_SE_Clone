@@ -61,6 +61,14 @@ export const BillingRoutes = [
     }
   },
   {
+    path: ROUTER_URL.BILLING_CUSTOMER_VIEW,
+    component: lazy(() => import('../../views/billing/customer/ViewDetail')),
+    meta: {
+      action: 'manage',
+      resource: ROUTER_URL.BILLING_CUSTOMER
+    }
+  },
+  {
     path: ROUTER_URL.BILLING_CUSTOMER_CREATE,
     exact: true,
     component: lazy(() => import('../../views/billing/customer/create')),
@@ -68,6 +76,36 @@ export const BillingRoutes = [
       action: 'manage',
       resource: ROUTER_URL.BILLING_CUSTOMER,
       navLink: ROUTER_URL.BILLING_CUSTOMER
+    }
+  },
+  {
+    path: ROUTER_URL.BILLING_ROOF_RENTAL_UNIT,
+    component: lazy(() => import('../../views/billing/roof-rental-unit/index')),
+    exact: true,
+    meta: {
+      action: 'manage',
+      resource: ROUTER_URL.BILLING_ROOF_RENTAL_UNIT,
+      navLink: ROUTER_URL.BILLING_ROOF_RENTAL_UNIT
+    }
+  },
+  {
+    path: ROUTER_URL.BILLING_ROOF_RENTAL_UNIT_CREATE,
+    component: lazy(() => import('../../views/billing/roof-rental-unit/create')),
+    exact: true,
+    meta: {
+      action: 'manage',
+      resource: ROUTER_URL.BILLING_ROOF_RENTAL_UNIT,
+      navLink: ROUTER_URL.BILLING_ROOF_RENTAL_UNIT
+    }
+  },
+  {
+    path: ROUTER_URL.BILLING_ROOF_RENTAL_UNIT_UPDATE,
+    component: lazy(() => import('../../views/billing/roof-rental-unit/update')),
+    exact: true,
+    meta: {
+      action: 'manage',
+      resource: ROUTER_URL.BILLING_ROOF_RENTAL_UNIT,
+      navLink: ROUTER_URL.BILLING_ROOF_RENTAL_UNIT
     }
   }
 ]

@@ -9,5 +9,6 @@ import './tables/datatables'
 import './tables/user-data'
 import './operationUnit/companyList'
 import './customer/customersList'
+import './roofRentalUnit/roofList'
 
 mock.onAny().passThrough()

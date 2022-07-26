@@ -14,7 +14,7 @@ import { Badge, Col, Row, UncontrolledTooltip } from 'reactstrap'
 import SweetAlert from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import PageHeader from './PageHeader'
-import { deleteBillingCustomer, getAllCustomer } from './store/actions'
+import { deleteBillingRoofRentalUnit, getAllRoofUnit } from './store/actions'
 import './styles.scss'
 
 const MySweetAlert = withReactContent(SweetAlert)
@@ -25,11 +25,11 @@ const OperationUnit = ({ intl }) => {
   const {
     layout: { skin }
   } = useSelector((state) => state)
-  const data = useSelector((state) => state.billingCustomer)
+  const data = useSelector((state) => state.roofUnit)
   useEffect(() => {
     Promise.all([
       dispatch(
-        getAllCustomer({
+        getAllRoofUnit({
           fk: '*',
           state: [STATUS.ACTIVE].toString(),
           rowsPerPage: -1
@@ -38,12 +38,12 @@ const OperationUnit = ({ intl }) => {
     ])
   }, [])
   const handleRedirectToUpdatePage = (id) => () => {
-    if (id) history.push(`${ROUTER_URL.BILLING_CUSTOMER_VIEW}?id=${id}`)
+    if (id) history.push(`${ROUTER_URL.BILLING_ROOF_RENTAL_UNIT_UPDATE}?id=${id}`)
   }
-  const handleDeleteCustomer = (id) => () => {
+  const handleDeleteRoofRentalUnit = (id) => () => {
     return MySweetAlert.fire({
       title: intl.formatMessage({ id: 'Delete billing customer title' }),
-      html: intl.formatMessage({ id: 'Delete billing customer message' }),
+      html: intl.formatMessage({ id: 'Delete billing information message' }),
       showCancelButton: true,
       showCloseButton: true,
       confirmButtonText: intl.formatMessage({ id: 'Yes' }),
@@ -62,7 +62,7 @@ const OperationUnit = ({ intl }) => {
       buttonsStyling: false
     }).then(({ isConfirmed }) => {
       if (isConfirmed) {
-        dispatch(deleteBillingCustomer({
+        dispatch(deleteBillingRoofRentalUnit({
           id,
           skin,
           intl
@@ -79,33 +79,29 @@ const OperationUnit = ({ intl }) => {
       maxWidth: '50px'
     },
     {
-      name: intl.formatMessage({ id: 'Customer Code' }),
+      name: intl.formatMessage({ id: 'Unit-code' }),
       selector: 'code',
       sortable: true,
-      maxWidth: '100px'
+      maxWidth: '125px'
     },
     {
-      name: intl.formatMessage({ id: 'Customer Company' }),
-      selector: 'fullName',
+      name: intl.formatMessage({ id: 'Roof rental unit name' }),
+      selector: 'name',
       center: true,
       sortable: true,
-      cell: (row) => <span>{row.fullName}</span>,
+      cell: (row) => <span>{row.name}</span>,
       minWidth: '20%'
     },
     {
-      name: intl.formatMessage({ id: 'Company Type Short' }),
-      selector: 'type',
-      sortable: true,
-      center: true
-    },
-    {
-      name: intl.formatMessage({ id: 'billing-customer-list-taxCode' }),
+      name: intl.formatMessage({ id: 'operation-unit-form-taxCode' }),
       selector: 'taxCode',
       sortable: true,
       center: true
     },
+
+
     {
-      name: intl.formatMessage({ id: 'operation-unit-form-address' }),
+      name: intl.formatMessage({ id: 'Address' }),
       selector: 'address',
       sortable: true,
       cell: (row) => {
@@ -124,9 +120,16 @@ const OperationUnit = ({ intl }) => {
       },
       minWidth: '320px'
     },
+
     {
       name: intl.formatMessage({ id: 'operation-unit-form-mobile' }),
       selector: 'mobile',
+      sortable: true,
+      center: true
+    },
+    {
+      name: intl.formatMessage({ id: 'Email' }),
+      selector: 'email',
       sortable: true,
       center: true
     },
@@ -156,7 +159,7 @@ const OperationUnit = ({ intl }) => {
           <Badge onClick={handleRedirectToUpdatePage(row.id)}>
             <IconView id={`editBtn_${row.id}`} />
           </Badge>
-          <Badge onClick={handleDeleteCustomer(row.id)}>
+          <Badge onClick={handleDeleteRoofRentalUnit(row.id)}>
             <IconDelete id={`deleteBtn_${row.id}`} />
           </Badge>
         </>
