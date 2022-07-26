@@ -219,8 +219,9 @@ export const getOperationUnitById = ({ id, isSavedToState, callback }) => {
       .get(`${API_GET_OPERATION_UNIT_BY_ID}/${id}`)
       .then((response) => {
         if (response.status === 200 && response.data.data) {
-          const payload = get(response, 'data.data.0', {})
+          const payload = get(response, 'data.data', {})
           if (isSavedToState) {
+            console.log("dàvhg")
             dispatch({
               type: SET_SELECTED_OPERATION_UNIT,
               payload

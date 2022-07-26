@@ -21,9 +21,9 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
     state: OPERATION_UNIT_STATUS_OPTS[0]
   }
 
-  const validationFunction = async (value, resolve) => {
+  const validationFunction = async (params, resolve) => {
     try {
-      const response = await axios.post(CHECK_DUPLICATE_OPRERATION_UNIT_CODE, { code: value, isNotCount: true })
+      const response = await axios.post(CHECK_DUPLICATE_OPRERATION_UNIT_CODE, { ...params, isNotCount: true })
 
       resolve(!(response.status === 200 && response.data.data))
     } catch (error) {
@@ -46,7 +46,13 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
         .max(15, intl.formatMessage({ id: 'max-validate' }))
         .test('dubplicated', intl.formatMessage({ id: 'dubplicated-validate' }), (value) => {
           if (!value?.trim()) return false
-          return new Promise((resolve) => validationDebounced(value, resolve))
+
+          const checkParams = {
+            code: value
+          }
+          console.log('initValues', initValues?.id)
+          if (initValues?.id > 0) checkParams.id = initValues?.id
+          return new Promise((resolve) => validationDebounced(checkParams, resolve))
         }),
 
       taxCode: yup
