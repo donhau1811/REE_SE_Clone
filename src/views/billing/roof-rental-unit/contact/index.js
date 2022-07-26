@@ -15,7 +15,7 @@ const Contact = ({ data, onChange }) => {
 
   const handleAddContact = () => {
     setCurrContact({
-      id: new Date()
+      id:'-1'
     })
   }
 

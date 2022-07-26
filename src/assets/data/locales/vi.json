@@ -1712,10 +1712,24 @@
   "Add contact info to create new roof rental unit":"Thêm mới liên hệ để hoàn tất việc thêm đơn vị cho thuê mái mới",
   "create-rental-unit": "Thêm thông tin đơn vị thuê mái ",
   "update-rental-unit": "Cập nhật thông tin đơn vị thuê mái ",
-  "roof-rental-unit":"Đơn vị cho thuê mái "
-
-
-
-
+  "roof-rental-unit":"Đơn vị cho thuê mái ",
+  "Roof Rental Company":"Đơn vị cho thuê mái",
+  "explain":"Diễn giải",
+  "Config Name":"Tên cấu hình",
+  "Config Code":"Mã cấu hình",
+  "Enter Config Code":"Nhập mã cấu hình",
+  "Enter Config Name":"Nhập tên cấu hình",
+  "Enter Config Explain":"Nhập diễn giải cho cấu hình",
+  "Configuration Value":"Giá trị cấu hình",
+  "Enter Configuration Value":"Nhập giá trị cấu hình",
+  "update-config":"Cập nhật cấu hình",
+  "details":"Xem chi tiết",
+  "Add new config value" : "Thêm mới giá trị cấu hình",
+  "Update new config value" : "Thêm mới giá trị cấu hình",
+  "Add failure":"Dữ liệu chưa được thêm mới thành công, xin vui lòng thử lại ",
+  "Settings is added successfully":"Giá trị cấu hình đã được thêm mới thành công",
+  "Delete settings success":"Xóa giá trị cấu hình thành công",
+  "Delete settings failure":"Xóa giá trị cấu hình thất bại",
+  "Delete billing settings message":"Bạn có chắc muốn xóa giá trị cấu hình này không"
 
 }

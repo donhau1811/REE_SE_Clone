@@ -64,6 +64,8 @@ export const ROUTER_URL = {
   BILLING_ROOF_RENTAL_UNIT: '/billing/roof-rental-unit',
   BILLING_ROOF_RENTAL_UNIT_CREATE: '/billing/roof-rental-unit/create-rental-unit',
   BILLING_ROOF_RENTAL_UNIT_UPDATE: '/billing/roof-rental-unit/update-rental-unit',
-  BILLING_CUSTOMER_VIEW: '/billing/customers/view-customer'
-
+  BILLING_CUSTOMER_VIEW: '/billing/customers/view-customer',
+  BILLING_SETTING: '/billing/settings',
+  BILLING_SETTING_VIEW: '/billing/settings/details',
+  BILLING_SETTING_UPDATE: '/billing/settings/update-config'
 }

@@ -23,7 +23,7 @@ import alert from '@src/views/alert/store/reducer'
 import report from '@src/views/report/store/reducer'
 import company from '@src/views/billing/operation-unit/store/reducer'
 import roofUnit from '@src/views/billing/roof-rental-unit/store/reducer'
-
+import settings from '@src/views/billing/settings/store/reducer'
 
 const rootReducer = combineReducers({
   auth,
@@ -46,7 +46,8 @@ const rootReducer = combineReducers({
   sensorSetting,
   company,
   billingCustomer,
-  roofUnit
+  roofUnit,
+  settings
 })
 
 export default rootReducer
