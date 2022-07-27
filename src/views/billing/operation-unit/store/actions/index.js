@@ -109,8 +109,7 @@ export const putOperationUnit = ({ params, callback, intl, skin }) => {
 
 export const getListOperationUnit = (params = {}) => {
   return async (dispatch) => {
-    console.log('params', params)
-    const { pagination = {}, searchValue, filterValue, ...rest } = params
+    const { pagination = {}, searchValue, ...rest } = params
     const payload = {
       ...rest,
       limit: pagination.rowsPerPage,
@@ -118,32 +117,9 @@ export const getListOperationUnit = (params = {}) => {
     }
     if (searchValue?.trim()) {
       payload.searchValue = {
-        name: {
-          value: searchValue,
-          type: 'contains'
-        },
-        code: {
-          value: searchValue,
-          type: 'contains'
-        },
-        taxCode: {
-          value: searchValue,
-          type: 'contains'
-        },
-        address: {
-          value: searchValue,
-          type: 'contains'
-        },
-        phone: {
-          value: searchValue,
-          type: 'contains'
-        }
-      }
-    }
-    if (filterValue) {
-      payload.searchValue = {
-        ...payload.searchValue,
-        ...filterValue
+        value: searchValue,
+        fields: ['name', 'code', 'taxCode', 'address', 'phone'],
+        type: 'contains'
       }
     }
 

@@ -15,8 +15,8 @@ import moment from 'moment'
 
 const Filter = ({ intl, children, onSubmit = () => {} }) => {
   const [isOpen, setIsOpen] = useState(false)
-  const [startDate, setStartDate] = useState(moment())
-  const [endDate, setEndDate] = useState(moment())
+  const [startDate, setStartDate] = useState(null)
+  const [endDate, setEndDate] = useState(null)
   const [status, setStatus] = useState('all')
   const handleStartDateChange = (newValue) => {
     setStartDate(newValue)

@@ -90,7 +90,7 @@ const OperationUnit = ({ intl }) => {
       center: true,
       sortable: true,
       cell: (row) => <span>{row.fullName}</span>,
-      minWidth: '20%'
+      minWidth: '360px'
     },
     {
       name: intl.formatMessage({ id: 'Company Type Short' }),
@@ -134,6 +134,8 @@ const OperationUnit = ({ intl }) => {
       name: intl.formatMessage({ id: 'Status' }),
       selector: 'state',
       sortable: true,
+      center: true,
+      minWidth: '150px',
       cell: (row) => {
         return row.state === OPERATION_UNIT_STATUS.ACTIVE ? (
           <Badge pill color="light-success">
@@ -169,7 +171,7 @@ const OperationUnit = ({ intl }) => {
       <Row>
         <Col sm="12">
           <PageHeader />
-          <Table columns={columns} data={data?.data || []} />
+          <Table columns={columns} data={data?.data || []}  />
         </Col>
       </Row>
     </>

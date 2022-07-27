@@ -8,9 +8,7 @@ import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/
 import { selectThemeColors } from '@src/utility/Utils'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { CHECK_DUPLICATE_OPRERATION_UNIT_CODE, MOBILE_REGEX } from '@src/utility/constants'
-import { debounce } from 'lodash'
-import axios from 'axios'
+import { MOBILE_REGEX } from '@src/utility/constants'
 
 const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, isReadOnly, submitText }) => {
   const OPERATION_UNIT_STATUS_OPTS = [
@@ -20,18 +18,6 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
   const initState = {
     state: OPERATION_UNIT_STATUS_OPTS[0]
   }
-
-  const validationFunction = async (params, resolve) => {
-    try {
-      const response = await axios.post(CHECK_DUPLICATE_OPRERATION_UNIT_CODE, { ...params, isNotCount: true })
-
-      resolve(!(response.status === 200 && response.data.data))
-    } catch (error) {
-      resolve(false)
-    }
-  }
-
-  const validationDebounced = debounce(validationFunction, 500)
 
   const ValidateSchema = yup.object().shape(
     {
@@ -43,18 +29,7 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
       code: yup
         .string()
         .required(intl.formatMessage({ id: 'required-validate' }))
-        .max(15, intl.formatMessage({ id: 'max-validate' }))
-        .test('dubplicated', intl.formatMessage({ id: 'dubplicated-validate' }), (value) => {
-          if (!value?.trim()) return false
-
-          const checkParams = {
-            code: value
-          }
-          console.log('initValues', initValues?.id)
-          if (initValues?.id > 0) checkParams.id = initValues?.id
-          return new Promise((resolve) => validationDebounced(checkParams, resolve))
-        }),
-
+        .max(15, intl.formatMessage({ id: 'max-validate' })),
       taxCode: yup
         .string()
         .required(intl.formatMessage({ id: 'required-validate' }))
