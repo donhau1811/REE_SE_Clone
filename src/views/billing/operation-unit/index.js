@@ -42,7 +42,9 @@ const OperationUnit = ({ intl }) => {
     fetchOperationUnit({
       pagination: {
         rowsPerPage: ROWS_PER_PAGE_DEFAULT,
-        currentPage: 1
+        currentPage: 1,
+        sortBy: 'code',
+        sortDirection: 'asc'
       }
     })
   }, [])
@@ -60,7 +62,6 @@ const OperationUnit = ({ intl }) => {
   }
 
   const handlePerPageChange = (e) => {
-    console.log('e', e)
     fetchOperationUnit({
       pagination: {
         rowsPerPage: e.value,
@@ -144,25 +145,28 @@ const OperationUnit = ({ intl }) => {
       selector: 'code',
       sortable: true,
       center: true,
-      minWidth: '100px'
+      minWidth: '150px'
     },
     {
       name: intl.formatMessage({ id: 'operation-unit-form-name' }),
       sortable: true,
       selector: 'name',
       cell: (row) => <span>{row.name}</span>,
-      center: true
+      center: true,
+      minWidth: '200px'
     },
     {
       name: intl.formatMessage({ id: 'operation-unit-form-taxCode' }),
       selector: 'taxCode',
       sortable: true,
-      center: true
+      center: true,
+      minWidth: '200px'
     },
     {
       name: intl.formatMessage({ id: 'operation-unit-form-address' }),
       selector: 'address',
       sortable: true,
+      minWidth: '350px',
       cell: (row) => {
         return (
           <>
@@ -182,12 +186,14 @@ const OperationUnit = ({ intl }) => {
       name: intl.formatMessage({ id: 'operation-unit-form-mobile' }),
       selector: 'phone',
       sortable: true,
+      minWidth: '150px',
       center: true
     },
     {
       name: intl.formatMessage({ id: 'Status' }),
       selector: 'state',
       sortable: true,
+      minWidth: '170px',
       cell: (row) => {
         return row.state === OPERATION_UNIT_STATUS.ACTIVE ? (
           <Badge pill color="light-success">
@@ -236,6 +242,7 @@ const OperationUnit = ({ intl }) => {
         <Col sm="12">
           <PageHeader onSearch={handleSearch} onFilter={handleFilter} searchValue={searchValue} />
           <Table
+            tableId="operation-unit"
             columns={columns}
             data={data}
             total={total}
