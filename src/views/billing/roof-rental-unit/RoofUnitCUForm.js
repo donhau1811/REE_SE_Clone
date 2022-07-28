@@ -6,14 +6,24 @@ import { Controller, useForm } from 'react-hook-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Select from 'react-select'
 import { Button, Col, Form, FormFeedback, Input, Label, Row } from 'reactstrap'
-import Contact from './contact'
+import Contact from '../customer/contact'
 import * as yup from 'yup'
 import './styles.scss'
 import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
 import React, { useState, useEffect } from 'react'
+import { checkDuplicate } from './store/actions'
+import { useDispatch, useSelector } from 'react-redux'
+import withReactContent from 'sweetalert2-react-content'
+import classNames from 'classnames'
+import SweetAlert from 'sweetalert2'
+import { ReactComponent as CicleFailed } from '@src/assets/images/svg/circle-failed.svg'
 
-const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, isReadOnly, isDuplicateCode }) => {
+const MySweetAlert = withReactContent(SweetAlert)
+
+const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, isReadOnly }) => {
   const [contacts, setContacts] = useState([])
+  const dispatch = useDispatch()
+  const [isDuplicateCode, setIsDuplicateCode] = useState(false)
   const OPERATION_UNIT_STATUS_OPTS = [
     { value: OPERATION_UNIT_STATUS.ACTIVE, label: intl.formatMessage({ id: 'Active' }) },
     { value: OPERATION_UNIT_STATUS.INACTIVE, label: intl.formatMessage({ id: 'Inactive' }) }
@@ -27,12 +37,50 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
     phone: null,
     note: null
   }
+  const {
+    layout: { skin }
+  } = useSelector((state) => state)
 
   const handleSubmitRoofVendorsForm = (values) => {
-    onSubmit?.({
-      ...values,
-      contacts
-    })
+
+    if (!contacts?.length > 0) {
+      return MySweetAlert.fire({
+        // icon: 'success',
+        iconHtml: <CicleFailed />,
+        text: intl.formatMessage({ id: 'Need at least 1 contact to add customer. Please try again' }),
+        customClass: {
+          popup: classNames({
+            'sweet-alert-popup--dark': skin === 'dark'
+          }),
+          confirmButton: 'btn btn-primary mt-2',
+          icon: 'border-0'
+        },
+        width: 'max-content',
+        showCloseButton: true,
+        confirmButtonText: intl.formatMessage({ id: 'Try again' })
+      })
+    }
+    if (initValues?.code !== values.code) {
+      dispatch(
+        checkDuplicate({
+          params: { code: values.code },
+          callback: value => {
+            setIsDuplicateCode(value)
+            if (!value) {
+              onSubmit?.({
+                ...values,
+                contacts
+              })
+            }
+          }
+        })
+      )
+    } else {
+      onSubmit?.({
+        ...values,
+        contacts
+      })
+    }
   }
   const handleContactformSubmit = (value) => {
     setContacts(value)
@@ -110,7 +158,6 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
               className="input"
               id="name"
               disabled={isReadOnly}
-
               name="name"
               autoComplete="on"
               invalid={!!errors.name}
@@ -128,7 +175,6 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
               className="input"
               id="code"
               disabled={isReadOnly}
-
               name="code"
               autoComplete="on"
               innerRef={register()}
@@ -137,8 +183,11 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
               placeholder={intl.formatMessage({ id: 'Enter-unit-code' })}
             />
             {errors?.code && <FormFeedback>{errors?.code?.message}</FormFeedback>}
-            {isDuplicateCode && <FormFeedback><div>{intl.formatMessage({ id: 'Vendor code already exists' })}</div></FormFeedback>}
-
+            {isDuplicateCode && (
+              <FormFeedback>
+                <div>{intl.formatMessage({ id: 'Vendor code already exists' })}</div>
+              </FormFeedback>
+            )}
           </Col>
           <Col className="mb-2" md="4">
             <Label className="general-label" for="exampleSelect">
@@ -149,7 +198,6 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
               className="input"
               id="taxCode"
               disabled={isReadOnly}
-
               name="taxCode"
               autoComplete="on"
               innerRef={register()}
@@ -170,7 +218,6 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
               className="input"
               id="address"
               disabled={isReadOnly}
-
               name="address"
               autoComplete="on"
               innerRef={register()}
@@ -190,7 +237,6 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
               type="email"
               id="email"
               disabled={isReadOnly}
-
               name="email"
               autoComplete="on"
               innerRef={register()}
@@ -210,7 +256,6 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
               id="phone"
               name="phone"
               disabled={isReadOnly}
-
               autoComplete="on"
               innerRef={register()}
               invalid={!!errors.phone}
@@ -229,7 +274,6 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
             <Controller
               as={Select}
               isDisabled={isReadOnly}
-
               control={control}
               theme={selectThemeColors}
               name="state"
@@ -251,7 +295,6 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
               id="note"
               autoComplete="on"
               disabled={isReadOnly}
-
               innerRef={register()}
               placeholder={intl.formatMessage({ id: 'Enter-unit-note' })}
             />
@@ -279,8 +322,7 @@ RoofUnit.propTypes = {
   onSubmit: func,
   onCancel: func,
   initValues: object,
-  isReadOnly: bool,
-  isDuplicateCode:bool
+  isReadOnly: bool
 }
 
 export default injectIntl(RoofUnit)

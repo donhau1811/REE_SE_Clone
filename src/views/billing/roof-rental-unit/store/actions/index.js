@@ -57,7 +57,7 @@ export const deleteBillingRoofRentalUnit = ({ id, skin, intl, callback }) => {
     await axios
       .delete(`${API_DELETE_ROOF_VENDORS}/${id}`)
       .then((response) => {
-        if (response.data) {
+        if (response?.status === 200 && response.data) {
           MySweetAlert.fire({
             iconHtml: <CicleSuccess />,
             text: intl.formatMessage({ id: 'Delete billing customer success' }),
@@ -124,9 +124,7 @@ export const getRoofVendorById = ({ id, isSavedToState, callback }) => {
 
 export const postRoofVendors = ({ params, callback, skin, intl }) => {
   return async () => {
-    await axios.post(API_CHECK_CODE_ROOF_VENDORS, { code: params?.code }).then((response) => {
-      if (!response.data?.data) {
-        axios
+    await axios
           .post(API_CREATE_ROOF_VENDOR, params)
           .then((response) => {
             if (response.status === 200 && response.data?.data) {
@@ -167,10 +165,6 @@ export const postRoofVendors = ({ params, callback, skin, intl }) => {
               confirmButtonText: intl.formatMessage({ id: 'Try again' })
             })
           })
-      } else {
-        callback?.(true)
-      }
-    })
   }
 
 }
@@ -216,6 +210,24 @@ export const putRoofVendors = ({ params, callback, intl, skin }) => {
           showCloseButton: true,
           confirmButtonText: intl.formatMessage({ id: 'Try again' })
         })
+      })
+  }
+}
+export const checkDuplicate = ({ params, callback }) => {
+  return async () => {
+    await axios
+      .post(API_CHECK_CODE_ROOF_VENDORS, params)
+      .then((response) => {
+        console.log(response)
+        if (response.status === 200 && !response.data?.data) {
+          
+          callback?.(false)
+        } else {
+          callback?.(true)
+        }
+      })
+      .catch((err) => {
+        console.log('err', err)
       })
   }
 }
