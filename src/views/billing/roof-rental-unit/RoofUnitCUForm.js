@@ -12,9 +12,8 @@ import './styles.scss'
 import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
 import React, { useState, useEffect } from 'react'
 
-const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, isReadOnly }) => {
+const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, isReadOnly, isDuplicateCode }) => {
   const [contacts, setContacts] = useState([])
-
   const OPERATION_UNIT_STATUS_OPTS = [
     { value: OPERATION_UNIT_STATUS.ACTIVE, label: intl.formatMessage({ id: 'Active' }) },
     { value: OPERATION_UNIT_STATUS.INACTIVE, label: intl.formatMessage({ id: 'Inactive' }) }
@@ -133,11 +132,13 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
               name="code"
               autoComplete="on"
               innerRef={register()}
-              invalid={!!errors.code}
-              valid={getValues('code')?.trim() && !errors.code}
+              invalid={!!errors.code || isDuplicateCode}
+              valid={getValues('code')?.trim() && !errors.code && !isDuplicateCode}
               placeholder={intl.formatMessage({ id: 'Enter-unit-code' })}
             />
             {errors?.code && <FormFeedback>{errors?.code?.message}</FormFeedback>}
+            {isDuplicateCode && <FormFeedback><div>{intl.formatMessage({ id: 'Vendor code already exists' })}</div></FormFeedback>}
+
           </Col>
           <Col className="mb-2" md="4">
             <Label className="general-label" for="exampleSelect">
@@ -278,7 +279,8 @@ RoofUnit.propTypes = {
   onSubmit: func,
   onCancel: func,
   initValues: object,
-  isReadOnly: bool
+  isReadOnly: bool,
+  isDuplicateCode:bool
 }
 
 export default injectIntl(RoofUnit)

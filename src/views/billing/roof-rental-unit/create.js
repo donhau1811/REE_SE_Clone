@@ -1,6 +1,6 @@
 import { ROUTER_URL } from '@src/utility/constants'
 import { object } from 'prop-types'
-import React from 'react'
+import React, { useState } from 'react'
 import { injectIntl } from 'react-intl'
 import { useHistory } from 'react-router-dom'
 import RoofUnit from './RoofUnitCUForm'
@@ -9,6 +9,7 @@ import { postRoofVendors } from './store/actions'
 
 const CreateRoofRentalUnit = ({ intl }) => {
   const history = useHistory()
+  const [isDuplicateCode, setIsDuplicateCode] = useState(false)
   const {
     layout: { skin }
   } = useSelector((state) => state)
@@ -17,8 +18,11 @@ const CreateRoofRentalUnit = ({ intl }) => {
     dispatch(
       postRoofVendors({
         params: { ...values, state: values?.state?.value },
-        callback: () => {
-          history.push(ROUTER_URL.BILLING_ROOF_RENTAL_UNIT)
+        callback: (value) => {
+          if (!value) {
+            history.push(ROUTER_URL.BILLING_ROOF_RENTAL_UNIT)
+          }
+          setIsDuplicateCode(value)
         },
         skin,
         intl
@@ -27,11 +31,11 @@ const CreateRoofRentalUnit = ({ intl }) => {
   }
 
   const handleCancel = () => {
-    history.push(ROUTER_URL.BILLING_CUSTOMER)
+    history.push(ROUTER_URL.BILLING_ROOF_RENTAL_UNIT)
   }
   return (
     <>
-      <RoofUnit onCancel={handleCancel} onSubmit={handleAddRoofVendors} />
+      <RoofUnit isDuplicateCode={isDuplicateCode} onCancel={handleCancel} onSubmit={handleAddRoofVendors} />
     </>
   )
 }

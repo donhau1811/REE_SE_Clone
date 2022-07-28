@@ -3,7 +3,8 @@ import {
   API_GET_ROOF_VENDOR_BY_ID,
   API_GET_ROOF_VENDOR,
   API_CREATE_ROOF_VENDOR,
-  API_UPDATE_ROOF_VENDOR
+  API_UPDATE_ROOF_VENDOR,
+  API_CHECK_CODE_ROOF_VENDORS
 } from '@src/utility/constants'
 import { FETCH_ROOF_RENTAL_UNIT_REQUEST, SET_SELECTED_ROOF_VENDOR } from '@src/utility/constants/actions'
 import axios from 'axios'
@@ -110,7 +111,6 @@ export const getRoofVendorById = ({ id, isSavedToState, callback }) => {
               payload
             })
           }
-          console.log('callback', response.data.data, callback)
           callback?.(response.data.data)
         } else {
           throw new Error(response.data?.message)
@@ -124,48 +124,55 @@ export const getRoofVendorById = ({ id, isSavedToState, callback }) => {
 
 export const postRoofVendors = ({ params, callback, skin, intl }) => {
   return async () => {
-    await axios
-      .post(API_CREATE_ROOF_VENDOR, params)
-      .then((response) => {
-        if (response.status === 200 && response.data?.data) {
-          MySweetAlert.fire({
-            iconHtml: <CicleSuccess />,
-            text: intl.formatMessage({ id: 'Operation unit is added successfully' }),
-            customClass: {
-              popup: classNames({
-                'sweet-alert-popup--dark': skin === 'dark'
-              }),
-              confirmButton: 'btn btn-primary mt-2',
-              icon: 'border-0'
-            },
-            width: 'max-content',
-            showCloseButton: true,
-            confirmButtonText: 'OK'
-          }).then(() => {
-            callback?.()
+    await axios.post(API_CHECK_CODE_ROOF_VENDORS, { code: params?.code }).then((response) => {
+      if (!response.data?.data) {
+        axios
+          .post(API_CREATE_ROOF_VENDOR, params)
+          .then((response) => {
+            if (response.status === 200 && response.data?.data) {
+              MySweetAlert.fire({
+                iconHtml: <CicleSuccess />,
+                text: intl.formatMessage({ id: 'Operation unit is added successfully' }),
+                customClass: {
+                  popup: classNames({
+                    'sweet-alert-popup--dark': skin === 'dark'
+                  }),
+                  confirmButton: 'btn btn-primary mt-2',
+                  icon: 'border-0'
+                },
+                width: 'max-content',
+                showCloseButton: true,
+                confirmButtonText: 'OK'
+              }).then(() => {
+                 callback?.(false)
+              })
+            } else {
+              throw new Error(response.data?.message)
+            }
           })
-        } else {
-          throw new Error(response.data?.message)
-        }
-      })
-      .catch((err) => {
-        console.log('err1', err)
-        MySweetAlert.fire({
-          iconHtml: <CicleFailed />,
-          text: intl.formatMessage({ id: 'Failed to update data. Please try again' }),
-          customClass: {
-            popup: classNames({
-              'sweet-alert-popup--dark': skin === 'dark'
-            }),
-            confirmButton: 'btn btn-primary mt-2',
-            icon: 'border-0'
-          },
-          width: 'max-content',
-          showCloseButton: true,
-          confirmButtonText: intl.formatMessage({ id: 'Try again' })
-        })
-      })
+          .catch((err) => {
+            console.log('err', err)
+            MySweetAlert.fire({
+              iconHtml: <CicleFailed />,
+              text: intl.formatMessage({ id: 'Failed to update data. Please try again' }),
+              customClass: {
+                popup: classNames({
+                  'sweet-alert-popup--dark': skin === 'dark'
+                }),
+                confirmButton: 'btn btn-primary mt-2',
+                icon: 'border-0'
+              },
+              width: 'max-content',
+              showCloseButton: true,
+              confirmButtonText: intl.formatMessage({ id: 'Try again' })
+            })
+          })
+      } else {
+        callback?.(true)
+      }
+    })
   }
+
 }
 export const putRoofVendors = ({ params, callback, intl, skin }) => {
   return async () => {
