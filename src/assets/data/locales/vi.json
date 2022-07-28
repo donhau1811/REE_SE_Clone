@@ -1733,5 +1733,7 @@
   "Delete settings failure":"Xóa giá trị cấu hình thất bại",
   "Delete billing settings message":"Bạn có chắc muốn xóa giá trị cấu hình này không",
   "Roof Vendors info":"Thông tin đơn vị cho thuê mái",
-   "Vendor code already exists":"Mã đơn vị đã tồn tại"
+   "Vendor code already exists":"Mã đơn vị đã tồn tại",
+   "operation-unit-form-phone":"Số điện thoại liên hệ",
+   "Enter-unit-phone":"Nhập số điện thoại"
 }

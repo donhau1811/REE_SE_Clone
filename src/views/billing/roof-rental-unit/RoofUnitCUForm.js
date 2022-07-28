@@ -89,7 +89,6 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
   useEffect(() => {
     reset({ ...initValues, state: OPERATION_UNIT_STATUS_OPTS.find((item) => item.value === initValues?.state) })
   }, [initValues])
-  console.log(initValues)
 
   return (
     <>

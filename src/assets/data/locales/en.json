@@ -1667,6 +1667,8 @@
   "Add new config value":"Add new config value",
   "Update new config value" : "Update new config value",
   "Add failure":"New data has not been successfully added, please try again",
-  "Vendor code already exists":"Vendor code already exists"
+  "Vendor code already exists":"Vendor code already exists",
+  "operation-unit-form-phone":"The phone number",
+  "Enter-unit-phone":"Enter the phone number"
 
 }

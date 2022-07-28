@@ -11,7 +11,7 @@ import customer from './customer'
 import roofRentalUnit from './roofRentalUnit'
 
 const solarMonitoringItems = [...dashboards, ...monitoring, ...report, ...settings]
-const billingInvoicesItems = [...operatingUnit, ...configuration, ...customer, ...roofRentalUnit]
+const billingInvoicesItems = [...configuration, ...operatingUnit,  ...customer, ...roofRentalUnit]
 
 const solarMonitoring = [
     {
