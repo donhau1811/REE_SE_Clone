@@ -1,8 +1,7 @@
-import { STATE as STATUS } from '@constants/common'
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
-import { ROUTER_URL } from '@src/utility/constants'
 import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
+import { ROUTER_URL, ROWS_PER_PAGE_DEFAULT } from '@src/utility/constants'
 import Table from '@src/views/common/table/CustomDataTable'
 import classnames from 'classnames'
 import { object } from 'prop-types'
@@ -14,7 +13,7 @@ import { Badge, Col, Row, UncontrolledTooltip } from 'reactstrap'
 import SweetAlert from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import PageHeader from './PageHeader'
-import { deleteBillingCustomer, getAllCustomer } from './store/actions'
+import { deleteCustomer, getListCustomer } from './store/actions'
 import './styles.scss'
 
 const MySweetAlert = withReactContent(SweetAlert)
@@ -25,20 +24,56 @@ const OperationUnit = ({ intl }) => {
   const {
     layout: { skin }
   } = useSelector((state) => state)
-  const data = useSelector((state) => state.billingCustomer)
+
+  const { data, params, total } = useSelector((state) => state.billingCustomer)
+
+  const { pagination = {}, searchValue } = params
+
+  const fetchListCustomers = (payload) => {
+    dispatch(
+      getListCustomer({
+        ...params,
+        ...payload
+      })
+    )
+  }
   useEffect(() => {
-    Promise.all([
-      dispatch(
-        getAllCustomer({
-          fk: '*',
-          state: [STATUS.ACTIVE].toString(),
-          rowsPerPage: -1
-        })
-      )
-    ])
+    fetchListCustomers({
+      pagination: {
+        rowsPerPage: ROWS_PER_PAGE_DEFAULT,
+        currentPage: 1,
+        sortBy: 'code',
+        sortDirection: 'asc'
+      }
+    })
   }, [])
   const handleRedirectToUpdatePage = (id) => () => {
-    if (id) history.push(`${ROUTER_URL.BILLING_CUSTOMER_VIEW}?id=${id}`)
+    if (id) history.push(`${ROUTER_URL.BILLING_CUSTOMER}/${id}`)
+  }
+
+  const handleChangePage = (e) => {
+    fetchListCustomers({
+      pagination: {
+        ...pagination,
+        currentPage: e.selected + 1
+      }
+    })
+  }
+
+  const handlePerPageChange = (e) => {
+    fetchListCustomers({
+      pagination: {
+        rowsPerPage: e.value,
+        currentPage: 1
+      }
+    })
+  }
+
+  const handleSort = (column, direction) => {
+    fetchListCustomers({
+      sortBy: column.selector,
+      sortDirection: direction
+    })
   }
   const handleDeleteCustomer = (id) => () => {
     return MySweetAlert.fire({
@@ -62,19 +97,43 @@ const OperationUnit = ({ intl }) => {
       buttonsStyling: false
     }).then(({ isConfirmed }) => {
       if (isConfirmed) {
-        dispatch(deleteBillingCustomer({
-          id,
-          skin,
-          intl
-        }))
+        dispatch(
+          deleteCustomer({
+            id,
+            skin,
+            intl,
+            callback: () => {
+              fetchListCustomers()
+            }
+          })
+        )
       }
+    })
+  }
+  const handleSearch = (value) => {
+    fetchListCustomers({
+      pagination: {
+        ...pagination,
+        currentPage: 1
+      },
+      searchValue: value
+    })
+  }
+  const handleFilter = (value) => {
+    fetchListCustomers({
+      pagination: {
+        ...pagination,
+        currentPage: 1
+      },
+      searchValue: '',
+      filterValue: value
     })
   }
   const columns = [
     {
       name: intl.formatMessage({ id: 'No.' }),
-      sortable: true,
-      cell: (row, index) => index + 1,
+      // eslint-disable-next-line no-mixed-operators
+      cell: (row, index) => index + (pagination?.currentPage - 1) * pagination.rowsPerPage + 1,
       center: true,
       maxWidth: '50px'
     },
@@ -126,7 +185,7 @@ const OperationUnit = ({ intl }) => {
     },
     {
       name: intl.formatMessage({ id: 'operation-unit-form-mobile' }),
-      selector: 'mobile',
+      selector: 'phone',
       sortable: true,
       center: true
     },
@@ -170,8 +229,16 @@ const OperationUnit = ({ intl }) => {
     <>
       <Row>
         <Col sm="12">
-          <PageHeader />
-          <Table columns={columns} data={data?.data || []}  />
+          <PageHeader onFilter={handleFilter} onSearch={handleSearch} searchValue={searchValue} />
+          <Table
+            columns={columns}
+            data={data || []}
+            total={total}
+            onPageChange={handleChangePage}
+            onPerPageChange={handlePerPageChange}
+            onSort={handleSort}
+            {...pagination}
+          />
         </Col>
       </Row>
     </>

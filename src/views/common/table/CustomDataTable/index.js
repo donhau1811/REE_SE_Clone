@@ -32,6 +32,7 @@ const Table = ({
   return (
     <>
       <DataTable
+      
         noHeader
         pagination
         paginationServer

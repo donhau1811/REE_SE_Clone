@@ -11,11 +11,12 @@ import ContactCUForm from './ContactCUForm'
 import { cloneDeep } from 'lodash'
 
 const Contact = ({ data, onChange, disabled }) => {
+  
   const [currContact, setCurrContact] = useState(null)
 
   const handleAddContact = () => {
     setCurrContact({
-      id: "-1"
+      id: '-1'
     })
   }
 
@@ -24,9 +25,14 @@ const Contact = ({ data, onChange, disabled }) => {
   }
 
   const handleDeleteContact = (contact) => () => {
-    const newData = data.filter((item) => item.id !== contact.id)
+    const newData = data.reduce((array, item) => {
+      if (item.id !== contact.id) return [...array, item]
+      if (item.isCreate) return array
+      return [...array, { ...item, isDelete: true }]
+    }, [])
     onChange?.(newData)
   }
+
   const columns = [
     {
       name: <FormattedMessage id="No." />,
@@ -36,19 +42,17 @@ const Contact = ({ data, onChange, disabled }) => {
     },
     {
       name: <FormattedMessage id="Contact Name" />,
-      selector: 'name',
-      center: true,
-      cell: (row) => <span>{row.name}</span>
+      selector: 'fullName',
+      center: true
     },
     {
       name: <FormattedMessage id="Position" />,
       selector: 'position',
-      center: true,
-      cell: (row) => <span>{row.position?.label}</span>
+      center: true
     },
     {
       name: <FormattedMessage id="operation-unit-form-mobile" />,
-      selector: 'mobile',
+      selector: 'phone',
       center: true
     },
     {
@@ -90,7 +94,7 @@ const Contact = ({ data, onChange, disabled }) => {
     let newData = cloneDeep(data)
 
     if (currContact?.id === '-1') {
-      newData.push({ ...values, id: newData.length > 0 ? newData[newData.length - 1].id + 1 : 1 })
+      newData.push({ ...values, id: -Number(new Date().getTime()) })
     } else {
       newData = newData.map((contact) => {
         if (contact.id === currContact?.id) return { ...contact, ...values }
@@ -121,7 +125,7 @@ const Contact = ({ data, onChange, disabled }) => {
       </Row>
       <Row className="mb-2">
         <Col>
-          <Table columns={columns} pagination={null} data={data} />
+          <Table columns={columns} pagination={null} data={data?.filter((item) => !item.isDelete) || []} />
           {!data?.length > 0 && <NoDataCOM />}
         </Col>
       </Row>
