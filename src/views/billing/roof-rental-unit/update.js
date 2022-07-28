@@ -1,20 +1,33 @@
 import { ROUTER_URL } from '@src/utility/constants'
 import { object } from 'prop-types'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { injectIntl } from 'react-intl'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import RoofUnit from './RoofUnitCUForm'
-import { mockUpdateForm } from './mock-data'
 import { Tab, Tabs } from '@mui/material'
 import ProjectTable from './ProjectTable'
-
+import { useDispatch, useSelector } from 'react-redux'
+import { getRoofVendorById, putRoofVendors } from './store/actions/index'
 const UpdateRoofRentalUnit = ({ intl }) => {
+  const dispatch = useDispatch()
   const history = useHistory()
-  const { search } = useLocation()
+  const [isReadOnly, setIsReadOnly] = useState(true)
+  const {
+    layout: { skin }
+  } = useSelector((state) => state)
   const [activeTab, setActiveTab] = useState(1)
-  const searchParams = new URLSearchParams(search)
-  const id = searchParams.get('id')
-  console.log('id', id)
+  const { id } = useParams()
+  useEffect(() => {
+    dispatch(
+      getRoofVendorById({
+        id,
+        isSavedToState: true
+      })
+    )
+  }, [])
+  const {
+    roofUnit: { selectedRoofVendor }
+  } = useSelector((state) => state)
   const handleCancel = () => {
     history.push(ROUTER_URL.BILLING_ROOF_RENTAL_UNIT)
   }
@@ -24,7 +37,22 @@ const UpdateRoofRentalUnit = ({ intl }) => {
   }
 
   const handleUpdateRentalUnit = (values) => {
-    console.log('values', values)
+    if (isReadOnly) {
+      setIsReadOnly(false)
+    } else {
+      dispatch(
+        putRoofVendors({
+          params: { ...values, state: values.state?.value, id },
+          callback: () => {
+            history.push(ROUTER_URL.BILLING_ROOF_RENTAL_UNIT)
+          },
+          intl,
+          skin
+        })
+      )
+
+
+    }
   }
   return (
     <>
@@ -38,14 +66,18 @@ const UpdateRoofRentalUnit = ({ intl }) => {
           root: 'mb-2 tabs-border-bottom'
         }}
       >
-        <Tab classes={{ root: 'general-tab' }} label={intl.formatMessage({ id: 'Customer info' })} value={1} />
+        <Tab classes={{ root: 'general-tab' }} label={intl.formatMessage({ id: 'Roof Vendors info' })} value={1} />
         <Tab classes={{ root: 'general-tab' }} label={intl.formatMessage({ id: 'projects' })} value={2} />
       </Tabs>
       {activeTab === 1 && (
-        <RoofUnit onSubmit={handleUpdateRentalUnit} onCancel={handleCancel} initValues={mockUpdateForm} />
+        <RoofUnit
+          isReadOnly={isReadOnly}
+          onSubmit={handleUpdateRentalUnit}
+          onCancel={handleCancel}
+          initValues={selectedRoofVendor}
+        />
       )}
-          {activeTab === 2 && <ProjectTable />}
-
+      {activeTab === 2 && <ProjectTable />}
     </>
   )
 }

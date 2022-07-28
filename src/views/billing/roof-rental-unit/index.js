@@ -1,7 +1,5 @@
-import { STATE as STATUS } from '@constants/common'
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
-import { ROUTER_URL } from '@src/utility/constants'
 import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
 import Table from '@src/views/common/table/CustomDataTable'
 import classnames from 'classnames'
@@ -16,29 +14,73 @@ import withReactContent from 'sweetalert2-react-content'
 import PageHeader from './PageHeader'
 import { deleteBillingRoofRentalUnit, getAllRoofUnit } from './store/actions'
 import './styles.scss'
+import { ROUTER_URL, ROWS_PER_PAGE_DEFAULT } from '@src/utility/constants'
 
 const MySweetAlert = withReactContent(SweetAlert)
 
-const OperationUnit = ({ intl }) => {
+const RoofVendor = ({ intl }) => {
   const history = useHistory()
   const dispatch = useDispatch()
+  const { data, params, total } = useSelector((state) => state.roofUnit)
+
+  const { pagination = {}, searchValue } = params
   const {
     layout: { skin }
   } = useSelector((state) => state)
-  const data = useSelector((state) => state.roofUnit)
+    
+   
+  const fetchRoofVendor = (payload) => {
+    dispatch(
+      getAllRoofUnit({
+        ...params,
+        ...payload
+      })
+    )
+  }
+   
   useEffect(() => {
-    Promise.all([
-      dispatch(
-        getAllRoofUnit({
-          fk: '*',
-          state: [STATUS.ACTIVE].toString(),
-          rowsPerPage: -1
-        })
-      )
-    ])
+    fetchRoofVendor({
+      pagination: {
+        rowsPerPage: ROWS_PER_PAGE_DEFAULT,
+        currentPage: 1
+      }
+    })
   }, [])
+  const handleChangePage = (e) => {
+    fetchRoofVendor({
+      pagination: {
+        ...pagination,
+        currentPage: e.selected + 1
+      }
+    })
+  }
+
+  const handlePerPageChange = (e) => {
+    fetchRoofVendor({
+      pagination: {
+        rowsPerPage: e.value,
+        currentPage: 1
+      }
+    })
+  }
+
+  const handleSearch = (value) => {
+    fetchRoofVendor({
+      pagination: {
+        ...pagination,
+        currentPage: 1
+      },
+      searchValue: value
+    })
+  }
+  const handleSort = (column, direction) => {
+    fetchRoofVendor({
+      sortBy: column.selector,
+      sortDirection: direction
+    })
+  }
   const handleRedirectToUpdatePage = (id) => () => {
-    if (id) history.push(`${ROUTER_URL.BILLING_ROOF_RENTAL_UNIT_UPDATE}?id=${id}`)
+    if (id) history.push(`${ROUTER_URL.BILLING_ROOF_RENTAL_UNIT}/${id}`)
   }
   const handleDeleteRoofRentalUnit = (id) => () => {
     return MySweetAlert.fire({
@@ -65,7 +107,10 @@ const OperationUnit = ({ intl }) => {
         dispatch(deleteBillingRoofRentalUnit({
           id,
           skin,
-          intl
+          intl,
+          callback : () => {
+            fetchRoofVendor()
+          }
         }))
       }
     })
@@ -123,7 +168,7 @@ const OperationUnit = ({ intl }) => {
 
     {
       name: intl.formatMessage({ id: 'operation-unit-form-mobile' }),
-      selector: 'mobile',
+      selector: 'phone',
       sortable: true,
       center: true
     },
@@ -171,16 +216,22 @@ const OperationUnit = ({ intl }) => {
     <>
       <Row>
         <Col sm="12">
-          <PageHeader />
-          <Table columns={columns} data={data?.data || []} />
+          <PageHeader onSearch={handleSearch} searchValue={searchValue} />
+          <Table columns={columns} 
+            data={data}
+            total={total}
+            onPageChange={handleChangePage}
+            onPerPageChange={handlePerPageChange}
+            onSort={handleSort}
+            {...pagination}/>
         </Col>
       </Row>
     </>
   )
 }
 
-OperationUnit.propTypes = {
+RoofVendor.propTypes = {
   intl: object.isRequired
 }
 
-export default injectIntl(OperationUnit)
+export default injectIntl(RoofVendor)

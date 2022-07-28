@@ -1713,7 +1713,7 @@
   "Add contact info to create new roof rental unit":"Thêm mới liên hệ để hoàn tất việc thêm đơn vị cho thuê mái mới",
   "create-rental-unit": "Thêm thông tin đơn vị thuê mái ",
   "update-rental-unit": "Cập nhật thông tin đơn vị thuê mái ",
-  "roof-rental-unit":"Đơn vị cho thuê mái ",
+  "roof-rental-unit":"Đơn vị cho thuê mái",
   "Roof Rental Company":"Đơn vị cho thuê mái",
   "explain":"Diễn giải",
   "Config Name":"Tên cấu hình",
@@ -1731,6 +1731,7 @@
   "Settings is added successfully":"Giá trị cấu hình đã được thêm mới thành công",
   "Delete settings success":"Xóa giá trị cấu hình thành công",
   "Delete settings failure":"Xóa giá trị cấu hình thất bại",
-  "Delete billing settings message":"Bạn có chắc muốn xóa giá trị cấu hình này không"
-
+  "Delete billing settings message":"Bạn có chắc muốn xóa giá trị cấu hình này không",
+  "Roof Vendors info":"Thông tin đơn vị cho thuê mái",
+   "Vendor code already exists":"Mã đơn vị đã tồn tại"
 }

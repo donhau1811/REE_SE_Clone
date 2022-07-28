@@ -24,12 +24,12 @@ const ThemeNavbar = (props) => {
 
   // Remove 1st empty item
   breadCrumbItems.shift()
-
   const {
     customerProject: { selectedProject },
-    company: { selectedCompany }
+    company: { selectedCompany },
+    roofUnit: { selectedRoofVendor }
   } = useSelector((state) => state)
-
+  
   const renderCustomNav = (pathname) => {
     switch (pathname) {
       case ROUTER_URL.PROJECT_OVERVIEW:
@@ -61,6 +61,24 @@ const ThemeNavbar = (props) => {
           { name: intl.formatMessage({ id: 'operation-units' }), link: ROUTER_URL.BILLING_OPERATION_UNIT },
           { name: selectedCompany?.name, link: '' }
         ]
+        return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
+      }
+      case `${ROUTER_URL.BILLING_ROOF_RENTAL_UNIT}/${selectedRoofVendor?.id}`: {
+        const tempItems = [
+          { name: intl.formatMessage({ id: 'billing' }), link: '' },
+          { name: intl.formatMessage({ id: 'roof-rental-unit' }), link: ROUTER_URL.BILLING_ROOF_RENTAL_UNIT},
+          { name: selectedRoofVendor?.name, link: '' }
+        ]
+
+        return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
+      }
+      case `${ROUTER_URL.BILLING_ROOF_RENTAL_UNIT_CREATE}`: {
+        const tempItems = [
+          { name: intl.formatMessage({ id: 'billing' }), link: '' },
+          { name: intl.formatMessage({ id: 'roof-rental-unit' }), link: ROUTER_URL.BILLING_ROOF_RENTAL_UNIT},
+          { name: intl.formatMessage({ id: 'create-rental-unit' }), link: '' }
+        ]
+
         return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
       }
 

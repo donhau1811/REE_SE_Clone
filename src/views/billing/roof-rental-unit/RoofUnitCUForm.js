@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { MOBILE_REGEX, EMAIL_REGEX } from '@src/utility/constants'
 import { selectThemeColors } from '@src/utility/Utils'
-import { func, object } from 'prop-types'
+import { func, object, bool } from 'prop-types'
 import { Controller, useForm } from 'react-hook-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Select from 'react-select'
@@ -11,51 +11,25 @@ import * as yup from 'yup'
 import './styles.scss'
 import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
 import React, { useState, useEffect } from 'react'
-import SweetAlert from 'sweetalert2'
-import classNames from 'classnames'
-import withReactContent from 'sweetalert2-react-content'
-import { useSelector } from 'react-redux'
-import { ReactComponent as CicleFailed } from '@src/assets/images/svg/circle-failed.svg'
 
-
-const MySweetAlert = withReactContent(SweetAlert)
-const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues }) => {
+const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, isReadOnly }) => {
   const [contacts, setContacts] = useState([])
-  const {
-    layout: { skin }
-  } = useSelector((state) => state)
+
   const OPERATION_UNIT_STATUS_OPTS = [
-    { value: OPERATION_UNIT_STATUS.INACTIVE, label: intl.formatMessage({ id: 'Active' }) },
-    { value: OPERATION_UNIT_STATUS.ACTIVE, label: intl.formatMessage({ id: 'Inactive' }) }
+    { value: OPERATION_UNIT_STATUS.ACTIVE, label: intl.formatMessage({ id: 'Active' }) },
+    { value: OPERATION_UNIT_STATUS.INACTIVE, label: intl.formatMessage({ id: 'Inactive' }) }
   ]
   const initState = {
-    status: OPERATION_UNIT_STATUS_OPTS[0],
+    state: OPERATION_UNIT_STATUS_OPTS[0],
     name: null,
     code: null,
     taxCode: null,
     address: null,
-    mobile: null,
+    phone: null,
     note: null
   }
 
-  const handleSubmitCustomerForm = (values) => {
-    if (contacts?.length < 1) {
-      return MySweetAlert.fire({
-        // icon: 'success',
-        iconHtml: <CicleFailed />,
-        text: intl.formatMessage({ id: 'Need at least 1 contact to add customer. Please try again' }),
-        customClass: {
-          popup: classNames({
-            'sweet-alert-popup--dark': skin === 'dark'
-          }),
-          confirmButton: 'btn btn-primary mt-2',
-          icon: 'border-0'
-        },
-        width: 'max-content',
-        showCloseButton: true,
-        confirmButtonText: intl.formatMessage({ id: 'Try again' })
-      })
-    }
+  const handleSubmitRoofVendorsForm = (values) => {
     onSubmit?.({
       ...values,
       contacts
@@ -86,7 +60,7 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues }
         .string()
         .required(intl.formatMessage({ id: 'required-validate' }))
         .max(255, intl.formatMessage({ id: 'max-validate' })),
-      mobile: yup
+      phone: yup
         .string()
         .matches(MOBILE_REGEX, {
           message: intl.formatMessage({ id: 'invalid-character-validate' }),
@@ -101,21 +75,25 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues }
           excludeEmptyString: true
         })
     },
-    ['name', 'code', 'taxCode', 'address', 'mobile', 'email', 'note']
+    ['name', 'code', 'taxCode', 'address', 'phone', 'email', 'note', 'state']
   )
   useEffect(() => {
     setContacts(initValues?.contacts || [])
   }, [initValues?.contacts])
 
-  const { handleSubmit, getValues, errors, control, register } = useForm({
+  const { handleSubmit, getValues, errors, control, register, reset } = useForm({
     mode: 'onChange',
-    resolver: yupResolver(ValidateSchema),
+    resolver: yupResolver(isReadOnly ? yup.object().shape({}) : ValidateSchema),
     defaultValues: initValues || initState
   })
+  useEffect(() => {
+    reset({ ...initValues, state: OPERATION_UNIT_STATUS_OPTS.find((item) => item.value === initValues?.state) })
+  }, [initValues])
+  console.log(initValues)
 
   return (
     <>
-      <Form onSubmit={handleSubmit(handleSubmitCustomerForm)}>
+      <Form onSubmit={handleSubmit(handleSubmitRoofVendorsForm)}>
         <Row className="mb-2">
           <Col>
             <h4 className="typo-section">
@@ -133,6 +111,8 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues }
             <Input
               className="input"
               id="name"
+              disabled={isReadOnly}
+
               name="name"
               autoComplete="on"
               invalid={!!errors.name}
@@ -149,6 +129,8 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues }
             <Input
               className="input"
               id="code"
+              disabled={isReadOnly}
+
               name="code"
               autoComplete="on"
               innerRef={register()}
@@ -166,6 +148,8 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues }
             <Input
               className="input"
               id="taxCode"
+              disabled={isReadOnly}
+
               name="taxCode"
               autoComplete="on"
               innerRef={register()}
@@ -185,6 +169,8 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues }
             <Input
               className="input"
               id="address"
+              disabled={isReadOnly}
+
               name="address"
               autoComplete="on"
               innerRef={register()}
@@ -203,6 +189,8 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues }
               className="input"
               type="email"
               id="email"
+              disabled={isReadOnly}
+
               name="email"
               autoComplete="on"
               innerRef={register()}
@@ -214,20 +202,22 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues }
           </Col>
           <Col className="mb-2" md="4">
             <Label className="general-label" for="exampleSelect">
-              {intl.formatMessage({ id: 'operation-unit-form-mobile' })}
+              {intl.formatMessage({ id: 'operation-unit-form-phone' })}
             </Label>
             <Input
               className="input"
               ty
-              id="mobile"
-              name="mobile"
+              id="phone"
+              name="phone"
+              disabled={isReadOnly}
+
               autoComplete="on"
               innerRef={register()}
-              invalid={!!errors.mobile}
-              valid={getValues('mobile')?.trim() && !errors.mobile}
-              placeholder={intl.formatMessage({ id: 'Enter-unit-mobile' })}
+              invalid={!!errors.phone}
+              valid={getValues('phone')?.trim() && !errors.phone}
+              placeholder={intl.formatMessage({ id: 'Enter-unit-phone' })}
             />
-            {errors?.mobile && <FormFeedback>{errors?.mobile?.message}</FormFeedback>}
+            {errors?.phone && <FormFeedback>{errors?.phone?.message}</FormFeedback>}
           </Col>
         </Row>
 
@@ -238,10 +228,12 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues }
             </Label>
             <Controller
               as={Select}
+              isDisabled={isReadOnly}
+
               control={control}
               theme={selectThemeColors}
-              name="status"
-              id="status"
+              name="state"
+              id="state"
               innerRef={register()}
               options={OPERATION_UNIT_STATUS_OPTS}
               className="react-select"
@@ -258,6 +250,8 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues }
               name="note"
               id="note"
               autoComplete="on"
+              disabled={isReadOnly}
+
               innerRef={register()}
               placeholder={intl.formatMessage({ id: 'Enter-unit-note' })}
             />
@@ -269,7 +263,7 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues }
 
         <Row className="d-flex justify-content-end align-items-center mt-5">
           <Button type="submit" color="primary" className="mr-1 px-3">
-            {intl.formatMessage({ id: 'Save' })}
+            {intl.formatMessage({ id: isReadOnly ? 'Update' : 'Save' })}
           </Button>
           <Button onClick={onCancel} color="secondary">
             {intl.formatMessage({ id: 'Cancel' })}
@@ -284,7 +278,8 @@ RoofUnit.propTypes = {
   intl: object.isRequired,
   onSubmit: func,
   onCancel: func,
-  initValues: object
+  initValues: object,
+  isReadOnly: bool
 }
 
 export default injectIntl(RoofUnit)

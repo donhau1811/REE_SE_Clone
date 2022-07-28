@@ -125,6 +125,14 @@ export const API_CREATE_OPERATION_UNIT = `${BASE_API_URL_V2}/operation-company/c
 export const API_UPDATE_OPERATION_UNIT = `${BASE_API_URL_V2}/operation-company/update`
 export const API_GET_OPERATION_UNIT_BY_ID = `${BASE_API_URL_V2}/operation-company/id`
 export const API_DELETE_OPERATING_COMPANY = `${BASE_API_URL_V2}/operation-company/delete`
+//roofVendor
+export const API_GET_ROOF_VENDOR = `${BASE_API_URL_V2}/roof-vendor/search`
+export const API_CREATE_ROOF_VENDOR  = `${BASE_API_URL_V2}/roof-vendor/create`
+export const API_UPDATE_ROOF_VENDOR  = `${BASE_API_URL_V2}/roof-vendor/update`
+export const API_GET_ROOF_VENDOR_BY_ID = `${BASE_API_URL_V2}/roof-vendor/id`
+export const API_DELETE_ROOF_VENDORS = `${BASE_API_URL_V2}/roof-vendor/delete`
+export const API_CHECK_CODE_ROOF_VENDORS = `${BASE_API_URL_V2}/roof-vendor/check-code`
+//end roofVendor
 
 export const API_CUSTOMER_V2 = `${BASE_API_URL}/glf_customer_v2`
 
