@@ -6,7 +6,6 @@ import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker'
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 import { object, func } from 'prop-types'
 import { ReactComponent as Carlendar } from '@src/assets/images/svg/carlendar.svg'
-import './scss/Filter.scss'
 import { DISPLAY_DATE_FORMAT } from '@src/utility/constants'
 import { injectIntl } from 'react-intl'
 

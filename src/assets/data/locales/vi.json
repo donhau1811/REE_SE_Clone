@@ -58,7 +58,6 @@
   "New Password": "Mật khẩu mới",
   "Retype New Password": "Nhập lại mật khẩu mới",
   "Logout": "Đăng xuất",
-  "Configuration": "Cấu hình",
   "System Alert": "Cảnh báo hệ thống",
   "Projects": "Dự án",
   "Users": "Người dùng",
@@ -1648,7 +1647,7 @@
   "BillingInvoice": "Thanh toán & hóa đơn",
   "SolarMonitoring": "Giám sát",
   "OperatingCompany": "Công ty vận hành",
-  "MasterData": "Cấu hình",
+  "Configuration": "Cấu hình",
   "Customer Company": "Tên công ty khách hàng",
   "Company-Types": "Loại Khách Hàng",
   "All-customer": "Tất cả khách hàng",
@@ -1713,7 +1712,7 @@
   "Add contact info to create new roof rental unit":"Thêm mới liên hệ để hoàn tất việc thêm đơn vị cho thuê mái mới",
   "create-rental-unit": "Thêm thông tin đơn vị thuê mái ",
   "update-rental-unit": "Cập nhật thông tin đơn vị thuê mái ",
-  "roof-rental-unit":"Đơn vị cho thuê mái ",
+  "roof-rental-unit":"Đơn vị cho thuê mái",
   "Roof Rental Company":"Đơn vị cho thuê mái",
   "explain":"Diễn giải",
   "Config Name":"Tên cấu hình",
@@ -1731,6 +1730,11 @@
   "Settings is added successfully":"Giá trị cấu hình đã được thêm mới thành công",
   "Delete settings success":"Xóa giá trị cấu hình thành công",
   "Delete settings failure":"Xóa giá trị cấu hình thất bại",
-  "Delete billing settings message":"Bạn có chắc muốn xóa giá trị cấu hình này không"
+  "Delete billing settings message":"Bạn có chắc muốn xóa giá trị cấu hình này không",
+  "Roof Vendors info":"Thông tin đơn vị cho thuê mái",
+   "Vendor code already exists":"Thông tin không được trùng",
+   "operation-unit-form-phone":"Số điện thoại liên hệ",
+   "Enter-unit-phone":"Nhập số điện thoại",
+   "Roof Vendor is added successfully": "Đơn vị cho thuê mái đã được thêm mới thành công!"
 
 }

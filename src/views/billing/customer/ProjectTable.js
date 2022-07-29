@@ -4,7 +4,6 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { object } from 'prop-types'
 import Table from '@src/views/common/table/CustomDataTable'
 import { billElectricArray } from './mock-data'
-import './scss/Filter.scss'
 
 const ProjectTable = ({ intl }) => {
   const columns = [

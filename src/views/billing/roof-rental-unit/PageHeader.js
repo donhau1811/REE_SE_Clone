@@ -1,5 +1,5 @@
-import { object } from 'prop-types'
-import React from 'react'
+import { object, string, func } from 'prop-types'
+import React, { useEffect, useState } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Button, Col, Input, Row, UncontrolledTooltip } from 'reactstrap'
 import InputGroupAddon from 'reactstrap/es/InputGroupAddon'
@@ -9,8 +9,28 @@ import { ReactComponent as IconSearch } from '@src/assets/images/svg/table/ic-se
 import { useHistory } from 'react-router-dom'
 import { ROUTER_URL } from '@src/utility/constants'
 
-const PageHeader = ({ intl }) => {
+const PageHeader = ({ intl, onSearch = () => {}, searchValue}) => {
   const history = useHistory()
+  const [value, setValue] = useState('')
+
+  useEffect(() => {
+    if (searchValue !== value) setValue(searchValue)
+  }, [searchValue])
+
+  const handleClickToSearch = () => {
+    onSearch?.(value)
+  }
+
+  const handleSearchInputChange = (e) => {
+    setValue(e.target.value)
+  }
+
+  const handleSearchInputKeyDown = (event) => {
+    if (event.keyCode === 13) {
+      event.preventDefault()
+      onSearch?.(value)
+    }
+  }
 
   const handleRedirectToAddNewPage = () => {
     history.push(ROUTER_URL.BILLING_ROOF_RENTAL_UNIT_CREATE)
@@ -26,10 +46,13 @@ const PageHeader = ({ intl }) => {
               bsSize="sm"
               id="search-input"
               placeholder={intl.formatMessage({ id: 'operation-unit-list-search-input-placeholder' })}
+              value={value}
+              onChange={handleSearchInputChange}
+              onKeyDown={handleSearchInputKeyDown}
             />
             <InputGroupAddon addonType="append">
               <InputGroupText>
-                <IconSearch />
+              <IconSearch onClick={handleClickToSearch} />
               </InputGroupText>
             </InputGroupAddon>
           </InputGroup>
@@ -49,7 +72,10 @@ const PageHeader = ({ intl }) => {
 }
 
 PageHeader.propTypes = {
-  intl: object.isRequired
+  intl: object.isRequired,
+  searchValue: string,
+  onSearch: func
+
 }
 
 export default injectIntl(PageHeader)

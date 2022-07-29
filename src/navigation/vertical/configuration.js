@@ -5,7 +5,7 @@ import React from 'react'
 export default [
   {
     id: 'configuration',
-    title: 'MasterData',
+    title: 'Configuration',
     icon: <img src={configuration} alt='configuration'/>,
     action: 'manage',
     resource: ROUTER_URL.BILLING_SETTING,
