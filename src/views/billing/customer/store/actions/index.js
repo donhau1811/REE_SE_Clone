@@ -134,12 +134,11 @@ export const putCustomer = ({ params, callback, skin, intl }) => {
       confirmButtonText: intl.formatMessage({ id: 'Try again' })
     }
     const { contacts, ...customerPayload } = params
-
     await axios
       .put(API_UPDATE_CUSTOMER_V2, { ...customerPayload, provinceCode: 'HCM' })
       .then((response) => {
         if (response.status === 200 && response.data.data) {
-          const contactsModifyRes = handleCRUDOfContacts(contacts, customerPayload.id)
+          const contactsModifyRes = handleCRUDOfContacts({ contacts, customerId: customerPayload.id })
           return Promise.all(contactsModifyRes)
             .then(() => {
               MySweetAlert.fire({

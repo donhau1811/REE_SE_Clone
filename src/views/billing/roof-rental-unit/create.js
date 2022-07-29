@@ -16,7 +16,7 @@ const CreateRoofRentalUnit = ({ intl }) => {
   const handleAddRoofVendors = (values) => {
     dispatch(
       postRoofVendors({
-        params: { ...values, state: values?.state?.value },
+        params: { ...values, state: values?.state?.value, type: values.type?.value },
         callback: () => {
             history.push(ROUTER_URL.BILLING_ROOF_RENTAL_UNIT)
         },
