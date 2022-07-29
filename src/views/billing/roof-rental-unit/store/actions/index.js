@@ -125,48 +125,47 @@ export const getRoofVendorById = ({ id, isSavedToState, callback }) => {
 export const postRoofVendors = ({ params, callback, skin, intl }) => {
   return async () => {
     await axios
-          .post(API_CREATE_ROOF_VENDOR, params)
-          .then((response) => {
-            if (response.status === 200 && response.data?.data) {
-              MySweetAlert.fire({
-                iconHtml: <CicleSuccess />,
-                text: intl.formatMessage({ id: 'Operation unit is added successfully' }),
-                customClass: {
-                  popup: classNames({
-                    'sweet-alert-popup--dark': skin === 'dark'
-                  }),
-                  confirmButton: 'btn btn-primary mt-2',
-                  icon: 'border-0'
-                },
-                width: 'max-content',
-                showCloseButton: true,
-                confirmButtonText: 'OK'
-              }).then(() => {
-                 callback?.(false)
-              })
-            } else {
-              throw new Error(response.data?.message)
-            }
+      .post(API_CREATE_ROOF_VENDOR, params)
+      .then((response) => {
+        if (response.status === 200 && response.data?.data) {
+          MySweetAlert.fire({
+            iconHtml: <CicleSuccess />,
+            text: intl.formatMessage({ id: 'Roof Vendor is added successfully' }),
+            customClass: {
+              popup: classNames({
+                'sweet-alert-popup--dark': skin === 'dark'
+              }),
+              confirmButton: 'btn btn-primary mt-2',
+              icon: 'border-0'
+            },
+            width: 'max-content',
+            showCloseButton: true,
+            confirmButtonText: 'OK'
+          }).then(() => {
+            callback?.(false)
           })
-          .catch((err) => {
-            console.log('err', err)
-            MySweetAlert.fire({
-              iconHtml: <CicleFailed />,
-              text: intl.formatMessage({ id: 'Failed to update data. Please try again' }),
-              customClass: {
-                popup: classNames({
-                  'sweet-alert-popup--dark': skin === 'dark'
-                }),
-                confirmButton: 'btn btn-primary mt-2',
-                icon: 'border-0'
-              },
-              width: 'max-content',
-              showCloseButton: true,
-              confirmButtonText: intl.formatMessage({ id: 'Try again' })
-            })
-          })
+        } else {
+          throw new Error(response.data?.message)
+        }
+      })
+      .catch((err) => {
+        console.log('err', err)
+        MySweetAlert.fire({
+          iconHtml: <CicleFailed />,
+          text: intl.formatMessage({ id: 'Failed to update data. Please try again' }),
+          customClass: {
+            popup: classNames({
+              'sweet-alert-popup--dark': skin === 'dark'
+            }),
+            confirmButton: 'btn btn-primary mt-2',
+            icon: 'border-0'
+          },
+          width: 'max-content',
+          showCloseButton: true,
+          confirmButtonText: intl.formatMessage({ id: 'Try again' })
+        })
+      })
   }
-
 }
 export const putRoofVendors = ({ params, callback, intl, skin }) => {
   return async () => {
@@ -213,21 +212,17 @@ export const putRoofVendors = ({ params, callback, intl, skin }) => {
       })
   }
 }
-export const checkDuplicate = ({ params, callback }) => {
-  return async () => {
-    await axios
-      .post(API_CHECK_CODE_ROOF_VENDORS, params)
-      .then((response) => {
-        console.log(response)
-        if (response.status === 200 && !response.data?.data) {
-          
-          callback?.(false)
-        } else {
-          callback?.(true)
-        }
-      })
-      .catch((err) => {
-        console.log('err', err)
-      })
-  }
+export const checkDuplicate = async ({ params }) => {
+  return axios
+    .post(API_CHECK_CODE_ROOF_VENDORS, params)
+    .then((response) => {
+      console.log(response)
+      if (response.status === 200) {
+        return response.data?.data
+      }
+    })
+    .catch((err) => {
+      console.log('err', err)
+      return true
+    })
 }

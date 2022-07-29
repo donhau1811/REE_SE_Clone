@@ -12,7 +12,7 @@ import './styles.scss'
 import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
 import React, { useState, useEffect } from 'react'
 import { checkDuplicate } from './store/actions'
-import { useDispatch, useSelector } from 'react-redux'
+import {  useSelector } from 'react-redux'
 import withReactContent from 'sweetalert2-react-content'
 import classNames from 'classnames'
 import SweetAlert from 'sweetalert2'
@@ -22,8 +22,6 @@ const MySweetAlert = withReactContent(SweetAlert)
 
 const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, isReadOnly }) => {
   const [contacts, setContacts] = useState([])
-  const dispatch = useDispatch()
-  const [isDuplicateCode, setIsDuplicateCode] = useState(false)
   const OPERATION_UNIT_STATUS_OPTS = [
     { value: OPERATION_UNIT_STATUS.ACTIVE, label: intl.formatMessage({ id: 'Active' }) },
     { value: OPERATION_UNIT_STATUS.INACTIVE, label: intl.formatMessage({ id: 'Inactive' }) }
@@ -41,47 +39,7 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
     layout: { skin }
   } = useSelector((state) => state)
 
-  const handleSubmitRoofVendorsForm = (values) => {
 
-    if (!contacts?.length > 0) {
-      return MySweetAlert.fire({
-        // icon: 'success',
-        iconHtml: <CicleFailed />,
-        text: intl.formatMessage({ id: 'Need at least 1 contact to add customer. Please try again' }),
-        customClass: {
-          popup: classNames({
-            'sweet-alert-popup--dark': skin === 'dark'
-          }),
-          confirmButton: 'btn btn-primary mt-2',
-          icon: 'border-0'
-        },
-        width: 'max-content',
-        showCloseButton: true,
-        confirmButtonText: intl.formatMessage({ id: 'Try again' })
-      })
-    }
-    if (initValues?.code !== values.code) {
-      dispatch(
-        checkDuplicate({
-          params: { code: values.code },
-          callback: value => {
-            setIsDuplicateCode(value)
-            if (!value) {
-              onSubmit?.({
-                ...values,
-                contacts
-              })
-            }
-          }
-        })
-      )
-    } else {
-      onSubmit?.({
-        ...values,
-        contacts
-      })
-    }
-  }
   const handleContactformSubmit = (value) => {
     setContacts(value)
   }
@@ -128,7 +86,7 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
     setContacts(initValues?.contacts || [])
   }, [initValues?.contacts])
 
-  const { handleSubmit, getValues, errors, control, register, reset } = useForm({
+  const { handleSubmit, getValues, errors, control, register, reset, setError } = useForm({
     mode: 'onChange',
     resolver: yupResolver(isReadOnly ? yup.object().shape({}) : ValidateSchema),
     defaultValues: initValues || initState
@@ -136,7 +94,37 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
   useEffect(() => {
     reset({ ...initValues, state: OPERATION_UNIT_STATUS_OPTS.find((item) => item.value === initValues?.state) })
   }, [initValues])
-
+  const handleSubmitRoofVendorsForm = async (values) => {
+    if (contacts?.length <= 0) {
+      return MySweetAlert.fire({
+        // icon: 'success',
+        iconHtml: <CicleFailed />,
+        text: intl.formatMessage({ id: 'Need at least 1 contact to add customer. Please try again' }),
+        customClass: {
+          popup: classNames({
+            'sweet-alert-popup--dark': skin === 'dark'
+          }),
+          confirmButton: 'btn btn-primary mt-2',
+          icon: 'border-0'
+        },
+        width: 'max-content',
+        showCloseButton: true,
+        confirmButtonText: intl.formatMessage({ id: 'Try again' })
+      })
+    }
+    const isDupicateCode = await checkDuplicate({
+      params: { code: values.code }
+    })
+    if (initValues?.code !== values.code && isDupicateCode) {
+      setError('code', { type: 'focus', message: intl.formatMessage({ id: 'dubplicated-validate' })}, { shouldFocus: true })
+      return 
+    } 
+      onSubmit?.({
+        ...values,
+        contacts
+      })
+    
+  }
   return (
     <>
       <Form onSubmit={handleSubmit(handleSubmitRoofVendorsForm)}>
@@ -178,16 +166,11 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
               name="code"
               autoComplete="on"
               innerRef={register()}
-              invalid={!!errors.code || isDuplicateCode}
-              valid={getValues('code')?.trim() && !errors.code && !isDuplicateCode}
+              invalid={!!errors.code}
+              valid={getValues('code')?.trim() && !errors.code}
               placeholder={intl.formatMessage({ id: 'Enter-unit-code' })}
             />
             {errors?.code && <FormFeedback>{errors?.code?.message}</FormFeedback>}
-            {isDuplicateCode && (
-              <FormFeedback>
-                <div>{intl.formatMessage({ id: 'Vendor code already exists' })}</div>
-              </FormFeedback>
-            )}
           </Col>
           <Col className="mb-2" md="4">
             <Label className="general-label" for="exampleSelect">
