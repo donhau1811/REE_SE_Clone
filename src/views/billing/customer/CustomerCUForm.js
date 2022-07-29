@@ -92,8 +92,8 @@ const OperationCUForm = ({
   useEffect(() => {
     const tempValues = {
       ...initValues,
-      state: CUSTOMER_STATUS_OPTS.find((item) => item.value === initValues.state),
-      type: GENERAL_CUSTOMER_TYPE.find((item) => item.value === initValues.type)
+      state: CUSTOMER_STATUS_OPTS.find((item) => item.value === initValues?.state),
+      type: GENERAL_CUSTOMER_TYPE.find((item) => item.value === initValues?.type)
     }
     reset(tempValues)
   }, [initValues?.id])
