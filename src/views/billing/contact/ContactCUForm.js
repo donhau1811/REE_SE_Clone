@@ -8,13 +8,13 @@ import { Button, Col, Form, FormFeedback, Input, Label, Modal, ModalBody, ModalH
 import * as yup from 'yup'
 import Select from 'react-select'
 import { selectThemeColors } from '@src/utility/Utils'
-import { positionMockData } from '../mock-data'
+import { POSITION_OPTIONS } from '@src/utility/constants/billing'
 
 function ContactCUForm({ contact, intl, onSubmit = () => {}, onCancel }) {
   const [isOpen, setIsOpen] = useState(false)
   const validateSchema = yup.object().shape(
     {
-      name: yup
+      fullName: yup
         .string()
         .required(intl.formatMessage({ id: 'required-validate' }))
         .max(150, intl.formatMessage({ id: 'max-validate' })),
@@ -22,7 +22,7 @@ function ContactCUForm({ contact, intl, onSubmit = () => {}, onCancel }) {
         .string()
         .required(intl.formatMessage({ id: 'required-validate' }))
         .matches(EMAIL_REGEX, intl.formatMessage({ id: 'Validate emmail' })),
-      mobile: yup
+      phone: yup
         .string()
         .matches(MOBILE_REGEX, {
           message: intl.formatMessage({ id: 'invalid-character-validate' }),
@@ -31,7 +31,7 @@ function ContactCUForm({ contact, intl, onSubmit = () => {}, onCancel }) {
         .max(15, intl.formatMessage({ id: 'max-validate' })),
       note: yup.string().max(255, intl.formatMessage({ id: 'max-validate' }))
     },
-    ['name', 'mobile', 'note', 'email']
+    ['fullName', 'phone', 'note', 'email']
   )
 
   const { getValues, errors, register, control, handleSubmit, reset } = useForm({
@@ -47,8 +47,18 @@ function ContactCUForm({ contact, intl, onSubmit = () => {}, onCancel }) {
 
   useEffect(() => {
     setIsOpen(Boolean(contact?.id))
-    if (contact?.id) reset(contact)
+    if (contact?.id) reset({ ...contact, position: POSITION_OPTIONS.find((item) => item.value === contact.position) })
   }, [contact?.id])
+
+  const handleSubmitContact = (values) => {
+    const payload = {
+      ...values,
+      position: values.position?.value
+    }
+    if (contact?.id > 0) payload.isUpdate = true
+    else payload.isCreate = true
+    onSubmit?.(payload)
+  }
 
   return (
     <>
@@ -60,20 +70,20 @@ function ContactCUForm({ contact, intl, onSubmit = () => {}, onCancel }) {
           <Form key="contact-from">
             <Row>
               <Col className="mb-2" xs={12}>
-                <Label className="general-label" for="name">
+                <Label className="general-label" for="fullName">
                   <FormattedMessage id="Contact Name" />
                   <span className="text-danger">&nbsp;(*)</span>
                 </Label>
                 <Input
-                  id="name"
-                  name="name"
+                  id="fullName"
+                  name="fullName"
                   autoComplete="on"
-                  invalid={!!errors.name}
-                  valid={getValues('name')?.trim() && !errors.name}
+                  invalid={!!errors.fullName}
+                  valid={getValues('fullName')?.trim() && !errors.fullName}
                   innerRef={register()}
                   placeholder={intl.formatMessage({ id: 'Enter Contact Name' })}
                 />
-                {errors?.name && <FormFeedback>{errors?.name?.message}</FormFeedback>}
+                {errors?.fullName && <FormFeedback>{errors?.fullName?.message}</FormFeedback>}
               </Col>
               <Col className="mb-2" xs={12}>
                 <Label className="general-label" for="position">
@@ -87,7 +97,7 @@ function ContactCUForm({ contact, intl, onSubmit = () => {}, onCancel }) {
                   name="position"
                   id="position"
                   innerRef={register()}
-                  options={positionMockData}
+                  options={POSITION_OPTIONS}
                   className="react-select"
                   classNamePrefix="select"
                   placeholder={intl.formatMessage({ id: 'Choose position' })}
@@ -113,19 +123,19 @@ function ContactCUForm({ contact, intl, onSubmit = () => {}, onCancel }) {
                 {errors?.email && <FormFeedback>{errors?.email?.message}</FormFeedback>}
               </Col>
               <Col className="mb-2" xs={12}>
-                <Label className="general-label" for="mobile">
+                <Label className="general-label" for="phone">
                   <FormattedMessage id="operation-unit-form-mobile" />
                 </Label>
                 <Input
-                  id="mobile"
-                  name="mobile"
+                  id="phone"
+                  name="phone"
                   autoComplete="on"
                   innerRef={register()}
-                  invalid={!!errors.mobile}
-                  valid={getValues('mobile')?.trim() && !errors.mobile}
+                  invalid={!!errors.phone}
+                  valid={getValues('phone')?.trim() && !errors.phone}
                   placeholder={intl.formatMessage({ id: 'Enter mobile' })}
                 />
-                {errors?.mobile && <FormFeedback>{errors?.mobile?.message}</FormFeedback>}
+                {errors?.phone && <FormFeedback>{errors?.phone?.message}</FormFeedback>}
               </Col>
 
               <Col className="mb-2" xs={12}>
@@ -146,7 +156,7 @@ function ContactCUForm({ contact, intl, onSubmit = () => {}, onCancel }) {
             </Row>
             <Row>
               <Col className="d-flex justify-content-end align-items-center">
-                <Button onClick={handleSubmit(onSubmit)} color="primary" className="mr-1 px-3">
+                <Button onClick={handleSubmit(handleSubmitContact)} color="primary" className="mr-1 px-3">
                   {intl.formatMessage({ id: 'Save' })}
                 </Button>{' '}
                 <Button color="secondary" onClick={handleCancel}>

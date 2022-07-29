@@ -16,7 +16,7 @@ const CreateCustomerCOM = ({ intl }) => {
   const handleAddCustomer = (values) => {
     dispatch(
       postCustomer({
-        params: values,
+        params: { ...values, state: values.state?.value, type: values.type?.value },
         callback: () => {
           history.push(ROUTER_URL.BILLING_CUSTOMER)
         },

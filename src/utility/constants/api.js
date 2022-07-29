@@ -118,7 +118,6 @@ export const API_GET_YIELD_CHART = `${BASE_API_URL}/glf_monitoring_yield_chart`
 export const API_GET_INVERTER_TYPES = `${BASE_API_URL}/glf_inverter_type`
 export const API_GET_PANEL_TYPES = `${BASE_API_URL}/glf_panel_type`
 
-
 export const API_GET_OPERATION_UNIT = `${BASE_API_URL_V2}/operation-company/search`
 export const CHECK_DUPLICATE_OPRERATION_UNIT_CODE = `${BASE_API_URL_V2}/operation-company/check-code`
 export const API_CREATE_OPERATION_UNIT = `${BASE_API_URL_V2}/operation-company/create`
@@ -134,12 +133,20 @@ export const API_DELETE_ROOF_VENDORS = `${BASE_API_URL_V2}/roof-vendor/delete`
 export const API_CHECK_CODE_ROOF_VENDORS = `${BASE_API_URL_V2}/roof-vendor/check-code`
 //end roofVendor
 
-export const API_CUSTOMER_V2 = `${BASE_API_URL}/glf_customer_v2`
+export const API_CUSTOMER_V2 = `${BASE_API_URL_V2}/customer/create`
+export const API_ADD_CUSTOMER_V2 = `${BASE_API_URL_V2}/customer/create`
+export const API_UPDATE_CUSTOMER_V2 = `${BASE_API_URL_V2}/customer/update`
+export const API_BILLING_CUSTOMERS = `${BASE_API_URL_V2}/customer/creat`
 
+export const API_DELETE_CUSTOMER_V2 = `${BASE_API_URL_V2}/customer/delete`
 
-export const API_DELETE_BILLING_CUSTOMER = `${BASE_API_URL}/api/v1/billing/customer`
-
-export const API_BILLING_CUSTOMERS = `${BASE_API_URL}/api/v1/customers`
+export const API_GET_LIST_CUSTOMER = `${BASE_API_URL_V2}/customer/search`
+export const API_CHECK_DUPLICATE_CUSTOMER_CODE = `${BASE_API_URL_V2}/customer/check-code`
+export const API_ADD_CONTACT = `${BASE_API_URL_V2}/contacts/create`
+export const API_UPDATE_CONTACT = `${BASE_API_URL_V2}/contacts/update`
+export const API_DELETE_CONTACT = `${BASE_API_URL_V2}/contacts/delete`
+export const API_GET_CUSTOMER_BY_ID = `${BASE_API_URL_V2}/customer/id`
+export const API_GET_CONTACT_BY_CUSTOMER_ID = `${BASE_API_URL_V2}/contacts/customerId`
 
 export const API_ROOF_RETAL_UNIT = `${BASE_API_URL}/api/v1/billing/roof`
 

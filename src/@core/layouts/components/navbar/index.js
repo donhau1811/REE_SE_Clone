@@ -27,7 +27,8 @@ const ThemeNavbar = (props) => {
   const {
     customerProject: { selectedProject },
     company: { selectedCompany },
-    roofUnit: { selectedRoofVendor }
+    roofUnit: { selectedRoofVendor },
+    billingCustomer: { selectedCustomer }
   } = useSelector((state) => state)
   
   const renderCustomNav = (pathname) => {
@@ -82,6 +83,14 @@ const ThemeNavbar = (props) => {
         return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
       }
 
+      case `${ROUTER_URL.BILLING_CUSTOMER}/${selectedCustomer?.id}`: {
+        const tempItems = [
+          { name: intl.formatMessage({ id: 'billing' }), link: '' },
+          { name: intl.formatMessage({ id: 'customers' }), link: ROUTER_URL.BILLING_CUSTOMER },
+          { name: selectedCustomer?.fullName, link: '' }
+        ]
+        return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
+      }
       default:
         return (
           <BreadCrumbs
