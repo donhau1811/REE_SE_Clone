@@ -1,42 +1,37 @@
-import {
-    ROWS_PER_PAGE_DEFAULT
-  
-  } from '@constants/index'
-  import { FETCH_CUSTOMERS_REQUEST } from '@constants/actions'
-  
-  // ** Initial State
-  const initialState = {
-    data: [],
-    total: 0,
-    params: {
-      page: 1,
+import { ROWS_PER_PAGE_DEFAULT } from '@constants/index'
+import { FETCH_CUSTOMERS_REQUEST, SET_SELECTED_BILLING_CUSTOMER } from '@constants/actions'
+import { cloneDeep } from 'lodash'
+
+// ** Initial State
+const initialState = {
+  data: [],
+  total: 0,
+  params: {
+    pagination: {
       rowsPerPage: ROWS_PER_PAGE_DEFAULT,
-      order: 'createDate desc',
-      state: '*',
-      fk: '["customers", "projects", "group"]'
-    },
-    paramsActivities: {
-      page: 1,
-      rowsPerPage: ROWS_PER_PAGE_DEFAULT,
-      state: '*',
-      fk: '*'
+      currentPage: 1
     }
+  },
+  selectedCustomer: {}
+}
+
+const reducer = (state = initialState, action) => {
+  switch (action.type) {
+    case FETCH_CUSTOMERS_REQUEST:
+      return {
+        ...state,
+        data: action?.data ? action.data : state.data,
+        params: action.params,
+        total: action.total
+      }
+    case SET_SELECTED_BILLING_CUSTOMER:
+      return {
+        ...state,
+        selectedCustomer: cloneDeep(action.payload)
+      }
+    default:
+      return state
   }
-  
-  const reducer = (state = initialState, action) => {
-    switch (action.type) {
-      case FETCH_CUSTOMERS_REQUEST:
-        return {
-          ...state,
-          allData: action?.data ? action.data : state.allData,
-          data: action?.data ? action.data : state.data,
-          total: action.total,
-          params: action.params ? { ...state.params, ...action.params } : state.params
-        }
-        default:
-          return state
-  }
-  }
-  
-  export default reducer
-  
+}
+
+export default reducer
