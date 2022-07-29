@@ -1,7 +1,7 @@
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
 import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
-import { ROUTER_URL, ROWS_PER_PAGE_DEFAULT } from '@src/utility/constants'
+import { ROUTER_URL, ROWS_PER_PAGE_DEFAULT, SET_CUSTOMER_PARAMS } from '@src/utility/constants'
 import Table from '@src/views/common/table/CustomDataTable'
 import classnames from 'classnames'
 import { object } from 'prop-types'
@@ -38,14 +38,21 @@ const OperationUnit = ({ intl }) => {
     )
   }
   useEffect(() => {
-    fetchListCustomers({
+    const initParamsToFetch = {
       pagination: {
         rowsPerPage: ROWS_PER_PAGE_DEFAULT,
         currentPage: 1,
         sortBy: 'code',
         sortDirection: 'asc'
       }
-    })
+    }
+    fetchListCustomers(initParamsToFetch)
+    return () => {
+      dispatch({
+        type: SET_CUSTOMER_PARAMS,
+        payload: initParamsToFetch
+      })
+    }
   }, [])
   const handleRedirectToUpdatePage = (id) => () => {
     if (id) history.push(`${ROUTER_URL.BILLING_CUSTOMER}/${id}`)
