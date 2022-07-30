@@ -4,9 +4,11 @@ import {
   API_GET_ROOF_VENDOR,
   API_CREATE_ROOF_VENDOR,
   API_UPDATE_ROOF_VENDOR,
-  API_CHECK_CODE_ROOF_VENDORS
+  API_CHECK_CODE_ROOF_VENDORS,
+  API_GET_CONTACT_BY_ROOF_VENDOR_ID,
+  API_ADD_CONTACT
 } from '@src/utility/constants'
-import { FETCH_ROOF_RENTAL_UNIT_REQUEST, SET_SELECTED_ROOF_VENDOR } from '@src/utility/constants/actions'
+import { FETCH_ROOF_RENTAL_UNIT_REQUEST, SET_CONTACT, SET_SELECTED_ROOF_VENDOR } from '@src/utility/constants/actions'
 import axios from 'axios'
 import classNames from 'classnames'
 import SweetAlert from 'sweetalert2'
@@ -14,6 +16,7 @@ import withReactContent from 'sweetalert2-react-content'
 import { ReactComponent as CicleFailed } from '@src/assets/images/svg/circle-failed.svg'
 import { ReactComponent as CicleSuccess } from '@src/assets/images/svg/circle-success.svg'
 import { get } from 'lodash'
+import { handleCRUDOfContacts } from '@src/views/billing/contact/util'
 
 const MySweetAlert = withReactContent(SweetAlert)
 
@@ -124,26 +127,44 @@ export const getRoofVendorById = ({ id, isSavedToState, callback }) => {
 
 export const postRoofVendors = ({ params, callback, skin, intl }) => {
   return async () => {
+    const { contacts, ...roofVendor } = params
     await axios
-      .post(API_CREATE_ROOF_VENDOR, params)
+      .post(API_CREATE_ROOF_VENDOR, roofVendor)
       .then((response) => {
         if (response.status === 200 && response.data?.data) {
-          MySweetAlert.fire({
-            iconHtml: <CicleSuccess />,
-            text: intl.formatMessage({ id: 'Roof Vendor is added successfully' }),
-            customClass: {
-              popup: classNames({
-                'sweet-alert-popup--dark': skin === 'dark'
-              }),
-              confirmButton: 'btn btn-primary mt-2',
-              icon: 'border-0'
-            },
-            width: 'max-content',
-            showCloseButton: true,
-            confirmButtonText: 'OK'
-          }).then(() => {
-            callback?.(false)
-          })
+          const roofVendorId = response.data?.data?.id
+          // eslint-disable-next-line no-unused-vars
+          const addRoofVendorContact = contacts.map(({ id, ...contact }) => 
+            // eslint-disable-next-line implicit-arrow-linebreak
+            axios.post(API_ADD_CONTACT, {
+              ...contact,
+              position: contact.position?.value || '',
+              roofVendorId,
+              state: 'ACTIVE'
+            })
+          )
+          Promise.all(addRoofVendorContact)
+            .then(() => {
+              MySweetAlert.fire({
+                iconHtml: <CicleSuccess />,
+                text: intl.formatMessage({ id: 'Roof Vendor is added successfully' }),
+                customClass: {
+                  popup: classNames({
+                    'sweet-alert-popup--dark': skin === 'dark'
+                  }),
+                  confirmButton: 'btn btn-primary mt-2',
+                  icon: 'border-0'
+                },
+                width: 'max-content',
+                showCloseButton: true,
+                confirmButtonText: 'OK'
+              }).then(() => {
+                callback?.(false)
+              })
+            })
+            .catch((err) => {
+              throw new Error(err.toString())
+            })
         } else {
           throw new Error(response.data?.message)
         }
@@ -169,48 +190,58 @@ export const postRoofVendors = ({ params, callback, skin, intl }) => {
 }
 export const putRoofVendors = ({ params, callback, intl, skin }) => {
   return async () => {
+    const errorAlert = {
+      iconHtml: <CicleFailed />,
+      text: intl.formatMessage({ id: 'Failed to update data. Please try again' }),
+      customClass: {
+        popup: classNames({
+          'sweet-alert-popup--dark': skin === 'dark'
+        }),
+        confirmButton: 'btn btn-primary mt-2',
+        icon: 'border-0'
+      },
+      width: 'max-content',
+      showCloseButton: true,
+      confirmButtonText: intl.formatMessage({ id: 'Try again' })
+    }
+    const {contacts, ...roofVendor} = params
     await axios
       .put(API_UPDATE_ROOF_VENDOR, params)
       .then((response) => {
         if (response.status === 200 && response.data?.data) {
-          MySweetAlert.fire({
-            iconHtml: <CicleSuccess />,
-            text: intl.formatMessage({ id: 'Data is updated successfully' }),
-            customClass: {
-              popup: classNames({
-                'sweet-alert-popup--dark': skin === 'dark'
-              }),
-              confirmButton: 'btn btn-primary mt-2',
-              icon: 'border-0'
-            },
-            width: 'max-content',
-            showCloseButton: true,
-            confirmButtonText: 'OK'
-          }).then(() => {
-            callback?.()
+          const contactsModifyRes = handleCRUDOfContacts({ contacts, roofVendorId: roofVendor.id })
+          return Promise.all(contactsModifyRes)
+          .then(() => {
+            MySweetAlert.fire({
+              iconHtml: <CicleSuccess />,
+              text: intl.formatMessage({ id: 'Data is updated successfully' }),
+              customClass: {
+                popup: classNames({
+                  'sweet-alert-popup--dark': skin === 'dark'
+                }),
+                confirmButton: 'btn btn-primary mt-2',
+                icon: 'border-0'
+              },
+              width: 'max-content',
+              showCloseButton: true,
+              confirmButtonText: 'OK'
+            }).then(() => {
+              callback?.()
+            })
           })
-        } else {
-          throw new Error(response.data?.message)
-        }
-      })
-      .catch((err) => {
-        console.log('err', err)
-        MySweetAlert.fire({
-          iconHtml: <CicleFailed />,
-          text: intl.formatMessage({ id: 'Failed to update data. Please try again' }),
-          customClass: {
-            popup: classNames({
-              'sweet-alert-popup--dark': skin === 'dark'
-            }),
-            confirmButton: 'btn btn-primary mt-2',
-            icon: 'border-0'
-          },
-          width: 'max-content',
-          showCloseButton: true,
-          confirmButtonText: intl.formatMessage({ id: 'Try again' })
-        })
-      })
-  }
+          .catch((err) => {
+            console.log('err', err)
+            MySweetAlert.fire(errorAlert)
+          })
+      } else {
+        throw new Error(response.data?.message)
+      }
+    })
+    .catch((err) => {
+      console.log('err', err)
+      MySweetAlert.fire(errorAlert)
+    })
+}
 }
 export const checkDuplicate = async ({ params }) => {
   return axios
@@ -225,4 +256,41 @@ export const checkDuplicate = async ({ params }) => {
       console.log('err', err)
       return true
     })
+}
+
+export const getRoofVendorWithContactsById = ({ id, isSavedToState, callback }) => {
+  return async (dispatch) => {
+    const getRoofVendorByIdReq = axios.get(`${API_GET_ROOF_VENDOR_BY_ID}/${id}`)
+    const getContactsByCusIdReq = axios.get(`${API_GET_CONTACT_BY_ROOF_VENDOR_ID}/${id}`)
+    Promise.all([getRoofVendorByIdReq, getContactsByCusIdReq])
+      .then(([RoofVendorRes, contactRes]) => {
+        if (
+          RoofVendorRes.status === 200 &&
+          RoofVendorRes.data?.data &&
+          contactRes.status === 200 &&
+          contactRes.data?.result
+        ) {
+          const payload = {
+            ...RoofVendorRes.data?.data,
+            contacts: contactRes.data?.result
+          }
+          if (isSavedToState) {
+            dispatch({
+              type: SET_SELECTED_ROOF_VENDOR,
+              payload: RoofVendorRes.data?.data
+            })
+            dispatch({
+              type: SET_CONTACT,
+              payload: contactRes.data?.result
+            })
+          }
+          callback?.(payload)
+        } else {
+          throw new Error('Something went wrong')
+        }
+      })
+      .catch((err) => {
+        console.log('err', err)
+      })
+  }
 }
