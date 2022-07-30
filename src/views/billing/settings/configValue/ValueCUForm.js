@@ -9,26 +9,24 @@ import Select from 'react-select'
 import { selectThemeColors } from '@src/utility/Utils'
 import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
 
-function ValueCUForm({ value, intl, onSubmit = () => {} }) {
-  const OPERATION_UNIT_STATUS_OPTS = [
-    { value: OPERATION_UNIT_STATUS.INACTIVE, label: intl.formatMessage({ id: 'Active' }) },
-    { value: OPERATION_UNIT_STATUS.ACTIVE, label: intl.formatMessage({ id: 'Inactive' }) }
+function ValueCUForm({ value, intl, onSubmit = () => {}, onCancel }) {
+  const CONFIG_VALUE_STATUS_OPTS = [
+    { value: OPERATION_UNIT_STATUS.ACTIVE, label: intl.formatMessage({ id: 'Active' }) },
+    { value: OPERATION_UNIT_STATUS.INACTIVE, label: intl.formatMessage({ id: 'Inactive' }) }
   ]
   const [isOpen, setIsOpen] = useState(false)
+
   const validateSchema = yup.object().shape(
     {
-      name: yup
-        .string()
-        .max(225, intl.formatMessage({ id: 'max-validate' })),
       value: yup
         .string()
         .required(intl.formatMessage({ id: 'required-validate' }))
         .max(225, intl.formatMessage({ id: 'max-validate' }))
     },
-    ['name', 'value',  'explain']
+    ['value', 'description']
   )
   const initState = {
-    state: OPERATION_UNIT_STATUS_OPTS[0]
+    state: CONFIG_VALUE_STATUS_OPTS[0]
   }
   const { getValues, errors, register, control, handleSubmit, reset } = useForm({
     mode: 'onChange',
@@ -37,11 +35,12 @@ function ValueCUForm({ value, intl, onSubmit = () => {} }) {
   })
   const toggle = () => {
     setIsOpen((preState) => !preState)
+    onCancel?.()
   }
 
   useEffect(() => {
     setIsOpen(Boolean(value?.id))
-    if (value?.id) reset(value)
+    if (value?.id) reset({ ...value, state: CONFIG_VALUE_STATUS_OPTS.find((item) => item.value === value?.state) })
   }, [value?.id])
 
   return (
@@ -61,6 +60,7 @@ function ValueCUForm({ value, intl, onSubmit = () => {} }) {
                   id="name"
                   name="name"
                   autoComplete="on"
+                  disabled
                   invalid={!!errors.name}
                   valid={getValues('name')?.trim() && !errors.name}
                   innerRef={register()}
@@ -68,10 +68,10 @@ function ValueCUForm({ value, intl, onSubmit = () => {} }) {
                 />
                 {errors?.name && <FormFeedback>{errors?.name?.message}</FormFeedback>}
               </Col>
-            
+
               <Col className="mb-2" xs={12}>
                 <Label className="general-label" for="value">
-                <FormattedMessage id="Configuration Value" />
+                  <FormattedMessage id="Configuration Value" />
                   <span className="text-danger">&nbsp;(*)</span>
                 </Label>
                 <Input
@@ -96,7 +96,7 @@ function ValueCUForm({ value, intl, onSubmit = () => {} }) {
                   name="state"
                   id="state"
                   innerRef={register()}
-                  options={OPERATION_UNIT_STATUS_OPTS}
+                  options={CONFIG_VALUE_STATUS_OPTS}
                   className="react-select"
                   classNamePrefix="select"
                   formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
@@ -109,17 +109,16 @@ function ValueCUForm({ value, intl, onSubmit = () => {} }) {
                   <FormattedMessage id="explain" />
                 </Label>
                 <Input
-                  id="explain"
-                  name="explain"
+                  id="description"
+                  name="description"
                   autoComplete="on"
                   innerRef={register()}
                   invalid={!!errors.note}
-                  valid={getValues('explain')?.trim() && !errors.note}
+                  valid={getValues('description')?.trim() && !errors.description}
                   placeholder={intl.formatMessage({ id: 'Enter Config Explain' })}
-
                   type="textarea"
                 />
-                {errors?.explain && <FormFeedback>{errors?.explain?.message}</FormFeedback>}
+                {errors?.description && <FormFeedback>{errors?.description?.message}</FormFeedback>}
               </Col>
             </Row>
             <Row>
@@ -142,7 +141,8 @@ function ValueCUForm({ value, intl, onSubmit = () => {} }) {
 ValueCUForm.propTypes = {
   value: object,
   intl: object,
-  onSubmit: func
+  onSubmit: func,
+  onCancel: func
 }
 
 export default injectIntl(ValueCUForm)

@@ -1,6 +1,11 @@
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
-import { DISPLAY_DATE_FORMAT, ROUTER_URL, ROWS_PER_PAGE_DEFAULT } from '@src/utility/constants'
+import {
+  DISPLAY_DATE_FORMAT,
+  ROUTER_URL,
+  ROWS_PER_PAGE_DEFAULT,
+  SET_OPERATION_UNIT_PARAMS
+} from '@src/utility/constants'
 import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
 import Table from '@src/views/common/table/CustomDataTable'
 import classnames from 'classnames'
@@ -29,7 +34,6 @@ const OperationUnit = ({ intl }) => {
     layout: { skin }
   } = useSelector((state) => state)
 
-
   const fetchOperationUnit = (payload) => {
     dispatch(
       getListOperationUnit({
@@ -40,14 +44,21 @@ const OperationUnit = ({ intl }) => {
   }
 
   useEffect(() => {
-    fetchOperationUnit({
+    const initParams = {
       pagination: {
         rowsPerPage: ROWS_PER_PAGE_DEFAULT,
         currentPage: 1,
         sortBy: 'code',
         sortDirection: 'asc'
       }
-    })
+    }
+    fetchOperationUnit(initParams)
+    return () => {
+      dispatch({
+        type: SET_OPERATION_UNIT_PARAMS,
+        payload: initParams
+      })
+    }
   }, [])
 
   const handleRedirectToUpdatePage = (id) => () => {

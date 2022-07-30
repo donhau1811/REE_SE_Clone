@@ -1,7 +1,8 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
 import { selectThemeColors } from '@src/utility/Utils'
-import { bool, func, object } from 'prop-types'
+import { bool, func, object, string } from 'prop-types'
+import { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Select from 'react-select'
@@ -9,15 +10,14 @@ import { Button, Col, Form, FormFeedback, Input, Label, Row } from 'reactstrap'
 import * as yup from 'yup'
 
 const SettingsCUForm = ({ isViewed, intl, onSubmit = () => {}, onCancel = () => {}, initValues }) => {
-  const OPERATION_UNIT_STATUS_OPTS = [
-    { value: OPERATION_UNIT_STATUS.INACTIVE, label: intl.formatMessage({ id: 'Active' }) },
-    { value: OPERATION_UNIT_STATUS.ACTIVE, label: intl.formatMessage({ id: 'Inactive' }) }
+  const SETTING_STATUS_OPTS = [
+    { value: OPERATION_UNIT_STATUS.ACTIVE, label: intl.formatMessage({ id: 'Active' }) },
+    { value: OPERATION_UNIT_STATUS.INACTIVE, label: intl.formatMessage({ id: 'Inactive' }) }
   ]
   const initState = {
-    state: OPERATION_UNIT_STATUS_OPTS[0]
+    state: SETTING_STATUS_OPTS[0]
   }
-  console.log(initState)
-  console.log(initValues)
+
   const ValidateSchema = yup.object().shape(
     {
       name: yup
@@ -28,23 +28,27 @@ const SettingsCUForm = ({ isViewed, intl, onSubmit = () => {}, onCancel = () => 
       code: yup
         .string()
         .required(intl.formatMessage({ id: 'required-validate' }))
-        .max(15, intl.formatMessage({ id: 'max-validate' }))
-        .test('dubplicated', intl.formatMessage({ id: 'dubplicated-validate' }), (value) => value !== 'aaa'),
+        .max(15, intl.formatMessage({ id: 'max-validate' })),
 
-      explain: yup
+      description: yup
         .string()
         .required(intl.formatMessage({ id: 'required-validate' }))
         .max(255, intl.formatMessage({ id: 'max-validate' }))
     },
-    ['name', 'code', 'explain']
+    ['name', 'code', 'description']
   )
 
-  const { handleSubmit, getValues, errors, control, register } = useForm({
+  const { handleSubmit, getValues, errors, control, register, reset } = useForm({
     mode: 'onChange',
     resolver: yupResolver(isViewed ? yup.object().shape({}) : ValidateSchema),
     defaultValues: initValues || initState
   })
-
+  useEffect(() => {
+    reset({
+      ...initValues,
+      state: SETTING_STATUS_OPTS.find((item) => item.value === initValues?.state)
+    })
+  }, [initValues])
   return (
     <>
       <Form key="customer-form" onSubmit={handleSubmit(onSubmit)}>
@@ -95,7 +99,7 @@ const SettingsCUForm = ({ isViewed, intl, onSubmit = () => {}, onCancel = () => 
               id="state"
               isDisabled={isViewed}
               innerRef={register()}
-              options={OPERATION_UNIT_STATUS_OPTS}
+              options={SETTING_STATUS_OPTS}
               className="react-select"
               classNamePrefix="select"
               placeholder={intl.formatMessage({ id: 'Select a status' })}
@@ -105,28 +109,28 @@ const SettingsCUForm = ({ isViewed, intl, onSubmit = () => {}, onCancel = () => 
         </Row>
         <Row>
           <Col className="mb-2" md={8}>
-            <Label className="general-label" for="address">
+            <Label className="general-label" for="description">
               <FormattedMessage id="explain" />
               <span className="text-danger">&nbsp;(*)</span>
             </Label>
             <Input
               disabled={isViewed}
-              id="explain"
-              name="explain"
+              id="description"
+              name="description"
               autoComplete="on"
               innerRef={register()}
-              invalid={!!errors.explain}
-              valid={getValues('explain')?.trim() && !errors.explain}
+              invalid={!!errors.description}
+              valid={getValues('description')?.trim() && !errors.description}
               placeholder={intl.formatMessage({ id: 'Enter Config Explain' })}
             />
-            {errors?.explain && <FormFeedback>{errors?.explain?.message}</FormFeedback>}
+            {errors?.description && <FormFeedback>{errors?.description?.message}</FormFeedback>}
           </Col>
         </Row>
         <Row></Row>
         <Row className="d-flex justify-content-end align-items-center">
-          <Button type="submit" color="primary" className="mr-1 px-3">
-            {intl.formatMessage({ id: isViewed ? 'Update' : 'Save' })}
-          </Button>{' '}
+          {/* <Button type="submit" color="primary" className="mr-1 px-3">
+            {submitText || intl.formatMessage({ id: isViewed ? 'Update' : 'Save' })}
+          </Button>{' '} */}
           <Button color="secondary" onClick={onCancel}>
             {intl.formatMessage({ id: 'Cancel' })}
           </Button>{' '}
@@ -141,7 +145,8 @@ SettingsCUForm.propTypes = {
   onSubmit: func,
   onCancel: func,
   initValues: object,
-  isViewed: bool
+  isViewed: bool,
+  submitText: string
 }
 
 export default injectIntl(SettingsCUForm)

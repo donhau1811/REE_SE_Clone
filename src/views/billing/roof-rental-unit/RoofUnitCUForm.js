@@ -6,13 +6,13 @@ import { Controller, useForm } from 'react-hook-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Select from 'react-select'
 import { Button, Col, Form, FormFeedback, Input, Label, Row } from 'reactstrap'
-import Contact from '../customer/contact'
+import Contact from '../contact'
 import * as yup from 'yup'
 import './styles.scss'
 import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
 import React, { useState, useEffect } from 'react'
 import { checkDuplicate } from './store/actions'
-import {  useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import withReactContent from 'sweetalert2-react-content'
 import classNames from 'classnames'
 import SweetAlert from 'sweetalert2'
@@ -38,7 +38,6 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
   const {
     layout: { skin }
   } = useSelector((state) => state)
-
 
   const handleContactformSubmit = (value) => {
     setContacts(value)
@@ -116,14 +115,17 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
       params: { code: values.code }
     })
     if (initValues?.code !== values.code && isDupicateCode) {
-      setError('code', { type: 'focus', message: intl.formatMessage({ id: 'dubplicated-validate' })}, { shouldFocus: true })
-      return 
-    } 
-      onSubmit?.({
-        ...values,
-        contacts
-      })
-    
+      setError(
+        'code',
+        { type: 'focus', message: intl.formatMessage({ id: 'dubplicated-validate' }) },
+        { shouldFocus: true }
+      )
+      return
+    }
+    onSubmit?.({
+      ...values,
+      contacts
+    })
   }
   return (
     <>

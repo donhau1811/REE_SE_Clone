@@ -28,9 +28,10 @@ const ThemeNavbar = (props) => {
     customerProject: { selectedProject },
     company: { selectedCompany },
     roofUnit: { selectedRoofVendor },
-    billingCustomer: { selectedCustomer }
+    billingCustomer: { selectedCustomer },
+    settings: { selectedSetting }
   } = useSelector((state) => state)
-  
+
   const renderCustomNav = (pathname) => {
     switch (pathname) {
       case ROUTER_URL.PROJECT_OVERVIEW:
@@ -67,7 +68,7 @@ const ThemeNavbar = (props) => {
       case `${ROUTER_URL.BILLING_ROOF_RENTAL_UNIT}/${selectedRoofVendor?.id}`: {
         const tempItems = [
           { name: intl.formatMessage({ id: 'billing' }), link: '' },
-          { name: intl.formatMessage({ id: 'roof-rental-unit' }), link: ROUTER_URL.BILLING_ROOF_RENTAL_UNIT},
+          { name: intl.formatMessage({ id: 'roof-rental-unit' }), link: ROUTER_URL.BILLING_ROOF_RENTAL_UNIT },
           { name: selectedRoofVendor?.name, link: '' }
         ]
 
@@ -76,7 +77,7 @@ const ThemeNavbar = (props) => {
       case `${ROUTER_URL.BILLING_ROOF_RENTAL_UNIT_CREATE}`: {
         const tempItems = [
           { name: intl.formatMessage({ id: 'billing' }), link: '' },
-          { name: intl.formatMessage({ id: 'roof-rental-unit' }), link: ROUTER_URL.BILLING_ROOF_RENTAL_UNIT},
+          { name: intl.formatMessage({ id: 'roof-rental-unit' }), link: ROUTER_URL.BILLING_ROOF_RENTAL_UNIT },
           { name: intl.formatMessage({ id: 'create-rental-unit' }), link: '' }
         ]
 
@@ -88,6 +89,14 @@ const ThemeNavbar = (props) => {
           { name: intl.formatMessage({ id: 'billing' }), link: '' },
           { name: intl.formatMessage({ id: 'customers' }), link: ROUTER_URL.BILLING_CUSTOMER },
           { name: selectedCustomer?.fullName, link: '' }
+        ]
+        return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
+      }
+      case `${ROUTER_URL.BILLING_SETTING}/${selectedSetting?.id}`: {
+        const tempItems = [
+          { name: intl.formatMessage({ id: 'billing' }), link: '' },
+          { name: intl.formatMessage({ id: 'settings' }), link: ROUTER_URL.BILLING_CUSTOMER },
+          { name: selectedSetting?.name, link: '' }
         ]
         return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
       }

@@ -4,7 +4,7 @@ import React from 'react'
 import { injectIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import OperationCUForm from './SettingsCUForm'
+import SettingsCUForm from './SettingsCUForm'
 import { postOperationUnit } from './store/actions'
 
 const CreateOperationUnit = ({ intl }) => {
@@ -30,7 +30,7 @@ const CreateOperationUnit = ({ intl }) => {
   const handleCancel = () => {
     history.push(ROUTER_URL.BILLING_OPERATION_UNIT)
   }
-  return <OperationCUForm onSubmit={handleAddOperationUnit} onCancel={handleCancel} />
+  return <SettingsCUForm onSubmit={handleAddOperationUnit} onCancel={handleCancel} />
 }
 
 CreateOperationUnit.propTypes = {
