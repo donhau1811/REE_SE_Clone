@@ -7,27 +7,28 @@ import RoofUnit from './RoofUnitCUForm'
 import { Tab, Tabs } from '@mui/material'
 import ProjectTable from './ProjectTable'
 import { useDispatch, useSelector } from 'react-redux'
-import { getRoofVendorById, putRoofVendors } from './store/actions/index'
+import { getRoofVendorWithContactsById, putRoofVendors } from './store/actions/index'
 const UpdateRoofRentalUnit = ({ intl }) => {
   const dispatch = useDispatch()
   const history = useHistory()
   const [isReadOnly, setIsReadOnly] = useState(true)
   const {
-    layout: { skin }
+    layout: { skin },
+    roofUnit: { selectedRoofVendor },
+    billingContacts: { contacts }
   } = useSelector((state) => state)
+
   const [activeTab, setActiveTab] = useState(1)
   const { id } = useParams()
   useEffect(() => {
     dispatch(
-      getRoofVendorById({
+      getRoofVendorWithContactsById({
         id,
         isSavedToState: true
       })
     )
-  }, [])
-  const {
-    roofUnit: { selectedRoofVendor }
-  } = useSelector((state) => state)
+  }, [id])
+
   const handleCancel = () => {
     history.push(ROUTER_URL.BILLING_ROOF_RENTAL_UNIT)
   }
@@ -42,7 +43,7 @@ const UpdateRoofRentalUnit = ({ intl }) => {
     } else {
       dispatch(
         putRoofVendors({
-          params: { ...values, state: values.state?.value, id },
+          params: { ...values, state: values.state?.value, type: values.type?.value, id},
           callback: () => {
             history.push(ROUTER_URL.BILLING_ROOF_RENTAL_UNIT)
           },
@@ -75,6 +76,7 @@ const UpdateRoofRentalUnit = ({ intl }) => {
           onSubmit={handleUpdateRentalUnit}
           onCancel={handleCancel}
           initValues={selectedRoofVendor}
+          contacts={contacts}
         />
       )}
       {activeTab === 2 && <ProjectTable />}

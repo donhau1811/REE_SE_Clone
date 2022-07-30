@@ -131,6 +131,7 @@ export const API_UPDATE_ROOF_VENDOR  = `${BASE_API_URL_V2}/roof-vendor/update`
 export const API_GET_ROOF_VENDOR_BY_ID = `${BASE_API_URL_V2}/roof-vendor/id`
 export const API_DELETE_ROOF_VENDORS = `${BASE_API_URL_V2}/roof-vendor/delete`
 export const API_CHECK_CODE_ROOF_VENDORS = `${BASE_API_URL_V2}/roof-vendor/check-code`
+export const API_GET_CONTACT_BY_ROOF_VENDOR_ID = `${BASE_API_URL_V2}/contacts/roofVendorId`
 //end roofVendor
 
 export const API_CUSTOMER_V2 = `${BASE_API_URL_V2}/customer/create`
