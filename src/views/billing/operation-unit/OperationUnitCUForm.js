@@ -8,7 +8,8 @@ import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/
 import { selectThemeColors } from '@src/utility/Utils'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { MOBILE_REGEX } from '@src/utility/constants'
+import { CHECK_DUPLICATE_OPRERATION_UNIT_CODE, MOBILE_REGEX } from '@src/utility/constants'
+import axios from 'axios'
 
 const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, isReadOnly, submitText }) => {
   const OPERATION_UNIT_STATUS_OPTS = [
@@ -47,7 +48,7 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
     ['name', 'code', 'taxCode', 'address', 'phone']
   )
 
-  const { handleSubmit, getValues, errors, control, register, reset } = useForm({
+  const { handleSubmit, getValues, errors, control, register, reset, setError } = useForm({
     mode: 'onChange',
     resolver: yupResolver(isReadOnly ? yup.object().shape({}) : ValidateSchema),
     defaultValues: initValues || initState
@@ -57,9 +58,21 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
     reset({ ...initValues, state: OPERATION_UNIT_STATUS_OPTS.find((item) => item.value === initValues?.state) })
   }, [initValues])
 
+  const handleSubmitOperationUnitForm = async (values) => {
+    const dataCheck = { code: values.code }
+    if (initValues?.id) dataCheck.id = initValues?.id
+    const checkDupCodeRes = await axios.post(CHECK_DUPLICATE_OPRERATION_UNIT_CODE, dataCheck)
+    if (checkDupCodeRes.status === 200 && checkDupCodeRes.data?.data) {
+      setError('code', { type: 'custom', message: intl.formatMessage({ id: 'dubplicated-validate' }) })
+      return
+    }
+
+    onSubmit?.(values)
+  }
+
   return (
     <>
-      <Form onSubmit={handleSubmit(onSubmit)}>
+      <Form onSubmit={handleSubmit(handleSubmitOperationUnitForm)}>
         <Row>
           <Col className="mb-2" md={4}>
             <Label className="general-label" for="name">
