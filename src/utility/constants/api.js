@@ -126,8 +126,8 @@ export const API_GET_OPERATION_UNIT_BY_ID = `${BASE_API_URL_V2}/operation-compan
 export const API_DELETE_OPERATING_COMPANY = `${BASE_API_URL_V2}/operation-company/delete`
 //roofVendor
 export const API_GET_ROOF_VENDOR = `${BASE_API_URL_V2}/roof-vendor/search`
-export const API_CREATE_ROOF_VENDOR  = `${BASE_API_URL_V2}/roof-vendor/create`
-export const API_UPDATE_ROOF_VENDOR  = `${BASE_API_URL_V2}/roof-vendor/update`
+export const API_CREATE_ROOF_VENDOR = `${BASE_API_URL_V2}/roof-vendor/create`
+export const API_UPDATE_ROOF_VENDOR = `${BASE_API_URL_V2}/roof-vendor/update`
 export const API_GET_ROOF_VENDOR_BY_ID = `${BASE_API_URL_V2}/roof-vendor/id`
 export const API_DELETE_ROOF_VENDORS = `${BASE_API_URL_V2}/roof-vendor/delete`
 export const API_CHECK_CODE_ROOF_VENDORS = `${BASE_API_URL_V2}/roof-vendor/check-code`
@@ -155,4 +155,10 @@ export const API_CONTACT_ROOF_RETAL_UNIT = `${BASE_API_URL}/api/v1/billing/roof-
 
 export const API_DELETE_ROOF_RETAL_UNIT = `${BASE_API_URL}/api/v1/billing/customer`
 
-export const API_BILLING_SETTING = `${BASE_API_URL}/api/v1/settings`
+export const API_GET_LIST_BILLING_SETTING = `${BASE_API_URL_V2}/config/search`
+export const API_GET_BILLING_SETTING_BY_ID = `${BASE_API_URL_V2}/config/id`
+export const API_GET_BILLING_SETTING_VALUE_BY_SETTING_ID = `${BASE_API_URL_V2}/config-value/config-id`
+export const API_UPDATE_BILLING_SETTING = `${BASE_API_URL_V2}/config/update`
+export const API_CREATE_BILLING_SETTING_VALUE = `${BASE_API_URL_V2}/config-value/create`
+export const API_UPDATE_BILLING_SETTING_VALUE = `${BASE_API_URL_V2}/config-value/update`
+export const API_DELETE_BILLING_SETTING_VALUE = `${BASE_API_URL_V2}/config-value/delete`

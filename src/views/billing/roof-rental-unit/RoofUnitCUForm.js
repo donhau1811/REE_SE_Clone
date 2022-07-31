@@ -12,7 +12,7 @@ import './styles.scss'
 import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
 import React, { useState, useEffect } from 'react'
 import { checkDuplicate } from './store/actions'
-import {  useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import withReactContent from 'sweetalert2-react-content'
 import classNames from 'classnames'
 import SweetAlert from 'sweetalert2'
@@ -39,7 +39,6 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
   const {
     layout: { skin }
   } = useSelector((state) => state)
-
 
   const handleContactformSubmit = (value) => {
     setContactsRoofVendor(value)

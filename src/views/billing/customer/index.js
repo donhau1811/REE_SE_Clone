@@ -87,7 +87,6 @@ const OperationUnit = ({ intl }) => {
       title: intl.formatMessage({ id: 'Delete billing customer title' }),
       html: intl.formatMessage({ id: 'Delete billing customer message' }),
       showCancelButton: true,
-      showCloseButton: true,
       confirmButtonText: intl.formatMessage({ id: 'Yes' }),
       cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),
       customClass: {

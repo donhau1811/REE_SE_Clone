@@ -1735,6 +1735,7 @@
    "Vendor code already exists":"Thông tin không được trùng",
    "operation-unit-form-phone":"Số điện thoại liên hệ",
    "Enter-unit-phone":"Nhập số điện thoại",
-   "Roof Vendor is added successfully": "Đơn vị cho thuê mái đã được thêm mới thành công!"
+   "Roof Vendor is added successfully": "Đơn vị cho thuê mái đã được thêm mới thành công!",
+   "description":"Diễn giải"
 
 }
