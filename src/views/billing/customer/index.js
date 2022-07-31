@@ -1,6 +1,6 @@
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
-import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
+import { GENERAL_CUSTOMER_TYPE, GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
 import { ROUTER_URL, ROWS_PER_PAGE_DEFAULT, SET_CUSTOMER_PARAMS } from '@src/utility/constants'
 import Table from '@src/views/common/table/CustomDataTable'
 import classnames from 'classnames'
@@ -161,7 +161,9 @@ const OperationUnit = ({ intl }) => {
       name: intl.formatMessage({ id: 'Company Type Short' }),
       selector: 'type',
       sortable: true,
-      center: true
+      center: true,
+      cell: (row) => <span>{GENERAL_CUSTOMER_TYPE.find((item) => item.value === row.type)?.label}</span>,
+      minWidth: '150px'
     },
     {
       name: intl.formatMessage({ id: 'billing-customer-list-taxCode' }),
