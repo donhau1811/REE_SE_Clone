@@ -14,7 +14,7 @@ const CreateOperationUnit = ({ intl }) => {
     layout: { skin }
   } = useSelector((state) => state)
   const handleAddOperationUnit = (values) => {
-    console.log('values', values)
+   
     dispatch(
       postOperationUnit({
         params: values,

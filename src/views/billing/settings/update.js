@@ -51,7 +51,7 @@ const UpdateConfig = ({ intl }) => {
         <Tab classes={{ root: 'general-tab' }} label={intl.formatMessage({ id: 'Configuration Value' })} value={2} />
       </Tabs>
       {activeTab === 1 && <SettingsCUForm isViewed onCancel={handleCancel} initValues={selectedSetting} />}
-      {activeTab === 2 && <ValueTable configKeyId={id} />}
+      {activeTab === 2 && <ValueTable configId={id} />}
     </>
   )
 }

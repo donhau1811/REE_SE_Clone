@@ -2,6 +2,7 @@ import {
   API_CREATE_BILLING_SETTING_VALUE,
   API_DELETE_BILLING_SETTING_VALUE,
   API_GET_BILLING_SETTING_BY_ID,
+  API_GET_BILLING_SETTING_VALUE_BY_SETTING_ID,
   API_GET_LIST_BILLING_SETTING,
   API_UPDATE_BILLING_SETTING,
   API_UPDATE_BILLING_SETTING_VALUE
@@ -254,6 +255,24 @@ export const getBillingSettingById = ({ id, isSavedToState, callback }) => {
       })
       .catch((err) => {
         console.log('err', err)
+      })
+  }
+}
+
+export const getBillingSettingValueBySettingId = ({ id, callback }) => {
+  return async () => {
+    await axios
+      .get(`${API_GET_BILLING_SETTING_VALUE_BY_SETTING_ID}/${id}`)
+      .then((response) => {
+        if (response.status === 200 && response.data.data) {
+          callback?.(response.data.data)
+        } else {
+          throw new Error(response.data?.message)
+        }
+      })
+      .catch((err) => {
+        console.log('err', err)
+        callback?.()
       })
   }
 }

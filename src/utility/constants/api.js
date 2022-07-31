@@ -157,6 +157,7 @@ export const API_DELETE_ROOF_RETAL_UNIT = `${BASE_API_URL}/api/v1/billing/custom
 
 export const API_GET_LIST_BILLING_SETTING = `${BASE_API_URL_V2}/config/search`
 export const API_GET_BILLING_SETTING_BY_ID = `${BASE_API_URL_V2}/config/id`
+export const API_GET_BILLING_SETTING_VALUE_BY_SETTING_ID = `${BASE_API_URL_V2}/config-value/config-id`
 export const API_UPDATE_BILLING_SETTING = `${BASE_API_URL_V2}/config/update`
 export const API_CREATE_BILLING_SETTING_VALUE = `${BASE_API_URL_V2}/config-value/create`
 export const API_UPDATE_BILLING_SETTING_VALUE = `${BASE_API_URL_V2}/config-value/update`
