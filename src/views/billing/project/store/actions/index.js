@@ -196,7 +196,6 @@ export const getProjectById = ({ id, isSavedToState, callback }) => {
         if (response.status === 200 && response.data.data) {
           const payload = get(response, 'data.data', {})
           if (isSavedToState) {
-            console.log('dàvhg')
             dispatch({
               type: SET_SELECTED_PROJECT,
               payload
