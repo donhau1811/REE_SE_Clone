@@ -1668,6 +1668,17 @@
   "Add failure":"New data has not been successfully added, please try again",
   "Vendor code already exists":"Vendor code already exists",
   "operation-unit-form-phone":"The phone number",
-  "Enter-unit-phone":"Enter the phone number"
+  "Enter-unit-phone":"Enter the phone number",
+  "Manager":"Manager",
+  "Operation date":"Operation date",
+  "Wattage":"Wattage",
+  "Edit Project": "Edit Project",
+  "Delete Project": "Delete Project",
+  "Project is added successfully":"Project is added successfully",
+  "Delete project successfully":"Delete project successfully",
+  "Delete project failed":"Delete project failed",
+  "project-list-search-input-placeholder": "Find by code, name project, customer company...."
+
+
 
 }
