@@ -1671,7 +1671,9 @@
   "Enter-unit-phone":"Enter the phone number",
   "Manager":"Manager",
   "Operation date":"Operation date",
-  "Wattage":"Wattage"
+  "Wattage":"Wattage",
+  "project-list-search-input-placeholder": "Find by code, name project, customer company...."
+
 
 
 }

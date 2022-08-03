@@ -11,7 +11,6 @@ import { ReactComponent as IconFilter } from '@src/assets/images/svg/table/ic-fi
 import { useHistory } from 'react-router-dom'
 import { ROUTER_URL } from '@src/utility/constants'
 import Filter from './Filter'
-import { i } from 'react-select/dist/index-2af9c02c.esm'
 
 const PageHeader = ({ intl, onSearch = () => {}, onFilter, searchValue }) => {
   const history = useHistory()
@@ -55,7 +54,7 @@ const PageHeader = ({ intl, onSearch = () => {}, onFilter, searchValue }) => {
               className=""
               bsSize="sm"
               id="search-input"
-              placeholder={intl.formatMessage({ id: 'operation-unit-list-search-input-placeholder' })}
+              placeholder={intl.formatMessage({ id: 'project-list-search-input-placeholder' })}
               value={value}
               onChange={handleSearchInputChange}
               onKeyDown={handleSearchInputKeyDown}
@@ -67,7 +66,7 @@ const PageHeader = ({ intl, onSearch = () => {}, onFilter, searchValue }) => {
             </InputGroupAddon>
           </InputGroup>
           <UncontrolledTooltip placement="top" target={`search-input`}>
-            {intl.formatMessage({ id: 'operation-unit-list-search-input-placeholder' })}
+            {intl.formatMessage({ id: 'project-list-search-input-placeholder' })}
           </UncontrolledTooltip>
         </Col>
 
