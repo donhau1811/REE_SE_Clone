@@ -1,17 +1,16 @@
-/* eslint-disable no-unused-vars */
+import { ReactComponent as IconSearch } from '@src/assets/images/svg/table/ic-search.svg'
+import { ROUTER_URL } from '@src/utility/constants'
 import { func, object, string } from 'prop-types'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
+import { useHistory } from 'react-router-dom'
 import { Button, Col, Input, Row, UncontrolledTooltip } from 'reactstrap'
+import InputGroup from 'reactstrap/es/InputGroup'
 import InputGroupAddon from 'reactstrap/es/InputGroupAddon'
 import InputGroupText from 'reactstrap/es/InputGroupText'
-import InputGroup from 'reactstrap/es/InputGroup'
-import { ReactComponent as IconSearch } from '@src/assets/images/svg/table/ic-search.svg'
-import { useHistory } from 'react-router-dom'
-import { ROUTER_URL } from '@src/utility/constants'
 
 
-const PageHeader = ({ intl, onSearch = () => {}, onFilter, searchValue }) => {
+const PageHeader = ({ intl, onSearch = () => {}, searchValue }) => {
   const history = useHistory()
   const [value, setValue] = useState('')
 

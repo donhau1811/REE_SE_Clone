@@ -5,7 +5,7 @@ import { FETCH_PROJECT_REQUEST } from '@constants/actions'
 const initialState = {
   data: [],
   total: 0,
-  selectedCompany: {},
+  selectedProject: {},
   params: {
     pagination: {
       rowsPerPage: ROWS_PER_PAGE_DEFAULT,

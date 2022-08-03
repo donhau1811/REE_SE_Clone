@@ -2,7 +2,6 @@ import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-de
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
 import { DISPLAY_DATE_FORMAT, ROUTER_URL, ROWS_PER_PAGE_DEFAULT } from '@src/utility/constants'
 import Table from '@src/views/common/table/CustomDataTable'
-import classnames from 'classnames'
 import moment from 'moment'
 import { object } from 'prop-types'
 import { useEffect } from 'react'
@@ -10,12 +9,9 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { Badge, Col, Row, UncontrolledTooltip } from 'reactstrap'
-import SweetAlert from 'sweetalert2'
-import withReactContent from 'sweetalert2-react-content'
 import PageHeader from './PageHeader'
-import { deleteProject, getListProject } from './store/actions/index'
+import { getListProject } from './store/actions/index'
 
-const MySweetAlert = withReactContent(SweetAlert)
 
 const Project = ({ intl }) => {
   const history = useHistory()
@@ -24,9 +20,6 @@ const Project = ({ intl }) => {
 
   const { pagination = {}, searchValue } = params
 
-  const {
-    layout: { skin }
-  } = useSelector((state) => state)
 
   const fetchProject = (payload) => {
     dispatch(
@@ -60,7 +53,7 @@ const Project = ({ intl }) => {
     })
   }
 
-  const handlePerPageChange = (e) => {
+  const handleNumberPerPageChange = (e) => {
     fetchProject({
       pagination: {
         rowsPerPage: e.value,
@@ -69,61 +62,6 @@ const Project = ({ intl }) => {
     })
   }
 
-  const handleSearch = (value) => {
-    fetchProject({
-      pagination: {
-        ...pagination,
-        currentPage: 1
-      },
-      searchValue: value
-    })
-  }
-
-  const handleFilter = (value) => {
-    fetchProject({
-      pagination: {
-        ...pagination,
-        currentPage: 1
-      },
-      searchValue: '',
-      filterValue: value
-    })
-  }
-
-  const handleDeleteProject = (id) => () => {
-    return MySweetAlert.fire({
-      title: intl.formatMessage({ id: 'Delete operating customer title' }),
-      text: intl.formatMessage({ id: 'Delete billing information message' }),
-      showCancelButton: true,
-      confirmButtonText: intl.formatMessage({ id: 'Yes' }),
-      cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),
-      customClass: {
-        popup: classnames({
-          'sweet-alert-popup--dark': skin === 'dark',
-          'sweet-popup': true
-        }),
-        header: 'sweet-title',
-        confirmButton: 'btn btn-primary',
-        cancelButton: 'btn btn-outline-secondary ml-1',
-        actions: 'sweet-actions',
-        content: 'sweet-content'
-      },
-      buttonsStyling: false
-    }).then(({ isConfirmed }) => {
-      if (isConfirmed) {
-        dispatch(
-          deleteProject({
-            id,
-            skin,
-            intl,
-            callback: () => {
-              fetchProject()
-            }
-          })
-        )
-      }
-    })
-  }
 
   const handleSort = (column, direction) => {
     fetchProject({
@@ -218,7 +156,7 @@ const Project = ({ intl }) => {
             <FormattedMessage id="Edit Project" />
           </UncontrolledTooltip>
           <Badge>
-            <IconDelete onClick={handleDeleteProject(row.id)} id={`deleteBtn_${row.id}`} />
+            <IconDelete id={`deleteBtn_${row.id}`} />
           </Badge>
           <UncontrolledTooltip placement="auto" target={`deleteBtn_${row.id}`}>
             <FormattedMessage id="Delete Project" />
@@ -232,14 +170,14 @@ const Project = ({ intl }) => {
     <>
       <Row>
         <Col sm="12">
-          <PageHeader onSearch={handleSearch} onFilter={handleFilter} searchValue={searchValue} />
+          <PageHeader searchValue={searchValue} />
           <Table
             tableId="project"
             columns={columns}
             data={data}
             total={total}
             onPageChange={handleChangePage}
-            onPerPageChange={handlePerPageChange}
+            onPerPageChange={handleNumberPerPageChange}
             onSort={handleSort}
             {...pagination}
           />
