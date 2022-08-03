@@ -1,67 +1,102 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Badge, Button, Col, Row } from 'reactstrap'
 import Table from '@src/views/common/table/CustomDataTable'
-import { array, bool, func, object } from 'prop-types'
+import { array, bool, func, object, string } from 'prop-types'
 import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit.svg'
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
 import ValueCUForm from './ValueCUForm'
-import { cloneDeep } from 'lodash'
-import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
+import { GENERAL_STATUS, GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
 import withReactContent from 'sweetalert2-react-content'
 import classnames from 'classnames'
 import SweetAlert from 'sweetalert2'
 import { useDispatch, useSelector } from 'react-redux'
-import { deleteSettingsValue } from '../store/actions/index'
+import {
+  deleteSettingsValue,
+  getBillingSettingValueBySettingId,
+  postSettingsValue,
+  putSettingsValue
+} from '../store/actions/index'
+import './styles.scss'
 
 const MySweetAlert = withReactContent(SweetAlert)
 
-const ValueTable = ({ data, onChange, disabled, intl}) => {
+const ValueTable = ({ configId, disabled, intl }) => {
   const [currValue, setCurrentValue] = useState(null)
+  const [configValues, setConfigValues] = useState([])
   const dispatch = useDispatch()
   const {
-    layout: { skin }
+    layout: { skin },
+    settings: { selectedSetting }
   } = useSelector((state) => state)
-  const handleAddValue = () => {
-    setCurrentValue({
-      id: new Date()
-    })
-  }
-  const handleEditValue = (Value) => () => {
-    setCurrentValue(Value)
+  const fetchConfigValue = () => {
+    dispatch(
+      getBillingSettingValueBySettingId({
+        id: configId,
+        callback: (res) => {
+          setConfigValues(res || [])
+        }
+      })
+    )
   }
 
-  const handleDeleteValue = (Value) => () => {
-    const id = Value.id
-    return MySweetAlert.fire({
-      title: intl.formatMessage({ id: 'Delete billing customer title' }),
-      html: intl.formatMessage({ id: 'Delete billing settings message' }),
-      showCancelButton: true,
-      showCloseButton: true,
-      confirmButtonText: intl.formatMessage({ id: 'Yes' }),
-      cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),
-      customClass: {
-        popup: classnames({
-          'sweet-alert-popup--dark': skin === 'dark',
-          'sweet-popup': true
-        }),
-        header: 'sweet-title',
-        confirmButton: 'btn btn-primary',
-        cancelButton: 'btn btn-outline-secondary ml-1',
-        actions: 'sweet-actions',
-        content: 'sweet-content'
-      },
-      buttonsStyling: false
-    }).then(({ isConfirmed }) => {
-      if (isConfirmed) {
-        dispatch(deleteSettingsValue({
-          id,
-          skin,
-          intl
-        }))
-      }
+  useEffect(() => {
+    fetchConfigValue()
+  }, [configId])
+  const handleAddValue = () => {
+    setCurrentValue({
+      id: '-1',
+      name: selectedSetting?.name,
+      state: GENERAL_STATUS.ACTIVE
     })
   }
+
+  const handleEditValue = (changeValue) => () => {
+    setCurrentValue({ ...changeValue, name: selectedSetting?.name })
+  }
+
+  const handleCancelValueForm = () => {
+    setCurrentValue({})
+  }
+
+  const handleCallbackForm = () => {
+    fetchConfigValue()
+    handleCancelValueForm()
+  }
+
+  const handleDeleteValue =
+    ({ id }) => () => {
+      return MySweetAlert.fire({
+        title: intl.formatMessage({ id: 'Delete billing customer title' }),
+        html: intl.formatMessage({ id: 'Delete billing settings message' }),
+        showCancelButton: true,
+        confirmButtonText: intl.formatMessage({ id: 'Yes' }),
+        cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),
+        customClass: {
+          popup: classnames({
+            'sweet-alert-popup--dark': skin === 'dark',
+            'sweet-popup': true
+          }),
+          header: 'sweet-title border-bottom',
+          confirmButton: 'btn btn-primary',
+          cancelButton: 'btn btn-outline-secondary ml-1',
+          actions: 'sweet-actions',
+          content: 'sweet-content'
+        },
+        buttonsStyling: false
+      }).then(({ isConfirmed }) => {
+        if (isConfirmed) {
+          dispatch(
+            deleteSettingsValue({
+              id,
+              callback: handleCallbackForm,
+              skin,
+              intl
+            })
+          )
+        }
+      })
+    }
   const columns = [
     {
       name: <FormattedMessage id="No." />,
@@ -73,7 +108,7 @@ const ValueTable = ({ data, onChange, disabled, intl}) => {
       name: <FormattedMessage id="Config Name" />,
       selector: 'name',
       center: true,
-      cell: (row) => <span>{row.name}</span>
+      cell: () => <span>{selectedSetting.name}</span>
     },
     {
       name: <FormattedMessage id="Configuration Value" />,
@@ -83,16 +118,16 @@ const ValueTable = ({ data, onChange, disabled, intl}) => {
     },
     {
       name: <FormattedMessage id="explain" />,
-      selector: 'explain',
+      selector: 'description',
       center: true
     },
     {
-      name:<FormattedMessage id="Status" />,
+      name: <FormattedMessage id="Status" />,
       center: true,
       selector: 'status',
       sortable: true,
       cell: (row) => {
-        return row.state?.value === OPERATION_UNIT_STATUS.ACTIVE ? (
+        return row.state === OPERATION_UNIT_STATUS.ACTIVE ? (
           <Badge pill color="light-success">
             <FormattedMessage id="Active" />
           </Badge>
@@ -114,7 +149,7 @@ const ValueTable = ({ data, onChange, disabled, intl}) => {
           <Badge onClick={handleEditValue(row)}>
             <IconEdit id={`editBtn_${row.id}`} />
           </Badge>
-          <Badge onClick={handleDeleteValue(row)} >
+          <Badge onClick={handleDeleteValue(row)}>
             <IconDelete id={`deleteBtn_${row.id}`} />
           </Badge>
         </>
@@ -123,26 +158,39 @@ const ValueTable = ({ data, onChange, disabled, intl}) => {
   ]
 
   const handleSubmitValueForm = (values) => {
-    let newData = cloneDeep(data)
+    const payload = {
+      state: values.state?.value,
+      value: values.value,
+      description: values.description,
+      configId
+    }
 
     if (currValue?.id === '-1') {
-      newData.push({ ...values, id: newData.length > 0 ? newData[newData.length - 1].id + 1 : 1 })
+      dispatch(
+        postSettingsValue({
+          params: payload,
+          callback: handleCallbackForm,
+          skin,
+          intl
+        })
+      )
     } else {
-      newData = newData.map((Value) => {
-        if (Value.id === currValue?.id) return { ...Value, ...values }
-        return Value
-      })
+      dispatch(
+        putSettingsValue({
+          params: { ...payload, id: currValue?.id },
+          callback: handleCallbackForm,
+          skin,
+          intl
+        })
+      )
     }
-    setCurrentValue({})
-    onChange?.(newData)
   }
 
   return (
     <>
       <Row className="mb-2">
         <Col className=" d-flex justify-content-between align-items-center">
-          <h4 className="typo-section">
-          </h4>
+          <h4 className="typo-section"></h4>
 
           <Button.Ripple
             disabled={disabled}
@@ -150,16 +198,16 @@ const ValueTable = ({ data, onChange, disabled, intl}) => {
             className="add-project add-Value-button"
             onClick={handleAddValue}
           >
-        <FormattedMessage id="Add new" />
+            <FormattedMessage id="Add new" />
           </Button.Ripple>
         </Col>
       </Row>
       <Row className="mb-2">
         <Col>
-          <Table columns={columns} pagination={null} data={ data } />
+          <Table columns={columns} pagination={null} data={configValues} />
         </Col>
       </Row>
-      <ValueCUForm value={currValue} onSubmit={handleSubmitValueForm}  />
+      <ValueCUForm value={currValue} onSubmit={handleSubmitValueForm} onCancel={handleCancelValueForm} />
     </>
   )
 }
@@ -167,8 +215,8 @@ ValueTable.propTypes = {
   data: array,
   onChange: func,
   disabled: bool,
-  intl: object.isRequired
-
+  intl: object.isRequired,
+  configId: string.isRequired
 }
 
 export default injectIntl(ValueTable)

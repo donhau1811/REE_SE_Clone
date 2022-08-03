@@ -1,5 +1,5 @@
 import { ROWS_PER_PAGE_DEFAULT } from '@constants/index'
-import { FETCH_COMPANY_REQUEST, SET_SELECTED_OPERATION_UNIT } from '@constants/actions'
+import { FETCH_COMPANY_REQUEST, SET_OPERATION_UNIT_PARAMS, SET_SELECTED_OPERATION_UNIT } from '@constants/actions'
 
 // ** Initial State
 const initialState = {
@@ -27,6 +27,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         selectedCompany: action.payload
+      }
+    case SET_OPERATION_UNIT_PARAMS:
+      return {
+        ...state,
+        params: action.payload
       }
     default:
       return state

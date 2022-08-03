@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { ReactComponent as CicleFailed } from '@src/assets/images/svg/circle-failed.svg'
 import { ReactComponent as CicleSuccess } from '@src/assets/images/svg/circle-success.svg'
 import {
@@ -19,7 +18,6 @@ import withReactContent from 'sweetalert2-react-content'
 const MySweetAlert = withReactContent(SweetAlert)
 import { SET_SELECTED_BILLING_CUSTOMER, SET_CONTACT } from '@constants/actions'
 import { handleCRUDOfContacts } from '@src/views/billing/contact/util'
-import { countRequest } from '@src/redux/actions/layout'
 
 export const getListCustomer = (params) => {
   return async (dispatch) => {
@@ -32,7 +30,7 @@ export const getListCustomer = (params) => {
     if (searchValue?.trim()) {
       payload.searchValue = {
         value: searchValue,
-        fields: ['fullName', 'code', 'taxCode', 'address', 'phone'],
+        fields: ['fullName', 'code', 'taxCode', 'address', 'phone', 'note'],
         type: 'contains'
       }
     }
@@ -118,7 +116,7 @@ export const postCustomer = ({ params, callback, skin, intl }) => {
 }
 
 export const putCustomer = ({ params, callback, skin, intl }) => {
-  return async (dispatch, getState) => {
+  return async () => {
     const errorAlert = {
       iconHtml: <CicleFailed />,
       text: intl.formatMessage({ id: 'Failed to update data. Please try again' }),
@@ -134,12 +132,11 @@ export const putCustomer = ({ params, callback, skin, intl }) => {
       confirmButtonText: intl.formatMessage({ id: 'Try again' })
     }
     const { contacts, ...customerPayload } = params
-
     await axios
       .put(API_UPDATE_CUSTOMER_V2, { ...customerPayload, provinceCode: 'HCM' })
       .then((response) => {
         if (response.status === 200 && response.data.data) {
-          const contactsModifyRes = handleCRUDOfContacts(contacts, customerPayload.id)
+          const contactsModifyRes = handleCRUDOfContacts({ contacts, customerId: customerPayload.id })
           return Promise.all(contactsModifyRes)
             .then(() => {
               MySweetAlert.fire({
@@ -167,7 +164,7 @@ export const putCustomer = ({ params, callback, skin, intl }) => {
           throw new Error(response.data?.message)
         }
       })
-      .catch((err) => {
+      .catch(() => {
         MySweetAlert.fire(errorAlert)
       })
   }
@@ -219,7 +216,7 @@ export const deleteCustomer = ({ id, skin, intl, callback }) => {
 }
 
 export const getCustomerWithContactsById = ({ id, isSavedToState, callback }) => {
-  return async (dispatch, getState) => {
+  return async (dispatch) => {
     const getCustomerByIdReq = axios.get(`${API_GET_CUSTOMER_BY_ID}/${id}`)
     const getContactsByCusIdReq = axios.get(`${API_GET_CONTACT_BY_CUSTOMER_ID}/${id}`)
     Promise.all([getCustomerByIdReq, getContactsByCusIdReq])

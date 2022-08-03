@@ -1,25 +1,14 @@
-import {
-  ROWS_PER_PAGE_DEFAULT
-
-} from '@constants/index'
-import { FETCH_SETTINGS_REQUEST } from '@constants/actions'
+import { ROWS_PER_PAGE_DEFAULT } from '@constants/index'
+import { FETCH_SETTINGS_REQUEST, SET_BILLING_SETTING_PARAMS, SET_SELECTED_BILLING_SETTING } from '@constants/actions'
 
 // ** Initial State
 const initialState = {
   data: [],
   total: 0,
+  selectedSetting: {},
   params: {
-    page: 1,
     rowsPerPage: ROWS_PER_PAGE_DEFAULT,
-    order: 'createDate desc',
-    state: '*',
-    fk: '["settings", "projects", "group"]'
-  },
-  paramsActivities: {
-    page: 1,
-    rowsPerPage: ROWS_PER_PAGE_DEFAULT,
-    state: '*',
-    fk: '*'
+    currentPage: 1
   }
 }
 
@@ -28,14 +17,23 @@ const reducer = (state = initialState, action) => {
     case FETCH_SETTINGS_REQUEST:
       return {
         ...state,
-        allData: action?.data ? action.data : state.allData,
         data: action?.data ? action.data : state.data,
-        total: action.total,
-        params: action.params ? { ...state.params, ...action.params } : state.params
+        params: action.params,
+        total: action.total
       }
-      default:
-        return state
-}
+    case SET_SELECTED_BILLING_SETTING:
+      return {
+        ...state,
+        selectedSetting: action.payload
+      }
+    case SET_BILLING_SETTING_PARAMS:
+      return {
+        ...state,
+        params: action.payload
+      }
+    default:
+      return state
+  }
 }
 
 export default reducer

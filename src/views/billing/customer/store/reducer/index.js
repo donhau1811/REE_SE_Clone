@@ -1,5 +1,5 @@
 import { ROWS_PER_PAGE_DEFAULT } from '@constants/index'
-import { FETCH_CUSTOMERS_REQUEST, SET_SELECTED_BILLING_CUSTOMER } from '@constants/actions'
+import { FETCH_CUSTOMERS_REQUEST, SET_CUSTOMER_PARAMS, SET_SELECTED_BILLING_CUSTOMER } from '@constants/actions'
 import { cloneDeep } from 'lodash'
 
 // ** Initial State
@@ -28,6 +28,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         selectedCustomer: cloneDeep(action.payload)
+      }
+    case SET_CUSTOMER_PARAMS:
+      return {
+        ...state,
+        params: action.payload
       }
     default:
       return state

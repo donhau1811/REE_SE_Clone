@@ -13,7 +13,6 @@ import { cloneDeep } from 'lodash'
 const Contact = ({ data, onChange, disabled }) => {
   
   const [currContact, setCurrContact] = useState(null)
-
   const handleAddContact = () => {
     setCurrContact({
       id: '-1'
@@ -91,7 +90,7 @@ const Contact = ({ data, onChange, disabled }) => {
   }
 
   const handleSubmitContactForm = (values) => {
-    let newData = cloneDeep(data)
+    let newData = cloneDeep(data) || []
 
     if (currContact?.id === '-1') {
       newData.push({ ...values, id: -Number(new Date().getTime()) })

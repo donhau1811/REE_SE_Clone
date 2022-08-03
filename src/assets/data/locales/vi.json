@@ -1744,7 +1744,7 @@
    "Project is added successfully":"Thêm mới dự án thành công",
    "Delete project successfully":"Xóa dự án thành công",
    "Delete project failed":"Xóa dự án thất bại",
-   "project-list-search-input-placeholder": "Tìm theo tên, mã dự án, khách hàng...."
-
+   "project-list-search-input-placeholder": "Tìm theo tên, mã dự án, khách hàng....",
+   "description":"Diễn giải"
 
 }
