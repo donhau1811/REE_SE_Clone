@@ -90,7 +90,7 @@ const Project = ({ intl }) => {
     })
   }
 
-  const handleDeleteOperationCompany = (id) => () => {
+  const handleDeleteProject = (id) => () => {
     return MySweetAlert.fire({
       title: intl.formatMessage({ id: 'Delete operating customer title' }),
       text: intl.formatMessage({ id: 'Delete billing information message' }),
@@ -218,7 +218,7 @@ const Project = ({ intl }) => {
             <FormattedMessage id="Edit Project" />
           </UncontrolledTooltip>
           <Badge>
-            <IconDelete onClick={handleDeleteOperationCompany(row.id)} id={`deleteBtn_${row.id}`} />
+            <IconDelete onClick={handleDeleteProject(row.id)} id={`deleteBtn_${row.id}`} />
           </Badge>
           <UncontrolledTooltip placement="auto" target={`deleteBtn_${row.id}`}>
             <FormattedMessage id="Delete Project" />
