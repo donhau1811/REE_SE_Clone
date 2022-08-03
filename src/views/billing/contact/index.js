@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl'
 import { Badge, Button, Col, Row } from 'reactstrap'
 import { Plus } from 'react-feather'
 import Table from '@src/views/common/table/CustomDataTable'
-import NoDataCOM from './NoDataCOM'
+import NoDataCOM from '@src/views/common/NoDataCOM'
 import { array, bool, func } from 'prop-types'
 import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit.svg'
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
@@ -11,7 +11,6 @@ import ContactCUForm from './ContactCUForm'
 import { cloneDeep } from 'lodash'
 
 const Contact = ({ data, onChange, disabled }) => {
-  
   const [currContact, setCurrContact] = useState(null)
   const handleAddContact = () => {
     setCurrContact({
@@ -125,7 +124,7 @@ const Contact = ({ data, onChange, disabled }) => {
       <Row className="mb-2">
         <Col>
           <Table columns={columns} pagination={null} data={data?.filter((item) => !item.isDelete) || []} />
-          {!data?.length > 0 && <NoDataCOM />}
+          {!data?.length > 0 && <NoDataCOM title={<FormattedMessage id="Add contact info to create new customer" />} />}
         </Col>
       </Row>
       <ContactCUForm contact={currContact} onSubmit={handleSubmitContactForm} onCancel={handleCancelContactForm} />

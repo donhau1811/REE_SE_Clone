@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { EMAIL_REGEX, MOBILE_REGEX } from '@src/utility/constants'
+import { EMAIL_REGEX, NUMBER_REGEX } from '@src/utility/constants'
 import { func, object } from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -24,7 +24,7 @@ function ContactCUForm({ contact, intl, onSubmit = () => {}, onCancel }) {
         .matches(EMAIL_REGEX, intl.formatMessage({ id: 'Validate emmail' })),
       phone: yup
         .string()
-        .matches(MOBILE_REGEX, {
+        .matches(NUMBER_REGEX, {
           message: intl.formatMessage({ id: 'invalid-character-validate' }),
           excludeEmptyString: true
         })

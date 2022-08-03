@@ -119,6 +119,8 @@ export const API_GET_INVERTER_TYPES = `${BASE_API_URL}/glf_inverter_type`
 export const API_GET_PANEL_TYPES = `${BASE_API_URL}/glf_panel_type`
 
 export const API_GET_OPERATION_UNIT = `${BASE_API_URL_V2}/operation-company/search`
+export const API_GET_ALL_OPERATION_UNIT = `${BASE_API_URL_V2}/operation-company/all`
+
 export const CHECK_DUPLICATE_OPRERATION_UNIT_CODE = `${BASE_API_URL_V2}/operation-company/check-code`
 export const API_CREATE_OPERATION_UNIT = `${BASE_API_URL_V2}/operation-company/create`
 export const API_UPDATE_OPERATION_UNIT = `${BASE_API_URL_V2}/operation-company/update`

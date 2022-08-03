@@ -1,5 +1,4 @@
 import mock from './mock'
-import './autoComplete/autoComplete'
 import './navbar/navbarSearch'
 import './pages/account-settings'
 import './cards/card-analytics'
@@ -9,7 +8,6 @@ import './tables/datatables'
 import './tables/user-data'
 import './operationUnit/companyList'
 import './roofRentalUnit/roofList'
-import './billingSetting/listBillingSettings'
 import './project/project'
 
 mock.onAny().passThrough()

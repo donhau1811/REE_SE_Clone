@@ -19,7 +19,7 @@ const PageHeader = ({ intl, onSearch = () => {}, searchValue }) => {
   }, [searchValue])
 
   const handleRedirectToAddNewPage = () => {
-    history.push(ROUTER_URL.BILLING_PROJECT)
+    history.push(ROUTER_URL.BILLING_PROJECT_CREATE)
   }
 
   const handleClickToSearch = () => {
