@@ -133,7 +133,7 @@ export const API_DELETE_ROOF_VENDORS = `${BASE_API_URL_V2}/roof-vendor/delete`
 export const API_CHECK_CODE_ROOF_VENDORS = `${BASE_API_URL_V2}/roof-vendor/check-code`
 //end roofVendor
 //project
-export const API_GET_NEW_PROJECT = `${BASE_API_URL}/project/search`
+export const API_GET_NEW_PROJECT = `${BASE_API_URL_V2}/project/search`
 export const API_CREATE_PROJECT  = `${BASE_API_URL_V2}/project/create`
 export const API_UPDATE_PROJECT  = `${BASE_API_URL_V2}/project/update`
 export const API_GET_PROJECT_BY_ID = `${BASE_API_URL_V2}/project/id`
