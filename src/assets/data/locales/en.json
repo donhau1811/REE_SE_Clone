@@ -1668,6 +1668,10 @@
   "Add failure":"New data has not been successfully added, please try again",
   "Vendor code already exists":"Vendor code already exists",
   "operation-unit-form-phone":"The phone number",
-  "Enter-unit-phone":"Enter the phone number"
+  "Enter-unit-phone":"Enter the phone number",
+  "Manager":"Manager",
+  "Operation date":"Operation date",
+  "Wattage":"Wattage"
+
 
 }

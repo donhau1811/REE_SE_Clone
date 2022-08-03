@@ -1735,6 +1735,14 @@
    "Vendor code already exists":"Thông tin không được trùng",
    "operation-unit-form-phone":"Số điện thoại liên hệ",
    "Enter-unit-phone":"Nhập số điện thoại",
-   "Roof Vendor is added successfully": "Đơn vị cho thuê mái đã được thêm mới thành công!"
+   "Roof Vendor is added successfully": "Đơn vị cho thuê mái đã được thêm mới thành công!",
+   "Manager":"Nhân viên quản lý",
+   "Operation date":"Ngày vận hành",
+   "Wattage":"Công suất",
+   "Edit Project": "Sửa dự án",
+   "Delete Project": "Xoá dự án",
+   "Project is added successfully":"Thêm mới dự án thành công",
+   "Delete project successfully":"Xóa dự án thành công",
+   "Delete project failed":"Xóa dự án thất bại"
 
 }

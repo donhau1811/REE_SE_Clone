@@ -130,5 +130,15 @@ export const BillingRoutes = [
       resource: ROUTER_URL.BILLING_SETTING,
       navLink: ROUTER_URL.BILLING_SETTING
     }
+  },
+  {
+    path: ROUTER_URL.BILLING_PROJECT,
+    component: lazy(() => import('../../views/billing/project/index')),
+    exact: true,
+    meta: {
+      action: 'manage',
+      resource: ROUTER_URL.BILLING_PROJECT,
+      navLink: ROUTER_URL.BILLING_PROJECT
+    }
   }
 ]
