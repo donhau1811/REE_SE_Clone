@@ -1745,6 +1745,26 @@
    "Delete project successfully":"Xóa dự án thành công",
    "Delete project failed":"Xóa dự án thất bại",
    "project-list-search-input-placeholder": "Tìm theo tên, mã dự án, khách hàng....",
-   "description":"Diễn giải"
-
+   "description":"Diễn giải",
+   "contract-code":"Số hợp đồng",
+   "effective-date":"Ngày hiệu lực",
+   "update-info":"Cập nhật thông tin",
+   "notification-recipients":"Người nhận thông báo",
+   "type-of-roof-vendor-contract":"Loại hợp đồng cho thuê mái nhà",
+   "no-charge":"Không tính phí",
+   "monthly-rent":"Tiền thuê cố định theo tháng",
+   "quarterly-rent":"Tiền thuê cố định theo quý",
+   "rent-as-percentage-of-revenue":"Tiền thuê theo phần trăm doanh thu",
+   "roof-rental-period":"Kỳ tính tiền thuê mái",
+   "start-date":"ngày bắt đầu",
+   "Notice-of-roof-rent":"Thông báo tiền thuê mái",
+   "from-the-last-day":"từ ngày cuối kỳ",
+   "rental-amount":"Số tiền cho thuê",
+   "vnd-month":"VNĐ/tháng",
+   "vnd-quarter":"VNĐ/quý",
+   "confirmation-prompt":"Nhắc nhở đơn vị xác nhận",
+   "turnover-rate":"Tỷ lệ % doanh thu",
+   "From-date-sending-notice":"từ ngày gửi thông báo",
+   "roof-rental-contract-type":"Loại hợp đồng cho thuê mái"
+   
 }
