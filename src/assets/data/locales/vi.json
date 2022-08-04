@@ -1627,6 +1627,7 @@
   "max-validate": "Thông tin vượt quá độ dài cho phép",
   "invalid-character-validate": "Ký tự không hợp lệ",
   "dubplicated-validate": "Thông tin không được trùng",
+  "invalid-format-validate": "Thông tin sai định dạng",
   "operation-unit-list-search-input-placeholder": "Tìm theo tên, mã công ty, mã số thuế, địa chỉ....",
   "create-operation-unit": "Thêm công ty vận hành",
   "operation-unit-form-name": "Tên công ty",
@@ -1758,7 +1759,17 @@
   "Add power selling contract": "Thêm hợp đồng bán điện",
   "Add roof renting contract": "Thêm hợp đồng thuê mái",
   "Contract number": "Số hợp đồng",
-  "Signed date": "Ngày ký",
+  "Signed date": "Ngày hiệu lực",
   "Add notification of electricity fee now or later": "Thêm mới thông báo tiền điện ngay hoặc cập nhật sau",
-  "Assigned accountant": "Kế toán phụ trách"
+  "Assigned accountant": "Kế toán phụ trách",
+  "power-selling-contract": "Thêm hợp đồng bán điện",
+  "Enter contract number": "Nhập số hợp đồng",
+  "Update information": "Cập nhật thông tin",
+  "Attack contract file": "Đính kèm file hợp đồng",
+  "Notification recievers": "Người nhận thông báo",
+  "Fullname": "Họ tên",
+  "Power billing cycle": "KỲ TÍNH TIỀN ĐIỆN",
+  "Cycle": "Kỳ",
+  "This month": "Cùng tháng",
+  "Next month": "Tháng sau"
 }
