@@ -7,7 +7,7 @@ import Select from 'react-select'
 import { selectThemeColors } from '@src/utility/Utils'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { MOBILE_REGEX } from '@src/utility/constants'
+import { REAL_NUMBER } from '@src/utility/constants'
 import Table from '@src/views/common/table/CustomDataTable'
 import MonthlyRent from './typesOfContracts/CyclicalContract'
 import ContractByPercentage from './typesOfContracts/ContractByPercentage'
@@ -90,6 +90,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel = () => {}, initValues, isRea
   const typeContract = watch('contractType', TypeOfRoofVendorContract[0])
   const isCyclicalContract = useMemo(() => typeContract.value === 2 || typeContract.value === 3, [typeContract])
   useEffect(() => {
+    setValidForm(defaultValid)
     if (isCyclicalContract) {
       setValidForm({
         ...defaultValid,
@@ -97,7 +98,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel = () => {}, initValues, isRea
           .string()
           .required(intl.formatMessage({ id: 'required-validate' }))
           .max(16, intl.formatMessage({ id: 'max-validate' }))
-          .matches(MOBILE_REGEX, {
+          .matches(REAL_NUMBER, {
             // lấy kiểu số  thực
             message: intl.formatMessage({ id: 'invalid-character-validate' }),
             excludeEmptyString: true
@@ -110,13 +111,12 @@ const RoofVendorContractCUForm = ({ intl, onCancel = () => {}, initValues, isRea
           .string()
           .required(intl.formatMessage({ id: 'required-validate' }))
           .max(16, intl.formatMessage({ id: 'max-validate' }))
-          .matches(MOBILE_REGEX, {
+          .matches(REAL_NUMBER, {
             message: intl.formatMessage({ id: 'invalid-character-validate' }),
             excludeEmptyString: true
           })
       })
     }
-    console.log(methods)
   }, [typeContract])
   useEffect(() => {
     const contractValue = {
@@ -139,7 +139,6 @@ const RoofVendorContractCUForm = ({ intl, onCancel = () => {}, initValues, isRea
     }
     onSubmit?.(newValue)
   }
-
   return (
     <FormProvider {...methods}>
       <Form onSubmit={handleSubmit(handleBeforeSubmit)}>
