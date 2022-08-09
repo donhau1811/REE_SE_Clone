@@ -1,5 +1,14 @@
+@import '@src/@core/scss/base/bootstrap-extended/_variables.scss';
+
+
+
 .cycle-item-wrapper {
   background-color: #e9eef6;
   padding: 16px 40px;
   min-width: 80%;
+}
+
+.form-text-sub{
+  color: $text-level2;
+  font-weight: 400;
 }
