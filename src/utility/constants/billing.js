@@ -21,3 +21,8 @@ export const POSITION_OPTIONS = [
     label: 'Kế toán trưởng'
   }
 ]
+let valueNumberOfDay = []
+for (let i = 0; i <= 31; i++) {
+  valueNumberOfDay = [...valueNumberOfDay, { value: i, label: i }]
+}
+export const VALUE_NUMBER_DAY_OF_MONTH = valueNumberOfDay
