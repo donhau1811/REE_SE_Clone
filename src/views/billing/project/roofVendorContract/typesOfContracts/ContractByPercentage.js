@@ -1,42 +1,38 @@
 import React from 'react'
 import { useFormContext, Controller } from 'react-hook-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { FormFeedback, Col, Row, Label } from 'reactstrap'
+import { FormFeedback, Col, Row, Label, Input } from 'reactstrap'
 import { selectThemeColors } from '@src/utility/Utils'
 import Select from 'react-select'
+import {bool} from 'prop-types'
+import { VALUE_NUMBER_DAY_OF_MONTH } from '@src/utility/constants/billing'
 
-let valueNumberOfDay = []
-for (let i = 0; i <= 31; i++) {
-  valueNumberOfDay = [...valueNumberOfDay, { value: i, label: i }]
-}
-const ContractByPercentage = () => {
-  const { register, errors, control } = useFormContext()
+const ContractByPercentage = ({isReadOnly}) => {
+  const { register, errors, control, getValues } = useFormContext()
   return (
     <>
-      <Row>
-        <Col className="mb-3" md={2}>
+      <Row className="justify-content-between">
+        <Col className="mb-3 d-flex align-items-center" md={2}>
           <Label className="general-label" >
             <FormattedMessage id="turnover-rate" />
           </Label>
         </Col>
-        <Col className="mb-3" md={3}>
-        <Controller
-            as={Select}
-            control={control}
-            options={valueNumberOfDay}
-            theme={selectThemeColors}
-            name="percentTurnover"
+        <Col className="mb-3" md={2}>
+        <Input
+            disabled={isReadOnly}
             id="percentTurnover"
+            name="percentTurnover"
+            autoComplete="on"
             innerRef={register()}
-            className="react-select input-select"
-            classNamePrefix="select"
-            defaultValue={valueNumberOfDay[0]}
-            formatOptionLabel={(option) => <> {option.label}</>}
+            invalid={!!errors.percentTurnover}
+            valid={getValues('percentTurnover')?.trim() && !errors.percentTurnover}
+            defaultValue={0}
           />
-          {errors?.rentalAmount && <FormFeedback>{errors?.rentalAmount?.message}</FormFeedback>}
+          {errors?.percentTurnover && <FormFeedback>{errors?.percentTurnover?.message}</FormFeedback>}
         </Col>
         <hr className='hrhorizontal45'/>
-        <Col className="mb-3" md={4}>
+        <Col className="mb-3 d-flex align-items-center" md={4}>
+          <div>
           <Label className="general-label">
             <FormattedMessage id="confirmation-prompt" />
           </Label>
@@ -44,19 +40,21 @@ const ContractByPercentage = () => {
           <FormattedMessage id="Date" />
           ) (
           <FormattedMessage id="From-date-sending-notice" />)
+          </div>
         </Col>
         <Col className="mb-3" md={2}>
           <Controller
+            isDisabled={isReadOnly}
             as={Select}
             control={control}
-            options={valueNumberOfDay}
+            options={VALUE_NUMBER_DAY_OF_MONTH()}
             theme={selectThemeColors}
             name="confirmationReminder"
             id="confirmationReminder"
             innerRef={register()}
             className="react-select input2"
             classNamePrefix="select"
-            defaultValue={valueNumberOfDay[0]}
+            defaultValue={VALUE_NUMBER_DAY_OF_MONTH()[0]}
             formatOptionLabel={(option) => <> {option.label}</>}
           />
         </Col>
@@ -65,6 +63,7 @@ const ContractByPercentage = () => {
   )
 }
 ContractByPercentage.propTypes = {
+  isReadOnly:bool
 }
 
 export default injectIntl(ContractByPercentage)

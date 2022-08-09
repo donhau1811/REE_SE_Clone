@@ -996,6 +996,8 @@
   "Efficiency of panel": "Efficiency of panel",
   "Electricity coordinate": "Electricity coordinate",
   "Inspection valid until": "Inspection valid until",
+  "effectiveDate": "Effective Date",
+  "expirationDate" :"Expiration Date",
   "Name, phone, address, province, investor, electricity": "Name, phone, address, province, investor, electricity",
   "Filter electricity name": "Filter electricity name",
   "Resend": "Resend",
@@ -1697,7 +1699,14 @@
   "confirmation-prompt":"Confirmation prompt",
   "turnover-rate":"Turnover rate",
   "From-date-sending-notice":"From the date sending the notice",
-  "roof-rental-contract-type":"Roof rental contract type"
+  "roof-rental-contract-type":"Roof rental contract type",
+  "operation-unit-form-address":"Address",
+  "Enter the contract code":"Enter the contract code",
+  "Select roof rental vendor":"Select roof rental vendor",
+  "required-validate":"Required validate",
+  "max-validate":"Max validate",
+  "invalid-character-validate":"Invalid character validate",
+  "create-roof-vendor-contract":"Create roof vendor contract"
 
 
 }

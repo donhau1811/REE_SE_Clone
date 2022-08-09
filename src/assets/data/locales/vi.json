@@ -1765,6 +1765,10 @@
    "confirmation-prompt":"Nhắc nhở đơn vị xác nhận",
    "turnover-rate":"Tỷ lệ % doanh thu",
    "From-date-sending-notice":"từ ngày gửi thông báo",
-   "roof-rental-contract-type":"Loại hợp đồng cho thuê mái"
-   
+   "roof-rental-contract-type":"Loại hợp đồng cho thuê mái",
+   "expirationDate" :"Ngày hết hiệu lực",
+   "Enter the contract code":"Nhập mã hợp đồng",
+   "Select roof rental vendor":"Chọn đơn vị cho thuê mái",
+   "create-roof-vendor-contract":"Tạo hợp đồng cho đơn vị thuê mái"
+
 }

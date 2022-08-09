@@ -133,12 +133,22 @@ export const BillingRoutes = [
   },
   {
     path: ROUTER_URL.BILLING_PROJECT_CREATE_ROOF_VENDOR,
-    component: lazy(() => import('../../views/billing/project/roofVendorContract/RoofVendorContractCUForm')),
+    component: lazy(() => import('../../views/billing/project/roofVendorContract/create')),
     exact: true,
     meta: {
       action: 'manage',
       resource: ROUTER_URL.BILLING_PROJECT_CREATE_ROOF_VENDOR,
       navLink: ROUTER_URL.BILLING_PROJECT_CREATE_ROOF_VENDOR
+    }
+  },
+  {
+    path: ROUTER_URL.BILLING_PROJECT_UPDATE_ROOF_VENDOR,
+    component: lazy(() => import('../../views/billing/project/roofVendorContract/update')),
+    exact: true,
+    meta: {
+      action: 'manage',
+      resource: ROUTER_URL.BILLING_PROJECT_UPDATE_ROOF_VENDOR,
+      navLink: ROUTER_URL.BILLING_PROJECT_UPDATE_ROOF_VENDOR
     }
   }
 ]
