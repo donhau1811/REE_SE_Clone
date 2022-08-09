@@ -30,9 +30,7 @@ const CreateCustomerCOM = ({ intl }) => {
     history.push(ROUTER_URL.BILLING_CUSTOMER)
   }
   return (
-    <>
       <CustomerCUForm onCancel={handleCancel} onSubmit={handleAddCustomer} />
-    </>
   )
 }
 

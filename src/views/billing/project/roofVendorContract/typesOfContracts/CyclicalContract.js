@@ -52,13 +52,13 @@ const MonthlyRents = ({ typeContract, isReadOnly }) => {
             as={Select}
             control={control}
             theme={selectThemeColors}
-            options={VALUE_NUMBER_DAY_OF_MONTH}
+            options={VALUE_NUMBER_DAY_OF_MONTH()}
             name="announcementDate"
             id="announcementDate"
             innerRef={register()}
             className="react-select input2"
             classNamePrefix="select"
-            defaultValue={VALUE_NUMBER_DAY_OF_MONTH[0]}
+            defaultValue={VALUE_NUMBER_DAY_OF_MONTH()[0]}
             formatOptionLabel={(option) => <> {option.label}</>}
           />
         </Col>
@@ -102,14 +102,14 @@ const MonthlyRents = ({ typeContract, isReadOnly }) => {
             as={Select}
             control={control}
             isDisabled={isReadOnly}
-            options={VALUE_NUMBER_DAY_OF_MONTH}
+            options={VALUE_NUMBER_DAY_OF_MONTH()}
             theme={selectThemeColors}
             name="confirmationReminder"
             id="confirmationReminder"
             innerRef={register()}
             className="react-select input2"
             classNamePrefix="select"
-            defaultValue={VALUE_NUMBER_DAY_OF_MONTH[0]}
+            defaultValue={VALUE_NUMBER_DAY_OF_MONTH()[0]}
             formatOptionLabel={(option) => <> {option.label}</>}
           />
         </Col>

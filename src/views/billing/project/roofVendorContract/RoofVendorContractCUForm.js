@@ -15,7 +15,7 @@ import './style.scss'
 import { mockRoofVendor } from './mock'
 import { VALUE_NUMBER_DAY_OF_MONTH } from '@src/utility/constants/billing'
 
-const RoofVendorContractCUForm = ({ intl, onCancel = () => {}, initValues, isReadOnly, onSubmit = () => {} }) => {
+const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSubmit }) => {
   const TypeOfRoofVendorContract = [
     { value: 1, label: intl.formatMessage({ id: 'no-charge' }) },
     { value: 2, label: intl.formatMessage({ id: 'monthly-rent' }) },
@@ -123,13 +123,13 @@ const RoofVendorContractCUForm = ({ intl, onCancel = () => {}, initValues, isRea
       ...initValues,
       roofVendorName: listOfRoofvendor.find((item) => item.label === initValues?.roofVendorName),
       contractType: TypeOfRoofVendorContract.find((item) => item.value === initValues?.typeContract),
-      announcementDate: VALUE_NUMBER_DAY_OF_MONTH.find((item) => item.label === initValues?.announcementDate),
-      confirmationReminder: VALUE_NUMBER_DAY_OF_MONTH.find((item) => item.label === initValues?.confirmationReminder)
+      announcementDate: VALUE_NUMBER_DAY_OF_MONTH().find((item) => item.label === initValues?.announcementDate),
+      confirmationReminder: VALUE_NUMBER_DAY_OF_MONTH().find((item) => item.label === initValues?.confirmationReminder)
     }
     reset(contractValue)
   }, [initValues?.id])
 
-  const handleBeforeSubmit = (value) => {
+  const handleProcessFormData = (value) => {
     const newValue = {
       ...value,
       roofVendorName: value?.roofVendorName?.label,
@@ -141,7 +141,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel = () => {}, initValues, isRea
   }
   return (
     <FormProvider {...methods}>
-      <Form onSubmit={handleSubmit(handleBeforeSubmit)}>
+      <Form onSubmit={handleSubmit(handleProcessFormData)}>
         <Row>
           <Col className="mb-3" md={3}>
             <Label className="general-label">

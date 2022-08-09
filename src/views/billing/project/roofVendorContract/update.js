@@ -8,9 +8,6 @@ import { mockContract } from './mock'
 // eslint-disable-next-line no-unused-vars
 const UpdateRoofVendorContract = ({ intl }) => {
   const history = useHistory()
-  useEffect(() => {
-  
-  }, [])
   const [isReadOnly, setIsReadOnly] = useState(true)
   const { id } = useParams()
   useEffect(() => {
@@ -27,14 +24,12 @@ const UpdateRoofVendorContract = ({ intl }) => {
     }
   }
   return (
-    <>
-      <RoofVendorContractCUForm
-        isReadOnly={isReadOnly}
-        onCancel={handleCancel}
-        onSubmit={handleUpdateRoofVendorContract}
-        initValues={{...mockContract[0], ...mockContract[0].typeContract, ...mockContract[0].roofVendor}}
-      />
-    </>
+    <RoofVendorContractCUForm
+      isReadOnly={isReadOnly}
+      onCancel={handleCancel}
+      onSubmit={handleUpdateRoofVendorContract}
+      initValues={{ ...mockContract[0], ...mockContract[0].typeContract, ...mockContract[0].roofVendor }}
+    />
   )
 }
 UpdateRoofVendorContract.propTypes = {
