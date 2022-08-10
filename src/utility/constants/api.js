@@ -125,6 +125,7 @@ export const API_UPDATE_OPERATION_UNIT = `${BASE_API_URL_V2}/operation-company/u
 export const API_GET_OPERATION_UNIT_BY_ID = `${BASE_API_URL_V2}/operation-company/id`
 export const API_DELETE_OPERATING_COMPANY = `${BASE_API_URL_V2}/operation-company/delete`
 //roofVendor
+export const API_GET_ALL_ROOF_VENDOR = `${BASE_API_URL_V2}/roof-vendor/all`
 export const API_GET_ROOF_VENDOR = `${BASE_API_URL_V2}/roof-vendor/search`
 export const API_CREATE_ROOF_VENDOR = `${BASE_API_URL_V2}/roof-vendor/create`
 export const API_UPDATE_ROOF_VENDOR = `${BASE_API_URL_V2}/roof-vendor/update`

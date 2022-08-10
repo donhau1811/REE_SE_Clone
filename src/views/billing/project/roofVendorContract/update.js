@@ -5,8 +5,7 @@ import { object } from 'prop-types'
 import { injectIntl } from 'react-intl'
 import { mockContract } from './mock'
 
-// eslint-disable-next-line no-unused-vars
-const UpdateRoofVendorContract = ({ intl }) => {
+const UpdateRoofVendorContract = () => {
   const history = useHistory()
   const [isReadOnly, setIsReadOnly] = useState(true)
   const { id } = useParams()

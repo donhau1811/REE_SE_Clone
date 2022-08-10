@@ -1,14 +1,12 @@
-import React from 'react'
-import { useFormContext, Controller } from 'react-hook-form'
+import { ISO_STANDARD_FORMAT } from '@src/utility/constants'
+import moment from 'moment'
+import { bool, object } from 'prop-types'
+import { useFormContext } from 'react-hook-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { FormFeedback, Col, Row, Label, Input } from 'reactstrap'
-import { selectThemeColors } from '@src/utility/Utils'
-import Select from 'react-select'
-import { object, bool } from 'prop-types'
-import { VALUE_NUMBER_DAY_OF_MONTH } from '@src/utility/constants/billing'
+import { Col, FormFeedback, Input, Label, Row } from 'reactstrap'
 
 const MonthlyRents = ({ typeContract, isReadOnly }) => {
-  const { register, errors, control, getValues } = useFormContext()
+  const { register, errors, getValues } = useFormContext()
   return (
     <>
       <Row className="justify-content-between">
@@ -31,10 +29,13 @@ const MonthlyRents = ({ typeContract, isReadOnly }) => {
             invalid={!!errors.startDate}
             valid={getValues('startDate')?.trim() && !errors.startDate}
             type="date"
+            defaultValue={moment().format(ISO_STANDARD_FORMAT)}
             className="custom-icon-input-date"
           />
           {errors?.startDate && <FormFeedback>{errors?.startDate?.message}</FormFeedback>}
         </Col>
+        <Col xs={0} lg={1} className="divider-vertical" />
+
         <Col className="mb-3 justify-content-start d-flex align-items-center" md={3}>
           <div>
             <Label className="general-label">
@@ -47,20 +48,17 @@ const MonthlyRents = ({ typeContract, isReadOnly }) => {
           </div>
         </Col>
         <Col className="mb-3" md={2}>
-          <Controller
-            isDisabled={isReadOnly}
-            as={Select}
-            control={control}
-            theme={selectThemeColors}
-            options={VALUE_NUMBER_DAY_OF_MONTH()}
-            name="announcementDate"
+          <Input
+            disabled={isReadOnly}
             id="announcementDate"
+            name="announcementDate"
+            autoComplete="on"
             innerRef={register()}
-            className="react-select input2"
-            classNamePrefix="select"
-            defaultValue={VALUE_NUMBER_DAY_OF_MONTH()[0]}
-            formatOptionLabel={(option) => <> {option.label}</>}
+            invalid={!!errors.announcementDate}
+            valid={getValues('announcementDate')?.trim() && !errors.announcementDate}
+            defaultValue={0}
           />
+          {errors?.announcementDate && <FormFeedback>{errors?.announcementDate?.message}</FormFeedback>}
         </Col>
       </Row>
       <Row className="justify-content-between">
@@ -86,6 +84,8 @@ const MonthlyRents = ({ typeContract, isReadOnly }) => {
           />
           {errors?.rentalAmount && <FormFeedback>{errors?.rentalAmount?.message}</FormFeedback>}
         </Col>
+        <Col xs={0} lg={1}  className="divider-vertical" />
+
         <Col className="mb-3 justify-content-start d-flex align-items-center" md={3}>
           <div>
             <Label className="general-label">
@@ -98,20 +98,17 @@ const MonthlyRents = ({ typeContract, isReadOnly }) => {
           </div>
         </Col>
         <Col className="mb-3" md={2}>
-          <Controller
-            as={Select}
-            control={control}
-            isDisabled={isReadOnly}
-            options={VALUE_NUMBER_DAY_OF_MONTH()}
-            theme={selectThemeColors}
-            name="confirmationReminder"
+          <Input
+            disabled={isReadOnly}
             id="confirmationReminder"
+            name="confirmationReminder"
+            autoComplete="on"
             innerRef={register()}
-            className="react-select input2"
-            classNamePrefix="select"
-            defaultValue={VALUE_NUMBER_DAY_OF_MONTH()[0]}
-            formatOptionLabel={(option) => <> {option.label}</>}
+            invalid={!!errors.confirmationReminder}
+            valid={getValues('confirmationReminder')?.trim() && !errors.confirmationReminder}
+            defaultValue={0}
           />
+          {errors?.confirmationReminder && <FormFeedback>{errors?.confirmationReminder?.message}</FormFeedback>}
         </Col>
       </Row>
     </>

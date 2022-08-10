@@ -1,3 +1,5 @@
+import { FormattedMessage } from 'react-intl'
+
 export const GENERAL_STATUS = {
   INACTIVE: 'INACTIVE',
   ACTIVE: 'ACTIVE'
@@ -22,15 +24,21 @@ export const POSITION_OPTIONS = [
   }
 ]
 
-function daysInMonth (month, year) {
-  return new Date(year ? year : new Date().getFullYear(), month ? month  :  new Date().getMonth(), 0).getDate()
-}
-
-export const VALUE_NUMBER_DAY_OF_MONTH = (month, year) => {
-  const numberMonth = daysInMonth(month, year)
-  let valueNumberOfDay = []
-  for (let i = 0; i <= numberMonth; i++) {
-    valueNumberOfDay = [...valueNumberOfDay, { value: i, label: i }]
+export const  TypeOfRoofVendorContract = [
+  {
+    value: 1,
+    label: <FormattedMessage id="no-charge"  />
+  },
+  {
+    value: 2,
+    label: <FormattedMessage id="monthly-rent" />
+  },
+  {
+    value: 3,
+    label: <FormattedMessage id="quarterly-rent" />
+  },
+  {
+    value: 4,
+    label: <FormattedMessage id="rent-as-percentage-of-revenue" />
   }
-  return valueNumberOfDay
-}
+]

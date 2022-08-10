@@ -24,16 +24,10 @@ export const typeContract = [
 ]
 export const mockRoofVendor = [
   {
-    id: 1,
-    roofVendorName: 'CTY TNHH LONG THÀNH 1',
-    taxCode: 'DX124XD',
-    address: 'Việt nam'
+    roofId: 1
   },
   {
-    id: 2,
-    roofVendorName: 'CTY TNHH LONG THÀNH 2',
-    taxCode: 'DX124XD',
-    address: 'Việt nam'
+    roofId: 2
   }
 ]
 

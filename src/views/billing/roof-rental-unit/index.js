@@ -12,7 +12,7 @@ import { Badge, Col, Row, UncontrolledTooltip } from 'reactstrap'
 import SweetAlert from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import PageHeader from './PageHeader'
-import { deleteBillingRoofRentalUnit, getAllRoofUnit } from './store/actions'
+import { deleteBillingRoofRentalUnit, getRoofVendor } from './store/actions'
 import './styles.scss'
 import { ROUTER_URL, ROWS_PER_PAGE_DEFAULT } from '@src/utility/constants'
 
@@ -31,7 +31,7 @@ const RoofVendor = ({ intl }) => {
    
   const fetchRoofVendor = (payload) => {
     dispatch(
-      getAllRoofUnit({
+      getRoofVendor({
         ...params,
         ...payload
       })

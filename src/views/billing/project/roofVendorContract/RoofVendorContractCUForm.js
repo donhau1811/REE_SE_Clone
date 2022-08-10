@@ -1,35 +1,27 @@
-import { func, object, string, bool } from 'prop-types'
-import React, { useEffect, useMemo, useState } from 'react'
-import { useForm, Controller, FormProvider } from 'react-hook-form'
-import { FormattedMessage, injectIntl } from 'react-intl'
-import { Button, Col, Form, FormFeedback, Input, Label, Row } from 'reactstrap'
-import Select from 'react-select'
-import { selectThemeColors } from '@src/utility/Utils'
 import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup'
-import { REAL_NUMBER } from '@src/utility/constants'
+import { MOBILE_REGEX, REAL_NUMBER } from '@src/utility/constants'
+import { TypeOfRoofVendorContract as type } from '@src/utility/constants/billing'
+import { selectThemeColors } from '@src/utility/Utils'
 import Table from '@src/views/common/table/CustomDataTable'
-import MonthlyRent from './typesOfContracts/CyclicalContract'
+import { bool, func, object, string } from 'prop-types'
+import { useEffect, useMemo, useState } from 'react'
+import { Controller, FormProvider, useForm } from 'react-hook-form'
+import { FormattedMessage, injectIntl } from 'react-intl'
+import { useDispatch, useSelector } from 'react-redux'
+import Select from 'react-select'
+import { Button, Col, Form, FormFeedback, Input, Label, Row } from 'reactstrap'
+import * as yup from 'yup'
+import { getAllRoofVendor, getRoofVendorWithContactsById } from '../../roof-rental-unit/store/actions'
 import ContractByPercentage from './typesOfContracts/ContractByPercentage'
-import './style.scss'
-import { mockRoofVendor } from './mock'
-import { VALUE_NUMBER_DAY_OF_MONTH } from '@src/utility/constants/billing'
+import MonthlyRent from './typesOfContracts/CyclicalContract'
 
 const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSubmit }) => {
-  const TypeOfRoofVendorContract = [
-    { value: 1, label: intl.formatMessage({ id: 'no-charge' }) },
-    { value: 2, label: intl.formatMessage({ id: 'monthly-rent' }) },
-    { value: 3, label: intl.formatMessage({ id: 'quarterly-rent' }) },
-    { value: 4, label: intl.formatMessage({ id: 'rent-as-percentage-of-revenue' }) }
-  ]
 
-  const listOfRoofvendor = mockRoofVendor.map((item) => {
-    return { value: item.id, label: item.roofVendorName }
-  })
 
   const defaultValues = {
-    contractType: TypeOfRoofVendorContract[0]
+    contractType: type[0]
   }
+   
   const defaultValid = {
     roofVendorName: yup.object().shape({
       label: yup.string().required(intl.formatMessage({ id: 'required-validate' })),
@@ -42,7 +34,25 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
     effectiveDate: yup.string().required(intl.formatMessage({ id: 'required-validate' })),
     expirationDate: yup.string().required(intl.formatMessage({ id: 'required-validate' }))
   }
+
+  const dispatch = useDispatch()
+
+  const {
+    billingContacts: { contacts }
+  } = useSelector((state) => state)
+
+  useEffect(() => {
+    dispatch(getAllRoofVendor())
+  }, [])
+
+  const { data } = useSelector((state) => state.roofUnit)
+
+  const listOfRoofvendor = data.map((item) => {
+    return { value: item.id, label: item.name }
+  })
+
   const [validForm, setValidForm] = useState(defaultValid)
+
   const columns = [
     {
       name: <FormattedMessage id="No." />,
@@ -78,18 +88,32 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
       cell: (row) => <span>{row.note}</span>
     }
   ]
-
   const ValidateSchema = yup.object().shape(validForm)
   const methods = useForm({
     mode: 'onChange',
     resolver: yupResolver(isReadOnly ? yup.object().shape({}) : ValidateSchema),
     defaultValues: initValues || defaultValues
   })
+  const { handleSubmit, getValues, errors, control, register, reset, watch, setValue } = methods
 
-  const { handleSubmit, getValues, errors, control, register, reset, watch } = methods
-  const typeContract = watch('contractType', TypeOfRoofVendorContract[0])
-  const isCyclicalContract = useMemo(() => typeContract.value === 2 || typeContract.value === 3, [typeContract])
+  const typeContract = watch('contractType', type[0])
+
+  const selectRoofVendor = watch(
+    'roofVendorName',
+    listOfRoofvendor.find((item) => item.value === initValues?.roofId)
+  )
   useEffect(() => {
+    setValue('roofVendorName', selectRoofVendor)
+    setValue('taxCode', data.find((item) => item.id === selectRoofVendor?.value)?.taxCode)
+    setValue('address', data.find((item) => item.id === selectRoofVendor?.value)?.address)
+    if (selectRoofVendor) {
+      dispatch(getRoofVendorWithContactsById({ id: selectRoofVendor?.value, isSavedToState: true }))
+    }
+  }, [selectRoofVendor])
+  const isCyclicalContract = useMemo(() => typeContract.value === 2 || typeContract.value === 3, [typeContract])
+
+  useEffect(() => {
+    // thay đổi valid tùy theo các subform
     setValidForm(defaultValid)
     if (isCyclicalContract) {
       setValidForm({
@@ -102,7 +126,31 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
             // lấy kiểu số  thực
             message: intl.formatMessage({ id: 'invalid-character-validate' }),
             excludeEmptyString: true
-          })
+          }),
+        announcementDate: yup
+          .string()
+          .required(intl.formatMessage({ id: 'required-validate' }))
+          .max(2, intl.formatMessage({ id: 'max-validate' }))
+          .matches(MOBILE_REGEX, {
+            // lấy kiểu số  thực
+            message: intl.formatMessage({ id: 'invalid-character-validate' }),
+            excludeEmptyString: true
+          }),
+        confirmationReminder: yup
+          .string()
+          .required(intl.formatMessage({ id: 'required-validate' }))
+          .max(2, intl.formatMessage({ id: 'max-validate' }))
+          .matches(MOBILE_REGEX, {
+            // lấy kiểu số  thực
+            message: intl.formatMessage({ id: 'invalid-character-validate' }),
+            excludeEmptyString: true
+          }),
+        startDate: yup
+        .string()
+        .required(intl.formatMessage({ id: 'required-validate' }))
+        .max(10, intl.formatMessage({ id: 'max-validate' }))
+
+
       })
     } else if (typeContract.value === 4) {
       setValidForm({
@@ -114,28 +162,51 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
           .matches(REAL_NUMBER, {
             message: intl.formatMessage({ id: 'invalid-character-validate' }),
             excludeEmptyString: true
+          }),
+        confirmationReminder: yup
+          .string()
+          .required(intl.formatMessage({ id: 'required-validate' }))
+          .max(2, intl.formatMessage({ id: 'max-validate' }))
+          .matches(MOBILE_REGEX, {
+            // lấy kiểu số  thực
+            message: intl.formatMessage({ id: 'invalid-character-validate' }),
+            excludeEmptyString: true
           })
       })
     }
   }, [typeContract])
+
   useEffect(() => {
     const contractValue = {
       ...initValues,
-      roofVendorName: listOfRoofvendor.find((item) => item.label === initValues?.roofVendorName),
-      contractType: TypeOfRoofVendorContract.find((item) => item.value === initValues?.typeContract),
-      announcementDate: VALUE_NUMBER_DAY_OF_MONTH().find((item) => item.label === initValues?.announcementDate),
-      confirmationReminder: VALUE_NUMBER_DAY_OF_MONTH().find((item) => item.label === initValues?.confirmationReminder)
+      roofVendorName: listOfRoofvendor.find((item) => item.value === initValues?.roofId),
+      contractType: type.find((item) => item.value === initValues?.typeContract)
     }
     reset(contractValue)
-  }, [initValues?.id])
+  }, [initValues])
 
   const handleProcessFormData = (value) => {
     const newValue = {
       ...value,
-      roofVendorName: value?.roofVendorName?.label,
-      contractType: value?.contractType?.label,
-      announcementDate: value?.announcementDate?.label,
-      confirmationReminder: value?.confirmationReminder?.label
+      state: 'ACTIVE',
+      code: value?.contractCode,
+      type: 'ROOF_VENDOR',
+      projectId: 1,
+      roofVendorId: value?.roofVendorName?.value,
+      startDate: value?.effectiveDate,
+      endDate: value?.expirationDate,
+      url: 'link contract pdf',
+      alerts: {
+        confirmAlert: value?.confirmationReminder,
+        billingAlert: value?.announcementDate
+      },
+      details: {
+        id: value?.contractType?.value,
+        name: value?.contractType?.label,
+        rentalAmount: value?.rentalAmount,
+        percent: value?.percentTurnover,
+        startDate:value?.startDate
+      }
     }
     onSubmit?.(newValue)
   }
@@ -143,7 +214,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
     <FormProvider {...methods}>
       <Form onSubmit={handleSubmit(handleProcessFormData)}>
         <Row>
-          <Col className="mb-3" md={3}>
+          <Col className="mb-3" md={3} xs={12} lg={4}>
             <Label className="general-label">
               <FormattedMessage id="contract-code" />
               <span className="text-danger">&nbsp;(*)</span>
@@ -160,7 +231,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
             />
             {errors?.contractCode && <FormFeedback>{errors?.contractCode?.message}</FormFeedback>}
           </Col>
-          <Col className="mb-2" md={2}>
+          <Col md={2} xs={12} lg={2}>
             <Label className="general-label" for="status">
               <FormattedMessage id="effectiveDate" />
               <span className="text-danger">&nbsp;(*)</span>
@@ -178,7 +249,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
             />
             {errors?.effectiveDate && <FormFeedback>{errors?.effectiveDate?.message}</FormFeedback>}
           </Col>
-          <Col className="mb-3" md={2}>
+          <Col  md={2} xs={12} lg={2}>
             <Label className="general-label">
               <FormattedMessage id="expirationDate" />
               <span className="text-danger">&nbsp;(*)</span>
@@ -198,9 +269,8 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
             {errors?.expirationDate && <FormFeedback>{errors?.expirationDate?.message}</FormFeedback>}
           </Col>
         </Row>
-        <Row></Row>
         <Row>
-          <Col className="mb-3" md={3}>
+          <Col className="mb-3" md={3} xs={12} lg={4}>
             <Label className="general-label">
               <FormattedMessage id="Roof rental unit name" />
               <span className="text-danger">&nbsp;(*)</span>
@@ -227,23 +297,18 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
             )}
           </Col>
 
-          <Col md={2}>
+          <Col md={2} xs={12} lg={2}>
             <Label className="general-label">
               <FormattedMessage id="operation-unit-form-taxCode" />
             </Label>
             <Input id="taxCode" name="taxCode" innerRef={register()} autoComplete="on" disabled={true} />
           </Col>
 
-          <Col md={5}>
+          <Col md={6} xs={12} lg={6}>
             <Label className="general-label">
               <FormattedMessage id="operation-unit-form-address" />
             </Label>
             <Input id="address" name="address" innerRef={register()} autoComplete="on" disabled={true} />
-          </Col>
-          <Col className="d-flex align-items-center mb-1" md={2}>
-            <Button type="button" color="primary" className="mr-1">
-              {intl.formatMessage({ id: 'update-info' })}
-            </Button>
           </Col>
         </Row>
         <Row className="mb-2">
@@ -251,14 +316,14 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
             <Label className="general-label">
               <FormattedMessage id="notification-recipients" />
             </Label>
-            <Table columns={columns} pagination={null} data={[{}]} />
+            <Table columns={columns} pagination={null} data={contacts} />
           </Col>
         </Row>
         <Row>
-          <hr className="hr" />
+          <div className="divider-dashed mb-2" />
         </Row>
         <Row>
-          <Col className="mb-3" md={3}>
+          <Col className="mb-3" md={3} xs={12} lg={4}>
             <Label className="general-label">
               <FormattedMessage id="roof-rental-contract-type" />
               <span className="text-danger">&nbsp;(*)</span>
@@ -269,7 +334,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
               isDisabled={isReadOnly}
               theme={selectThemeColors}
               name="contractType"
-              options={TypeOfRoofVendorContract}
+              options={type}
               id="contractType"
               autoComplete="on"
               innerRef={register()}
@@ -277,11 +342,11 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
               classNamePrefix="select"
               valid={!!getValues('contractType')?.value}
               invalid={!!errors.contractType}
-              formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
+              formatOptionLabel={(option) => <> {option.label}</>}
             />
           </Col>
         </Row>
-        {isCyclicalContract && <MonthlyRent isReadOnly={isReadOnly} intl typeContract={typeContract} />}
+        {isCyclicalContract && <MonthlyRent isReadOnly={isReadOnly} typeContract={typeContract} />}
         {typeContract.value === 4 && <ContractByPercentage isReadOnly={isReadOnly} />}
         <Row className="d-flex justify-content-end align-items-center">
           <Button type="submit" color="primary" className="mr-1 px-3">
