@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { bool, func, object, string } from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
@@ -12,7 +11,7 @@ import { selectThemeColors } from '@src/utility/Utils'
 import { API_GET_ALL_OPERATION_UNIT, NUMBER_REGEX } from '@src/utility/constants'
 import axios from 'axios'
 import { accountantOptions } from './contants'
-import Contract from './Contract'
+import Contract from './contract'
 
 const ProjectCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, isReadOnly, submitText }) => {
   const initState = {}

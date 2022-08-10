@@ -147,7 +147,8 @@ export const API_CHECK_PROJECT = `${BASE_API_URL_V2}/project/check-code`
 export const API_CUSTOMER_V2 = `${BASE_API_URL_V2}/customer/create`
 export const API_ADD_CUSTOMER_V2 = `${BASE_API_URL_V2}/customer/create`
 export const API_UPDATE_CUSTOMER_V2 = `${BASE_API_URL_V2}/customer/update`
-export const API_BILLING_CUSTOMERS = `${BASE_API_URL_V2}/customer/creat`
+export const API_GET_ALL_CUSTOMER = `${BASE_API_URL_V2}/customer/all`
+
 
 export const API_DELETE_CUSTOMER_V2 = `${BASE_API_URL_V2}/customer/delete`
 

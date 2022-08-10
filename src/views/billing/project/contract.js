@@ -2,8 +2,8 @@ import { Tab, Tabs } from '@mui/material'
 import { object } from 'prop-types'
 import React, { useState } from 'react'
 import { injectIntl } from 'react-intl'
-import PowerSelling from './PowerSelling'
-import RoofRenting from './RoofRenting'
+import PowerSelling from '../contract/PowerSelling/List'
+import RoofRenting from '../contract/RoofRenting/List'
 
 function ContractCOM({ intl }) {
   const [activeTab, setActiveTab] = useState(1)

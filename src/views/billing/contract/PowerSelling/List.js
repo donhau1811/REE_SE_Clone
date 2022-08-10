@@ -4,14 +4,16 @@ import { Plus } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Table from '@src/views/common/table/CustomDataTable'
 import { Badge, Button, Col, Row } from 'reactstrap'
-import { PowerSellingContractData } from '../mock-data'
+import { PowerSellingContractData } from '../../project/mock-data'
 import moment from 'moment'
-import { DISPLAY_DATE_FORMAT } from '@src/utility/constants'
+import { DISPLAY_DATE_FORMAT, ROUTER_URL } from '@src/utility/constants'
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
 import NoDataCOM from '@src/views/common/NoDataCOM'
+import { useHistory } from 'react-router-dom'
 
 function PowerSelling({ disabled, intl }) {
+  const history = useHistory()
   const columns = [
     {
       name: intl.formatMessage({ id: 'No.' }),
@@ -76,6 +78,10 @@ function PowerSelling({ disabled, intl }) {
       )
     }
   ]
+
+  const handleRedirectToCreateContract = () => {
+    history.push(ROUTER_URL.BILLING_PROJECT_CREATE_CONTRACT_POWER_SELLING)
+  }
   return (
     <>
       {' '}
@@ -85,13 +91,20 @@ function PowerSelling({ disabled, intl }) {
             <FormattedMessage id="Power Selling Agreement" />
           </h4>
 
-          <Button.Ripple disabled={disabled} color="primary" className="add-project add-contact-button">
+          <Button.Ripple
+            disabled={disabled}
+            color="primary"
+            className="add-project add-contact-button"
+            onClick={handleRedirectToCreateContract}
+          >
             <Plus className="mr-1" /> <FormattedMessage id="Add power selling contract" />
           </Button.Ripple>
         </Col>
         <Col xs={12}>
           <Table tableId="project" columns={columns} data={PowerSellingContractData} pagination={null} />
-          {!PowerSellingContractData?.length > 0 && <NoDataCOM title={<FormattedMessage id="Add notification of electricity fee now or later" />} />}
+          {!PowerSellingContractData?.length > 0 && (
+            <NoDataCOM title={<FormattedMessage id="Add notification of electricity fee now or later" />} />
+          )}
         </Col>
       </Row>
     </>

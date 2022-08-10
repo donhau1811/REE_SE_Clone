@@ -157,7 +157,7 @@ function ContactCUForm({ contact, intl, onSubmit = () => {}, onCancel }) {
             <Row>
               <Col className="d-flex justify-content-end align-items-center">
                 <Button onClick={handleSubmit(handleSubmitContact)} color="primary" className="mr-1 px-3">
-                  {intl.formatMessage({ id: 'Save' })}
+                  {intl.formatMessage({ id: 'Finish' })}
                 </Button>{' '}
                 <Button color="secondary" onClick={handleCancel}>
                   {intl.formatMessage({ id: 'Cancel' })}
