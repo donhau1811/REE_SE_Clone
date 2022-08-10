@@ -1,5 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { MOBILE_REGEX, REAL_NUMBER } from '@src/utility/constants'
+import { TypeOfRoofVendorContract as type } from '@src/utility/constants/billing'
 import { selectThemeColors } from '@src/utility/Utils'
 import Table from '@src/views/common/table/CustomDataTable'
 import { bool, func, object, string } from 'prop-types'
@@ -15,16 +16,10 @@ import ContractByPercentage from './typesOfContracts/ContractByPercentage'
 import MonthlyRent from './typesOfContracts/CyclicalContract'
 
 const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSubmit }) => {
-  const TypeOfRoofVendorContract = [
-    { value: 1, label: intl.formatMessage({ id: 'no-charge' }) },
-    { value: 2, label: intl.formatMessage({ id: 'monthly-rent' }) },
-    { value: 3, label: intl.formatMessage({ id: 'quarterly-rent' }) },
-    { value: 4, label: intl.formatMessage({ id: 'rent-as-percentage-of-revenue' }) 
-  }
-  ]
+
 
   const defaultValues = {
-    contractType: TypeOfRoofVendorContract[0]
+    contractType: type[0]
   }
    
   const defaultValid = {
@@ -101,7 +96,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
   })
   const { handleSubmit, getValues, errors, control, register, reset, watch, setValue } = methods
 
-  const typeContract = watch('contractType', TypeOfRoofVendorContract[0])
+  const typeContract = watch('contractType', type[0])
 
   const selectRoofVendor = watch(
     'roofVendorName',
@@ -109,8 +104,8 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
   )
   useEffect(() => {
     setValue('roofVendorName', selectRoofVendor)
-    setValue('taxCode', data.find((item) => item.id === selectRoofVendor.value)?.taxCode)
-    setValue('address', data.find((item) => item.id === selectRoofVendor.value)?.address)
+    setValue('taxCode', data.find((item) => item.id === selectRoofVendor?.value)?.taxCode)
+    setValue('address', data.find((item) => item.id === selectRoofVendor?.value)?.address)
     if (selectRoofVendor) {
       dispatch(getRoofVendorWithContactsById({ id: selectRoofVendor?.value, isSavedToState: true }))
     }
@@ -185,7 +180,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
     const contractValue = {
       ...initValues,
       roofVendorName: listOfRoofvendor.find((item) => item.value === initValues?.roofId),
-      contractType: TypeOfRoofVendorContract.find((item) => item.value === initValues?.typeContract)
+      contractType: type.find((item) => item.value === initValues?.typeContract)
     }
     reset(contractValue)
   }, [initValues])
@@ -213,7 +208,6 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
         startDate:value?.startDate
       }
     }
-    console.log('newValue', newValue)
     onSubmit?.(newValue)
   }
   return (
@@ -340,7 +334,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
               isDisabled={isReadOnly}
               theme={selectThemeColors}
               name="contractType"
-              options={TypeOfRoofVendorContract}
+              options={type}
               id="contractType"
               autoComplete="on"
               innerRef={register()}
@@ -348,7 +342,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
               classNamePrefix="select"
               valid={!!getValues('contractType')?.value}
               invalid={!!errors.contractType}
-              formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
+              formatOptionLabel={(option) => <> {option.label}</>}
             />
           </Col>
         </Row>
