@@ -7,7 +7,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { Button, Col, Form, FormFeedback, Input, Label, Modal, ModalBody, ModalHeader, Row } from 'reactstrap'
 import * as yup from 'yup'
 import Select from 'react-select'
-import { selectThemeColors } from '@src/utility/Utils'
+import { selectThemeColors, showToast } from '@src/utility/Utils'
 import axios from 'axios'
 
 function ContactCUForm({ clock, intl, onSubmit = () => {}, onCancel }) {
@@ -16,26 +16,30 @@ function ContactCUForm({ clock, intl, onSubmit = () => {}, onCancel }) {
   const [manufacturerList, setManufacturerList] = useState([])
 
   useEffect(async () => {
-    const [clockTypesRes, manufacturerListRes] = await Promise.all([
-      axios.get(`${API_GET_BILLING_SETTING_VALUE_BY_SETTING_ID}/6`),
-      axios.get(`${API_GET_BILLING_SETTING_VALUE_BY_SETTING_ID}/7`)
-    ])
+    try {
+      const [clockTypesRes, manufacturerListRes] = await Promise.all([
+        axios.get(`${API_GET_BILLING_SETTING_VALUE_BY_SETTING_ID}/6`),
+        axios.get(`${API_GET_BILLING_SETTING_VALUE_BY_SETTING_ID}/7`)
+      ])
 
-    if (clockTypesRes.status === 200 && clockTypesRes.data.data) {
-      setTypesOfClock(
-        (clockTypesRes.data.data || []).map((item) => ({
-          value: item.value,
-          label: item.value
-        }))
-      )
-    }
-    if (manufacturerListRes.status === 200 && manufacturerListRes.data.data) {
-      setManufacturerList(
-        (manufacturerListRes.data.data || []).map((item) => ({
-          value: item.value,
-          label: item.value
-        }))
-      )
+      if (clockTypesRes.status === 200 && clockTypesRes.data.data) {
+        setTypesOfClock(
+          (clockTypesRes.data.data || []).map((item) => ({
+            value: item.value,
+            label: item.value
+          }))
+        )
+      }
+      if (manufacturerListRes.status === 200 && manufacturerListRes.data.data) {
+        setManufacturerList(
+          (manufacturerListRes.data.data || []).map((item) => ({
+            value: item.value,
+            label: item.value
+          }))
+        )
+      }
+    } catch (error) {
+      showToast('error', error.toString())
     }
   }, [])
 
