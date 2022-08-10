@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { MOBILE_REGEX, REAL_NUMBER } from '@src/utility/constants'
+import { NUMBER_REGEX, REAL_NUMBER } from '@src/utility/constants'
 import { TypeOfRoofVendorContract as type } from '@src/utility/constants/billing'
 import { selectThemeColors } from '@src/utility/Utils'
 import Table from '@src/views/common/table/CustomDataTable'
@@ -131,7 +131,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
           .string()
           .required(intl.formatMessage({ id: 'required-validate' }))
           .max(2, intl.formatMessage({ id: 'max-validate' }))
-          .matches(MOBILE_REGEX, {
+          .matches(NUMBER_REGEX, {
             // lấy kiểu số  thực
             message: intl.formatMessage({ id: 'invalid-character-validate' }),
             excludeEmptyString: true
@@ -140,7 +140,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
           .string()
           .required(intl.formatMessage({ id: 'required-validate' }))
           .max(2, intl.formatMessage({ id: 'max-validate' }))
-          .matches(MOBILE_REGEX, {
+          .matches(NUMBER_REGEX, {
             // lấy kiểu số  thực
             message: intl.formatMessage({ id: 'invalid-character-validate' }),
             excludeEmptyString: true
@@ -167,7 +167,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
           .string()
           .required(intl.formatMessage({ id: 'required-validate' }))
           .max(2, intl.formatMessage({ id: 'max-validate' }))
-          .matches(MOBILE_REGEX, {
+          .matches(NUMBER_REGEX, {
             // lấy kiểu số  thực
             message: intl.formatMessage({ id: 'invalid-character-validate' }),
             excludeEmptyString: true
