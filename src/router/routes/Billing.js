@@ -133,7 +133,7 @@ export const BillingRoutes = [
   },
   {
     path: ROUTER_URL.BILLING_PROJECT_CREATE_ROOF_VENDOR,
-    component: lazy(() => import('../../views/billing/project/roofVendorContract/create')),
+    component: lazy(() => import('../../views/billing/contract/RoofRenting/create')),
     exact: true,
     meta: {
       action: 'manage',
@@ -143,7 +143,7 @@ export const BillingRoutes = [
   },
   {
     path: ROUTER_URL.BILLING_PROJECT_UPDATE_ROOF_VENDOR,
-    component: lazy(() => import('../../views/billing/project/roofVendorContract/update')),
+    component: lazy(() => import('../../views/billing/contract/RoofRenting/update')),
     exact: true,
     meta: {
       action: 'manage',
