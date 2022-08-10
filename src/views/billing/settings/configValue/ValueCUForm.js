@@ -124,7 +124,7 @@ function ValueCUForm({ value, intl, onSubmit = () => {}, onCancel }) {
             <Row>
               <Col className="d-flex justify-content-end align-items-center">
                 <Button onClick={handleSubmit(onSubmit)} color="primary" className="mr-1 px-3">
-                  {intl.formatMessage({ id: 'Save' })}
+                  {intl.formatMessage({ id: 'Finish' })}
                 </Button>{' '}
                 <Button color="secondary" onClick={toggle}>
                   {intl.formatMessage({ id: 'Cancel' })}

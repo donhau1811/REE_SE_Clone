@@ -248,6 +248,7 @@ export const getCustomerWithContactsById = ({ id, isSavedToState, callback }) =>
       })
       .catch((err) => {
         console.log('err', err)
+        callback?.()
       })
   }
 }

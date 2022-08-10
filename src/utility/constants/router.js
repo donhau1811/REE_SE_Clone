@@ -67,5 +67,7 @@ export const ROUTER_URL = {
   BILLING_SETTING: '/billing/settings',
   BILLING_SETTING_VIEW: '/billing/settings/details',
   BILLING_PROJECT: '/billing/project',
-  BILLING_SETTING_UPDATE: '/billing/settings/:id'
+  BILLING_PROJECT_CREATE: '/billing/project/create-project',
+  BILLING_SETTING_UPDATE: '/billing/settings/:id',
+  BILLING_PROJECT_CREATE_CONTRACT_POWER_SELLING: '/billing/project/power-selling-contract'
 }

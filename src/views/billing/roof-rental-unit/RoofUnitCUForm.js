@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { MOBILE_REGEX, EMAIL_REGEX } from '@src/utility/constants'
+import { NUMBER_REGEX, EMAIL_REGEX } from '@src/utility/constants'
 import { selectThemeColors } from '@src/utility/Utils'
 import { func, object, bool } from 'prop-types'
 import { Controller, useForm } from 'react-hook-form'
@@ -69,7 +69,7 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
         .max(255, intl.formatMessage({ id: 'max-validate' })),
       phone: yup
         .string()
-        .matches(MOBILE_REGEX, {
+        .matches(NUMBER_REGEX, {
           message: intl.formatMessage({ id: 'invalid-character-validate' }),
           excludeEmptyString: true
         })
