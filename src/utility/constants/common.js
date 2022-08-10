@@ -188,3 +188,5 @@ export const DISPLAY_DATE_TIME_FORMAT = 'DD/MM/YYYY HH:mm:ss'
 export const DISPLAY_DATE_FORMAT = 'DD/MM/YYYY'
 export const DISPLAY_DATE_FORMAT_WORKSHEET = 'DD.MM.YYYY'
 export const DISPLAY_DATE_FORMAT_CALENDAR = 'dd/MM/yyyy'
+// https://github.com/reactstrap/reactstrap/issues/1412#issuecomment-492256559
+export const ISO_STANDARD_FORMAT = 'YYYY-MM-DD'

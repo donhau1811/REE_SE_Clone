@@ -1766,6 +1766,7 @@
    "turnover-rate":"Tỷ lệ % doanh thu",
    "From-date-sending-notice":"từ ngày gửi thông báo",
    "roof-rental-contract-type":"Loại hợp đồng cho thuê mái",
+   "effectiveDate": "Ngày có hiệu lực",
    "expirationDate" :"Ngày hết hiệu lực",
    "Enter the contract code":"Nhập mã hợp đồng",
    "Select roof rental vendor":"Chọn đơn vị cho thuê mái",

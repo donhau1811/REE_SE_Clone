@@ -6,7 +6,8 @@ import {
   API_UPDATE_ROOF_VENDOR,
   API_CHECK_CODE_ROOF_VENDORS,
   API_GET_CONTACT_BY_ROOF_VENDOR_ID,
-  API_ADD_CONTACT
+  API_ADD_CONTACT,
+  API_GET_ALL_ROOF_VENDOR
 } from '@src/utility/constants'
 import { FETCH_ROOF_RENTAL_UNIT_REQUEST, SET_CONTACT, SET_SELECTED_ROOF_VENDOR } from '@src/utility/constants/actions'
 import axios from 'axios'
@@ -20,7 +21,28 @@ import { handleCRUDOfContacts } from '@src/views/billing/contact/util'
 
 const MySweetAlert = withReactContent(SweetAlert)
 
-export const getAllRoofUnit = (params) => {
+export const getAllRoofVendor = () => {
+  return async (dispatch) => {
+    await axios
+      .get(API_GET_ALL_ROOF_VENDOR)
+      .then((response) => {
+        if (response?.status === 200 && response?.data?.data) {
+          dispatch({
+            type: FETCH_ROOF_RENTAL_UNIT_REQUEST,
+            data: response.data.data,
+            total: response.data.count
+          })
+        } else {
+          throw new Error(response.data.message)
+        }
+      })
+      .catch((err) => {
+        console.log('err', err)
+      })
+  }
+  }
+
+export const getRoofVendor = (params) => {
   return async (dispatch) => {
     const { pagination = {}, searchValue, ...rest } = params
     const payload = {
