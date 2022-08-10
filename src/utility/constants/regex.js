@@ -8,4 +8,5 @@ export const CUSTOMER_CODE = /^[\d|A-Z]{3,256}$/gm
 export const NORMAL_CHARACTER = /[^a-zA-Z0-9]/g
 export const NUMBER_REGEX = /^\d+$/g
 export const COORDINATES_REGEX = /^$|^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/gm
+export const REAL_NUMBER = /^(\d|-\d+)?(\d|,\d)*(\.\d+)?\d*$/g
 

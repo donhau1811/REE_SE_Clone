@@ -132,6 +132,26 @@ export const BillingRoutes = [
     }
   },
   {
+    path: ROUTER_URL.BILLING_PROJECT_CREATE_ROOF_VENDOR,
+    component: lazy(() => import('../../views/billing/contract/RoofRenting/create')),
+    exact: true,
+    meta: {
+      action: 'manage',
+      resource: ROUTER_URL.BILLING_PROJECT_CREATE_ROOF_VENDOR,
+      navLink: ROUTER_URL.BILLING_PROJECT_CREATE_ROOF_VENDOR
+    }
+  },
+  {
+    path: ROUTER_URL.BILLING_PROJECT_UPDATE_ROOF_VENDOR,
+    component: lazy(() => import('../../views/billing/contract/RoofRenting/update')),
+    exact: true,
+    meta: {
+      action: 'manage',
+      resource: ROUTER_URL.BILLING_PROJECT_UPDATE_ROOF_VENDOR,
+      navLink: ROUTER_URL.BILLING_PROJECT_UPDATE_ROOF_VENDOR
+    }
+  },
+  {
     path: ROUTER_URL.BILLING_PROJECT_CREATE,
     component: lazy(() => import('../../views/billing/project/create')),
     exact: true,

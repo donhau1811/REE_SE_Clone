@@ -24,6 +24,25 @@ export const POSITION_OPTIONS = [
   }
 ]
 
+export const TypeOfRoofVendorContract = [
+  {
+    value: 1,
+    label: <FormattedMessage id="no-charge" />
+  },
+  {
+    value: 2,
+    label: <FormattedMessage id="monthly-rent" />
+  },
+  {
+    value: 3,
+    label: <FormattedMessage id="quarterly-rent" />
+  },
+  {
+    value: 4,
+    label: <FormattedMessage id="rent-as-percentage-of-revenue" />
+  }
+]
+
 export const MONTH_OPTIONS = [
   {
     value: 1,
