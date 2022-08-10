@@ -7,24 +7,27 @@ import NoDataCOM from '@src/views/common/NoDataCOM'
 import { array, bool, func } from 'prop-types'
 import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit.svg'
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
-import ContactCUForm from './ContactCUForm'
+import ClockCUForm from './ClockCUForm'
 import { cloneDeep } from 'lodash'
+import moment from 'moment'
+import { DISPLAY_DATE_FORMAT } from '@src/utility/constants'
 
 const Contact = ({ data, onChange, disabled }) => {
-  const [currContact, setCurrContact] = useState(null)
-  const handleAddContact = () => {
-    setCurrContact({
-      id: '-1'
+
+  const [currClock, setCurrClock] = useState(null)
+  const handleAddClock = () => {
+    setCurrClock({
+      id: -1
     })
   }
 
-  const handleEditContact = (contact) => () => {
-    setCurrContact(contact)
+  const handleEditClock = (clock) => () => {
+    setCurrClock(clock)
   }
 
-  const handleDeleteContact = (contact) => () => {
+  const handleDeleteClock = (clock) => () => {
     const newData = data.reduce((array, item) => {
-      if (item.id !== contact.id) return [...array, item]
+      if (item.id !== clock.id) return [...array, item]
       if (item.isCreate) return array
       return [...array, { ...item, isDelete: true }]
     }, [])
@@ -39,31 +42,35 @@ const Contact = ({ data, onChange, disabled }) => {
       maxWidth: '50px'
     },
     {
-      name: <FormattedMessage id="Contact Name" />,
-      selector: 'fullName',
+      name: <FormattedMessage id="Device name" />,
+      selector: 'name',
+      sortable: true,
       center: true
     },
     {
-      name: <FormattedMessage id="Position" />,
-      selector: 'position',
+      name: <FormattedMessage id="Serial number of clock" />,
+      selector: 'serialNumber',
+      sortable: true,
       center: true
     },
     {
-      name: <FormattedMessage id="operation-unit-form-mobile" />,
-      selector: 'phone',
+      name: <FormattedMessage id="Type of clock" />,
+      selector: 'typeOfClock',
+      sortable: true,
       center: true
     },
     {
-      name: 'Email',
-      selector: 'email',
+      name: <FormattedMessage id="Manufacturer" />,
+      selector: 'manufacturer',
       center: true,
-      cell: (row) => <span>{row.email}</span>
+      sortable: true
     },
     {
-      name: <FormattedMessage id="note" />,
-      selector: 'note',
+      name: <FormattedMessage id="Inspection valid until" />,
+      selector: 'qualityVerifyDate',
       center: true,
-      cell: (row) => <span>{row.note}</span>
+      sortable: true,
+      cell: (row) => <span>{!!row.qualityVerifyDate && moment(row.qualityVerifyDate).format(DISPLAY_DATE_FORMAT)}</span>
     },
     {
       name: <FormattedMessage id="Actions" />,
@@ -73,10 +80,10 @@ const Contact = ({ data, onChange, disabled }) => {
       cell: (row) => (
         <>
           {' '}
-          <Badge onClick={handleEditContact(row)}>
+          <Badge onClick={handleEditClock(row)}>
             <IconEdit id={`editBtn_${row.id}`} />
           </Badge>
-          <Badge onClick={handleDeleteContact(row)} disabled={disabled}>
+          <Badge onClick={handleDeleteClock(row)} disabled={disabled}>
             <IconDelete id={`deleteBtn_${row.id}`} />
           </Badge>
         </>
@@ -84,22 +91,22 @@ const Contact = ({ data, onChange, disabled }) => {
     }
   ]
 
-  const handleCancelContactForm = () => {
-    setCurrContact({})
+  const handleCancelClockForm = () => {
+    setCurrClock({})
   }
 
-  const handleSubmitContactForm = (values) => {
+  const handleSubmitClockForm = (values) => {
     let newData = cloneDeep(data) || []
 
-    if (currContact?.id === '-1') {
+    if (currClock?.id === -1) {
       newData.push({ ...values, id: -Number(new Date().getTime()) })
     } else {
       newData = newData.map((contact) => {
-        if (contact.id === currContact?.id) return { ...contact, ...values }
+        if (contact.id === currClock?.id) return { ...contact, ...values }
         return contact
       })
     }
-    setCurrContact({})
+    setCurrClock({})
     onChange?.(newData)
   }
 
@@ -108,26 +115,26 @@ const Contact = ({ data, onChange, disabled }) => {
       <Row className="mb-2">
         <Col className=" d-flex justify-content-between align-items-center">
           <h4 className="typo-section">
-            <FormattedMessage id="Contact Information" />
+            <FormattedMessage id="List of clock" />
           </h4>
 
           <Button.Ripple
             disabled={disabled}
             color="primary"
             className="add-project add-contact-button"
-            onClick={handleAddContact}
+            onClick={handleAddClock}
           >
-            <Plus className="mr-1" /> <FormattedMessage id="Add new contact" />
+            <Plus className="mr-1" /> <FormattedMessage id="Add new clock" />
           </Button.Ripple>
         </Col>
       </Row>
       <Row className="mb-2">
         <Col>
           <Table columns={columns} pagination={null} data={data?.filter((item) => !item.isDelete) || []} />
-          {!data?.length > 0 && <NoDataCOM title={<FormattedMessage id="Add contact info to create new customer" />} />}
+          {!data?.length > 0 && <NoDataCOM />}
         </Col>
       </Row>
-      <ContactCUForm contact={currContact} onSubmit={handleSubmitContactForm} onCancel={handleCancelContactForm} />
+      <ClockCUForm clock={currClock} onSubmit={handleSubmitClockForm} onCancel={handleCancelClockForm} />
     </>
   )
 }

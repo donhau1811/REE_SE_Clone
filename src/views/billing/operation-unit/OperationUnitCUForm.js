@@ -8,7 +8,7 @@ import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/
 import { selectThemeColors } from '@src/utility/Utils'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { CHECK_DUPLICATE_OPRERATION_UNIT_CODE, MOBILE_REGEX } from '@src/utility/constants'
+import { CHECK_DUPLICATE_OPRERATION_UNIT_CODE, NUMBER_REGEX } from '@src/utility/constants'
 import axios from 'axios'
 
 const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, isReadOnly, submitText }) => {
@@ -39,7 +39,7 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
       address: yup.string().max(255, intl.formatMessage({ id: 'max-validate' })),
       phone: yup
         .string()
-        .matches(MOBILE_REGEX, {
+        .matches(NUMBER_REGEX, {
           message: intl.formatMessage({ id: 'invalid-character-validate' }),
           excludeEmptyString: true
         })

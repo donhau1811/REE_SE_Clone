@@ -2,8 +2,9 @@ import React from 'react'
 import { ReactComponent as NoDataIcon } from '@src/assets/images/svg/no-data.svg'
 import './styles.scss'
 import { FormattedMessage } from 'react-intl'
+import { element } from 'prop-types'
 
-const NoDataCOM = () => {
+const NoDataCOM = ({title}) => {
   return (
     <>
       <div className="customer-contact-no-data">
@@ -13,12 +14,17 @@ const NoDataCOM = () => {
           <FormattedMessage id="No data" />
         </div>
         <div className="no-data-title mt-2">
+          {title}
           {' '}
-          <FormattedMessage id="Add contact info to create new customer" />
+         
         </div>
       </div>
     </>
   )
+}
+
+NoDataCOM.propTypes = {
+  title: element
 }
 
 export default NoDataCOM

@@ -1476,6 +1476,7 @@ footer.footer {
 
 .typo-section {
   color: $sub-text-level2;
+  text-transform: uppercase;
 }
 
 .general-label {
@@ -1492,5 +1493,25 @@ footer.footer {
 .tabs-border-bottom {
   border-bottom: 1px solid $text-sub;
 }
+.add-contact-button {
+  background-color: #026894 !important;
+  border: 0;
+  border-radius: 3px;
+}
 
-
+.custom-icon-input-date::-webkit-calendar-picker-indicator {
+  background-image: url('@src/assets/images/svg/carlendar.svg');
+  font-size: 20px;
+}
+.file-attachment-label {
+  color: #026894;
+  font-size: 14px;
+}
+.divider-dashed {
+  width: 100%;
+  border-bottom: 1px dashed $text-level2;
+}
+.divider-vertical{
+  height: auto;
+  border-right: 1px dashed $text-level2;
+}

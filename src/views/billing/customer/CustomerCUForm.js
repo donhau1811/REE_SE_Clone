@@ -7,7 +7,7 @@ import Select from 'react-select'
 import { selectThemeColors } from '@src/utility/Utils'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { API_CHECK_DUPLICATE_CUSTOMER_CODE, MOBILE_REGEX } from '@src/utility/constants'
+import { API_CHECK_DUPLICATE_CUSTOMER_CODE, NUMBER_REGEX } from '@src/utility/constants'
 import { GENERAL_CUSTOMER_TYPE, GENERAL_STATUS } from '@src/utility/constants/billing'
 import SweetAlert from 'sweetalert2'
 import './styles.scss'
@@ -73,7 +73,7 @@ const OperationCUForm = ({
         .max(255, intl.formatMessage({ id: 'max-validate' })),
       phone: yup
         .string()
-        .matches(MOBILE_REGEX, {
+        .matches(NUMBER_REGEX, {
           message: intl.formatMessage({ id: 'invalid-character-validate' }),
           excludeEmptyString: true
         })
