@@ -1,19 +1,24 @@
-import { bool, object } from 'prop-types'
+import { array, bool, func, object, string } from 'prop-types'
 import React from 'react'
 import { Plus } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Table from '@src/views/common/table/CustomDataTable'
 import { Badge, Button, Col, Row } from 'reactstrap'
-import { PowerSellingContractData } from '../../project/mock-data'
 import moment from 'moment'
 import { DISPLAY_DATE_FORMAT, ROUTER_URL } from '@src/utility/constants'
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
 import NoDataCOM from '@src/views/common/NoDataCOM'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 
-function PowerSelling({ disabled, intl }) {
+function PowerSelling({ disabled, intl, data, onDelete }) {
+  const { id } = useParams()
   const history = useHistory()
+
+  const handleDeleteContract = (contractItem) => () => {
+    onDelete?.(contractItem)
+  }
+
   const columns = [
     {
       name: intl.formatMessage({ id: 'No.' }),
@@ -23,14 +28,15 @@ function PowerSelling({ disabled, intl }) {
     },
     {
       name: intl.formatMessage({ id: 'Contract number' }),
-      selector: 'contractID',
+      selector: 'code',
       sortable: true,
-      center: true
+      center: true,
+      minWidth: '200px'
     },
     {
       name: intl.formatMessage({ id: 'Signed date' }),
-      selector: 'signedDate',
-      cell: (row) => <span>{moment(row.signedDate).format(DISPLAY_DATE_FORMAT)}</span>,
+      selector: 'startDate',
+      cell: (row) => <span>{moment(row.startDate).format(DISPLAY_DATE_FORMAT)}</span>,
       sortable: true,
       center: true
     },
@@ -45,7 +51,7 @@ function PowerSelling({ disabled, intl }) {
       selector: 'companyName',
       sortable: true,
       center: true,
-      minWidth: '100px'
+      minWidth: '300px'
     },
     {
       name: intl.formatMessage({ id: 'billing-customer-list-taxCode' }),
@@ -65,13 +71,14 @@ function PowerSelling({ disabled, intl }) {
       name: intl.formatMessage({ id: 'Actions' }),
       selector: '#',
       center: true,
+      isHidden: disabled,
       cell: (row) => (
         <>
           {' '}
           <Badge>
             <IconView id={`editBtn_${row.id}`} />
           </Badge>
-          <Badge>
+          <Badge onClick={handleDeleteContract(row)}>
             <IconDelete id={`deleteBtn_${row.id}`} />
           </Badge>
         </>
@@ -80,7 +87,7 @@ function PowerSelling({ disabled, intl }) {
   ]
 
   const handleRedirectToCreateContract = () => {
-    history.push(ROUTER_URL.BILLING_PROJECT_CREATE_CONTRACT_POWER_SELLING)
+    history.push(ROUTER_URL.BILLING_PROJECT_CREATE_CONTRACT_POWER_SELLING.replace(':projectId', id))
   }
   return (
     <>
@@ -101,8 +108,8 @@ function PowerSelling({ disabled, intl }) {
           </Button.Ripple>
         </Col>
         <Col xs={12}>
-          <Table tableId="project" columns={columns} data={PowerSellingContractData} pagination={null} />
-          {!PowerSellingContractData?.length > 0 && (
+          <Table tableId="project" columns={columns} data={data} pagination={null} />
+          {!data?.length > 0 && (
             <NoDataCOM title={<FormattedMessage id="Add notification of electricity fee now or later" />} />
           )}
         </Col>
@@ -113,7 +120,10 @@ function PowerSelling({ disabled, intl }) {
 
 PowerSelling.propTypes = {
   intl: object,
-  disabled: bool
+  disabled: bool,
+  projectId: string,
+  data: array,
+  onDelete: func
 }
 
 export default injectIntl(PowerSelling)

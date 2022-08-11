@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { API_GET_BILLING_SETTING_VALUE_BY_SETTING_ID } from '@src/utility/constants'
+import { API_GET_BILLING_SETTING_VALUE_BY_CODE } from '@src/utility/constants'
 import { func, object } from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -9,6 +9,7 @@ import * as yup from 'yup'
 import Select from 'react-select'
 import { selectThemeColors, showToast } from '@src/utility/Utils'
 import axios from 'axios'
+import { GENERAL_STATUS } from '@src/utility/constants/billing'
 
 function ContactCUForm({ clock, intl, onSubmit = () => {}, onCancel }) {
   const [isOpen, setIsOpen] = useState(false)
@@ -18,24 +19,28 @@ function ContactCUForm({ clock, intl, onSubmit = () => {}, onCancel }) {
   useEffect(async () => {
     try {
       const [clockTypesRes, manufacturerListRes] = await Promise.all([
-        axios.get(`${API_GET_BILLING_SETTING_VALUE_BY_SETTING_ID}/6`),
-        axios.get(`${API_GET_BILLING_SETTING_VALUE_BY_SETTING_ID}/7`)
+        axios.get(`${API_GET_BILLING_SETTING_VALUE_BY_CODE}/Clock_Type`),
+        axios.get(`${API_GET_BILLING_SETTING_VALUE_BY_CODE}/Manufacturer`)
       ])
 
-      if (clockTypesRes.status === 200 && clockTypesRes.data.data) {
+      if (clockTypesRes.status === 200 && clockTypesRes.data.data?.values) {
         setTypesOfClock(
-          (clockTypesRes.data.data || []).map((item) => ({
-            value: item.value,
-            label: item.value
-          }))
+          (clockTypesRes.data.data?.values || [])
+            .filter((item) => item.state === GENERAL_STATUS.ACTIVE)
+            .map((item) => ({
+              value: item.value,
+              label: item.value
+            }))
         )
       }
-      if (manufacturerListRes.status === 200 && manufacturerListRes.data.data) {
+      if (manufacturerListRes.status === 200 && manufacturerListRes.data.data?.values) {
         setManufacturerList(
-          (manufacturerListRes.data.data || []).map((item) => ({
-            value: item.value,
-            label: item.value
-          }))
+          (manufacturerListRes.data.data?.values || [])
+            .filter((item) => item.state === GENERAL_STATUS.ACTIVE)
+            .map((item) => ({
+              value: item.value,
+              label: item.value
+            }))
         )
       }
     } catch (error) {

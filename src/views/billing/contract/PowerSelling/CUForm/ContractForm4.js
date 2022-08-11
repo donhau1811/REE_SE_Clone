@@ -1,4 +1,4 @@
-import { API_GET_BILLING_SETTING_VALUE_BY_SETTING_ID } from '@src/utility/constants'
+import { API_GET_BILLING_SETTING_VALUE_BY_CODE } from '@src/utility/constants'
 import axios from 'axios'
 import { object } from 'prop-types'
 import React, { useEffect, useState } from 'react'
@@ -7,18 +7,21 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { Col, FormFeedback, Input, Label, Row } from 'reactstrap'
 import Select from 'react-select'
 import { selectThemeColors } from '@src/utility/Utils'
+import { GENERAL_STATUS } from '@src/utility/constants/billing'
 
 const ContractForm4COM = ({ intl }) => {
   const [currencyList, setCurrencyList] = useState([])
 
   useEffect(async () => {
-    const allCurrencyRes = await axios.get(`${API_GET_BILLING_SETTING_VALUE_BY_SETTING_ID}/9`)
-    if (allCurrencyRes.status === 200 && allCurrencyRes.data.data) {
+    const allCurrencyRes = await axios.get(`${API_GET_BILLING_SETTING_VALUE_BY_CODE}/Currency`)
+    if (allCurrencyRes.status === 200 && allCurrencyRes.data.data?.values) {
       setCurrencyList(
-        (allCurrencyRes.data.data || []).map((item) => ({
-          value: item.value,
-          label: item.value
-        }))
+        (allCurrencyRes.data.data?.values || [])
+          .filter((item) => item.state === GENERAL_STATUS.ACTIVE)
+          .map((item) => ({
+            value: item.value,
+            label: item.value
+          }))
       )
     }
   }, [])
@@ -30,6 +33,7 @@ const ContractForm4COM = ({ intl }) => {
         <Col className="mb-2" xs={12} lg={4}>
           <Label className="general-label" for="EVNCoefficient">
             <FormattedMessage id="EVN cost coefficient" />
+            <span className="text-danger">&nbsp;(*)</span>
           </Label>
           <Input
             id="EVNCoefficient"
@@ -38,7 +42,6 @@ const ContractForm4COM = ({ intl }) => {
             innerRef={register()}
             invalid={!!errors.EVNCoefficient}
             valid={getValues('EVNCoefficient')?.trim() && !errors.EVNCoefficient}
-            type="number"
             placeholder={intl.formatMessage({ id: 'Enter rate' })}
             min="0"
           />
@@ -57,6 +60,7 @@ const ContractForm4COM = ({ intl }) => {
         <Col className="mb-2" xs={12} lg={4}>
           <Label className="general-label" for="currency">
             <FormattedMessage id="Currency" />
+            <span className="text-danger">&nbsp;(*)</span>
           </Label>
           <Controller
             as={Select}
@@ -78,6 +82,7 @@ const ContractForm4COM = ({ intl }) => {
         <Col className="mb-2" xs={12} lg={4}>
           <Label className="general-label" for="currency">
             <FormattedMessage id="Peak" />
+            <span className="text-danger">&nbsp;(*)</span>
           </Label>
           <Input
             id="currencyHigh"
@@ -86,7 +91,6 @@ const ContractForm4COM = ({ intl }) => {
             innerRef={register()}
             invalid={!!errors.currencyHigh}
             valid={getValues('currencyHigh')?.trim() && !errors.currencyHigh}
-            type="number"
             placeholder={intl.formatMessage({ id: 'Enter rate' })}
             min="0"
           />
@@ -95,6 +99,7 @@ const ContractForm4COM = ({ intl }) => {
         <Col className="mb-2" xs={12} lg={4}>
           <Label className="general-label" for="currencyMedium">
             <FormattedMessage id="Mid-point" />
+            <span className="text-danger">&nbsp;(*)</span>
           </Label>
           <Input
             id="currencyMedium"
@@ -103,7 +108,6 @@ const ContractForm4COM = ({ intl }) => {
             innerRef={register()}
             invalid={!!errors.currencyMedium}
             valid={getValues('currencyMedium')?.trim() && !errors.currencyMedium}
-            type="number"
             placeholder={intl.formatMessage({ id: 'Enter rate' })}
             min="0"
           />
@@ -112,6 +116,7 @@ const ContractForm4COM = ({ intl }) => {
         <Col className="mb-2" xs={12} lg={4}>
           <Label className="general-label" for="currencyLow">
             <FormattedMessage id="Idle" />
+            <span className="text-danger">&nbsp;(*)</span>
           </Label>
           <Input
             id="currencyLow"
@@ -120,7 +125,6 @@ const ContractForm4COM = ({ intl }) => {
             innerRef={register()}
             invalid={!!errors.currencyLow}
             valid={getValues('currencyLow')?.trim() && !errors.currencyLow}
-            type="number"
             placeholder={intl.formatMessage({ id: 'Enter rate' })}
             min="0"
           />

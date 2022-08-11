@@ -12,6 +12,7 @@ const ContractForm2COM = ({ intl }) => {
       <Col className="mb-2" xs={12} lg={4}>
         <Label className="general-label" for="typeOfClock">
           <FormattedMessage id="Loss rate through transformer (%)" />
+          <span className="text-danger">&nbsp;(*)</span>
         </Label>
         <Input
           id="lossRate"
@@ -20,7 +21,7 @@ const ContractForm2COM = ({ intl }) => {
           innerRef={register()}
           invalid={!!errors.lossRate}
           valid={getValues('lossRate')?.trim() && !errors.lossRate}
-          type="number"
+       
           placeholder={intl.formatMessage({ id: 'Enter rate' })}
         />
         {errors?.lossRate && <FormFeedback className="d-block">{errors?.lossRate?.message}</FormFeedback>}

@@ -1,4 +1,3 @@
-/* eslint no-unused-vars: 0 */ // --> OFF
 // ** React Imports
 import React, { Fragment } from 'react'
 import { useHistory } from 'react-router-dom'
@@ -9,9 +8,9 @@ import PropTypes from 'prop-types'
 // ** Custom Components
 import NavbarUser from './NavbarUser'
 import NavbarBookmarks from './NavbarBookmarks'
-import { FormattedMessage, injectIntl } from 'react-intl'
-import backArrow from '@src/assets/images/svg/headerbar/back-arrow.svg'
-import NavbarDashboard from '@layouts/components/navbar/NavbarDashboard'
+import { injectIntl } from 'react-intl'
+// import backArrow from '@src/assets/images/svg/headerbar/back-arrow.svg'
+// import NavbarDashboard from '@layouts/components/navbar/NavbarDashboard'
 import { ROUTER_URL } from '@constants/router'
 import BreadCrumbs from '@src/views/common/breadcrumbs'
 import { useSelector } from 'react-redux'
@@ -29,7 +28,8 @@ const ThemeNavbar = (props) => {
     company: { selectedCompany },
     roofUnit: { selectedRoofVendor },
     billingCustomer: { selectedCustomer },
-    settings: { selectedSetting }
+    settings: { selectedSetting },
+    projects: { selectedProject: selectedBillingProject }
   } = useSelector((state) => state)
 
   const renderCustomNav = (pathname) => {
@@ -95,8 +95,24 @@ const ThemeNavbar = (props) => {
       case `${ROUTER_URL.BILLING_SETTING}/${selectedSetting?.id}`: {
         const tempItems = [
           { name: intl.formatMessage({ id: 'billing' }), link: '' },
-          { name: intl.formatMessage({ id: 'settings' }), link: ROUTER_URL.BILLING_CUSTOMER },
+          { name: intl.formatMessage({ id: 'settings' }), link: ROUTER_URL.BILLING_SETTING },
           { name: selectedSetting?.name, link: '' }
+        ]
+        return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
+      }
+      case `${ROUTER_URL.BILLING_PROJECT}/${selectedBillingProject?.id}`: {
+        const tempItems = [
+          { name: intl.formatMessage({ id: 'billing' }), link: '' },
+          { name: intl.formatMessage({ id: 'project' }), link: ROUTER_URL.BILLING_PROJECT },
+          { name: selectedBillingProject?.name, link: '' }
+        ]
+        return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
+      }
+      case ROUTER_URL.BILLING_PROJECT_CREATE_CONTRACT_POWER_SELLING.replace(':projectId', selectedBillingProject.id): {
+        const tempItems = [
+          { name: intl.formatMessage({ id: 'billing' }), link: '' },
+          { name: intl.formatMessage({ id: 'project' }), link: ROUTER_URL.BILLING_PROJECT },
+          { name: intl.formatMessage({ id: 'power-selling-contract' }), link: '' }
         ]
         return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
       }

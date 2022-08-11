@@ -1,17 +1,19 @@
-import { bool, object } from 'prop-types'
+import { array, bool, func, object } from 'prop-types'
 import React from 'react'
 import { Plus } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Table from '@src/views/common/table/CustomDataTable'
 import { Badge, Button, Col, Row } from 'reactstrap'
-import { PowerSellingContractData } from '../../project/mock-data'
 import moment from 'moment'
 import { DISPLAY_DATE_FORMAT } from '@src/utility/constants'
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
 import NoDataCOM from '@src/views/common/NoDataCOM'
 
-function RoofRenting({ disabled, intl }) {
+function RoofRenting({ disabled, intl, data, onDelete }) {
+  const handleDeleteContract = (contractItem) => () => {
+    onDelete?.(contractItem)
+  }
   const columns = [
     {
       name: intl.formatMessage({ id: 'No.' }),
@@ -21,14 +23,15 @@ function RoofRenting({ disabled, intl }) {
     },
     {
       name: intl.formatMessage({ id: 'Contract number' }),
-      selector: 'contractID',
+      selector: 'code',
       sortable: true,
-      center: true
+      center: true,
+      minWidth: '200px'
     },
     {
       name: intl.formatMessage({ id: 'Signed date' }),
-      selector: 'signedDate',
-      cell: (row) => <span>{moment(row.signedDate).format(DISPLAY_DATE_FORMAT)}</span>,
+      selector: 'startDate',
+      cell: (row) => <span>{moment(row.startDate).format(DISPLAY_DATE_FORMAT)}</span>,
       sortable: true,
       center: true
     },
@@ -43,7 +46,7 @@ function RoofRenting({ disabled, intl }) {
       selector: 'companyName',
       sortable: true,
       center: true,
-      minWidth: '100px'
+      minWidth: '300px'
     },
     {
       name: intl.formatMessage({ id: 'billing-customer-list-taxCode' }),
@@ -63,13 +66,14 @@ function RoofRenting({ disabled, intl }) {
       name: intl.formatMessage({ id: 'Actions' }),
       selector: '#',
       center: true,
+      isHidden: disabled,
       cell: (row) => (
         <>
           {' '}
           <Badge>
             <IconView id={`editBtn_${row.id}`} />
           </Badge>
-          <Badge>
+          <Badge onClick={handleDeleteContract(row)}>
             <IconDelete id={`deleteBtn_${row.id}`} />
           </Badge>
         </>
@@ -90,8 +94,10 @@ function RoofRenting({ disabled, intl }) {
           </Button.Ripple>
         </Col>
         <Col xs={12}>
-          <Table tableId="project" columns={columns} data={PowerSellingContractData} pagination={null} />
-          {!PowerSellingContractData?.length > 0 && <NoDataCOM title={<FormattedMessage id="Add notification of electricity fee now or later" />} />}
+          <Table tableId="project" columns={columns} data={data} pagination={null} />
+          {!data?.length > 0 && (
+            <NoDataCOM title={<FormattedMessage id="Add notification of electricity fee now or later" />} />
+          )}
         </Col>
       </Row>
     </>
@@ -100,7 +106,9 @@ function RoofRenting({ disabled, intl }) {
 
 RoofRenting.propTypes = {
   intl: object,
-  disabled: bool
+  disabled: bool,
+  data: array,
+  onDelete: func
 }
 
 export default injectIntl(RoofRenting)
