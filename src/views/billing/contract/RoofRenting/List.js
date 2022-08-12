@@ -21,10 +21,10 @@ function RoofRenting({ disabled, intl, data, onDelete }) {
   }
   const handleRedirectUpdatePage = (idUpdate) => () => {
     if (idUpdate) {
-      history.push({
-        pathname: ROUTER_URL.BILLING_PROJECT_UPDATE_ROOF_VENDOR.replace(':projectId', id).replace(':id', idUpdate),
-        state: { idProject: id }
-      })
+      history.push(
+       ROUTER_URL.BILLING_PROJECT_UPDATE_ROOF_VENDOR.replace(':projectId', id).replace(':id', idUpdate)
+      
+      )
     }
   }
   const columns = [
@@ -94,10 +94,9 @@ function RoofRenting({ disabled, intl, data, onDelete }) {
     }
   ]
   const handleRedirectToCreateContract = () => {
-    history.push({
-      pathname: ROUTER_URL.BILLING_PROJECT_CREATE_ROOF_VENDOR.replace(':projectId', id),
-      state: { idProject: id }
-    })
+    history.push(
+      ROUTER_URL.BILLING_PROJECT_CREATE_ROOF_VENDOR.replace(':projectId', id)
+   )
   }
   return (
     <>
