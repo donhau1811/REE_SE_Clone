@@ -190,7 +190,6 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
   const handleProcessFormData = async (value) => {
     const dataCheck = { code: value?.contractCode }
     if (initValues?.id) dataCheck.id = initValues?.id
-    console.log('dataCheck', initValues)
     const checkDupCodeRes = await axios.post(API_CHECK_CODE_CONTRACT, dataCheck)
     if (checkDupCodeRes.status === 200 && checkDupCodeRes.data?.data) {
       setError('contractCode', { type: 'custom', message: intl.formatMessage({ id: 'dubplicated-validate' }) })
