@@ -286,15 +286,17 @@ export const getRoofVendorWithContactsById = ({ id, isSavedToState, callback }) 
     const getContactsByCusIdReq = axios.get(`${API_GET_CONTACT_BY_ROOF_VENDOR_ID}/${id}`)
     Promise.all([getRoofVendorByIdReq, getContactsByCusIdReq])
       .then(([RoofVendorRes, contactRes]) => {
+        console.log('first', RoofVendorRes, contactRes)
         if (
           RoofVendorRes.status === 200 &&
           RoofVendorRes.data?.data &&
           contactRes.status === 200 &&
-          contactRes.data?.result
+          contactRes.data?.data
         ) {
+          console.log('go here')
           const payload = {
             ...RoofVendorRes.data?.data,
-            contacts: contactRes.data?.result
+            contacts: contactRes.data?.data
           }
           if (isSavedToState) {
             dispatch({
@@ -303,7 +305,7 @@ export const getRoofVendorWithContactsById = ({ id, isSavedToState, callback }) 
             })
             dispatch({
               type: SET_CONTACT,
-              payload: contactRes.data?.result
+              payload: contactRes.data?.data
             })
           }
           callback?.(payload)

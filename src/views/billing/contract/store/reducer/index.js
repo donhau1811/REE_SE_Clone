@@ -1,9 +1,11 @@
-import { SET_CONTRACT_OF_BILLING_PROJECT, SET_SELECTED_BILLING_PROJECT } from '@constants/actions'
+import { SET_CONTRACT_OF_BILLING_PROJECT, SET_SELECTED_BILLING_PROJECT, SET_SELECTED_CONTRACT } from '@constants/actions'
 
 // ** Initial State
 const initialState = {
   data: [],
-  selectedProject: {}
+  selectedProject: {},
+  selectedContract: {}
+
 }
 
 const reducer = (state = initialState, action) => {
@@ -18,6 +20,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         selectedProject: action.payload
       }
+      case SET_SELECTED_CONTRACT:
+        return {
+          ...state,
+          selectedContract: action.payload[0]
+        }
     default:
       return state
   }

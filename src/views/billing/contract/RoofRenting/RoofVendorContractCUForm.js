@@ -1,8 +1,9 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { NUMBER_REGEX, REAL_NUMBER } from '@src/utility/constants'
+import { API_CHECK_CODE_CONTRACT, NUMBER_REGEX, REAL_NUMBER } from '@src/utility/constants'
 import { TypeOfRoofVendorContract as type } from '@src/utility/constants/billing'
 import { selectThemeColors } from '@src/utility/Utils'
 import Table from '@src/views/common/table/CustomDataTable'
+import axios from 'axios'
 import { bool, func, object, string } from 'prop-types'
 import { useEffect, useMemo, useState } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
@@ -16,7 +17,6 @@ import ContractByPercentage from './typesOfContracts/ContractByPercentage'
 import MonthlyRent from './typesOfContracts/CyclicalContract'
 
 const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSubmit }) => {
-
 
   const defaultValues = {
     contractType: type[0]
@@ -94,7 +94,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
     resolver: yupResolver(isReadOnly ? yup.object().shape({}) : ValidateSchema),
     defaultValues: initValues || defaultValues
   })
-  const { handleSubmit, getValues, errors, control, register, reset, watch, setValue } = methods
+  const { handleSubmit, getValues, errors, control, register, reset, watch, setValue, setError } = methods
 
   const typeContract = watch('contractType', type[0])
 
@@ -180,19 +180,29 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
     const contractValue = {
       ...initValues,
       roofVendorName: listOfRoofvendor.find((item) => item.value === initValues?.roofId),
-      contractType: type.find((item) => item.value === initValues?.typeContract)
+      contractType: type.find((item) => item.value === initValues?.typeContract),
+      taxCode:data.find((item) => item.id === selectRoofVendor?.value)?.taxCode,
+      address: data.find((item) => item.id === selectRoofVendor?.value)?.address
     }
     reset(contractValue)
   }, [initValues])
 
-  const handleProcessFormData = (value) => {
+  const handleProcessFormData = async (value) => {
+    const dataCheck = { code: value?.contractCode }
+    if (initValues?.id) dataCheck.id = initValues?.id
+    console.log('dataCheck', initValues)
+    const checkDupCodeRes = await axios.post(API_CHECK_CODE_CONTRACT, dataCheck)
+    if (checkDupCodeRes.status === 200 && checkDupCodeRes.data?.data) {
+      setError('contractCode', { type: 'custom', message: intl.formatMessage({ id: 'dubplicated-validate' }) })
+      return
+    }
     const newValue = {
       ...value,
       state: 'ACTIVE',
       code: value?.contractCode,
       type: 'ROOF_VENDOR',
-      projectId: 1,
-      roofVendorId: value?.roofVendorName?.value,
+      projectId: 7,
+      roofVendorId:  Number(value?.roofVendorName?.value),
       startDate: value?.effectiveDate,
       endDate: value?.expirationDate,
       url: 'link contract pdf',
@@ -202,7 +212,6 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
       },
       details: {
         id: value?.contractType?.value,
-        name: value?.contractType?.label,
         rentalAmount: value?.rentalAmount,
         percent: value?.percentTurnover,
         startDate:value?.startDate
@@ -226,7 +235,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
               disabled={isReadOnly}
               innerRef={register()}
               invalid={!!errors.contractCode}
-              valid={getValues('contractCode')?.trim() && !errors.contractCode}
+              valid={getValues('contractCode')?.trim() && !errors.contractCode && !isReadOnly}
               placeholder={intl.formatMessage({ id: 'Enter the contract code' })}
             />
             {errors?.contractCode && <FormFeedback>{errors?.contractCode?.message}</FormFeedback>}
@@ -243,7 +252,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
               autoComplete="on"
               innerRef={register()}
               invalid={!!errors.effectiveDate}
-              valid={getValues('effectiveDate')?.trim() && !errors.effectiveDate}
+              valid={getValues('effectiveDate')?.trim() && !errors.effectiveDate && !isReadOnly}
               type="date"
               className="custom-icon-input-date"
             />
@@ -262,7 +271,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
               autoComplete="on"
               innerRef={register()}
               invalid={!!errors.expirationDate}
-              valid={getValues('expirationDate')?.trim() && !errors.expirationDate}
+              valid={getValues('expirationDate')?.trim() && !errors.expirationDate && !isReadOnly}
               type="date"
               className="custom-icon-input-date"
             />
@@ -350,7 +359,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
         {typeContract.value === 4 && <ContractByPercentage isReadOnly={isReadOnly} />}
         <Row className="d-flex justify-content-end align-items-center">
           <Button type="submit" color="primary" className="mr-1 px-3">
-            {intl.formatMessage({ id: isReadOnly ? 'Update' : 'Save' })}
+            {intl.formatMessage({ id: isReadOnly ? 'Update' : 'Finish' })}
           </Button>{' '}
           <Button color="secondary" onClick={onCancel}>
             {intl.formatMessage({ id: 'Cancel' })}

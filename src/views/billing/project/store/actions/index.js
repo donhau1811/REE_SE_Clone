@@ -18,9 +18,10 @@ export const getListProject = (params = {}) => {
       limit: pagination.rowsPerPage,
       offset: pagination.rowsPerPage * (pagination.currentPage - 1)
     }
+    console.log(payload)
 
     await axios
-      .get(API_GET_NEW_PROJECT, payload)
+      .post(API_GET_NEW_PROJECT, payload)
       .then((response) => {
         if (response.status === 200 && response.data.data) {
           dispatch({

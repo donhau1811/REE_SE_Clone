@@ -1,8 +1,8 @@
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
-import { DISPLAY_DATE_FORMAT, ROUTER_URL, ROWS_PER_PAGE_DEFAULT } from '@src/utility/constants'
+import { ROUTER_URL, ROWS_PER_PAGE_DEFAULT } from '@src/utility/constants'
+import { GENERAL_STATUS as PROJECT_STATUS } from '@src/utility/constants/billing'
 import Table from '@src/views/common/table/CustomDataTable'
-import moment from 'moment'
 import { object } from 'prop-types'
 import { useEffect } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -114,7 +114,7 @@ const Project = ({ intl }) => {
     },
     {
       name: intl.formatMessage({ id: 'Customer Company' }),
-      selector: 'customerCompany',
+      selector: 'companyName',
       sortable: true,
       center: true,
       minWidth: '200px'
@@ -125,23 +125,27 @@ const Project = ({ intl }) => {
       selector: 'manager',
       sortable: true,
       minWidth: '200px',
-      center: true
+      center: true,
+      cell: () => <span>{'Trần Văn Việt Anh'}</span>
     },
 
     {
-      name: intl.formatMessage({ id: 'Operation date' }),
-      selector: 'operationDate',
+      name: intl.formatMessage({ id: 'Status' }),
+      selector: 'state',
       sortable: true,
-      minWidth: '200px',
-      cell: (row) => moment(row.modifiedDate).format(DISPLAY_DATE_FORMAT),
-      center: true
-    },
-    {
-      name: intl.formatMessage({ id: 'Wattage' }),
-      selector: 'wattage',
-      sortable: true,
-      cell: (row) => `${row.wattage} kWh`,
-      center: true
+      center: true,
+      minWidth: '150px',
+      cell: (row) => {
+        return row.state === PROJECT_STATUS.ACTIVE ? (
+          <Badge pill color="light-success">
+            <FormattedMessage id="Active" />
+          </Badge>
+        ) : (
+          <Badge pill color="light-muted">
+            <FormattedMessage id="Inactive" />
+          </Badge>
+        )
+      }
     },
     {
       name: intl.formatMessage({ id: 'Actions' }),

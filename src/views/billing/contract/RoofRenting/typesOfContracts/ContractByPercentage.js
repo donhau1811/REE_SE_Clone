@@ -21,7 +21,7 @@ const ContractByPercentage = ({ isReadOnly }) => {
             autoComplete="on"
             innerRef={register()}
             invalid={!!errors.percentTurnover}
-            valid={getValues('percentTurnover')?.trim() && !errors.percentTurnover}
+            valid={getValues('percentTurnover')?.trim() && !errors.percentTurnover && !isReadOnly}
             defaultValue={0}
           />
           {errors?.percentTurnover && <FormFeedback>{errors?.percentTurnover?.message}</FormFeedback>}
@@ -46,7 +46,7 @@ const ContractByPercentage = ({ isReadOnly }) => {
             autoComplete="on"
             innerRef={register()}
             invalid={!!errors.confirmationReminder}
-            valid={getValues('confirmationReminder')?.trim() && !errors.confirmationReminder}
+            valid={getValues('confirmationReminder')?.trim() && !errors.confirmationReminder && !isReadOnly}
             defaultValue={0}
           />
           {errors?.confirmationReminder && <FormFeedback>{errors?.confirmationReminder?.message}</FormFeedback>}
