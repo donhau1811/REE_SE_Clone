@@ -96,7 +96,7 @@ export const getBillingProjectById = ({ id, isSavedToState, callback }) => {
         }
       })
       .catch((err) => {
-        console.log('err', err)
+        showToast('error', err.toString())
       })
   }
 }

@@ -23,7 +23,7 @@ export const getAllContractByProjectId = ({ id, isSavedToState, callback }) => {
         }
       })
       .catch((err) => {
-        console.log('err', err)
+      
         showToast('error', err.toString())
       })
   }
@@ -41,7 +41,7 @@ export const deleteContractById = ({ id, callback }) => {
         }
       })
       .catch((err) => {
-        console.log('err', err)
+       
         showToast('error', err.toString())
       })
   }
