@@ -162,6 +162,16 @@ export const BillingRoutes = [
     }
   },
   {
+    path: ROUTER_URL.BILLING_PROJECT_UPDATE,
+    component: lazy(() => import('../../views/billing/project/update')),
+    exact: true,
+    meta: {
+      action: 'manage',
+      resource: ROUTER_URL.BILLING_PROJECT,
+      navLink: ROUTER_URL.BILLING_PROJECT
+    }
+  },
+  {
     path: ROUTER_URL.BILLING_PROJECT_CREATE_CONTRACT_POWER_SELLING,
     component: lazy(() => import('../../views/billing/contract/PowerSelling/create')),
     exact: true,

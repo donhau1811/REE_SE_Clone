@@ -5,6 +5,11 @@ export const GENERAL_STATUS = {
   ACTIVE: 'ACTIVE'
 }
 
+export const GENERAL_STATUS_OPTS = [
+  { value: GENERAL_STATUS.ACTIVE, label: 'Active' },
+  { value: GENERAL_STATUS.INACTIVE, label: 'Inactive' }
+]
+
 export const ENTERPRISE = 'ENTERPRISE'
 export const EVN = 'EVN'
 export const OTHER = 'OTHER'
@@ -84,3 +89,10 @@ export const POWER_BILLING_FORM_OPTIONS = [
     label: <FormattedMessage id="Power billing form number" values={{ number: 7 }} />
   }
 ]
+
+export const DAYS_OF_MONTH_OPTIONS = Array.from(Array(31)).map((e, i) => ({ value: i + 1, label: i + 1 }))
+
+export const END_OF_MONTH_OPTION =  {
+  value: 'endOfMonth',
+  label: <FormattedMessage id="End of month" />
+}

@@ -185,6 +185,7 @@ export const CHART_PARAM_TYPE = {
 }
 
 export const DISPLAY_DATE_TIME_FORMAT = 'DD/MM/YYYY HH:mm:ss'
+export const ISO_DISPLAY_DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm:ss'
 export const DISPLAY_DATE_FORMAT = 'DD/MM/YYYY'
 export const DISPLAY_DATE_FORMAT_WORKSHEET = 'DD.MM.YYYY'
 export const DISPLAY_DATE_FORMAT_CALENDAR = 'dd/MM/yyyy'

@@ -67,10 +67,10 @@ export const ROUTER_URL = {
   BILLING_SETTING: '/billing/settings',
   BILLING_SETTING_VIEW: '/billing/settings/details',
   BILLING_PROJECT: '/billing/project',
+  BILLING_PROJECT_UPDATE: '/billing/project/:id',
   BILLING_SETTING_UPDATE: '/billing/settings/:id',
   BILLING_PROJECT_CREATE_ROOF_VENDOR: '/billing/create-roof-vendor-contract',
   BILLING_PROJECT_UPDATE_ROOF_VENDOR: '/billing/roof-vendor-contract/:id',
-
   BILLING_PROJECT_CREATE: '/billing/project/create-project',
-  BILLING_PROJECT_CREATE_CONTRACT_POWER_SELLING: '/billing/project/power-selling-contract'
+  BILLING_PROJECT_CREATE_CONTRACT_POWER_SELLING: '/billing/project/:projectId/power-selling-contract'
 }

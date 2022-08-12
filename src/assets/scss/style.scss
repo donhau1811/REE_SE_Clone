@@ -1511,7 +1511,11 @@ footer.footer {
   width: 100%;
   border-bottom: 1px dashed $text-level2;
 }
-.divider-vertical{
+.divider-vertical {
   height: auto;
   border-right: 1px dashed $text-level2;
+}
+
+.react-select.select--is-disabled {
+  background-color: #efefee;
 }

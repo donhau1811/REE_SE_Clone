@@ -14,12 +14,18 @@ import Clock from '@src/views/billing/clock'
 
 import { ReactComponent as Attachment } from '@src/assets/images/svg/attachment-file.svg'
 import { PlusCircle, Trash2, XCircle } from 'react-feather'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { getCustomerWithContactsById } from '@src/views/billing/customer/store/actions'
 import './style.scss'
 import { get } from 'lodash'
 import classNames from 'classnames'
-import { MONTH_OPTIONS, POWER_BILLING_FORM_OPTIONS } from '@src/utility/constants/billing'
+import {
+  DAYS_OF_MONTH_OPTIONS,
+  END_OF_MONTH_OPTION,
+  GENERAL_STATUS,
+  MONTH_OPTIONS,
+  POWER_BILLING_FORM_OPTIONS
+} from '@src/utility/constants/billing'
 import { ContractForm2 } from './ContractForm2'
 import {
   ContractForm2Schema,
@@ -31,17 +37,51 @@ import {
 import { ContractForm4 } from './ContractForm4'
 import { ContractForm5 } from './ContractForm5'
 import { ContractForm7 } from './ContractForm7'
+import { useParams } from 'react-router-dom'
+import { getBillingProjectById } from '@src/views/billing/project/store/actions'
 
-function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel }) {
+const formInitValues = {
+  billingCycle: [
+    {
+      start: { value: 1, label: 1 },
+      end: END_OF_MONTH_OPTION,
+      month: MONTH_OPTIONS[0]
+    }
+  ],
+  formType: POWER_BILLING_FORM_OPTIONS[0],
+  round: 0,
+  reminderToEnterIndex: 0,
+  reminderCusToConfirm: 0,
+  dateOfPayment: 0,
+  vat: 8
+}
+
+function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel, onSubmit }) {
+  const {
+    projects: { selectedProject: selectedBillingProject }
+  } = useSelector((state) => state)
+  const { projectId } = useParams()
+
   const [customers, setCustomers] = useState([])
 
   const [validateSchemaState, setValidateSchemaState] = useState(ValidateSchemaObj)
 
   const dispatch = useDispatch()
 
+  useEffect(() => {
+    if (Number(projectId) !== Number(selectedBillingProject?.id)) {
+      dispatch(
+        getBillingProjectById({
+          id: projectId,
+          isSavedToState: true
+        })
+      )
+    }
+  }, [projectId])
+
   useEffect(async () => {
     const allCustomersRes = await axios.get(API_GET_ALL_CUSTOMER)
-    const allCustomers = allCustomersRes.data?.data
+    const allCustomers = (allCustomersRes.data?.data).filter((item) => item.state === GENERAL_STATUS.ACTIVE)
     setCustomers(
       (allCustomers || []).map(({ id, fullName }) => ({
         value: id,
@@ -54,21 +94,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
   const methods = useForm({
     mode: 'onChange',
     resolver: yupResolver(isReadOnly ? yup.object().shape({}) : ValidateSchema),
-    defaultValues: initValues || {
-      billingCycle: [
-        {
-          start: 1,
-          end: 31,
-          month: MONTH_OPTIONS[0]
-        }
-      ],
-      formType: POWER_BILLING_FORM_OPTIONS[3],
-      round: 0,
-      reminderToEnterIndex: 0,
-      reminderCusToConfirm: 0,
-      dateOfPayment: 0,
-      vat: 8
-    }
+    defaultValues: initValues || formInitValues
   })
 
   const { handleSubmit, getValues, errors, control, register, setValue, watch } = methods
@@ -118,17 +144,22 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
     const typeOfContract = watch('formType')?.value
     switch (typeOfContract) {
       case 2:
-      case 3:
         setValidateSchemaState({ ...ValidateSchemaObj, ...ContractForm2Schema })
         break
+      case 3:
+        setValidateSchemaState({ ...ValidateSchemaObj, ...ContractForm2Schema, coefficient: null })
+        break
       case 4:
-        setValidateSchemaState({ ...ValidateSchemaObj, ...ContractForm4Schema })
+        setValidateSchemaState({ ...ValidateSchemaObj, ...ContractForm4Schema, coefficient: null })
         break
       case 5:
-        setValidateSchemaState({ ...ValidateSchemaObj, ...ContractForm5Schema })
+        setValidateSchemaState({ ...ValidateSchemaObj, ...ContractForm5Schema, coefficient: null })
+        break
+      case 6:
+        setValidateSchemaState({ ...ValidateSchemaObj, coefficient: null })
         break
       case 7:
-        setValidateSchemaState({ ...ValidateSchemaObj, ...ContractForm7Schema })
+        setValidateSchemaState({ ...ValidateSchemaObj, ...ContractForm7Schema, coefficient: null })
         break
       default:
         setValidateSchemaState(ValidateSchemaObj)
@@ -184,36 +215,40 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
   }
 
   const handleAppendCycle = () => {
-    append({
-      start: 1,
-      end: 31,
-      month: MONTH_OPTIONS[0]
-    })
+    append(formInitValues.billingCycle[0])
   }
   const handleSubmitForm = (values) => {
     console.log('values', values)
+    const submitValues = {
+      state: GENERAL_STATUS.ACTIVE,
+      code: values.code,
+      type: 'CUSTOMER'
+    }
+    console.log('submitValues', submitValues)
+    onSubmit?.(submitValues)
   }
+
   return (
     <>
       <FormProvider {...methods}>
         <Form onSubmit={handleSubmit(handleSubmitForm)}>
           <Row>
             <Col className="mb-2" xs={6} lg={3}>
-              <Label className="general-label" for="contractId">
+              <Label className="general-label" for="code">
                 <FormattedMessage id="Contract number" />
                 <span className="text-danger">&nbsp;(*)</span>
               </Label>
               <Input
-                id="contractId"
-                name="contractId"
+                id="code"
+                name="code"
                 disabled={isReadOnly}
                 autoComplete="on"
-                invalid={!!errors.contractId}
-                valid={getValues('contractId')?.trim() && !errors.contractId}
+                invalid={!!errors.code}
+                valid={getValues('code')?.trim() && !errors.code}
                 innerRef={register()}
                 placeholder={intl.formatMessage({ id: 'Enter contract number' })}
               />
-              {errors?.contractId && <FormFeedback>{errors?.contractId?.message}</FormFeedback>}
+              {errors?.code && <FormFeedback>{errors?.code?.message}</FormFeedback>}
             </Col>
             <Col className="mb-2" xs={6} lg={2}>
               <Label className="general-label" for="startDate">
@@ -369,28 +404,34 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                           </Label>
                         </Col>
                         <Col xs={12} lg={3}>
-                          <Input
+                          <Controller
+                            as={Select}
+                            control={control}
+                            theme={selectThemeColors}
                             name={`billingCycle[${index}].start`}
-                            type="number"
-                            disabled={isReadOnly}
-                            autoComplete="on"
-                            innerRef={register({ valueAsNumber: true })}
+                            isDisabled={isReadOnly}
+                            innerRef={register()}
+                            options={DAYS_OF_MONTH_OPTIONS}
+                            className="react-select"
+                            classNamePrefix="select"
+                            formatOptionLabel={(option) => <>{option.label}</>}
                             defaultValue={item.start}
-                            invalid={!!getValidStart}
-                            valid={getValues(`billingCycle[${index}].start`) && !getValidStart}
                           />
                           {getValidStart && <FormFeedback>{getValidStart?.message}</FormFeedback>}
                         </Col>
                         <Col xs={12} lg={3}>
-                          <Input
-                            name={`billingCycle[${index}].end`}
-                            type="number"
-                            disabled={isReadOnly}
-                            autoComplete="on"
+                          <Controller
+                            as={Select}
+                            control={control}
+                            theme={selectThemeColors}
+                            name={`billingCycle[${index}].start`}
+                            isDisabled={isReadOnly}
                             innerRef={register()}
+                            options={[...DAYS_OF_MONTH_OPTIONS, END_OF_MONTH_OPTION]}
+                            className="react-select"
+                            classNamePrefix="select"
+                            formatOptionLabel={(option) => <>{option.label}</>}
                             defaultValue={item.end}
-                            invalid={!!getValidEnd}
-                            valid={getValues(`billingCycle[${index}].end`)?.trim() && !getValidEnd}
                           />
                           {getValidEnd && <FormFeedback>{getValidEnd?.message}</FormFeedback>}
                         </Col>
@@ -455,6 +496,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                 <Col className="mb-2" xs={6} lg={4}>
                   <Label className="general-label" for="vat">
                     <FormattedMessage id="VAT (%)" />
+                    <span className="text-danger">&nbsp;(*)</span>
                   </Label>
                   <Input
                     id="vat"
@@ -469,31 +511,33 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                 </Col>
               </Row>
               <Row>
-                <Col className="mb-2" xs={6} lg={8}>
-                  <Label className="general-label" for="coefficient">
-                    <FormattedMessage id="Payout coefficient" />
-                  </Label>
-                  <Input
-                    id="coefficient"
-                    name="coefficient"
-                    autoComplete="on"
-                    type="number"
-                    innerRef={register()}
-                    invalid={!!errors.coefficient}
-                    valid={getValues('coefficient')?.trim() && !errors.coefficient}
-                    placeholder={intl.formatMessage({ id: 'Enter coefficient' })}
-                  />
-                  {errors?.coefficient && <FormFeedback>{errors?.coefficient?.message}</FormFeedback>}
-                </Col>
+                {[1, 2].includes(watch('formType').value) && (
+                  <Col className="mb-2" xs={6} lg={8}>
+                    <Label className="general-label" for="coefficient">
+                      <FormattedMessage id="Payout coefficient" />
+                      <span className="text-danger">&nbsp;(*)</span>
+                    </Label>
+                    <Input
+                      id="coefficient"
+                      name="coefficient"
+                      autoComplete="on"
+                      innerRef={register()}
+                      invalid={!!errors.coefficient}
+                      valid={getValues('coefficient')?.trim() && !errors.coefficient}
+                      placeholder={intl.formatMessage({ id: 'Enter coefficient' })}
+                    />
+                    {errors?.coefficient && <FormFeedback>{errors?.coefficient?.message}</FormFeedback>}
+                  </Col>
+                )}
                 <Col className="mb-2" xs={6} lg={4}>
                   <Label className="general-label" for="round">
                     <FormattedMessage id="Rounding" />
+                    <span className="text-danger">&nbsp;(*)</span>
                   </Label>
                   <Input
                     id="round"
                     name="round"
                     autoComplete="on"
-                    type="number"
                     innerRef={register()}
                     invalid={!!errors.round}
                     valid={getValues('round')?.trim() && !errors.round}
@@ -510,6 +554,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                 <Col className="mb-2 d-flex align-items-center" xs={6} lg={9}>
                   <Label className="general-label mb-0" for="reminderToEnterIndex">
                     <FormattedMessage id="Remind to enter power index" />
+                    <span className="text-danger">&nbsp;(*)</span>
                     <span className="font-weight-normal">
                       {' '}
                       (<FormattedMessage id="day" />){' '}
@@ -525,7 +570,6 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                     id="reminderToEnterIndex"
                     name="reminderToEnterIndex"
                     autoComplete="on"
-                    type="number"
                     innerRef={register()}
                     invalid={!!errors.reminderToEnterIndex}
                     valid={getValues('reminderToEnterIndex')?.trim() && !errors.reminderToEnterIndex}
@@ -538,6 +582,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                 <Col className="mb-2 d-flex align-items-center" xs={6} lg={9}>
                   <Label className="general-label mb-0" for="reminderCusToConfirm">
                     <FormattedMessage id="Remind customer to confirm" />
+                    <span className="text-danger">&nbsp;(*)</span>
                     <span className="font-weight-normal">
                       {' '}
                       (<FormattedMessage id="day" />){' '}
@@ -553,7 +598,6 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                     id="reminderCusToConfirm"
                     name="reminderCusToConfirm"
                     autoComplete="on"
-                    type="number"
                     innerRef={register()}
                     invalid={!!errors.reminderCusToConfirm}
                     valid={getValues('reminderCusToConfirm')?.trim() && !errors.reminderCusToConfirm}
@@ -566,6 +610,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                 <Col className="mb-2 d-flex align-items-center" xs={6} lg={9}>
                   <Label className="general-label mb-0" for="dateOfPayment">
                     <FormattedMessage id="Date of payment" />
+                    <span className="text-danger">&nbsp;(*)</span>
                     <span className="font-weight-normal">
                       {' '}
                       (<FormattedMessage id="day" />){' '}
@@ -581,13 +626,12 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                     id="dateOfPayment"
                     name="dateOfPayment"
                     autoComplete="on"
-                    type="number"
                     innerRef={register()}
                     invalid={!!errors.dateOfPayment}
                     valid={getValues('dateOfPayment')?.trim() && !errors.dateOfPayment}
                     placeholder={intl.formatMessage({ id: 'Enter' })}
                   />
-                  {errors?.reminderToEnterIndex && <FormFeedback>{errors?.reminderToEnterIndex?.message}</FormFeedback>}
+                  {errors?.dateOfPayment && <FormFeedback>{errors?.dateOfPayment?.message}</FormFeedback>}
                 </Col>
               </Row>
             </Col>
@@ -605,7 +649,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
             <Col className="mb-2" xs={12} lg={4}>
               <Label className="general-label" for="peakPrice">
                 <FormattedMessage id="Peak" />
-                {/* <span className="text-danger">&nbsp;(*)</span> */}
+                <span className="text-danger">&nbsp;(*)</span>
               </Label>
               <Input
                 id="peakPrice"
@@ -615,20 +659,18 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                 invalid={!!errors.peakPrice}
                 valid={getValues('peakPrice')?.trim() && !errors.peakPrice}
                 placeholder={intl.formatMessage({ id: 'Enter price' })}
-                type="number"
               ></Input>
               {errors?.peakPrice && <FormFeedback>{errors?.peakPrice?.message}</FormFeedback>}
             </Col>
             <Col className="mb-2" xs={12} lg={4}>
               <Label className="general-label" for="midPointPrice">
                 <FormattedMessage id="Mid-point" />
-                {/* <span className="text-danger">&nbsp;(*)</span> */}
+                <span className="text-danger">&nbsp;(*)</span>
               </Label>
               <Input
                 id="midPointPrice"
                 name="midPointPrice"
                 autoComplete="on"
-                type="number"
                 innerRef={register()}
                 invalid={!!errors.midPointPrice}
                 valid={getValues('midPointPrice')?.trim() && !errors.midPointPrice}
@@ -639,13 +681,12 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
             <Col className="mb-2" xs={12} lg={4}>
               <Label className="general-label" for="idlePrice">
                 <FormattedMessage id="Idle" />
-                {/* <span className="text-danger">&nbsp;(*)</span> */}
+                <span className="text-danger">&nbsp;(*)</span>
               </Label>
               <Input
                 id="idlePrice"
                 name="idlePrice"
                 autoComplete="on"
-                type="number"
                 innerRef={register()}
                 invalid={!!errors.idlePrice}
                 valid={getValues('idlePrice')?.trim() && !errors.idlePrice}
@@ -681,7 +722,8 @@ PowerSellingCUForm.propTypes = {
   isReadOnly: bool,
   submitText: string,
   initValues: object,
-  onCancel: func
+  onCancel: func,
+  onSubmit: func
 }
 
 export default injectIntl(PowerSellingCUForm)

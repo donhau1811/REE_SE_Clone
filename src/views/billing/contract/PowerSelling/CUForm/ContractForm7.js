@@ -12,6 +12,7 @@ const ContractForm7COM = ({ intl }) => {
       <Col className="mb-2" xs={12} lg={4}>
         <Label className="general-label" for="chargeRate">
           <FormattedMessage id="Charge coefficient" />
+          <span className="text-danger">&nbsp;(*)</span>
         </Label>
         <Input
           id="chargeRate"
@@ -20,7 +21,7 @@ const ContractForm7COM = ({ intl }) => {
           innerRef={register()}
           invalid={!!errors.chargeRate}
           valid={getValues('chargeRate')?.trim() && !errors.chargeRate}
-          type="number"
+     
           placeholder={intl.formatMessage({ id: 'Enter rate' })}
 
         />

@@ -138,8 +138,8 @@ export const API_GET_CONTACT_BY_ROOF_VENDOR_ID = `${BASE_API_URL_V2}/contacts/ro
 //end roofVendor
 //project
 export const API_GET_NEW_PROJECT = `${BASE_API_URL_V2}/project/search`
-export const API_CREATE_PROJECT  = `${BASE_API_URL_V2}/project/create`
-export const API_UPDATE_PROJECT  = `${BASE_API_URL_V2}/project/update`
+export const API_CREATE_PROJECT = `${BASE_API_URL_V2}/project/create`
+export const API_UPDATE_PROJECT = `${BASE_API_URL_V2}/project/update`
 export const API_GET_PROJECT_BY_ID = `${BASE_API_URL_V2}/project/id`
 export const API_DELETE_PROJECTS = `${BASE_API_URL_V2}/project/delete`
 export const API_CHECK_PROJECT = `${BASE_API_URL_V2}/project/check-code`
@@ -149,7 +149,6 @@ export const API_CUSTOMER_V2 = `${BASE_API_URL_V2}/customer/create`
 export const API_ADD_CUSTOMER_V2 = `${BASE_API_URL_V2}/customer/create`
 export const API_UPDATE_CUSTOMER_V2 = `${BASE_API_URL_V2}/customer/update`
 export const API_GET_ALL_CUSTOMER = `${BASE_API_URL_V2}/customer/all`
-
 
 export const API_DELETE_CUSTOMER_V2 = `${BASE_API_URL_V2}/customer/delete`
 
@@ -170,7 +169,11 @@ export const API_DELETE_ROOF_RETAL_UNIT = `${BASE_API_URL}/api/v1/billing/custom
 export const API_GET_LIST_BILLING_SETTING = `${BASE_API_URL_V2}/config/search`
 export const API_GET_BILLING_SETTING_BY_ID = `${BASE_API_URL_V2}/config/id`
 export const API_GET_BILLING_SETTING_VALUE_BY_SETTING_ID = `${BASE_API_URL_V2}/config-value/config-id`
+export const API_GET_BILLING_SETTING_VALUE_BY_CODE = `${BASE_API_URL_V2}/config/code`
 export const API_UPDATE_BILLING_SETTING = `${BASE_API_URL_V2}/config/update`
 export const API_CREATE_BILLING_SETTING_VALUE = `${BASE_API_URL_V2}/config-value/create`
 export const API_UPDATE_BILLING_SETTING_VALUE = `${BASE_API_URL_V2}/config-value/update`
 export const API_DELETE_BILLING_SETTING_VALUE = `${BASE_API_URL_V2}/config-value/delete`
+
+export const API_GET_ALL_CONTRACT_PROJECT_IDS = `${BASE_API_URL_V2}/contract/all`
+export const API_DELETE_CONTRACT = `${BASE_API_URL_V2}/contract/delete`

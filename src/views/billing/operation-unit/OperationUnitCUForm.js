@@ -4,7 +4,7 @@ import { useForm, Controller } from 'react-hook-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Button, Col, Form, FormFeedback, Input, Label, Row } from 'reactstrap'
 import Select from 'react-select'
-import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
+import { GENERAL_STATUS_OPTS } from '@src/utility/constants/billing'
 import { selectThemeColors } from '@src/utility/Utils'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
@@ -12,12 +12,8 @@ import { CHECK_DUPLICATE_OPRERATION_UNIT_CODE, NUMBER_REGEX } from '@src/utility
 import axios from 'axios'
 
 const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, isReadOnly, submitText }) => {
-  const OPERATION_UNIT_STATUS_OPTS = [
-    { value: OPERATION_UNIT_STATUS.ACTIVE, label: intl.formatMessage({ id: 'Active' }) },
-    { value: OPERATION_UNIT_STATUS.INACTIVE, label: intl.formatMessage({ id: 'Inactive' }) }
-  ]
   const initState = {
-    state: OPERATION_UNIT_STATUS_OPTS[0]
+    state: GENERAL_STATUS_OPTS[0]
   }
 
   const ValidateSchema = yup.object().shape(
@@ -55,7 +51,7 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
   })
 
   useEffect(() => {
-    reset({ ...initValues, state: OPERATION_UNIT_STATUS_OPTS.find((item) => item.value === initValues?.state) })
+    reset({ ...initValues, state: GENERAL_STATUS_OPTS.find((item) => item.value === initValues?.state) })
   }, [initValues])
 
   const handleSubmitOperationUnitForm = async (values) => {
@@ -173,7 +169,7 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
               id="state"
               isDisabled={isReadOnly}
               innerRef={register()}
-              options={OPERATION_UNIT_STATUS_OPTS}
+              options={GENERAL_STATUS_OPTS}
               className="react-select"
               classNamePrefix="select"
               placeholder={intl.formatMessage({ id: 'Select a status' })}

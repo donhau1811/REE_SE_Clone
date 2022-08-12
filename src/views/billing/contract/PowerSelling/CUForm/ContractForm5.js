@@ -12,6 +12,7 @@ const ContractForm5COM = ({ intl }) => {
       <Col className="mb-2" xs={12} lg={4}>
         <Label className="general-label" for="typeOfClock">
           <FormattedMessage id="Revenue share coefficient" />
+          <span className="text-danger">&nbsp;(*)</span>
         </Label>
         <Input
           id="revenueShareRatio"
@@ -20,7 +21,7 @@ const ContractForm5COM = ({ intl }) => {
           innerRef={register()}
           invalid={!!errors.revenueShareRatio}
           valid={getValues('revenueShareRatio')?.trim() && !errors.revenueShareRatio}
-          type="number"
+     
           placeholder={intl.formatMessage({ id: 'Enter rate' })}
 
         />
