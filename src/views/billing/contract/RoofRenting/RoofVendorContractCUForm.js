@@ -15,6 +15,9 @@ import * as yup from 'yup'
 import { getAllRoofVendor, getRoofVendorWithContactsById } from '../../roof-rental-unit/store/actions'
 import ContractByPercentage from './typesOfContracts/ContractByPercentage'
 import MonthlyRent from './typesOfContracts/CyclicalContract'
+import { useParams } from 'react-router-dom'
+import { XCircle } from 'react-feather'
+import { ReactComponent as Attachment } from '@src/assets/images/svg/attachment-file.svg'
 
 const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSubmit }) => {
 
@@ -39,8 +42,8 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
 
   const {
     billingContacts: { contacts }
-  } = useSelector((state) => state)
-
+    } = useSelector((state) => state)
+    const { projectId } = useParams()
   useEffect(() => {
     dispatch(getAllRoofVendor())
   }, [])
@@ -200,7 +203,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
       state: 'ACTIVE',
       code: value?.contractCode,
       type: 'ROOF_VENDOR',
-      projectId: 7,
+      projectId,
       roofVendorId:  Number(value?.roofVendorName?.value),
       startDate: value?.effectiveDate,
       endDate: value?.expirationDate,
@@ -276,6 +279,39 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
             />
             {errors?.expirationDate && <FormFeedback>{errors?.expirationDate?.message}</FormFeedback>}
           </Col>
+        </Row>
+        <Row>
+        <Col xs={12} className=" mb-2 d-flex flex-column justify-content-end">
+              <div className="d-flex align-items-end">
+                <div className="mr-2">
+                  {watch('file')?.map((item) => (
+                    <a key={item.name} href="#" className="d-block">
+                      {item.name}
+                      <span className="ml-1" role="button">
+                        <XCircle size={14} color="#838A9C" />
+                      </span>
+                    </a>
+                  ))}
+                </div>
+                <div className="d-flex align-items-center">
+                  <Label className="file-attachment-label" for="file" role="button">
+                    <span className="mr-1">
+                      <Attachment />
+                    </span>
+                    <FormattedMessage id="Đính kèm file hợp đồng" />
+                  </Label>
+                  <Input
+                    type="file"
+                    autoComplete="on"
+                    disabled={isReadOnly}
+                    id="file"
+                    multiple
+                    className="d-none"
+                  />
+                </div>
+              </div>
+              {errors?.file && <FormFeedback className="d-block">{errors?.file?.message}</FormFeedback>}
+            </Col>
         </Row>
         <Row>
           <Col className="mb-3" md={3} xs={12} lg={4}>

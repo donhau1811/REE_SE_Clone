@@ -12,12 +12,17 @@ import SweetAlert from 'sweetalert2'
 import classNames from 'classnames'
 import '@src/@core/scss/billing-sweet-alert.scss'
 import withReactContent from 'sweetalert2-react-content'
+import { getBillingProjectById } from '../../project/store/actions'
 
 const MySweetAlert = withReactContent(SweetAlert)
 const UpdateRoofVendorContract = ({ intl }) => {
   const {
     layout: { skin }
   } = useSelector((state) => state)
+  const {
+    projects: { selectedProject: selectedBillingProject }
+  } = useSelector((state) => state)
+  
   const dispatch = useDispatch()
   const history = useHistory()
   const [isReadOnly, setIsReadOnly] = useState(true)
@@ -28,7 +33,18 @@ const UpdateRoofVendorContract = ({ intl }) => {
     dispatch(getContractById({ id }))
   }, [id])
 
+  useEffect(() => {
+    if (Number(projectId) !== Number(selectedBillingProject?.id)) {
+      dispatch(
+        getBillingProjectById({
+          id: projectId,
+          isSavedToState: true
+        })
+      )
+    }
+  }, [projectId])
   const { selectedContract } = useSelector((state) => state.projectContracts)
+
   useEffect(() => {
     setCleanData({
       contractCode: selectedContract.code,
@@ -49,7 +65,7 @@ const UpdateRoofVendorContract = ({ intl }) => {
     if (!isReadOnly) {
       return MySweetAlert.fire({
         title: intl.formatMessage({ id: 'Cancel' }),
-        text: intl.formatMessage({ id: 'You want to cancel add new' }),
+        text: intl.formatMessage({ id: 'You want to cancel update' }),
         showCancelButton: true,
         confirmButtonText: intl.formatMessage({ id: 'Yes' }),
         cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),

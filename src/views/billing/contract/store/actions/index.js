@@ -34,13 +34,14 @@ export const getAllContractByProjectId = ({ id, isSavedToState, callback }) => {
   }
 }
 
-export const deleteContractById = ({ id, callback }) => {
+export const deleteContractById = ({ id, callback, intl }) => {
   return async () => {
     await axios
       .delete(`${API_DELETE_CONTRACT}/${id}`)
       .then((response) => {
-        if (response.status === 200 && response.data.data) {
-          
+        if (response.status === 200 && response.data?.data) {
+          showToast('success',  intl.formatMessage({ id: 'Delete info success' }))
+
           callback?.()
         } else {
           throw new Error(response.data?.message)

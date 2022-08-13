@@ -10,15 +10,32 @@ import SweetAlert from 'sweetalert2'
 import classNames from 'classnames'
 import '@src/@core/scss/billing-sweet-alert.scss'
 import withReactContent from 'sweetalert2-react-content'
+import { getBillingProjectById } from '../../project/store/actions'
+import React, { useEffect } from 'react'
 
 const MySweetAlert = withReactContent(SweetAlert)
 const CreateRoofVendorContract = ({ intl }) => {
   const {
     layout: { skin }
   } = useSelector((state) => state)
+  const {
+    projects: { selectedProject: selectedBillingProject }
+  } = useSelector((state) => state)
   const history = useHistory()
   const { projectId } = useParams()
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (Number(projectId) !== Number(selectedBillingProject?.id)) {
+      dispatch(
+        getBillingProjectById({
+          id: projectId,
+          isSavedToState: true
+        })
+      )
+    }
+  }, [projectId])
+
   const handleAddRoofVendorContract = (values) => {
     const { address, taxCode, contractCode, effectiveDate, expirationDate, contractType, ...newvalue } = values
     dispatch(
@@ -52,11 +69,9 @@ const CreateRoofVendorContract = ({ intl }) => {
       buttonsStyling: false
     }).then(({ isConfirmed }) => {
       if (isConfirmed) {
-
         history.push(`${ROUTER_URL.BILLING_PROJECT_UPDATE}`.replace(':id', projectId))
       }
     })
-
   }
   return (
     <>

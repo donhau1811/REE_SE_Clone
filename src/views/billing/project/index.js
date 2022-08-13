@@ -10,16 +10,23 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { Badge, Col, Row, UncontrolledTooltip } from 'reactstrap'
 import PageHeader from './PageHeader'
-import { getListProject } from './store/actions/index'
+import { deleteBillingProjectById, getListProject } from './store/actions/index'
+import SweetAlert from 'sweetalert2'
+import classNames from 'classnames'
+import '@src/@core/scss/billing-sweet-alert.scss'
+import withReactContent from 'sweetalert2-react-content'
 
+const MySweetAlert = withReactContent(SweetAlert)
 
 const Project = ({ intl }) => {
   const history = useHistory()
+  const {
+    layout: { skin }
+  } = useSelector((state) => state)
   const dispatch = useDispatch()
   const { data, params, total } = useSelector((state) => state.projects)
 
   const { pagination = {}, searchValue } = params
-
 
   const fetchProject = (payload) => {
     dispatch(
@@ -52,7 +59,37 @@ const Project = ({ intl }) => {
       }
     })
   }
-
+  const handleDeleteProject = (project) => () => {
+    return MySweetAlert.fire({
+      title: intl.formatMessage({ id: 'Delete operating customer title' }),
+      text: intl.formatMessage({ id: 'Delete billing information message' }),
+      showCancelButton: true,
+      confirmButtonText: intl.formatMessage({ id: 'Yes' }),
+      cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),
+      customClass: {
+        popup: classNames({
+          'sweet-alert-popup--dark': skin === 'dark',
+          'sweet-popup': true
+        }),
+        header: 'sweet-title',
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-outline-secondary ml-1',
+        actions: 'sweet-actions',
+        content: 'sweet-content'
+      },
+      buttonsStyling: false
+    }).then(({ isConfirmed }) => {
+      if (isConfirmed) {
+        dispatch(
+          deleteBillingProjectById({
+            id: project.id,
+            callback: fetchProject,
+            intl
+          })
+        )
+      }
+    })
+  }
   const handleNumberPerPageChange = (e) => {
     fetchProject({
       pagination: {
@@ -61,7 +98,6 @@ const Project = ({ intl }) => {
       }
     })
   }
-
 
   const handleSort = (column, direction) => {
     fetchProject({
@@ -159,7 +195,7 @@ const Project = ({ intl }) => {
           <UncontrolledTooltip placement="auto" target={`editBtn_${row.id}`}>
             <FormattedMessage id="Edit Project" />
           </UncontrolledTooltip>
-          <Badge>
+          <Badge onClick={handleDeleteProject(row)}>
             <IconDelete id={`deleteBtn_${row.id}`} />
           </Badge>
           <UncontrolledTooltip placement="auto" target={`deleteBtn_${row.id}`}>

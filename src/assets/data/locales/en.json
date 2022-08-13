@@ -1711,7 +1711,11 @@
   "Update info success":"Data updated successfully",
   "Delete info success":"Delete success",
   "Create roof vendor contract":"Create roof vendor contract",
-  "You want to cancel add new":"You want to cancel add new ?"
+  "You want to cancel add new":"You want to cancel add new ?",
+  "You want to cancel update":"You want to cancel update ?",
+  "project management":"Project management"
+
+
 
 
 
