@@ -177,3 +177,12 @@ export const API_DELETE_BILLING_SETTING_VALUE = `${BASE_API_URL_V2}/config-value
 
 export const API_GET_ALL_CONTRACT_PROJECT_IDS = `${BASE_API_URL_V2}/contract/all`
 export const API_DELETE_CONTRACT = `${BASE_API_URL_V2}/contract/delete`
+export const API_ADD_CONTRACT = `${BASE_API_URL_V2}/contract/create`
+export const API_UPDATE_CONTRACT = `${BASE_API_URL_V2}/contract/update`
+export const API_CHECK_CODE_CONTRACT = `${BASE_API_URL_V2}/contract/check-code`
+export const API_GET_CONTRACT_BY_ID = `${BASE_API_URL_V2}/contract/id`
+
+export const API_DELETE_CLOCK = `${BASE_API_URL_V2}/clock/delete`
+export const API_ADD_CLOCK = `${BASE_API_URL_V2}/clock/create`
+export const API_UPDATE_CLOCK = `${BASE_API_URL_V2}/clock/update`
+export const API_GET_ALL_CLOCK_BY_CONTRACT_ID = `${BASE_API_URL_V2}/clock/contractId`

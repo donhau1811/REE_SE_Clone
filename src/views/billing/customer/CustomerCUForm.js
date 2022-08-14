@@ -109,31 +109,34 @@ const OperationCUForm = ({
   }
 
   const handleSubmitCustomerForm = async (values) => {
-    // check trùng  mã khách hàng
-    const dataCheck = { code: values.code }
-    if (initValues?.id) dataCheck.id = initValues?.id
-    const checkDupCodeRes = await axios.post(API_CHECK_DUPLICATE_CUSTOMER_CODE, dataCheck)
-    if (checkDupCodeRes.status === 200 && checkDupCodeRes.data?.data) {
-      setError('code', { type: 'custom', message: intl.formatMessage({ id: 'dubplicated-validate' }) })
-      return
+    if (!isViewed) {
+      // check trùng  mã khách hàng
+      const dataCheck = { code: values.code }
+      if (initValues?.id) dataCheck.id = initValues?.id
+      const checkDupCodeRes = await axios.post(API_CHECK_DUPLICATE_CUSTOMER_CODE, dataCheck)
+      if (checkDupCodeRes.status === 200 && checkDupCodeRes.data?.data) {
+        setError('code', { type: 'custom', message: intl.formatMessage({ id: 'dubplicated-validate' }) })
+        return
+      }
+      if (!contactsState?.filter((item) => !item.isDelete).length > 0) {
+        return MySweetAlert.fire({
+          // icon: 'success',
+          iconHtml: <CicleFailed />,
+          text: intl.formatMessage({ id: 'Need at least 1 contact to add customer. Please try again' }),
+          customClass: {
+            popup: classNames({
+              'sweet-alert-popup--dark': skin === 'dark'
+            }),
+            confirmButton: 'btn btn-primary mt-2',
+            icon: 'border-0'
+          },
+          width: 'max-content',
+          showCloseButton: true,
+          confirmButtonText: intl.formatMessage({ id: 'Try again' })
+        })
+      }
     }
-    if (!contactsState?.filter((item) => !item.isDelete).length > 0) {
-      return MySweetAlert.fire({
-        // icon: 'success',
-        iconHtml: <CicleFailed />,
-        text: intl.formatMessage({ id: 'Need at least 1 contact to add customer. Please try again' }),
-        customClass: {
-          popup: classNames({
-            'sweet-alert-popup--dark': skin === 'dark'
-          }),
-          confirmButton: 'btn btn-primary mt-2',
-          icon: 'border-0'
-        },
-        width: 'max-content',
-        showCloseButton: true,
-        confirmButtonText: intl.formatMessage({ id: 'Try again' })
-      })
-    }
+
     onSubmit?.({
       ...values,
       contacts: contactsState

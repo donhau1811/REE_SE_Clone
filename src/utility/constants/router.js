@@ -72,5 +72,6 @@ export const ROUTER_URL = {
   BILLING_PROJECT_CREATE_ROOF_VENDOR: '/billing/create-roof-vendor-contract',
   BILLING_PROJECT_UPDATE_ROOF_VENDOR: '/billing/roof-vendor-contract/:id',
   BILLING_PROJECT_CREATE: '/billing/project/create-project',
-  BILLING_PROJECT_CREATE_CONTRACT_POWER_SELLING: '/billing/project/:projectId/power-selling-contract'
+  BILLING_PROJECT_CREATE_CONTRACT_POWER_SELLING: '/billing/project/:projectId/power-selling-contract',
+  BILLING_PROJECT_UPDATE_CONTRACT_POWER_SELLING: '/billing/project/:projectId/power-selling-contract/:id'
 }

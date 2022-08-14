@@ -2,6 +2,7 @@ import {
   API_CREATE_BILLING_SETTING_VALUE,
   API_DELETE_BILLING_SETTING_VALUE,
   API_GET_BILLING_SETTING_BY_ID,
+  API_GET_BILLING_SETTING_VALUE_BY_CODE,
   API_GET_BILLING_SETTING_VALUE_BY_SETTING_ID,
   API_GET_LIST_BILLING_SETTING,
   API_UPDATE_BILLING_SETTING,
@@ -13,8 +14,9 @@ import SweetAlert from 'sweetalert2'
 import { ReactComponent as CicleSuccess } from '@src/assets/images/svg/circle-success.svg'
 import { ReactComponent as CicleFailed } from '@src/assets/images/svg/circle-failed.svg'
 import classNames from 'classnames'
-import { FETCH_SETTINGS_REQUEST, SET_SELECTED_BILLING_SETTING } from '@constants/actions'
+import { FETCH_SETTINGS_REQUEST, SET_SELECTED_BILLING_SETTING, SET_SETTING_BY_CODE } from '@constants/actions'
 import { get } from 'lodash'
+import { GENERAL_STATUS } from '@src/utility/constants/billing'
 
 const MySweetAlert = withReactContent(SweetAlert)
 
@@ -265,6 +267,33 @@ export const getBillingSettingValueBySettingId = ({ id, callback }) => {
       .get(`${API_GET_BILLING_SETTING_VALUE_BY_SETTING_ID}/${id}`)
       .then((response) => {
         if (response.status === 200 && response.data.data) {
+          callback?.(response.data.data)
+        } else {
+          throw new Error(response.data?.message)
+        }
+      })
+      .catch((err) => {
+        console.log('err', err)
+        callback?.()
+      })
+  }
+}
+
+export const getSettingValuesByCode = ({ code, isSavedToState, callback }) => {
+  return async (dispatch) => {
+    await axios
+      .get(`${API_GET_BILLING_SETTING_VALUE_BY_CODE}/${code}`)
+      .then((response) => {
+        if (response.status === 200 && response.data.data) {
+          if (isSavedToState) {
+            dispatch({
+              type: SET_SETTING_BY_CODE,
+              key: code,
+              payload: (response.data.data?.values || [])
+                .filter((item) => item.state === GENERAL_STATUS.ACTIVE)
+                .map((item) => ({ value: item.value, label: item.value }))
+            })
+          }
           callback?.(response.data.data)
         } else {
           throw new Error(response.data?.message)

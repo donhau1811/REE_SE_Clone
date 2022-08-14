@@ -1,29 +1,24 @@
-import { API_GET_BILLING_SETTING_VALUE_BY_CODE } from '@src/utility/constants'
-import axios from 'axios'
 import { object } from 'prop-types'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Col, FormFeedback, Input, Label, Row } from 'reactstrap'
 import Select from 'react-select'
 import { selectThemeColors } from '@src/utility/Utils'
-import { GENERAL_STATUS } from '@src/utility/constants/billing'
+import { useDispatch, useSelector } from 'react-redux'
+import { getSettingValuesByCode } from '@src/views/billing/settings/store/actions'
 
 const ContractForm4COM = ({ intl }) => {
-  const [currencyList, setCurrencyList] = useState([])
+  const { setting } = useSelector((state) => state.settings)
+  const dispatch = useDispatch()
 
   useEffect(async () => {
-    const allCurrencyRes = await axios.get(`${API_GET_BILLING_SETTING_VALUE_BY_CODE}/Currency`)
-    if (allCurrencyRes.status === 200 && allCurrencyRes.data.data?.values) {
-      setCurrencyList(
-        (allCurrencyRes.data.data?.values || [])
-          .filter((item) => item.state === GENERAL_STATUS.ACTIVE)
-          .map((item) => ({
-            value: item.value,
-            label: item.value
-          }))
-      )
-    }
+    dispatch(
+      getSettingValuesByCode({
+        isSavedToState: true,
+        code: 'Currency'
+      })
+    )
   }, [])
   const { register, errors, getValues, control } = useFormContext()
 
@@ -31,21 +26,21 @@ const ContractForm4COM = ({ intl }) => {
     <>
       <Row>
         <Col className="mb-2" xs={12} lg={4}>
-          <Label className="general-label" for="EVNCoefficient">
+          <Label className="general-label" for="unitPriceRate">
             <FormattedMessage id="EVN cost coefficient" />
             <span className="text-danger">&nbsp;(*)</span>
           </Label>
           <Input
-            id="EVNCoefficient"
-            name="EVNCoefficient"
+            id="unitPriceRate"
+            name="unitPriceRate"
             autoComplete="on"
             innerRef={register()}
-            invalid={!!errors.EVNCoefficient}
-            valid={getValues('EVNCoefficient')?.trim() && !errors.EVNCoefficient}
+            invalid={!!errors.unitPriceRate}
+            valid={getValues('unitPriceRate')?.trim() && !errors.unitPriceRate}
             placeholder={intl.formatMessage({ id: 'Enter rate' })}
             min="0"
           />
-          {errors?.EVNCoefficient && <FormFeedback className="d-block">{errors?.EVNCoefficient?.message}</FormFeedback>}
+          {errors?.unitPriceRate && <FormFeedback className="d-block">{errors?.unitPriceRate?.message}</FormFeedback>}
         </Col>
       </Row>
       <div className="divider-dashed mb-2" />
@@ -69,7 +64,7 @@ const ContractForm4COM = ({ intl }) => {
             name="currency"
             id="currency"
             innerRef={register()}
-            options={currencyList}
+            options={setting.Currency || []}
             className="react-select"
             classNamePrefix="select"
             placeholder={intl.formatMessage({ id: 'Choose currency' })}

@@ -19,6 +19,12 @@ function PowerSelling({ disabled, intl, data, onDelete }) {
     onDelete?.(contractItem)
   }
 
+  const handleRedirectToUpdateContract = (contractItem) => () => {
+    history.push(
+      ROUTER_URL.BILLING_PROJECT_UPDATE_CONTRACT_POWER_SELLING.replace(':projectId', id).replace(':id', contractItem.id)
+    )
+  }
+
   const columns = [
     {
       name: intl.formatMessage({ id: 'No.' }),
@@ -76,7 +82,7 @@ function PowerSelling({ disabled, intl, data, onDelete }) {
         <>
           {' '}
           <Badge>
-            <IconView id={`editBtn_${row.id}`} />
+            <IconView id={`editBtn_${row.id}`} onClick={handleRedirectToUpdateContract(row)} />
           </Badge>
           <Badge onClick={handleDeleteContract(row)}>
             <IconDelete id={`deleteBtn_${row.id}`} />

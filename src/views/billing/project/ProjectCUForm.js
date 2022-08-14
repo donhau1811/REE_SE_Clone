@@ -30,16 +30,14 @@ const ProjectCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initVal
       const initParam = {
         page: 1,
         rowsPerPage: 999,
-
         order: 'createDate desc',
-
         state: 'ACTIVE'
       }
       const [allCompaniesRes, allUsersRes] = await Promise.all([
         axios.get(API_GET_ALL_OPERATION_UNIT),
         axios.get(API_GET_USERS, initParam)
       ])
-      console.log('allUsersRes', allUsersRes)
+
       if (allCompaniesRes.status === 200 && allCompaniesRes.data?.data) {
         setCompanies(
           (allCompaniesRes.data.data || []).map(({ id, name }) => ({

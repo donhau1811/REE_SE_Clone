@@ -29,7 +29,8 @@ const ThemeNavbar = (props) => {
     roofUnit: { selectedRoofVendor },
     billingCustomer: { selectedCustomer },
     settings: { selectedSetting },
-    projects: { selectedProject: selectedBillingProject }
+    projects: { selectedProject: selectedBillingProject },
+    projectContracts: { selectedContract }
   } = useSelector((state) => state)
 
   const renderCustomNav = (pathname) => {
@@ -113,6 +114,18 @@ const ThemeNavbar = (props) => {
           { name: intl.formatMessage({ id: 'billing' }), link: '' },
           { name: intl.formatMessage({ id: 'project' }), link: ROUTER_URL.BILLING_PROJECT },
           { name: intl.formatMessage({ id: 'power-selling-contract' }), link: '' }
+        ]
+        return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
+      }
+      case ROUTER_URL.BILLING_PROJECT_UPDATE_CONTRACT_POWER_SELLING.replace(
+        ':projectId',
+        selectedBillingProject.id
+      ).replace(':id', selectedContract?.id): {
+        const tempItems = [
+          { name: intl.formatMessage({ id: 'billing' }), link: '' },
+          { name: intl.formatMessage({ id: 'project' }), link: ROUTER_URL.BILLING_PROJECT },
+          { name: selectedBillingProject.name, link: `${ROUTER_URL.BILLING_PROJECT}/${selectedBillingProject.id}` },
+          { name: intl.formatMessage({ id: 'Update selling power contract' }), link: '' }
         ]
         return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
       }
