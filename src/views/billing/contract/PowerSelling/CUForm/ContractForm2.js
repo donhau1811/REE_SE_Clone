@@ -1,10 +1,10 @@
-import { object } from 'prop-types'
+import { bool, object } from 'prop-types'
 import React from 'react'
 import { useFormContext } from 'react-hook-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Col, FormFeedback, Input, Label, Row } from 'reactstrap'
 
-const ContractForm2COM = ({ intl }) => {
+const ContractForm2COM = ({ intl, isReadOnly }) => {
   const { register, errors, getValues } = useFormContext()
 
   return (
@@ -18,10 +18,10 @@ const ContractForm2COM = ({ intl }) => {
           id="lossRate"
           name="lossRate"
           autoComplete="on"
+          disabled={isReadOnly}
           innerRef={register()}
           invalid={!!errors.lossRate}
           valid={getValues('lossRate')?.trim() && !errors.lossRate}
-       
           placeholder={intl.formatMessage({ id: 'Enter rate' })}
         />
         {errors?.lossRate && <FormFeedback className="d-block">{errors?.lossRate?.message}</FormFeedback>}
@@ -31,7 +31,8 @@ const ContractForm2COM = ({ intl }) => {
 }
 
 ContractForm2COM.propTypes = {
-  intl: object
+  intl: object,
+  isReadOnly: bool
 }
 
 export const ContractForm2 = injectIntl(ContractForm2COM)

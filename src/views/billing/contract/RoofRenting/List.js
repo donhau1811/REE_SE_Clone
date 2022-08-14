@@ -21,10 +21,7 @@ function RoofRenting({ disabled, intl, data, onDelete }) {
   }
   const handleRedirectUpdatePage = (idUpdate) => () => {
     if (idUpdate) {
-      history.push(
-       ROUTER_URL.BILLING_PROJECT_UPDATE_ROOF_VENDOR.replace(':projectId', id).replace(':id', idUpdate)
-      
-      )
+      history.push(ROUTER_URL.BILLING_PROJECT_UPDATE_ROOF_VENDOR.replace(':projectId', id).replace(':id', idUpdate))
     }
   }
   const columns = [
@@ -52,28 +49,31 @@ function RoofRenting({ disabled, intl, data, onDelete }) {
       name: intl.formatMessage({ id: 'Unit-code' }),
       selector: 'customerCode',
       sortable: true,
-      center: true
+      center: true,
+      cell: (row) => <span>{row?.roofVendor?.code}</span>
     },
     {
       name: intl.formatMessage({ id: 'Roof rental unit name' }),
       selector: 'companyName',
       sortable: true,
       center: true,
-      minWidth: '300px'
+      minWidth: '300px',
+      cell: (row) => <span>{row?.roofVendor?.name}</span>
     },
     {
       name: intl.formatMessage({ id: 'billing-customer-list-taxCode' }),
       selector: 'taxCode',
       sortable: true,
-      center: true
+      center: true,
+      cell: (row) => <span>{row?.roofVendor?.taxCode}</span>
     },
     {
       name: intl.formatMessage({ id: 'Address' }),
       selector: 'address',
-      cell: (row) => <span> {row.address}</span>,
       sortable: true,
       center: true,
-      minWidth: '350px'
+      minWidth: '350px',
+      cell: (row) => <span>{row?.roofVendor?.address}</span>
     },
     {
       name: intl.formatMessage({ id: 'Actions' }),
@@ -94,9 +94,7 @@ function RoofRenting({ disabled, intl, data, onDelete }) {
     }
   ]
   const handleRedirectToCreateContract = () => {
-    history.push(
-      ROUTER_URL.BILLING_PROJECT_CREATE_ROOF_VENDOR.replace(':projectId', id)
-   )
+    history.push(ROUTER_URL.BILLING_PROJECT_CREATE_ROOF_VENDOR.replace(':projectId', id))
   }
   return (
     <>

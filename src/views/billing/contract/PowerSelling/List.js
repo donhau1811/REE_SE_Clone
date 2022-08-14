@@ -19,6 +19,12 @@ function PowerSelling({ disabled, intl, data, onDelete }) {
     onDelete?.(contractItem)
   }
 
+  const handleRedirectToUpdateContract = (contractItem) => () => {
+    history.push(
+      ROUTER_URL.BILLING_PROJECT_UPDATE_CONTRACT_POWER_SELLING.replace(':projectId', id).replace(':id', contractItem.id)
+    )
+  }
+
   const columns = [
     {
       name: intl.formatMessage({ id: 'No.' }),
@@ -44,28 +50,32 @@ function PowerSelling({ disabled, intl, data, onDelete }) {
       name: intl.formatMessage({ id: 'Customer Code' }),
       selector: 'customerCode',
       sortable: true,
-      center: true
+      center: true,
+      cell: (row) => <span>{row?.customer?.code}</span>
     },
     {
       name: intl.formatMessage({ id: 'Customer Company' }),
       selector: 'companyName',
       sortable: true,
       center: true,
-      minWidth: '300px'
+      minWidth: '300px',
+      cell: (row) => <span>{row?.customer?.fullName}</span>
     },
     {
       name: intl.formatMessage({ id: 'billing-customer-list-taxCode' }),
       selector: 'taxCode',
       sortable: true,
-      center: true
+      center: true,
+      cell: (row) => <span>{row?.customer?.taxCode}</span>
     },
     {
       name: intl.formatMessage({ id: 'Address' }),
       selector: 'address',
-      cell: (row) => <span> {row.address}</span>,
+
       sortable: true,
       center: true,
-      minWidth: '350px'
+      minWidth: '350px',
+      cell: (row) => <span>{row?.customer?.address}</span>
     },
     {
       name: intl.formatMessage({ id: 'Actions' }),
@@ -76,7 +86,7 @@ function PowerSelling({ disabled, intl, data, onDelete }) {
         <>
           {' '}
           <Badge>
-            <IconView id={`editBtn_${row.id}`} />
+            <IconView id={`editBtn_${row.id}`} onClick={handleRedirectToUpdateContract(row)} />
           </Badge>
           <Badge onClick={handleDeleteContract(row)}>
             <IconDelete id={`deleteBtn_${row.id}`} />

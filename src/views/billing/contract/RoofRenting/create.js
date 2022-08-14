@@ -43,7 +43,12 @@ const CreateRoofVendorContract = ({ intl }) => {
         newvalue,
         intl,
         callback: () => {
-          history.push(`${ROUTER_URL.BILLING_PROJECT_UPDATE}`.replace(':id', projectId))
+          history.push({
+            pathname: `${ROUTER_URL.BILLING_PROJECT}/${projectId}`,
+            state: {
+              allowUpdate: true
+            }
+          })
         }
       })
     )
@@ -69,7 +74,12 @@ const CreateRoofVendorContract = ({ intl }) => {
       buttonsStyling: false
     }).then(({ isConfirmed }) => {
       if (isConfirmed) {
-        history.push(`${ROUTER_URL.BILLING_PROJECT_UPDATE}`.replace(':id', projectId))
+        history.push({
+          pathname: `${ROUTER_URL.BILLING_PROJECT}/${projectId}`,
+          state: {
+            allowUpdate: true
+          }
+        })
       }
     })
   }

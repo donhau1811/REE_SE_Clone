@@ -1,19 +1,35 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Badge, Button, Col, Row } from 'reactstrap'
 import { Plus } from 'react-feather'
 import Table from '@src/views/common/table/CustomDataTable'
 import NoDataCOM from '@src/views/common/NoDataCOM'
-import { array, bool, func } from 'prop-types'
+import { array, bool, func, string } from 'prop-types'
 import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit.svg'
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
 import ClockCUForm from './ClockCUForm'
 import { cloneDeep } from 'lodash'
 import moment from 'moment'
 import { DISPLAY_DATE_FORMAT } from '@src/utility/constants'
+import { useDispatch } from 'react-redux'
+import { getAllClockByContractId } from './store/actions'
 
-const Contact = ({ data, onChange, disabled }) => {
+const Clock = ({ data, onChange, disabled, contractId }) => {
+  const dispatch = useDispatch()
+  console.log('data', data)
 
+  useEffect(() => {
+    if (contractId > 0) {
+      dispatch(
+        getAllClockByContractId({
+          id: contractId,
+          callback: (res) => {
+            onChange?.((res || []))
+          }
+        })
+      )
+    }
+  }, [contractId])
   const [currClock, setCurrClock] = useState(null)
   const handleAddClock = () => {
     setCurrClock({
@@ -49,13 +65,13 @@ const Contact = ({ data, onChange, disabled }) => {
     },
     {
       name: <FormattedMessage id="Serial number of clock" />,
-      selector: 'serialNumber',
+      selector: 'seri',
       sortable: true,
       center: true
     },
     {
       name: <FormattedMessage id="Type of clock" />,
-      selector: 'typeOfClock',
+      selector: 'type',
       sortable: true,
       center: true
     },
@@ -67,10 +83,10 @@ const Contact = ({ data, onChange, disabled }) => {
     },
     {
       name: <FormattedMessage id="Inspection valid until" />,
-      selector: 'qualityVerifyDate',
+      selector: 'inspectionDate',
       center: true,
       sortable: true,
-      cell: (row) => <span>{!!row.qualityVerifyDate && moment(row.qualityVerifyDate).format(DISPLAY_DATE_FORMAT)}</span>
+      cell: (row) => <span>{!!row.inspectionDate && moment(row.inspectionDate).format(DISPLAY_DATE_FORMAT)}</span>
     },
     {
       name: <FormattedMessage id="Actions" />,
@@ -101,9 +117,9 @@ const Contact = ({ data, onChange, disabled }) => {
     if (currClock?.id === -1) {
       newData.push({ ...values, id: -Number(new Date().getTime()) })
     } else {
-      newData = newData.map((contact) => {
-        if (contact.id === currClock?.id) return { ...contact, ...values }
-        return contact
+      newData = newData.map((clock) => {
+        if (clock.id === currClock?.id) return { ...clock, ...values }
+        return clock
       })
     }
     setCurrClock({})
@@ -138,10 +154,11 @@ const Contact = ({ data, onChange, disabled }) => {
     </>
   )
 }
-Contact.propTypes = {
+Clock.propTypes = {
   data: array,
   onChange: func,
-  disabled: bool
+  disabled: bool,
+  contractId: string
 }
 
-export default Contact
+export default Clock

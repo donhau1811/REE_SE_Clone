@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { API_GET_BILLING_SETTING_VALUE_BY_CODE } from '@src/utility/constants'
+import { API_GET_BILLING_SETTING_VALUE_BY_CODE, ISO_STANDARD_FORMAT } from '@src/utility/constants'
 import { func, object } from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -10,6 +10,7 @@ import Select from 'react-select'
 import { selectThemeColors, showToast } from '@src/utility/Utils'
 import axios from 'axios'
 import { GENERAL_STATUS } from '@src/utility/constants/billing'
+import moment from 'moment'
 
 function ContactCUForm({ clock, intl, onSubmit = () => {}, onCancel }) {
   const [isOpen, setIsOpen] = useState(false)
@@ -53,11 +54,11 @@ function ContactCUForm({ clock, intl, onSubmit = () => {}, onCancel }) {
       .string()
       .required(intl.formatMessage({ id: 'required-validate' }))
       .max(100, intl.formatMessage({ id: 'max-validate' })),
-    serialNumber: yup
+    seri: yup
       .string()
       .required(intl.formatMessage({ id: 'required-validate' }))
       .max(50, intl.formatMessage({ id: 'max-validate' })),
-    typeOfClock: yup.object().required(intl.formatMessage({ id: 'required-validate' }))
+    type: yup.object().required(intl.formatMessage({ id: 'required-validate' }))
   })
 
   const { getValues, errors, register, control, handleSubmit, reset } = useForm({
@@ -77,7 +78,8 @@ function ContactCUForm({ clock, intl, onSubmit = () => {}, onCancel }) {
       reset({
         ...clock,
         manufacturer: (manufacturerList || []).find((item) => item.value === clock?.manufacturer),
-        typeOfClock: (typesOfClock || []).find((item) => item.value === clock?.typeOfClock)
+        type: (typesOfClock || []).find((item) => item.value === clock?.type),
+        inspectionDate: clock.inspectionDate ? moment.utc(clock.inspectionDate).format(ISO_STANDARD_FORMAT) : null
       })
     }
   }, [clock?.id, typesOfClock, manufacturerList])
@@ -86,7 +88,8 @@ function ContactCUForm({ clock, intl, onSubmit = () => {}, onCancel }) {
     const payload = {
       ...values,
       manufacturer: values.manufacturer?.value,
-      typeOfClock: values.typeOfClock?.value
+      type: values.type?.value,
+      inspectionDate: values.inspectionDate ? moment.utc(values.inspectionDate) : null
     }
     if (clock?.id > 0) payload.isUpdate = true
     else payload.isCreate = true
@@ -119,24 +122,24 @@ function ContactCUForm({ clock, intl, onSubmit = () => {}, onCancel }) {
                 {errors?.name && <FormFeedback>{errors?.name?.message}</FormFeedback>}
               </Col>
               <Col className="mb-2" xs={12}>
-                <Label className="general-label" for="serialNumber">
+                <Label className="general-label" for="seri">
                   Seri
                   <span className="text-danger">&nbsp;(*)</span>
                 </Label>
                 <Input
-                  id="serialNumber"
-                  name="serialNumber"
+                  id="seri"
+                  name="seri"
                   autoComplete="on"
-                  invalid={!!errors.serialNumber}
-                  valid={getValues('serialNumber')?.trim() && !errors.serialNumber}
+                  invalid={!!errors.seri}
+                  valid={getValues('seri')?.trim() && !errors.seri}
                   innerRef={register()}
                   placeholder={intl.formatMessage({ id: 'Enter serial number' })}
                 />
-                {errors?.serialNumber && <FormFeedback>{errors?.serialNumber?.message}</FormFeedback>}
+                {errors?.seri && <FormFeedback>{errors?.seri?.message}</FormFeedback>}
               </Col>
 
               <Col className="mb-2" xs={12}>
-                <Label className="general-label" for="typeOfClock">
+                <Label className="general-label" for="type">
                   <FormattedMessage id="Type of clock" />
                   <span className="text-danger">&nbsp;(*)</span>
                 </Label>
@@ -145,8 +148,8 @@ function ContactCUForm({ clock, intl, onSubmit = () => {}, onCancel }) {
                   control={control}
                   isClearable={true}
                   theme={selectThemeColors}
-                  name="typeOfClock"
-                  id="typeOfClock"
+                  name="type"
+                  id="type"
                   innerRef={register()}
                   options={typesOfClock}
                   className="react-select"
@@ -154,7 +157,7 @@ function ContactCUForm({ clock, intl, onSubmit = () => {}, onCancel }) {
                   placeholder={intl.formatMessage({ id: 'Choose type of clock' })}
                   formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
                 />
-                {errors?.typeOfClock && <FormFeedback className="d-block">{errors?.typeOfClock?.message}</FormFeedback>}
+                {errors?.type && <FormFeedback className="d-block">{errors?.type?.message}</FormFeedback>}
               </Col>
               <Col className="mb-2" xs={12}>
                 <Label className="general-label" for="phone">
@@ -180,20 +183,20 @@ function ContactCUForm({ clock, intl, onSubmit = () => {}, onCancel }) {
               </Col>
 
               <Col className="mb-2" xs={12}>
-                <Label className="general-label" for="status">
+                <Label className="general-label" for="inspectionDate">
                   <FormattedMessage id="Inspection valid until" />
                 </Label>
                 <Input
-                  id="qualityVerifyDate"
-                  name="qualityVerifyDate"
+                  id="inspectionDate"
+                  name="inspectionDate"
                   autoComplete="on"
                   innerRef={register()}
-                  invalid={!!errors.qualityVerifyDate}
-                  valid={getValues('qualityVerifyDate')?.trim() && !errors.qualityVerifyDate}
+                  invalid={!!errors.inspectionDate}
+                  valid={getValues('inspectionDate')?.trim() && !errors.inspectionDate}
                   type="date"
                   className="custom-icon-input-date"
                 />
-                {errors?.qualityVerifyDate && <FormFeedback>{errors?.qualityVerifyDate?.message}</FormFeedback>}
+                {errors?.inspectionDate && <FormFeedback>{errors?.inspectionDate?.message}</FormFeedback>}
               </Col>
             </Row>
             <Row>

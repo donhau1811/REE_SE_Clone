@@ -48,7 +48,7 @@ export const postProject = ({ params, callback }) => {
       .then((response) => {
         if (response.status === 200 && response.data.data) {
           showToast('success', <FormattedMessage id="Create new data successfully" />)
-          if (callback) callback()
+          if (callback) callback(response.data.data)
         } else {
           throw new Error(response.data?.message)
         }
@@ -103,13 +103,13 @@ export const getBillingProjectById = ({ id, isSavedToState, callback }) => {
   }
 }
 
-export const deleteBillingProjectById = ({id, callback, intl}) => {
+export const deleteBillingProjectById = ({ id, callback, intl }) => {
   return async () => {
     await axios
       .delete(`${API_DELETE_PROJECTS}/${id}`)
       .then((response) => {
         if (response.status === 200 && response.data?.data) {
-          showToast('success',  intl.formatMessage({ id: 'Delete info success' }))
+          showToast('success', intl.formatMessage({ id: 'Delete info success' }))
 
           callback?.(response.data.data)
         } else {

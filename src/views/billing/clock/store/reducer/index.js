@@ -1,16 +1,16 @@
-import { SET_CONTACT } from '@constants/actions'
+import { SET_CLOCK } from '@constants/actions'
 
 // ** Initial State
 const initialState = {
-  contacts: []
+  clocks: []
 }
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case SET_CONTACT:
+    case SET_CLOCK:
       return {
         ...state,
-        contacts: action.payload
+        clocks: action.payload
       }
 
     default:

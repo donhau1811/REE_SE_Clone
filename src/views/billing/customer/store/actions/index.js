@@ -67,7 +67,7 @@ export const postCustomer = ({ params, callback, skin, intl }) => {
           // eslint-disable-next-line no-unused-vars
           const addCusContactReq = contacts.map(({ id, ...contact }) =>
             // eslint-disable-next-line implicit-arrow-linebreak
-            axios.post(API_ADD_CONTACT, { ...contact, position: contact.position?.value, customerId, state: 'ACTIVE' })
+            axios.post(API_ADD_CONTACT, { ...contact, customerId, state: 'ACTIVE' })
           )
           Promise.all(addCusContactReq)
             .then(() => {
@@ -137,6 +137,7 @@ export const putCustomer = ({ params, callback, skin, intl }) => {
       .then((response) => {
         if (response.status === 200 && response.data.data) {
           const contactsModifyRes = handleCRUDOfContacts({ contacts, customerId: customerPayload.id })
+          console.log('handleCRUDOfContacts')
           return Promise.all(contactsModifyRes)
             .then(() => {
               MySweetAlert.fire({
@@ -219,26 +220,27 @@ export const getCustomerWithContactsById = ({ id, isSavedToState, callback }) =>
   return async (dispatch) => {
     const getCustomerByIdReq = axios.get(`${API_GET_CUSTOMER_BY_ID}/${id}`)
     const getContactsByCusIdReq = axios.get(`${API_GET_CONTACT_BY_CUSTOMER_ID}/${id}`)
+
     Promise.all([getCustomerByIdReq, getContactsByCusIdReq])
       .then(([customerRes, contactRes]) => {
         if (
           customerRes.status === 200 &&
-          customerRes.data?.result &&
+          customerRes.data?.data &&
           contactRes.status === 200 &&
-          contactRes.data?.result
+          contactRes.data?.data
         ) {
           const payload = {
-            ...customerRes.data?.result,
-            contacts: contactRes.data?.result
+            ...customerRes.data?.data,
+            contacts: contactRes.data?.data
           }
           if (isSavedToState) {
             dispatch({
               type: SET_SELECTED_BILLING_CUSTOMER,
-              payload: customerRes.data?.result
+              payload: customerRes.data?.data
             })
             dispatch({
               type: SET_CONTACT,
-              payload: contactRes.data?.result
+              payload: contactRes.data?.data
             })
           }
           callback?.(payload)

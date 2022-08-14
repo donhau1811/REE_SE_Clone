@@ -5,21 +5,27 @@ import { object } from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { injectIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory, useParams } from 'react-router-dom'
+import { useHistory, useLocation, useParams } from 'react-router-dom'
 import ProjectCUForm from './ProjectCUForm'
 import { getBillingProjectById, putProject } from './store/actions'
 
 const UpdateOperationUnit = ({ intl }) => {
-
   const history = useHistory()
   const dispatch = useDispatch()
   const [isReadOnly, setIsReadOnly] = useState(true)
+
+  const location = useLocation()
+
   const {
     projects: { selectedProject: selectedBillingProject }
   } = useSelector((state) => state)
 
   const { id } = useParams()
-  
+
+  useEffect(() => {
+    if (location.state?.allowUpdate) setIsReadOnly(false)
+  }, [location.state?.allowUpdate])
+
   useEffect(() => {
     dispatch(
       getBillingProjectById({

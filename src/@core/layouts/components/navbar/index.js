@@ -29,7 +29,7 @@ const ThemeNavbar = (props) => {
     billingCustomer: { selectedCustomer },
     settings: { selectedSetting },
     projects: { selectedProject: selectedBillingProject },
-    projectContracts : { selectedContract }
+    projectContracts: { selectedContract }
   } = useSelector((state) => state)
   const renderCustomNav = (pathname) => {
     switch (pathname) {
@@ -115,22 +115,43 @@ const ThemeNavbar = (props) => {
         ]
         return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
       }
+      case ROUTER_URL.BILLING_PROJECT_UPDATE_CONTRACT_POWER_SELLING.replace(
+        ':projectId',
+        selectedBillingProject.id
+      ).replace(':id', selectedContract?.id): {
+        const tempItems = [
+          { name: intl.formatMessage({ id: 'billing' }), link: '' },
+          { name: intl.formatMessage({ id: 'project' }), link: ROUTER_URL.BILLING_PROJECT },
+          { name: selectedBillingProject.name, link: `${ROUTER_URL.BILLING_PROJECT}/${selectedBillingProject.id}` },
+          { name: intl.formatMessage({ id: 'Update selling power contract' }), link: '' }
+        ]
+        return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
+      }
       case ROUTER_URL.BILLING_PROJECT_CREATE_ROOF_VENDOR.replace(':projectId', selectedBillingProject.id): {
         const tempItems = [
           { name: intl.formatMessage({ id: 'billing' }), link: '' },
           { name: intl.formatMessage({ id: 'project management' }), link: '' },
           { name: intl.formatMessage({ id: 'project' }), link: ROUTER_URL.BILLING_PROJECT },
-          { name: selectedBillingProject?.name, link: ROUTER_URL.BILLING_PROJECT_UPDATE.replace(':id', selectedBillingProject.id) },
+          {
+            name: selectedBillingProject?.name,
+            link: ROUTER_URL.BILLING_PROJECT_UPDATE.replace(':id', selectedBillingProject.id)
+          },
           { name: intl.formatMessage({ id: 'Add roof renting contract' }), link: '' }
         ]
         return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
       }
-      case ROUTER_URL.BILLING_PROJECT_UPDATE_ROOF_VENDOR.replace(':projectId', selectedBillingProject.id).replace(':id', selectedContract?.id): {
+      case ROUTER_URL.BILLING_PROJECT_UPDATE_ROOF_VENDOR.replace(':projectId', selectedBillingProject.id).replace(
+        ':id',
+        selectedContract?.id
+      ): {
         const tempItems = [
           { name: intl.formatMessage({ id: 'billing' }), link: '' },
           { name: intl.formatMessage({ id: 'project management' }), link: '' },
           { name: intl.formatMessage({ id: 'project' }), link: ROUTER_URL.BILLING_PROJECT },
-          { name: selectedBillingProject?.name, link: ROUTER_URL.BILLING_PROJECT_UPDATE.replace(':id', selectedBillingProject.id) },
+          {
+            name: selectedBillingProject?.name,
+            link: ROUTER_URL.BILLING_PROJECT_UPDATE.replace(':id', selectedBillingProject.id)
+          },
           { name: selectedContract?.id, link: '' }
         ]
         return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />

@@ -1679,6 +1679,7 @@
   "Try again": "Thử lại",
   "Need at least 1 contact to add customer. Please try again": "Phải có ít nhất 1 thông tin liên hệ được thêm mới. Vui lòng thử lại!",
   "Failed to update data. Please try again": "Dữ liệu cập nhật không thành công, vui lòng thử lại!",
+  "Failed to create data. Please try again": "Dữ liệu thêm mới không thành công, vui lòng thử lại",
   "New customer is added successfully": "Khách hàng đã được thêm mới thành công!",
   "update-customer": "Cập nhật thông tin khách hàng",
   "Data is updated successfully": "Dữ liệu đã được cập nhật thành công",
@@ -1833,11 +1834,13 @@
   "Charge coefficient": "Hệ số tính tiền điện",
   "End of month": "Cuối tháng",
   "Create new data successfully": "Dữ liệu thêm mới thành công",
-  "Create info success":"Dữ liệu thêm mới thành công",
-  "Update info success":"Dữ liệu cập nhật thành công",
-  "Delete info success":"Xóa thành công",
-  "Create roof vendor contract":"Thêm mới hợp đồng thuê mái",
-  "You want to cancel add new":"Bạn có muốn hủy bỏ việc thêm mới ?",
-  "You want to cancel update":"Bạn có muốn hủy bỏ việc chỉnh sửa ?",
-  "project management":"Quản lý dự án"
+  "Need at least 1 clock to add contract. Please try again": "Phải có ít nhất 1 thông tin đồng hồ được thêm mới. Vui lòng thử lại!",
+  "Update selling power contract": "Cập nhật hợp đồng bán điện",
+  "Create info success": "Dữ liệu thêm mới thành công",
+  "Update info success": "Dữ liệu cập nhật thành công",
+  "Delete info success": "Xóa thành công",
+  "Create roof vendor contract": "Thêm mới hợp đồng thuê mái",
+  "You want to cancel add new": "Bạn có muốn hủy bỏ việc thêm mới ?",
+  "You want to cancel update": "Bạn có muốn hủy bỏ việc chỉnh sửa ?",
+  "project management": "Quản lý dự án"
 }

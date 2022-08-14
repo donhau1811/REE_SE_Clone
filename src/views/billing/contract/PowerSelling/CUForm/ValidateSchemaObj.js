@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { NUMBER_REGEX, REAL_NUMBER } from '@src/utility/constants'
 import { FormattedMessage } from 'react-intl'
 import * as yup from 'yup'
@@ -17,28 +18,28 @@ export const ValidateSchemaObj = {
       end: yup.object().required(<FormattedMessage id="required-validate" />)
     })
   ),
-  reminderToEnterIndex: yup
+  manualInputAlert: yup
     .string()
     .required(<FormattedMessage id="required-validate" />)
     .max(2, <FormattedMessage id="max-validate" />)
     .matches(NUMBER_REGEX, {
       message: <FormattedMessage id="invalid-character-validate" />
     }),
-  reminderCusToConfirm: yup
+  confirmAlert: yup
     .string()
     .required(<FormattedMessage id="required-validate" />)
     .max(2, <FormattedMessage id="max-validate" />)
     .matches(NUMBER_REGEX, {
       message: <FormattedMessage id="invalid-character-validate" />
     }),
-  dateOfPayment: yup
+  billingAlert: yup
     .string()
     .required(<FormattedMessage id="required-validate" />)
     .max(2, <FormattedMessage id="max-validate" />)
     .matches(NUMBER_REGEX, {
       message: <FormattedMessage id="invalid-character-validate" />
     }),
-  round: yup
+  roundPrecision: yup
     .string()
     .required(<FormattedMessage id="required-validate" />)
     .max(2, <FormattedMessage id="max-validate" />)
@@ -73,7 +74,7 @@ export const ValidateSchemaObj = {
     .matches(REAL_NUMBER, {
       message: <FormattedMessage id="invalid-character-validate" />
     }),
-  coefficient: yup
+  payoutRatio: yup
     .string()
     .required(<FormattedMessage id="required-validate" />)
     .max(4, <FormattedMessage id="max-validate" />)
@@ -92,7 +93,7 @@ export const ContractForm2Schema = {
     })
 }
 export const ContractForm4Schema = {
-  EVNCoefficient: yup
+  unitPriceRate: yup
     .string()
     .required(<FormattedMessage id="required-validate" />)
     .max(16, <FormattedMessage id="max-validate" />)
