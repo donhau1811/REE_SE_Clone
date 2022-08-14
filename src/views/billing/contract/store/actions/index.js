@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   API_ADD_CONTRACT,
   API_DELETE_CONTRACT,
@@ -37,12 +36,14 @@ export const getAllContractByProjectId = ({ id, isSavedToState, callback }) => {
   }
 }
 
-export const deleteContractById = ({ id, callback }) => {
+export const deleteContractById = ({ id, callback, intl }) => {
   return async () => {
     await axios
       .delete(`${API_DELETE_CONTRACT}/${id}`)
       .then((response) => {
-        if (response.status === 200 && response.data.data) {
+        if (response.status === 200 && response.data?.data) {
+          showToast('success', intl.formatMessage({ id: 'Delete info success' }))
+
           callback?.()
         } else {
           throw new Error(response.data?.message)
@@ -60,34 +61,17 @@ export const postCustomerContract = ({ payload: { clocks, ...params }, callback 
       .post(API_ADD_CONTRACT, params)
       .then((response) => {
         if (response.status === 200 && response.data.data) {
-          showToast('success', <FormattedMessage id="Create new data successfully" />)
-          callback?.()
+          const contactsModifyRes = handleCRUDOfClocks({ clocks, contractId: response.data.data?.id })
+          Promise.all(contactsModifyRes)
+            .then(() => {
+              showToast('success', <FormattedMessage id="Create new data successfully" />)
 
-          // const addCusContactReq = contacts.map(({ id, ...contact }) =>
-          //   axios.post(API_ADD_CONTACT, { ...contact, position: contact.position?.value, customerId, state: 'ACTIVE' })
-          // )
-          // Promise.all(addCusContactReq)
-          //   .then(() => {
-          //     MySweetAlert.fire({
-          //       iconHtml: <CicleSuccess />,
-          //       text: intl.formatMessage({ id: 'New customer is added successfully' }),
-          //       customClass: {
-          //         popup: classNames({
-          //           'sweet-alert-popup--dark': skin === 'dark'
-          //         }),
-          //         confirmButton: 'btn btn-primary mt-2',
-          //         icon: 'border-0'
-          //       },
-          //       width: 'max-content',
-          //       showCloseButton: true,
-          //       confirmButtonText: 'OK'
-          //     }).then(() => {
-          //       callback?.()
-          //     })
-          //   })
-          //   .catch((err) => {
-          //     throw new Error(err.toString())
-          //   })
+              callback?.()
+            })
+            .catch((err) => {
+              console.log('err', err)
+              showToast('error', <FormattedMessage id="Failed to create data. Please try again" />)
+            })
         } else {
           throw new Error(response.data?.message)
         }
@@ -141,6 +125,40 @@ export const putCustomerContract = ({ payload: { clocks, ...params }, callback }
       .catch((err) => {
         console.log('err', err)
         showToast('error', <FormattedMessage id="Failed to update data. Please try again" />)
+      })
+  }
+}
+export const postContractRoofVendor = ({ newvalue, callback, intl }) => {
+  return async () => {
+    await axios
+      .post(`${API_ADD_CONTRACT}`, newvalue)
+      .then((response) => {
+        if (response.status === 200 && response.data?.data) {
+          showToast('success', intl.formatMessage({ id: 'Create info success' }))
+          callback?.()
+        } else {
+          throw new Error(response.data?.message)
+        }
+      })
+      .catch((err) => {
+        showToast('error', err.toString())
+      })
+  }
+}
+export const putContractRoofVendor = ({ newvalue, callback, intl }) => {
+  return async () => {
+    await axios
+      .put(`${API_UPDATE_CONTRACT}`, newvalue)
+      .then((response) => {
+        if (response.status === 200 && response.data?.data) {
+          showToast('success', intl.formatMessage({ id: 'Update info success' }))
+          callback?.()
+        } else {
+          throw new Error(response.data?.message)
+        }
+      })
+      .catch((err) => {
+        showToast('error', err.toString())
       })
   }
 }

@@ -269,7 +269,6 @@ export const checkDuplicate = async ({ params }) => {
   return axios
     .post(API_CHECK_CODE_ROOF_VENDORS, params)
     .then((response) => {
-      console.log(response)
       if (response.status === 200) {
         return response.data?.data
       }
@@ -290,11 +289,11 @@ export const getRoofVendorWithContactsById = ({ id, isSavedToState, callback }) 
           RoofVendorRes.status === 200 &&
           RoofVendorRes.data?.data &&
           contactRes.status === 200 &&
-          contactRes.data?.result
+          contactRes.data?.data
         ) {
           const payload = {
             ...RoofVendorRes.data?.data,
-            contacts: contactRes.data?.result
+            contacts: contactRes.data?.data
           }
           if (isSavedToState) {
             dispatch({
@@ -303,7 +302,7 @@ export const getRoofVendorWithContactsById = ({ id, isSavedToState, callback }) 
             })
             dispatch({
               type: SET_CONTACT,
-              payload: contactRes.data?.result
+              payload: contactRes.data?.data
             })
           }
           callback?.(payload)

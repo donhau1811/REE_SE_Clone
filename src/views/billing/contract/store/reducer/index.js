@@ -18,6 +18,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         selectedContract: action.payload[0] || []
       }
+
     default:
       return state
   }

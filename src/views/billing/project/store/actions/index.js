@@ -1,5 +1,6 @@
 import {
   API_CREATE_PROJECT,
+  API_DELETE_PROJECTS,
   API_GET_NEW_PROJECT,
   API_GET_PROJECT_BY_ID,
   API_UPDATE_PROJECT
@@ -18,9 +19,10 @@ export const getListProject = (params = {}) => {
       limit: pagination.rowsPerPage,
       offset: pagination.rowsPerPage * (pagination.currentPage - 1)
     }
+    console.log(payload)
 
     await axios
-      .get(API_GET_NEW_PROJECT, payload)
+      .post(API_GET_NEW_PROJECT, payload)
       .then((response) => {
         if (response.status === 200 && response.data.data) {
           dispatch({
@@ -90,6 +92,25 @@ export const getBillingProjectById = ({ id, isSavedToState, callback }) => {
               payload
             })
           }
+          callback?.(response.data.data)
+        } else {
+          throw new Error(response.data?.message)
+        }
+      })
+      .catch((err) => {
+        showToast('error', err.toString())
+      })
+  }
+}
+
+export const deleteBillingProjectById = ({id, callback, intl}) => {
+  return async () => {
+    await axios
+      .delete(`${API_DELETE_PROJECTS}/${id}`)
+      .then((response) => {
+        if (response.status === 200 && response.data?.data) {
+          showToast('success',  intl.formatMessage({ id: 'Delete info success' }))
+
           callback?.(response.data.data)
         } else {
           throw new Error(response.data?.message)

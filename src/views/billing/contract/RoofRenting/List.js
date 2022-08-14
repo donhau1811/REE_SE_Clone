@@ -5,14 +5,27 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import Table from '@src/views/common/table/CustomDataTable'
 import { Badge, Button, Col, Row } from 'reactstrap'
 import moment from 'moment'
-import { DISPLAY_DATE_FORMAT } from '@src/utility/constants'
+import { DISPLAY_DATE_FORMAT, ROUTER_URL } from '@src/utility/constants'
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
 import NoDataCOM from '@src/views/common/NoDataCOM'
+import { useHistory, useParams } from 'react-router-dom'
 
 function RoofRenting({ disabled, intl, data, onDelete }) {
+  const { id } = useParams()
+
+
+  const history = useHistory()
   const handleDeleteContract = (contractItem) => () => {
     onDelete?.(contractItem)
+  }
+  const handleRedirectUpdatePage = (idUpdate) => () => {
+    if (idUpdate) {
+      history.push(
+       ROUTER_URL.BILLING_PROJECT_UPDATE_ROOF_VENDOR.replace(':projectId', id).replace(':id', idUpdate)
+      
+      )
+    }
   }
   const columns = [
     {
@@ -70,7 +83,7 @@ function RoofRenting({ disabled, intl, data, onDelete }) {
       cell: (row) => (
         <>
           {' '}
-          <Badge>
+          <Badge onClick={handleRedirectUpdatePage(row.id)}>
             <IconView id={`editBtn_${row.id}`} />
           </Badge>
           <Badge onClick={handleDeleteContract(row)}>
@@ -80,6 +93,11 @@ function RoofRenting({ disabled, intl, data, onDelete }) {
       )
     }
   ]
+  const handleRedirectToCreateContract = () => {
+    history.push(
+      ROUTER_URL.BILLING_PROJECT_CREATE_ROOF_VENDOR.replace(':projectId', id)
+   )
+  }
   return (
     <>
       {' '}
@@ -89,7 +107,12 @@ function RoofRenting({ disabled, intl, data, onDelete }) {
             <FormattedMessage id="Contract of Roof Renting" />
           </h4>
 
-          <Button.Ripple disabled={disabled} color="primary" className="add-project add-contact-button">
+          <Button.Ripple
+            disabled={disabled}
+            color="primary"
+            className="add-project add-contact-button"
+            onClick={handleRedirectToCreateContract}
+          >
             <Plus className="mr-1" /> <FormattedMessage id="Add roof renting contract" />
           </Button.Ripple>
         </Col>
