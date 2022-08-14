@@ -57,7 +57,8 @@ function ContractCOM({ intl, isReadOnly, projectId }) {
         dispatch(
           deleteContractById({
             id: contractItem.id,
-            callback: fetchAllContractByProjectId
+            callback: fetchAllContractByProjectId,
+            intl
           })
         )
       }

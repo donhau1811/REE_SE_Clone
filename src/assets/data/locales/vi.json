@@ -1832,5 +1832,12 @@
   "Revenue share coefficient": "Hệ số chia sẻ doanh thu",
   "Charge coefficient": "Hệ số tính tiền điện",
   "End of month": "Cuối tháng",
-  "Create new data successfully": "Dữ liệu thêm mới thành công"
+  "Create new data successfully": "Dữ liệu thêm mới thành công",
+  "Create info success":"Dữ liệu thêm mới thành công",
+  "Update info success":"Dữ liệu cập nhật thành công",
+  "Delete info success":"Xóa thành công",
+  "Create roof vendor contract":"Thêm mới hợp đồng thuê mái",
+  "You want to cancel add new":"Bạn có muốn hủy bỏ việc thêm mới ?",
+  "You want to cancel update":"Bạn có muốn hủy bỏ việc chỉnh sửa ?",
+  "project management":"Quản lý dự án"
 }

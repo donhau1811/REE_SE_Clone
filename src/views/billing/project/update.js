@@ -10,6 +10,7 @@ import ProjectCUForm from './ProjectCUForm'
 import { getBillingProjectById, putProject } from './store/actions'
 
 const UpdateOperationUnit = ({ intl }) => {
+
   const history = useHistory()
   const dispatch = useDispatch()
   const [isReadOnly, setIsReadOnly] = useState(true)
@@ -18,6 +19,7 @@ const UpdateOperationUnit = ({ intl }) => {
   } = useSelector((state) => state)
 
   const { id } = useParams()
+  
   useEffect(() => {
     dispatch(
       getBillingProjectById({

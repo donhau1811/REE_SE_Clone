@@ -1706,7 +1706,17 @@
   "required-validate":"Required validate",
   "max-validate":"Max validate",
   "invalid-character-validate":"Invalid character validate",
-  "create-roof-vendor-contract":"Create roof vendor contract"
+  "create-roof-vendor-contract":"Create roof vendor contract",
+  "Create info success":"Data added successfully",
+  "Update info success":"Data updated successfully",
+  "Delete info success":"Delete success",
+  "Create roof vendor contract":"Create roof vendor contract",
+  "You want to cancel add new":"You want to cancel add new ?",
+  "You want to cancel update":"You want to cancel update ?",
+  "project management":"Project management"
+
+
+
 
 
 }

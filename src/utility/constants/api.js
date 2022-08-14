@@ -143,6 +143,7 @@ export const API_UPDATE_PROJECT = `${BASE_API_URL_V2}/project/update`
 export const API_GET_PROJECT_BY_ID = `${BASE_API_URL_V2}/project/id`
 export const API_DELETE_PROJECTS = `${BASE_API_URL_V2}/project/delete`
 export const API_CHECK_PROJECT = `${BASE_API_URL_V2}/project/check-code`
+export const API_GET_ALL_PROJECT = `${BASE_API_URL_V2}/project/all`
 //end project
 
 export const API_CUSTOMER_V2 = `${BASE_API_URL_V2}/customer/create`
@@ -177,3 +178,7 @@ export const API_DELETE_BILLING_SETTING_VALUE = `${BASE_API_URL_V2}/config-value
 
 export const API_GET_ALL_CONTRACT_PROJECT_IDS = `${BASE_API_URL_V2}/contract/all`
 export const API_DELETE_CONTRACT = `${BASE_API_URL_V2}/contract/delete`
+export const API_ADD_CONTRACT = `${BASE_API_URL_V2}/contract/create`
+export const API_UPDATE_CONTRACT = `${BASE_API_URL_V2}/contract/update`
+export const API_CHECK_CODE_CONTRACT = `${BASE_API_URL_V2}/contract/check-code`
+export const API_GET_CONTRACT_BY_ID = `${BASE_API_URL_V2}/contract/id`

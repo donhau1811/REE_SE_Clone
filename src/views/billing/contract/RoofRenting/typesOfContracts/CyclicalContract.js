@@ -27,7 +27,7 @@ const MonthlyRents = ({ typeContract, isReadOnly }) => {
             autoComplete="on"
             innerRef={register()}
             invalid={!!errors.startDate}
-            valid={getValues('startDate')?.trim() && !errors.startDate}
+            valid={getValues('startDate')?.trim() && !errors.startDate && !isReadOnly}
             type="date"
             defaultValue={moment().format(ISO_STANDARD_FORMAT)}
             className="custom-icon-input-date"
@@ -55,7 +55,7 @@ const MonthlyRents = ({ typeContract, isReadOnly }) => {
             autoComplete="on"
             innerRef={register()}
             invalid={!!errors.announcementDate}
-            valid={getValues('announcementDate')?.trim() && !errors.announcementDate}
+            valid={getValues('announcementDate')?.trim() && !errors.announcementDate && !isReadOnly}
             defaultValue={0}
           />
           {errors?.announcementDate && <FormFeedback>{errors?.announcementDate?.message}</FormFeedback>}
@@ -79,7 +79,7 @@ const MonthlyRents = ({ typeContract, isReadOnly }) => {
             autoComplete="on"
             innerRef={register()}
             invalid={!!errors.rentalAmount}
-            valid={getValues('rentalAmount')?.trim() && !errors.rentalAmount}
+            valid={getValues('rentalAmount')?.trim() && !errors.rentalAmount && !isReadOnly}
             defaultValue={0}
           />
           {errors?.rentalAmount && <FormFeedback>{errors?.rentalAmount?.message}</FormFeedback>}
@@ -105,7 +105,7 @@ const MonthlyRents = ({ typeContract, isReadOnly }) => {
             autoComplete="on"
             innerRef={register()}
             invalid={!!errors.confirmationReminder}
-            valid={getValues('confirmationReminder')?.trim() && !errors.confirmationReminder}
+            valid={getValues('confirmationReminder')?.trim() && !errors.confirmationReminder && !isReadOnly}
             defaultValue={0}
           />
           {errors?.confirmationReminder && <FormFeedback>{errors?.confirmationReminder?.message}</FormFeedback>}

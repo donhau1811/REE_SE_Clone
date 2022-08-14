@@ -1,8 +1,8 @@
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
-import { DISPLAY_DATE_FORMAT, ROUTER_URL, ROWS_PER_PAGE_DEFAULT } from '@src/utility/constants'
+import { ROUTER_URL, ROWS_PER_PAGE_DEFAULT } from '@src/utility/constants'
+import { GENERAL_STATUS as PROJECT_STATUS } from '@src/utility/constants/billing'
 import Table from '@src/views/common/table/CustomDataTable'
-import moment from 'moment'
 import { object } from 'prop-types'
 import { useEffect } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -10,16 +10,23 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { Badge, Col, Row, UncontrolledTooltip } from 'reactstrap'
 import PageHeader from './PageHeader'
-import { getListProject } from './store/actions/index'
+import { deleteBillingProjectById, getListProject } from './store/actions/index'
+import SweetAlert from 'sweetalert2'
+import classNames from 'classnames'
+import '@src/@core/scss/billing-sweet-alert.scss'
+import withReactContent from 'sweetalert2-react-content'
 
+const MySweetAlert = withReactContent(SweetAlert)
 
 const Project = ({ intl }) => {
   const history = useHistory()
+  const {
+    layout: { skin }
+  } = useSelector((state) => state)
   const dispatch = useDispatch()
   const { data, params, total } = useSelector((state) => state.projects)
 
   const { pagination = {}, searchValue } = params
-
 
   const fetchProject = (payload) => {
     dispatch(
@@ -52,7 +59,37 @@ const Project = ({ intl }) => {
       }
     })
   }
-
+  const handleDeleteProject = (project) => () => {
+    return MySweetAlert.fire({
+      title: intl.formatMessage({ id: 'Delete operating customer title' }),
+      text: intl.formatMessage({ id: 'Delete billing information message' }),
+      showCancelButton: true,
+      confirmButtonText: intl.formatMessage({ id: 'Yes' }),
+      cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),
+      customClass: {
+        popup: classNames({
+          'sweet-alert-popup--dark': skin === 'dark',
+          'sweet-popup': true
+        }),
+        header: 'sweet-title',
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-outline-secondary ml-1',
+        actions: 'sweet-actions',
+        content: 'sweet-content'
+      },
+      buttonsStyling: false
+    }).then(({ isConfirmed }) => {
+      if (isConfirmed) {
+        dispatch(
+          deleteBillingProjectById({
+            id: project.id,
+            callback: fetchProject,
+            intl
+          })
+        )
+      }
+    })
+  }
   const handleNumberPerPageChange = (e) => {
     fetchProject({
       pagination: {
@@ -61,7 +98,6 @@ const Project = ({ intl }) => {
       }
     })
   }
-
 
   const handleSort = (column, direction) => {
     fetchProject({
@@ -114,7 +150,7 @@ const Project = ({ intl }) => {
     },
     {
       name: intl.formatMessage({ id: 'Customer Company' }),
-      selector: 'customerCompany',
+      selector: 'companyName',
       sortable: true,
       center: true,
       minWidth: '200px'
@@ -125,23 +161,27 @@ const Project = ({ intl }) => {
       selector: 'manager',
       sortable: true,
       minWidth: '200px',
-      center: true
+      center: true,
+      cell: () => <span>{'Trần Văn Việt Anh'}</span>
     },
 
     {
-      name: intl.formatMessage({ id: 'Operation date' }),
-      selector: 'operationDate',
+      name: intl.formatMessage({ id: 'Status' }),
+      selector: 'state',
       sortable: true,
-      minWidth: '200px',
-      cell: (row) => moment(row.modifiedDate).format(DISPLAY_DATE_FORMAT),
-      center: true
-    },
-    {
-      name: intl.formatMessage({ id: 'Wattage' }),
-      selector: 'wattage',
-      sortable: true,
-      cell: (row) => `${row.wattage} kWh`,
-      center: true
+      center: true,
+      minWidth: '150px',
+      cell: (row) => {
+        return row.state === PROJECT_STATUS.ACTIVE ? (
+          <Badge pill color="light-success">
+            <FormattedMessage id="Active" />
+          </Badge>
+        ) : (
+          <Badge pill color="light-muted">
+            <FormattedMessage id="Inactive" />
+          </Badge>
+        )
+      }
     },
     {
       name: intl.formatMessage({ id: 'Actions' }),
@@ -155,7 +195,7 @@ const Project = ({ intl }) => {
           <UncontrolledTooltip placement="auto" target={`editBtn_${row.id}`}>
             <FormattedMessage id="Edit Project" />
           </UncontrolledTooltip>
-          <Badge>
+          <Badge onClick={handleDeleteProject(row)}>
             <IconDelete id={`deleteBtn_${row.id}`} />
           </Badge>
           <UncontrolledTooltip placement="auto" target={`deleteBtn_${row.id}`}>

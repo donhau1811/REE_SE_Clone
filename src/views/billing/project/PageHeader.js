@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { ReactComponent as IconSearch } from '@src/assets/images/svg/table/ic-search.svg'
 import { ROUTER_URL } from '@src/utility/constants'
 import { func, object, string } from 'prop-types'
@@ -42,7 +43,7 @@ const PageHeader = ({ intl, onSearch = () => {}, searchValue }) => {
       <Row className="mb-2">
         <Col lg="4" md="8" className="my-lg-0 mb-1 d-flex justify-content-end align-items-center">
          
-          <InputGroup className="input-group-merge">
+          {/* <InputGroup className="input-group-merge">
             <Input
               className=""
               bsSize="sm"
@@ -60,7 +61,7 @@ const PageHeader = ({ intl, onSearch = () => {}, searchValue }) => {
           </InputGroup>
           <UncontrolledTooltip placement="top" target={`search-input`}>
             {intl.formatMessage({ id: 'project-list-search-input-placeholder' })}
-          </UncontrolledTooltip>
+          </UncontrolledTooltip> */}
         </Col>
 
         <Col lg={{ offset: 4, size: 4 }} md={4} className="d-flex justify-content-end align-items-center">
