@@ -4,17 +4,52 @@ import moment from 'moment'
 import { object } from 'prop-types'
 import React from 'react'
 import { injectIntl } from 'react-intl'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import ProjectCUForm from './ProjectCUForm'
 import { postProject } from './store/actions'
+import SweetAlert from 'sweetalert2'
+import classNames from 'classnames'
+import '@src/@core/scss/billing-sweet-alert.scss'
+import withReactContent from 'sweetalert2-react-content'
 
-const CreateProject = () => {
+const MySweetAlert = withReactContent(SweetAlert)
+
+const CreateProject = ({ intl }) => {
   const dispatch = useDispatch()
   const history = useHistory()
+  const {
+    layout: { skin }
+  } = useSelector((state) => state)
+
+  // const handleCancel = () => {
+  //   history.push(ROUTER_URL.BILLING_PROJECT)
+  // }
 
   const handleCancel = () => {
-    history.push(ROUTER_URL.BILLING_PROJECT)
+    return MySweetAlert.fire({
+      title: intl.formatMessage({ id: 'Cancel' }),
+      text: intl.formatMessage({ id: 'You want to cancel add new' }),
+      showCancelButton: true,
+      confirmButtonText: intl.formatMessage({ id: 'Yes' }),
+      cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),
+      customClass: {
+        popup: classNames({
+          'sweet-alert-popup--dark': skin === 'dark',
+          'sweet-popup': true
+        }),
+        header: 'sweet-title',
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-outline-secondary ml-1',
+        actions: 'sweet-actions',
+        content: 'sweet-content'
+      },
+      buttonsStyling: false
+    }).then(({ isConfirmed }) => {
+      if (isConfirmed) {
+        history.push(ROUTER_URL.BILLING_PROJECT)
+      }
+    })
   }
 
   const handleCreateProject = (newProject) => {
@@ -32,8 +67,8 @@ const CreateProject = () => {
     dispatch(
       postProject({
         params,
-        callback: () => {
-          handleCancel()
+        callback: (res) => {
+          history.push(`${ROUTER_URL.BILLING_PROJECT}/${res.id}`)
         }
       })
     )

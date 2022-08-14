@@ -119,6 +119,10 @@ const ProjectCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initVal
   }, [initValues?.id, customers?.length, companies?.length])
 
   const handleSubmitOperationUnitForm = async (values) => {
+    if (isReadOnly) {
+      onSubmit?.(initValues)
+      return
+    }
     const dataCheck = { code: values.code }
     if (initValues?.id) dataCheck.id = initValues?.id
     const checkDupCodeRes = await axios.post(API_CHECK_PROJECT, dataCheck)

@@ -1,7 +1,7 @@
 import {
   API_ADD_CONTRACT,
   API_DELETE_CONTRACT,
-  API_GET_ALL_CONTRACT_PROJECT_IDS,
+  API_GET_ALL_CONTRACT_PROJECT_ID,
   API_GET_CONTRACT_BY_ID,
   API_UPDATE_CONTRACT
 } from '@src/utility/constants'
@@ -15,7 +15,7 @@ import { handleCRUDOfClocks } from '../../util'
 export const getAllContractByProjectId = ({ id, isSavedToState, callback }) => {
   return async (dispatch) => {
     await axios
-      .get(`${API_GET_ALL_CONTRACT_PROJECT_IDS}?projectIds=${id}`)
+      .get(`${API_GET_ALL_CONTRACT_PROJECT_ID}/${id}`)
       .then((response) => {
         if (response.status === 200 && response.data.data) {
           const payload = get(response, 'data.data', {})

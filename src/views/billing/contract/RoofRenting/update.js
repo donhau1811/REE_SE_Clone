@@ -22,7 +22,7 @@ const UpdateRoofVendorContract = ({ intl }) => {
   const {
     projects: { selectedProject: selectedBillingProject }
   } = useSelector((state) => state)
-  
+
   const dispatch = useDispatch()
   const history = useHistory()
   const [isReadOnly, setIsReadOnly] = useState(true)
@@ -83,12 +83,21 @@ const UpdateRoofVendorContract = ({ intl }) => {
         buttonsStyling: false
       }).then(({ isConfirmed }) => {
         if (isConfirmed) {
-          history.push(`${ROUTER_URL.BILLING_PROJECT_UPDATE}`.replace(':id', projectId))
+          history.push({
+            pathname: `${ROUTER_URL.BILLING_PROJECT}/${projectId}`,
+            state: {
+              allowUpdate: true
+            }
+          })
         }
       })
     }
-
-    history.push(ROUTER_URL.BILLING_PROJECT_UPDATE.replace(':id', projectId))
+    history.push({
+      pathname: `${ROUTER_URL.BILLING_PROJECT}/${projectId}`,
+      state: {
+        allowUpdate: true
+      }
+    })
   }
   const handleUpdateRoofVendorContract = (value) => {
     if (isReadOnly) {
@@ -101,7 +110,12 @@ const UpdateRoofVendorContract = ({ intl }) => {
           newvalue,
           intl,
           callback: () => {
-            history.push(ROUTER_URL.BILLING_PROJECT_UPDATE.replace(':id', projectId))
+            history.push({
+              pathname: `${ROUTER_URL.BILLING_PROJECT}/${projectId}`,
+              state: {
+                allowUpdate: true
+              }
+            })
           }
         })
       )
