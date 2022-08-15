@@ -99,9 +99,26 @@ const ThemeNavbar = (props) => {
         ]
         return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
       }
+      case `${ROUTER_URL.BILLING_PROJECT}`: {
+        const tempItems = [
+          { name: intl.formatMessage({ id: 'billing' }), link: '' },
+          { name: intl.formatMessage({ id: 'project management' }), link: '' },
+          { name: intl.formatMessage({ id: 'project' }) }
+        ]
+        return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
+      }
+      case `${ROUTER_URL.BILLING_PROJECT_CREATE}`: {
+        const tempItems = [
+          { name: intl.formatMessage({ id: 'billing' }), link: '' },
+          { name: intl.formatMessage({ id: 'project management' }), link: '' },
+          { name: intl.formatMessage({ id: 'create-project' }) }
+        ]
+        return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
+      }
       case `${ROUTER_URL.BILLING_PROJECT}/${selectedBillingProject?.id}`: {
         const tempItems = [
           { name: intl.formatMessage({ id: 'billing' }), link: '' },
+          { name: intl.formatMessage({ id: 'project management' }), link: '' },
           { name: intl.formatMessage({ id: 'project' }), link: ROUTER_URL.BILLING_PROJECT },
           { name: selectedBillingProject?.name, link: '' }
         ]
@@ -110,6 +127,7 @@ const ThemeNavbar = (props) => {
       case ROUTER_URL.BILLING_PROJECT_CREATE_CONTRACT_POWER_SELLING.replace(':projectId', selectedBillingProject.id): {
         const tempItems = [
           { name: intl.formatMessage({ id: 'billing' }), link: '' },
+          { name: intl.formatMessage({ id: 'project management' }), link: '' },
           { name: intl.formatMessage({ id: 'project' }), link: ROUTER_URL.BILLING_PROJECT },
           { name: intl.formatMessage({ id: 'power-selling-contract' }), link: '' }
         ]
@@ -121,6 +139,7 @@ const ThemeNavbar = (props) => {
       ).replace(':id', selectedContract?.id): {
         const tempItems = [
           { name: intl.formatMessage({ id: 'billing' }), link: '' },
+          { name: intl.formatMessage({ id: 'project management' }), link: '' },
           { name: intl.formatMessage({ id: 'project' }), link: ROUTER_URL.BILLING_PROJECT },
           { name: selectedBillingProject.name, link: `${ROUTER_URL.BILLING_PROJECT}/${selectedBillingProject.id}` },
           { name: intl.formatMessage({ id: 'Update selling power contract' }), link: '' }
