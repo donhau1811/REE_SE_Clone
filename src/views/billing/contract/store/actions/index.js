@@ -49,8 +49,8 @@ export const deleteContractById = ({ id, callback, intl }) => {
           throw new Error(response.data?.message)
         }
       })
-      .catch((err) => {
-        showToast('error', err.toString())
+      .catch(() => {
+        showToast('error', intl.formatMessage({ id: 'data delete failed, please try again' }))
       })
   }
 }
@@ -137,11 +137,13 @@ export const postContractRoofVendor = ({ newvalue, callback, intl }) => {
           showToast('success', intl.formatMessage({ id: 'Create info success' }))
           callback?.()
         } else {
+          console.log('err')
           throw new Error(response.data?.message)
         }
       })
       .catch((err) => {
-        showToast('error', err.toString())
+        console.log('err', err)
+        showToast('error', intl.formatMessage({ id: 'data create failed, please try again' }))
       })
   }
 }
@@ -154,11 +156,13 @@ export const putContractRoofVendor = ({ newvalue, callback, intl }) => {
           showToast('success', intl.formatMessage({ id: 'Update info success' }))
           callback?.()
         } else {
+          console.log('err')
           throw new Error(response.data?.message)
         }
       })
       .catch((err) => {
-        showToast('error', err.toString())
+        console.log('err', err)
+        showToast('error', intl.formatMessage({ id: 'data update failed, please try again' }))
       })
   }
 }

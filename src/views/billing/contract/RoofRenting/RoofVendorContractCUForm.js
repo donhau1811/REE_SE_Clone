@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { API_CHECK_CODE_CONTRACT, NUMBER_REGEX, REAL_NUMBER } from '@src/utility/constants'
 import { TypeOfRoofVendorContract as type } from '@src/utility/constants/billing'
-import { selectThemeColors } from '@src/utility/Utils'
+import { selectThemeColors, showToast } from '@src/utility/Utils'
 import Table from '@src/views/common/table/CustomDataTable'
 import axios from 'axios'
 import { bool, func, object, string } from 'prop-types'
@@ -18,13 +18,15 @@ import MonthlyRent from './typesOfContracts/CyclicalContract'
 import { useParams } from 'react-router-dom'
 import { XCircle } from 'react-feather'
 import { ReactComponent as Attachment } from '@src/assets/images/svg/attachment-file.svg'
+import { getSettingValuesByCode } from '@src/views/billing/settings/store/actions'
 
 const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSubmit }) => {
-
   const defaultValues = {
     contractType: type[0]
   }
-   
+  const [valueSetting, setValueSetting] = useState([])
+  const { setting } = useSelector((state) => state.settings)
+
   const defaultValid = {
     roofVendorName: yup.object().shape({
       label: yup.string().required(intl.formatMessage({ id: 'required-validate' })),
@@ -39,11 +41,30 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
   }
 
   const dispatch = useDispatch()
+  useEffect(async () => {
+    dispatch(
+      getSettingValuesByCode({
+        isSavedToState: true,
+        code: 'Roof_Vendor_Contract'
+      })
+    )
+  }, [])
+  useEffect(() => {
+    console.log('sett', setting)
+    console.log('gt',  (setting?.Roof_Vendor_Contract || [])?.map((item) => console.log(item)))
+    setValueSetting(
+      (setting?.Roof_Vendor_Contract || [])?.map((item) => ({
+        ...item,
+        value: setting?.Roof_Vendor_Contract?.findIndex(x => x?.value === item?.value) + 1
+      }))
+    )
 
+  }, [setting])
+  console.log('vl', valueSetting)
   const {
     billingContacts: { contacts }
-    } = useSelector((state) => state)
-    const { projectId } = useParams()
+  } = useSelector((state) => state)
+  const { projectId } = useParams()
   useEffect(() => {
     dispatch(getAllRoofVendor())
   }, [])
@@ -149,11 +170,9 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
             excludeEmptyString: true
           }),
         startDate: yup
-        .string()
-        .required(intl.formatMessage({ id: 'required-validate' }))
-        .max(10, intl.formatMessage({ id: 'max-validate' }))
-
-
+          .string()
+          .required(intl.formatMessage({ id: 'required-validate' }))
+          .max(10, intl.formatMessage({ id: 'max-validate' }))
       })
     } else if (typeContract.value === 4) {
       setValidForm({
@@ -184,7 +203,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
       ...initValues,
       roofVendorName: listOfRoofvendor.find((item) => item.value === initValues?.roofId),
       contractType: type.find((item) => item.value === initValues?.typeContract),
-      taxCode:data.find((item) => item.id === selectRoofVendor?.value)?.taxCode,
+      taxCode: data.find((item) => item.id === selectRoofVendor?.value)?.taxCode,
       address: data.find((item) => item.id === selectRoofVendor?.value)?.address
     }
     reset(contractValue)
@@ -193,9 +212,22 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
   const handleProcessFormData = async (value) => {
     const dataCheck = { code: value?.contractCode }
     if (initValues?.id) dataCheck.id = initValues?.id
-    const checkDupCodeRes = await axios.post(API_CHECK_CODE_CONTRACT, dataCheck)
-    if (checkDupCodeRes.status === 200 && checkDupCodeRes.data?.data) {
-      setError('contractCode', { type: 'custom', message: intl.formatMessage({ id: 'dubplicated-validate' }) })
+    try {
+      const checkDupCodeRes = await axios.post(API_CHECK_CODE_CONTRACT, dataCheck)
+      if (checkDupCodeRes.status === 200 && checkDupCodeRes.data?.data) {
+        setError('contractCode', { type: 'custom', message: intl.formatMessage({ id: 'dubplicated-validate' }) })
+        return
+      }
+    } catch (err) {
+      const alert = initValues?.id
+        ? 'Failed to update data. Please try again'
+        : 'Failed to create data. Please try again'
+      showToast(
+        'error',
+        intl.formatMessage({
+          id: alert
+        })
+      )
       return
     }
     const newValue = {
@@ -204,7 +236,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
       code: value?.contractCode,
       type: 'ROOF_VENDOR',
       projectId,
-      roofVendorId:  Number(value?.roofVendorName?.value),
+      roofVendorId: Number(value?.roofVendorName?.value),
       startDate: value?.effectiveDate,
       endDate: value?.expirationDate,
       url: 'link contract pdf',
@@ -216,7 +248,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
         id: value?.contractType?.value,
         rentalAmount: value?.rentalAmount,
         percent: value?.percentTurnover,
-        startDate:value?.startDate
+        startDate: value?.startDate
       }
     }
     onSubmit?.(newValue)
@@ -260,7 +292,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
             />
             {errors?.effectiveDate && <FormFeedback>{errors?.effectiveDate?.message}</FormFeedback>}
           </Col>
-          <Col  md={2} xs={12} lg={2}>
+          <Col md={2} xs={12} lg={2}>
             <Label className="general-label">
               <FormattedMessage id="expirationDate" />
               <span className="text-danger">&nbsp;(*)</span>
@@ -281,37 +313,30 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
           </Col>
         </Row>
         <Row>
-        <Col xs={12} className=" mb-2 d-flex flex-column justify-content-end">
-              <div className="d-flex align-items-end">
-                <div className="mr-2">
-                  {watch('file')?.map((item) => (
-                    <a key={item.name} href="#" className="d-block">
-                      {item.name}
-                      <span className="ml-1" role="button">
-                        <XCircle size={14} color="#838A9C" />
-                      </span>
-                    </a>
-                  ))}
-                </div>
-                <div className="d-flex align-items-center">
-                  <Label className="file-attachment-label" for="file" role="button">
-                    <span className="mr-1">
-                      <Attachment />
+          <Col xs={12} className=" mb-2 d-flex flex-column justify-content-end">
+            <div className="d-flex align-items-end">
+              <div className="mr-2">
+                {watch('file')?.map((item) => (
+                  <a key={item.name} href="#" className="d-block">
+                    {item.name}
+                    <span className="ml-1" role="button">
+                      <XCircle size={14} color="#838A9C" />
                     </span>
-                    <FormattedMessage id="Đính kèm file hợp đồng" />
-                  </Label>
-                  <Input
-                    type="file"
-                    autoComplete="on"
-                    disabled={isReadOnly}
-                    id="file"
-                    multiple
-                    className="d-none"
-                  />
-                </div>
+                  </a>
+                ))}
               </div>
-              {errors?.file && <FormFeedback className="d-block">{errors?.file?.message}</FormFeedback>}
-            </Col>
+              <div className="d-flex align-items-center">
+                <Label className="file-attachment-label" for="file" role="button">
+                  <span className="mr-1">
+                    <Attachment />
+                  </span>
+                  <FormattedMessage id="Đính kèm file hợp đồng" />
+                </Label>
+                <Input type="file" autoComplete="on" disabled={isReadOnly} id="file" multiple className="d-none" />
+              </div>
+            </div>
+            {errors?.file && <FormFeedback className="d-block">{errors?.file?.message}</FormFeedback>}
+          </Col>
         </Row>
         <Row>
           <Col className="mb-3" md={3} xs={12} lg={4}>
@@ -394,7 +419,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
         {typeContract.value === 4 && <ContractByPercentage isReadOnly={isReadOnly} />}
         <Row className="d-flex justify-content-end align-items-center">
           <Button type="submit" color="primary" className="mr-1 px-3">
-            {intl.formatMessage({ id: isReadOnly ? 'Update' : 'Finish' })}
+            {intl.formatMessage({ id: isReadOnly ? 'Update' : 'Save' })}
           </Button>{' '}
           <Button color="secondary" onClick={onCancel}>
             {intl.formatMessage({ id: 'Cancel' })}

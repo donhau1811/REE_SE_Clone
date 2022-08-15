@@ -1,24 +1,25 @@
+import '@src/@core/scss/billing-sweet-alert.scss'
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
 import { ROUTER_URL, ROWS_PER_PAGE_DEFAULT } from '@src/utility/constants'
-import { GENERAL_STATUS as PROJECT_STATUS } from '@src/utility/constants/billing'
+import { GENERAL_STATUS as PROJECT_STATUS, mockUser } from '@src/utility/constants/billing'
 import Table from '@src/views/common/table/CustomDataTable'
+import classNames from 'classnames'
 import { object } from 'prop-types'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { Badge, Col, Row, UncontrolledTooltip } from 'reactstrap'
+import SweetAlert from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 import PageHeader from './PageHeader'
 import { deleteBillingProjectById, getListProject } from './store/actions/index'
-import SweetAlert from 'sweetalert2'
-import classNames from 'classnames'
-import '@src/@core/scss/billing-sweet-alert.scss'
-import withReactContent from 'sweetalert2-react-content'
+import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit.svg'
 
 const MySweetAlert = withReactContent(SweetAlert)
-
 const Project = ({ intl }) => {
+  const [cleanData, setCleanData] = useState()
   const history = useHistory()
   const {
     layout: { skin }
@@ -36,20 +37,49 @@ const Project = ({ intl }) => {
       })
     )
   }
+  const replaceIdByUserName = (listId) => {
+    const newList = JSON.parse(listId)
+    let nameString = newList.length > 0 ? '' : '....'
+    newList.map((item) => {
+      if (mockUser[item - 1]?.label) nameString += `${mockUser[item - 1]?.label},`
+    })
+    nameString = nameString.slice(0, -1)
+    return nameString
+  }
+
+  useEffect(() => {
+    const newData = data.map((item) => ({ ...item, userIds: replaceIdByUserName(item.userIds) }))
+    setCleanData(newData)
+  }, [data])
 
   useEffect(() => {
     fetchProject({
       pagination: {
         rowsPerPage: ROWS_PER_PAGE_DEFAULT,
-        currentPage: 1,
-        sortBy: 'code',
-        sortDirection: 'asc'
-      }
+        currentPage: 1
+      },
+      sortBy: 'code',
+      sortDirection: 'asc'
     })
   }, [])
 
   const handleRedirectToUpdatePage = (id) => () => {
-    if (id) history.push(`${ROUTER_URL.BILLING_PROJECT}/${id}`)
+    if (id) {
+      history.push({
+        pathname: `${ROUTER_URL.BILLING_PROJECT}/${id}`,
+        state: {
+          allowUpdate: true
+        }
+      })
+    }
+  }
+
+  const handleRedirectToViewPage = (id) => () => {
+    if (id) {
+      history.push({
+        pathname: `${ROUTER_URL.BILLING_PROJECT}/${id}`
+      })
+    }
   }
   const handleChangePage = (e) => {
     fetchProject({
@@ -59,6 +89,7 @@ const Project = ({ intl }) => {
       }
     })
   }
+
   const handleDeleteProject = (project) => () => {
     return MySweetAlert.fire({
       title: intl.formatMessage({ id: 'Delete operating customer title' }),
@@ -158,11 +189,10 @@ const Project = ({ intl }) => {
 
     {
       name: intl.formatMessage({ id: 'Manager' }),
-      selector: 'manager',
+      selector: 'userIds',
       sortable: true,
       minWidth: '200px',
-      center: true,
-      cell: () => <span>{'Trần Văn Việt Anh'}</span>
+      center: true
     },
 
     {
@@ -189,11 +219,17 @@ const Project = ({ intl }) => {
       cell: (row) => (
         <>
           {' '}
-          <Badge onClick={handleRedirectToUpdatePage(row.id)}>
+          <Badge onClick={handleRedirectToViewPage(row.id)}>
             <IconView id={`editBtn_${row.id}`} />
           </Badge>
           <UncontrolledTooltip placement="auto" target={`editBtn_${row.id}`}>
-            <FormattedMessage id="Edit Project" />
+            <FormattedMessage id="View Project" />
+          </UncontrolledTooltip>
+          <Badge onClick={handleRedirectToUpdatePage(row.id)}>
+            <IconEdit id={`updateBtn_${row.id}`} />
+          </Badge>
+          <UncontrolledTooltip placement="auto" target={`updateBtn_${row.id}`}>
+            <FormattedMessage id="Update Project" />
           </UncontrolledTooltip>
           <Badge onClick={handleDeleteProject(row)}>
             <IconDelete id={`deleteBtn_${row.id}`} />
@@ -214,7 +250,7 @@ const Project = ({ intl }) => {
           <Table
             tableId="project"
             columns={columns}
-            data={data}
+            data={cleanData}
             total={total}
             onPageChange={handleChangePage}
             onPerPageChange={handleNumberPerPageChange}
