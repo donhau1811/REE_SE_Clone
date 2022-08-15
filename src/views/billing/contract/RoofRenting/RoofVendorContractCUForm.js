@@ -1,6 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { API_CHECK_CODE_CONTRACT, NUMBER_REGEX, REAL_NUMBER } from '@src/utility/constants'
-import { TypeOfRoofVendorContract as type } from '@src/utility/constants/billing'
 import { selectThemeColors, showToast } from '@src/utility/Utils'
 import Table from '@src/views/common/table/CustomDataTable'
 import axios from 'axios'
@@ -21,10 +20,11 @@ import { ReactComponent as Attachment } from '@src/assets/images/svg/attachment-
 import { getSettingValuesByCode } from '@src/views/billing/settings/store/actions'
 
 const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSubmit }) => {
-  const defaultValues = {
-    contractType: type[0]
-  }
   const [valueSetting, setValueSetting] = useState([])
+
+  const defaultValues = {
+    contractType: valueSetting[0]
+  }
   const { setting } = useSelector((state) => state.settings)
 
   const defaultValid = {
@@ -50,6 +50,8 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
     )
   }, [])
   useEffect(() => {
+    console.log('sett', setting)
+    console.log('gt',  (setting?.Roof_Vendor_Contract || [])?.map((item) => console.log(item)))
     setValueSetting(
       (setting?.Roof_Vendor_Contract || [])?.map((item) => ({
         ...item,
@@ -58,6 +60,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
     )
 
   }, [setting])
+  console.log('vl', valueSetting)
   const {
     billingContacts: { contacts }
   } = useSelector((state) => state)
@@ -117,7 +120,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
   })
   const { handleSubmit, getValues, errors, control, register, reset, watch, setValue, setError } = methods
 
-  const typeContract = watch('contractType', type[0])
+  const typeContract = watch('contractType', valueSetting[0])
 
   const selectRoofVendor = watch(
     'roofVendorName',
@@ -131,7 +134,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
       dispatch(getRoofVendorWithContactsById({ id: selectRoofVendor?.value, isSavedToState: true }))
     }
   }, [selectRoofVendor])
-  const isCyclicalContract = useMemo(() => typeContract.value === 2 || typeContract.value === 3, [typeContract])
+  const isCyclicalContract = useMemo(() => typeContract?.value === 2 || typeContract?.value === 3, [typeContract])
 
   useEffect(() => {
     // thay đổi valid tùy theo các subform
@@ -171,7 +174,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
           .required(intl.formatMessage({ id: 'required-validate' }))
           .max(10, intl.formatMessage({ id: 'max-validate' }))
       })
-    } else if (typeContract.value === 4) {
+    } else if (typeContract?.value === 4) {
       setValidForm({
         ...defaultValid,
         percentTurnover: yup
@@ -199,7 +202,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
     const contractValue = {
       ...initValues,
       roofVendorName: listOfRoofvendor.find((item) => item.value === initValues?.roofId),
-      contractType: type.find((item) => item.value === initValues?.typeContract),
+      contractType: valueSetting.find((item) => item.value === initValues?.typeContract),
       taxCode: data.find((item) => item.id === selectRoofVendor?.value)?.taxCode,
       address: data.find((item) => item.id === selectRoofVendor?.value)?.address
     }
@@ -400,7 +403,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
               isDisabled={isReadOnly}
               theme={selectThemeColors}
               name="contractType"
-              options={type}
+              options={valueSetting}
               id="contractType"
               autoComplete="on"
               innerRef={register()}
@@ -413,7 +416,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
           </Col>
         </Row>
         {isCyclicalContract && <MonthlyRent isReadOnly={isReadOnly} typeContract={typeContract} />}
-        {typeContract.value === 4 && <ContractByPercentage isReadOnly={isReadOnly} />}
+        {typeContract?.value === 4 && <ContractByPercentage isReadOnly={isReadOnly} />}
         <Row className="d-flex justify-content-end align-items-center">
           <Button type="submit" color="primary" className="mr-1 px-3">
             {intl.formatMessage({ id: isReadOnly ? 'Update' : 'Save' })}

@@ -12,7 +12,6 @@ import { FormattedMessage } from 'react-intl'
 import { get } from 'lodash'
 
 export const getListProject = (params = {}) => {
-  console.log(params)
   return async (dispatch) => {
     const { pagination = {}, ...rest } = params
     const payload = {
