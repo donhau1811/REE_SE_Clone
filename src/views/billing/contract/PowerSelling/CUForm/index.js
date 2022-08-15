@@ -47,8 +47,6 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
     contractClock: { clocks }
   } = useSelector((state) => state)
 
-  console.log('clocks', clocks)
-
   const { setting } = useSelector((state) => state.settings)
 
   const formInitValues = {
