@@ -11,14 +11,13 @@ import { selectThemeColors, showToast } from '@src/utility/Utils'
 import {
   API_CHECK_PROJECT,
   API_GET_ALL_OPERATION_UNIT,
-  API_GET_USERS,
   ISO_STANDARD_FORMAT,
   REAL_NUMBER
 } from '@src/utility/constants'
 import axios from 'axios'
 import Contract from './contract'
 import ValueContOfMultipleSelect from '@src/utility/components/ReactSelectCustomCOM/ValueContOfMultipleSelect'
-import { GENERAL_STATUS_OPTS } from '@src/utility/constants/billing'
+import { GENERAL_STATUS_OPTS, mockUser } from '@src/utility/constants/billing'
 import moment from 'moment'
 
 const ProjectCUForm = ({
@@ -52,18 +51,17 @@ const ProjectCUForm = ({
 
   const initState = { state: GENERAL_STATUS_OPTS[0] }
   const [companies, setCompanies] = useState([])
-  const [customers, setCustomers] = useState([])
   useEffect(async () => {
     try {
-      const initParam = {
+      /*const initParam = {
         page: 1,
         rowsPerPage: 999,
         order: 'createDate desc',
         state: 'ACTIVE'
-      }
-      const [allCompaniesRes, allUsersRes] = await Promise.all([
-        axios.get(API_GET_ALL_OPERATION_UNIT),
-        axios.get(API_GET_USERS, initParam)
+      }*/
+      const [allCompaniesRes] = await Promise.all([
+        axios.get(API_GET_ALL_OPERATION_UNIT)
+       // axios.get(API_GET_USERS, initParam)
       ])
 
       if (allCompaniesRes.status === 200 && allCompaniesRes.data?.data) {
@@ -74,14 +72,14 @@ const ProjectCUForm = ({
           }))
         )
       }
-      if (allUsersRes.status === 200 && allUsersRes.data?.data) {
+      /*if (allUsersRes.status === 200 && allUsersRes.data?.data) {
         setCustomers(
           (allUsersRes.data.data || []).map(({ id, fullName }) => ({
             value: id,
             label: fullName
           }))
         )
-      }
+      }*/
     } catch (error) {
       showToast('error', error.toString())
     }
@@ -133,7 +131,7 @@ const ProjectCUForm = ({
     if (initValues?.userIds) {
       const listUserIds = JSON.parse(initValues.userIds)
       tmpInitValues.accountantIds = listUserIds.reduce((usersArray, userItemId) => {
-        const findUserItem = customers.find((item) => Number(item.value) === Number(userItemId))
+        const findUserItem = mockUser.find((item) => Number(item.value) === Number(userItemId))
 
         if (findUserItem) return [...usersArray, findUserItem]
         return usersArray
@@ -144,7 +142,7 @@ const ProjectCUForm = ({
     }
 
     reset(tmpInitValues)
-  }, [initValues?.id, customers?.length, companies?.length])
+  }, [initValues?.id, mockUser?.length, companies?.length])
 
   const handleSubmitOperationUnitForm = async (values) => {
     if (isReadOnly) {
@@ -244,7 +242,7 @@ const ProjectCUForm = ({
               isDisabled={isReadOnly}
               isMulti
               hideSelectedOptions={false}
-              options={customers}
+              options={mockUser}
               innerRef={register()}
               className="react-select"
               classNamePrefix="select"

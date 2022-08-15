@@ -92,7 +92,13 @@ export const POWER_BILLING_FORM_OPTIONS = [
 
 export const DAYS_OF_MONTH_OPTIONS = Array.from(Array(31)).map((e, i) => ({ value: i + 1, label: i + 1 }))
 
-export const END_OF_MONTH_OPTION =  {
+export const END_OF_MONTH_OPTION = {
   value: 'endOfMonth',
   label: <FormattedMessage id="End of month" />
 }
+export const mockUser = [
+  { value: 1, label: 'Hứa Văn Cường' },
+  { value: 2, label: 'Bùi Nhật Bình' },
+  { value: 3, label: 'Nguyễn Duy Long' },
+  { value: 4, label: 'La Duệ Tân' }
+]
