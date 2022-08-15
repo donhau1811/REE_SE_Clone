@@ -68,7 +68,7 @@ function ContactCUForm({ clock, intl, onSubmit = () => {}, onCancel }) {
   })
 
   const handleCancel = () => {
-    setIsOpen((preState) => !preState)
+    // setIsOpen((preState) => !preState)
     onCancel?.()
   }
 

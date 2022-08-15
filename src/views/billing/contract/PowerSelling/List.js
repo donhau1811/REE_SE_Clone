@@ -85,19 +85,23 @@ function PowerSelling({ disabled, intl, data, onDelete }) {
       name: intl.formatMessage({ id: 'Actions' }),
       selector: '#',
       center: true,
-      isHidden: disabled,
+
       cell: (row) => (
         <>
           {' '}
           <Badge>
             <IconView id={`viewBtn_${row.id}`} onClick={handleRedirectToUpdateContract(row)} />
           </Badge>
-          <Badge>
-            <IconEdit id={`editBtn_${row.id}`} onClick={handleRedirectToUpdateContract(row, true)} />
-          </Badge>
-          <Badge onClick={handleDeleteContract(row)}>
-            <IconDelete id={`deleteBtn_${row.id}`} />
-          </Badge>
+          {!disabled && (
+            <>
+              <Badge>
+                <IconEdit id={`editBtn_${row.id}`} onClick={handleRedirectToUpdateContract(row, true)} />
+              </Badge>
+              <Badge onClick={handleDeleteContract(row)}>
+                <IconDelete id={`deleteBtn_${row.id}`} />
+              </Badge>
+            </>
+          )}
         </>
       )
     }
