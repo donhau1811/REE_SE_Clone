@@ -50,8 +50,6 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
     )
   }, [])
   useEffect(() => {
-    console.log('sett', setting)
-    console.log('gt',  (setting?.Roof_Vendor_Contract || [])?.map((item) => console.log(item)))
     setValueSetting(
       (setting?.Roof_Vendor_Contract || [])?.map((item) => ({
         ...item,
@@ -60,7 +58,6 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
     )
 
   }, [setting])
-  console.log('vl', valueSetting)
   const {
     billingContacts: { contacts }
   } = useSelector((state) => state)
