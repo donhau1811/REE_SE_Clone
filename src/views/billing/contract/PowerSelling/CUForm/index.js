@@ -116,10 +116,14 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
   })
 
   const { handleSubmit, getValues, errors, control, register, setValue, watch, setError, reset } = methods
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'billingCycle'
+  })
 
   useEffect(async () => {
     if (initValues?.id) {
-      reset({
+      const dataValues = {
         ...initValues,
         formType: (setting.Elec_Selling_Type || []).find((item) => item.value === initValues?.details?.id),
         startDate: initValues.startDate ? moment.utc(initValues.startDate).format(ISO_STANDARD_FORMAT) : null,
@@ -142,18 +146,19 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
         currencyMedium: initValues?.details?.foreignUnitPrice?.medium,
         currencyLow: initValues?.details?.foreignUnitPrice?.low,
         clocks
-      })
+      }
+      for (const key in dataValues) {
+        if (Object.hasOwnProperty.call(dataValues, key)) {
+          const element = dataValues[key]
+          setValue(key, element)
+        }
+      }
     } else {
       reset({
         ...formInitValues
       })
     }
   }, [initValues?.id, customers?.length, setting.Currency?.length, setting.Elec_Selling_Type?.length, clocks?.length])
-
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: 'billingCycle'
-  })
 
   const contactColumns = [
     {
@@ -224,6 +229,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
     dispatch(
       getCustomerWithContactsById({
         id: customerId,
+        isSavedToState: true,
         callback: (res) => {
           if (res) {
             setValue('taxCode', res.taxCode)

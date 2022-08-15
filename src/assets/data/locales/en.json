@@ -1681,6 +1681,8 @@
   "Delete project failed": "Delete project failed",
   "project-list-search-input-placeholder": "Find by code, name project, customer company....",
 
+  "You want to cancel create/update": "You want to cancel creating/updating ?",
+
   "operation-units": "Operation company",
   "billing-customer-list-taxCode": "Tax code",
   "dubplicated-validate": "Information cannot be duplicated",
@@ -1697,10 +1699,6 @@
   "update-operation-unit": "Update operation company",
   "Power billing form number": "Power billing form no.{number} ",
   "create-project": "Add new project",
-  "create-customer":"Add new customer",
-  "roof-rental-unit":"Roof rental unit",
-  "create-rental-unit":"Add new roof rental unit",
-  "power-selling-contract":"Add new power selling contract",
   "contract-code":"Contract Code",
   "effective-date":"Effective Date",
   "update-info":"Update infomation",
@@ -1734,5 +1732,9 @@
   "Create roof vendor contract":"Create roof vendor contract",
   "You want to cancel add new":"You want to cancel add new ?",
   "You want to cancel update":"You want to cancel update ?",
-  "project management":"Project management"
+  "project management":"Project management",
+  "create-customer": "Add new customer",
+  "roof-rental-unit": "Roof rental unit",
+  "create-rental-unit": "Add new roof rental unit",
+  "power-selling-contract": "Add new power selling contract"
 }

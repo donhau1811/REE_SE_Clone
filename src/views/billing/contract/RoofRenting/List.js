@@ -78,19 +78,22 @@ function RoofRenting({ disabled, intl, data, onDelete }) {
       name: intl.formatMessage({ id: 'Actions' }),
       selector: '#',
       center: true,
-      isHidden: disabled,
       cell: (row) => (
         <>
           {' '}
           <Badge onClick={handleRedirectUpdatePage(row.id)}>
             <IconView id={`editBtn_${row.id}`} />
           </Badge>
-          <Badge>
-            <IconEdit id={`editBtn_${row.id}`} onClick={handleRedirectUpdatePage(row.id, true)} />
-          </Badge>
-          <Badge onClick={handleDeleteContract(row)}>
-            <IconDelete id={`deleteBtn_${row.id}`} />
-          </Badge>
+          {!disabled && (
+            <>
+              <Badge>
+                <IconEdit id={`editBtn_${row.id}`} onClick={handleRedirectUpdatePage(row.id, true)} />
+              </Badge>
+              <Badge onClick={handleDeleteContract(row)}>
+                <IconDelete id={`deleteBtn_${row.id}`} />
+              </Badge>
+            </>
+          )}
         </>
       )
     }
