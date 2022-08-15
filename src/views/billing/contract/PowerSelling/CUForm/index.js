@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react'
 import { useForm, Controller, useFieldArray, FormProvider } from 'react-hook-form'
 import * as yup from 'yup'
@@ -24,8 +23,7 @@ import {
   DAYS_OF_MONTH_OPTIONS,
   END_OF_MONTH_OPTION,
   GENERAL_STATUS,
-  MONTH_OPTIONS,
-  POWER_BILLING_FORM_OPTIONS
+  MONTH_OPTIONS
 } from '@src/utility/constants/billing'
 import { ContractForm2 } from './ContractForm2'
 import {
@@ -41,30 +39,32 @@ import { ContractForm7 } from './ContractForm7'
 import { useParams } from 'react-router-dom'
 import { getBillingProjectById } from '@src/views/billing/project/store/actions'
 import moment from 'moment'
-import { values } from 'postcss-rtl/lib/affected-props'
-
-const formInitValues = {
-  billingCycle: [
-    {
-      start: { value: 1, label: 1 },
-      end: END_OF_MONTH_OPTION,
-      month: MONTH_OPTIONS[0]
-    }
-  ],
-  formType: POWER_BILLING_FORM_OPTIONS[0],
-  roundPrecision: 0,
-  manualInputAlert: 0,
-  confirmAlert: 0,
-  billingAlert: 0,
-  vat: 8
-}
+import { getSettingValuesByCode } from '@src/views/billing/settings/store/actions'
 
 function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel, onSubmit, cancelText }) {
   const {
-    projects: { selectedProject: selectedBillingProject }
+    projects: { selectedProject: selectedBillingProject },
+    contractClock: { clocks }
   } = useSelector((state) => state)
 
   const { setting } = useSelector((state) => state.settings)
+
+  const formInitValues = {
+    billingCycle: [
+      {
+        start: { value: 1, label: 1 },
+        end: END_OF_MONTH_OPTION,
+        month: MONTH_OPTIONS[0]
+      }
+    ],
+    formType: setting.Elec_Selling_Type?.[0],
+    roundPrecision: 0,
+    manualInputAlert: 0,
+    confirmAlert: 0,
+    billingAlert: 0,
+    vat: 8
+    // clocks:
+  }
 
   const { projectId } = useParams()
 
@@ -94,6 +94,18 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
         label: fullName
       }))
     )
+    dispatch(
+      getSettingValuesByCode({
+        isSavedToState: true,
+        code: 'Elec_Selling_Type'
+      })
+    )
+    dispatch(
+      getSettingValuesByCode({
+        isSavedToState: true,
+        code: 'Currency'
+      })
+    )
   }, [])
   const ValidateSchema = yup.object().shape(validateSchemaState)
 
@@ -105,11 +117,11 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
 
   const { handleSubmit, getValues, errors, control, register, setValue, watch, setError, reset } = methods
 
-  useEffect(() => {
+  useEffect(async () => {
     if (initValues?.id) {
       reset({
         ...initValues,
-        formType: POWER_BILLING_FORM_OPTIONS.find((item) => item.value === initValues?.details?.id),
+        formType: (setting.Elec_Selling_Type || []).find((item) => item.value === initValues?.details?.id),
         startDate: initValues.startDate ? moment.utc(initValues.startDate).format(ISO_STANDARD_FORMAT) : null,
         endDate: initValues.endDate ? moment.utc(initValues.endDate).format(ISO_STANDARD_FORMAT) : null,
         customerId: customers.find((item) => item.value === initValues.customerId),
@@ -128,10 +140,15 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
         currency: (setting.Currency || []).find((item) => item.value === initValues.details?.currencyUnit),
         currencyHigh: initValues?.details?.foreignUnitPrice?.high,
         currencyMedium: initValues?.details?.foreignUnitPrice?.medium,
-        currencyLow: initValues?.details?.foreignUnitPrice?.low
+        currencyLow: initValues?.details?.foreignUnitPrice?.low,
+        clocks
+      })
+    } else {
+      reset({
+        ...formInitValues
       })
     }
-  }, [initValues?.id, customers?.length, setting.Currency?.length])
+  }, [initValues?.id, customers?.length, setting.Currency?.length, setting.Elec_Selling_Type?.length, clocks?.length])
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -177,22 +194,22 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
   useEffect(() => {
     const typeOfContract = watch('formType')?.value
     switch (typeOfContract) {
-      case 2:
+      case 'Mẫu 2':
         setValidateSchemaState({ ...ValidateSchemaObj, ...ContractForm2Schema })
         break
-      case 3:
+      case 'Mẫu 3':
         setValidateSchemaState({ ...ValidateSchemaObj, ...ContractForm2Schema, payoutRatio: null })
         break
-      case 4:
+      case 'Mẫu 4':
         setValidateSchemaState({ ...ValidateSchemaObj, ...ContractForm4Schema, payoutRatio: null })
         break
-      case 5:
+      case 'Mẫu 5':
         setValidateSchemaState({ ...ValidateSchemaObj, ...ContractForm5Schema, payoutRatio: null })
         break
-      case 6:
+      case 'Mẫu 6':
         setValidateSchemaState({ ...ValidateSchemaObj, payoutRatio: null })
         break
-      case 7:
+      case 'Mẫu 7':
         setValidateSchemaState({ ...ValidateSchemaObj, ...ContractForm7Schema, payoutRatio: null })
         break
       default:
@@ -347,8 +364,8 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                 name="code"
                 disabled={isReadOnly}
                 autoComplete="on"
-                invalid={!!errors.code}
-                valid={getValues('code')?.trim() && !errors.code}
+                invalid={!isReadOnly && !!errors.code}
+                valid={!isReadOnly && getValues('code')?.trim() && !errors.code}
                 innerRef={register()}
                 placeholder={intl.formatMessage({ id: 'Enter contract number' })}
               />
@@ -366,8 +383,8 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                 autoComplete="on"
                 disabled={isReadOnly}
                 innerRef={register()}
-                invalid={!!errors.startDate}
-                valid={getValues('startDate')?.trim() && !errors.startDate}
+                invalid={!isReadOnly && !!errors.startDate}
+                valid={!isReadOnly && getValues('startDate')?.trim() && !errors.startDate}
               />
               {errors?.startDate && <FormFeedback>{errors?.startDate?.message}</FormFeedback>}
             </Col>
@@ -383,8 +400,8 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                 autoComplete="on"
                 disabled={isReadOnly}
                 innerRef={register()}
-                invalid={!!errors.endDate}
-                valid={getValues('endDate')?.trim() && !errors.endDate}
+                invalid={!isReadOnly && !!errors.endDate}
+                valid={!isReadOnly && getValues('endDate')?.trim() && !errors.endDate}
               />
               {errors?.endDate && <FormFeedback>{errors?.endDate?.message}</FormFeedback>}
             </Col>
@@ -454,8 +471,8 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                 autoComplete="on"
                 innerRef={register()}
                 disabled
-                invalid={!!errors.taxCode}
-                valid={getValues('taxCode')?.trim() && !errors.taxCode}
+                invalid={!isReadOnly && !!errors.taxCode}
+                valid={!isReadOnly && getValues('taxCode')?.trim() && !errors.taxCode}
                 placeholder={intl.formatMessage({ id: 'operation-unit-form-taxCode-placeholder' })}
               />
               {errors?.taxCode && <FormFeedback>{errors?.taxCode?.message}</FormFeedback>}
@@ -470,8 +487,8 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                 autoComplete="on"
                 innerRef={register()}
                 disabled
-                invalid={!!errors.address}
-                valid={getValues('address')?.trim() && !errors.address}
+                invalid={!isReadOnly && !!errors.address}
+                valid={!isReadOnly && getValues('address')?.trim() && !errors.address}
                 placeholder={intl.formatMessage({ id: 'operation-unit-form-address-placeholder' })}
               />
               {errors?.address && <FormFeedback>{errors?.address?.message}</FormFeedback>}
@@ -590,7 +607,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                     name="formType"
                     isDisabled={isReadOnly}
                     innerRef={register()}
-                    options={POWER_BILLING_FORM_OPTIONS}
+                    options={setting.Elec_Selling_Type || []}
                     className="react-select"
                     classNamePrefix="select"
                     formatOptionLabel={(option) => <>{option.label}</>}
@@ -607,16 +624,16 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                     name="vat"
                     autoComplete="on"
                     innerRef={register()}
-                    invalid={!!errors.vat}
+                    invalid={!isReadOnly && !!errors.vat}
                     disabled={isReadOnly}
-                    valid={getValues('vat')?.trim() && !errors.vat}
+                    valid={!isReadOnly && getValues('vat')?.trim() && !errors.vat}
                     placeholder={intl.formatMessage({ id: 'Enter' })}
                   />
                   {errors?.vat && <FormFeedback>{errors?.vat?.message}</FormFeedback>}
                 </Col>
               </Row>
               <Row>
-                {[1, 2].includes(watch('formType')?.value) && (
+                {['Mẫu 1', 'Mẫu 2'].includes(watch('formType')?.value) && (
                   <Col className="mb-2" xs={6} lg={8}>
                     <Label className="general-label" for="coefficient">
                       <FormattedMessage id="Payout coefficient" />
@@ -628,8 +645,8 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                       autoComplete="on"
                       disabled={isReadOnly}
                       innerRef={register()}
-                      invalid={!!errors.payoutRatio}
-                      valid={getValues('payoutRatio')?.trim() && !errors.payoutRatio}
+                      invalid={!isReadOnly && !!errors.payoutRatio}
+                      valid={!isReadOnly && getValues('payoutRatio')?.trim() && !errors.payoutRatio}
                       placeholder={intl.formatMessage({ id: 'Enter coefficient' })}
                     />
                     {errors?.payoutRatio && <FormFeedback>{errors?.payoutRatio?.message}</FormFeedback>}
@@ -646,8 +663,8 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                     autoComplete="on"
                     innerRef={register()}
                     disabled={isReadOnly}
-                    invalid={!!errors.roundPrecision}
-                    valid={getValues('roundPrecision')?.trim() && !errors.roundPrecision}
+                    invalid={!isReadOnly && !!errors.roundPrecision}
+                    valid={!isReadOnly && getValues('roundPrecision')?.trim() && !errors.roundPrecision}
                     placeholder={intl.formatMessage({ id: 'Enter' })}
                   />
                   {errors?.roundPrecision && <FormFeedback>{errors?.roundPrecision?.message}</FormFeedback>}
@@ -679,8 +696,8 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                     autoComplete="on"
                     innerRef={register()}
                     disabled={isReadOnly}
-                    invalid={!!errors.manualInputAlert}
-                    valid={getValues('manualInputAlert')?.trim() && !errors.manualInputAlert}
+                    invalid={!isReadOnly && !!errors.manualInputAlert}
+                    valid={!isReadOnly && getValues('manualInputAlert')?.trim() && !errors.manualInputAlert}
                     placeholder={intl.formatMessage({ id: 'Enter' })}
                   />
                   {errors?.manualInputAlert && <FormFeedback>{errors?.manualInputAlert?.message}</FormFeedback>}
@@ -708,8 +725,8 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                     autoComplete="on"
                     disabled={isReadOnly}
                     innerRef={register()}
-                    invalid={!!errors.confirmAlert}
-                    valid={getValues('confirmAlert')?.trim() && !errors.confirmAlert}
+                    invalid={!isReadOnly && !!errors.confirmAlert}
+                    valid={!isReadOnly && getValues('confirmAlert')?.trim() && !errors.confirmAlert}
                     placeholder={intl.formatMessage({ id: 'Enter' })}
                   />
                   {errors?.confirmAlert && <FormFeedback>{errors?.confirmAlert?.message}</FormFeedback>}
@@ -737,8 +754,8 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                     autoComplete="on"
                     disabled={isReadOnly}
                     innerRef={register()}
-                    invalid={!!errors.billingAlert}
-                    valid={getValues('billingAlert')?.trim() && !errors.billingAlert}
+                    invalid={!isReadOnly && !!errors.billingAlert}
+                    valid={!isReadOnly && getValues('billingAlert')?.trim() && !errors.billingAlert}
                     placeholder={intl.formatMessage({ id: 'Enter' })}
                   />
                   {errors?.billingAlert && <FormFeedback>{errors?.billingAlert?.message}</FormFeedback>}
@@ -767,8 +784,8 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                 autoComplete="on"
                 disabled={isReadOnly}
                 innerRef={register()}
-                invalid={!!errors.peakPrice}
-                valid={getValues('peakPrice')?.trim() && !errors.peakPrice}
+                invalid={!isReadOnly && !!errors.peakPrice}
+                valid={!isReadOnly && getValues('peakPrice')?.trim() && !errors.peakPrice}
                 placeholder={intl.formatMessage({ id: 'Enter price' })}
               ></Input>
               {errors?.peakPrice && <FormFeedback>{errors?.peakPrice?.message}</FormFeedback>}
@@ -784,8 +801,8 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                 autoComplete="on"
                 innerRef={register()}
                 disabled={isReadOnly}
-                invalid={!!errors.midPointPrice}
-                valid={getValues('midPointPrice')?.trim() && !errors.midPointPrice}
+                invalid={!isReadOnly && !!errors.midPointPrice}
+                valid={!isReadOnly && getValues('midPointPrice')?.trim() && !errors.midPointPrice}
                 placeholder={intl.formatMessage({ id: 'Enter price' })}
               />
               {errors?.midPointPrice && <FormFeedback>{errors?.midPointPrice?.message}</FormFeedback>}
@@ -800,18 +817,18 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                 name="idlePrice"
                 autoComplete="on"
                 innerRef={register()}
-                invalid={!!errors.idlePrice}
+                invalid={!isReadOnly && !!errors.idlePrice}
                 disabled={isReadOnly}
-                valid={getValues('idlePrice')?.trim() && !errors.idlePrice}
+                valid={!isReadOnly && getValues('idlePrice')?.trim() && !errors.idlePrice}
                 placeholder={intl.formatMessage({ id: 'Enter price' })}
               />
               {errors?.idlePrice && <FormFeedback>{errors?.idlePrice?.message}</FormFeedback>}
             </Col>
           </Row>
-          {[2, 3].includes(watch('formType')?.value) && <ContractForm2 isReadOnly={isReadOnly} />}
-          {watch('formType')?.value === 4 && <ContractForm4 isReadOnly={isReadOnly} />}
-          {watch('formType')?.value === 5 && <ContractForm5 isReadOnly={isReadOnly} />}
-          {watch('formType')?.value === 7 && <ContractForm7 isReadOnly={isReadOnly} />}
+          {['Mẫu 2', 'Mẫu 3'].includes(watch('formType')?.value) && <ContractForm2 isReadOnly={isReadOnly} />}
+          {watch('formType')?.value === 'Mẫu 4' && <ContractForm4 isReadOnly={isReadOnly} />}
+          {watch('formType')?.value === 'Mẫu 5' && <ContractForm5 isReadOnly={isReadOnly} />}
+          {watch('formType')?.value === 'Mẫu 7' && <ContractForm7 isReadOnly={isReadOnly} />}
           <div className="divider-dashed mb-2" />
           <Clock
             disabled={isReadOnly}
@@ -820,7 +837,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
             contractId={initValues?.id}
           />
           <Row>
-            <Col className="d-flex justify-content-end align-items-center">
+            <Col className="d-flex justify-content-end align-items-center mb-2">
               <Button type="submit" color="primary" className="mr-1 px-3">
                 {submitText || intl.formatMessage({ id: 'Save' })}
               </Button>{' '}

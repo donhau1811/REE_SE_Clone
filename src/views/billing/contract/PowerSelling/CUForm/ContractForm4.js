@@ -1,25 +1,15 @@
 import { bool, object } from 'prop-types'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Col, FormFeedback, Input, Label, Row } from 'reactstrap'
 import Select from 'react-select'
 import { selectThemeColors } from '@src/utility/Utils'
-import { useDispatch, useSelector } from 'react-redux'
-import { getSettingValuesByCode } from '@src/views/billing/settings/store/actions'
+import { useSelector } from 'react-redux'
 
 const ContractForm4COM = ({ intl, isReadOnly }) => {
   const { setting } = useSelector((state) => state.settings)
-  const dispatch = useDispatch()
 
-  useEffect(async () => {
-    dispatch(
-      getSettingValuesByCode({
-        isSavedToState: true,
-        code: 'Currency'
-      })
-    )
-  }, [])
   const { register, errors, getValues, control } = useFormContext()
 
   return (
@@ -37,7 +27,7 @@ const ContractForm4COM = ({ intl, isReadOnly }) => {
             innerRef={register()}
             invalid={!!errors.unitPriceRate}
             disabled={isReadOnly}
-            valid={getValues('unitPriceRate')?.trim() && !errors.unitPriceRate}
+            valid={!isReadOnly && getValues('unitPriceRate')?.trim() && !errors.unitPriceRate}
             placeholder={intl.formatMessage({ id: 'Enter rate' })}
             min="0"
           />
@@ -88,7 +78,7 @@ const ContractForm4COM = ({ intl, isReadOnly }) => {
             disabled={isReadOnly}
             innerRef={register()}
             invalid={!!errors.currencyHigh}
-            valid={getValues('currencyHigh')?.trim() && !errors.currencyHigh}
+            valid={!isReadOnly && getValues('currencyHigh')?.trim() && !errors.currencyHigh}
             placeholder={intl.formatMessage({ id: 'Enter rate' })}
             min="0"
           />
@@ -106,7 +96,7 @@ const ContractForm4COM = ({ intl, isReadOnly }) => {
             innerRef={register()}
             disabled={isReadOnly}
             invalid={!!errors.currencyMedium}
-            valid={getValues('currencyMedium')?.trim() && !errors.currencyMedium}
+            valid={!isReadOnly && getValues('currencyMedium')?.trim() && !errors.currencyMedium}
             placeholder={intl.formatMessage({ id: 'Enter rate' })}
             min="0"
           />
@@ -124,7 +114,7 @@ const ContractForm4COM = ({ intl, isReadOnly }) => {
             disabled={isReadOnly}
             innerRef={register()}
             invalid={!!errors.currencyLow}
-            valid={getValues('currencyLow')?.trim() && !errors.currencyLow}
+            valid={!isReadOnly && getValues('currencyLow')?.trim() && !errors.currencyLow}
             placeholder={intl.formatMessage({ id: 'Enter rate' })}
             min="0"
           />

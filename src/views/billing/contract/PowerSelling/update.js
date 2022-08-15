@@ -1,7 +1,7 @@
 import { ROUTER_URL } from '@src/utility/constants'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory, useParams } from 'react-router-dom'
+import { useHistory, useLocation, useParams } from 'react-router-dom'
 import { getContractById, putCustomerContract } from '../store/actions'
 import CUForm from './CUForm'
 import SweetAlert from 'sweetalert2'
@@ -14,6 +14,7 @@ import { object } from 'prop-types'
 const MySweetAlert = withReactContent(SweetAlert)
 
 function PowerSellingCreateCOM({ intl }) {
+  const location = useLocation()
   const history = useHistory()
   const dispatch = useDispatch()
   const { projectId, id } = useParams()
@@ -24,6 +25,10 @@ function PowerSellingCreateCOM({ intl }) {
     layout: { skin }
   } = useSelector((state) => state)
   const [isReadOnly, setIsReadOnly] = useState(true)
+
+  useEffect(() => {
+    if (location.state?.allowUpdate) setIsReadOnly(false)
+  }, [location.state?.allowUpdate])
 
   const handleCancel = () => {
     if (!isReadOnly) {
@@ -92,6 +97,7 @@ function PowerSellingCreateCOM({ intl }) {
       )
     }
   }
+
   return (
     <>
       <CUForm

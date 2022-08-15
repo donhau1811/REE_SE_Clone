@@ -1,5 +1,5 @@
-import { bool, func, object, string } from 'prop-types'
-import React, { useEffect, useState } from 'react'
+import { bool, element, func, object, string } from 'prop-types'
+import React, { cloneElement, useEffect, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Button, Col, Form, FormFeedback, Input, Label, Row } from 'reactstrap'
@@ -21,7 +21,35 @@ import ValueContOfMultipleSelect from '@src/utility/components/ReactSelectCustom
 import { GENERAL_STATUS_OPTS } from '@src/utility/constants/billing'
 import moment from 'moment'
 
-const ProjectCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues = {}, isReadOnly, submitText }) => {
+const ProjectCUForm = ({
+  intl,
+  onSubmit = () => {},
+  onCancel = () => {},
+  initValues = {},
+  isReadOnly,
+  submitText,
+  submitButton,
+  cancelButton
+}) => {
+  const footerCOM = (
+    <>
+      {typeof submitButton === 'undefined' ? (
+        <Button type="submit" color="primary" className="mr-1 px-3">
+          {submitText || intl.formatMessage({ id: 'Save' })}
+        </Button>
+      ) : submitButton ? (
+        cloneElement(submitButton)
+      ) : null}
+      {typeof cancelButton === 'undefined' ? (
+        <Button color="secondary" onClick={onCancel}>
+          {intl.formatMessage({ id: 'Cancel' })}
+        </Button>
+      ) : cancelButton ? (
+        cloneElement(cancelButton, { onClick: onCancel })
+      ) : null}
+    </>
+  )
+
   const initState = { state: GENERAL_STATUS_OPTS[0] }
   const [companies, setCompanies] = useState([])
   const [customers, setCustomers] = useState([])
@@ -284,12 +312,7 @@ const ProjectCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initVal
           </Col>
           {!initValues?.id > 0 ? (
             <Col className="mb-2 d-flex align-items-end justify-content-end" md={4}>
-              <Button type="submit" color="primary" className="mr-1 px-3">
-                {submitText || intl.formatMessage({ id: 'Save' })}
-              </Button>{' '}
-              <Button color="secondary" onClick={onCancel}>
-                {intl.formatMessage({ id: 'Cancel' })}
-              </Button>{' '}
+              {footerCOM}
             </Col>
           ) : (
             <Col className="mb-2" md={4}>
@@ -321,10 +344,10 @@ const ProjectCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initVal
           </Row>
         )}
         {initValues?.id && (
-          <Row className="d-flex justify-content-end align-items-center">
-            <Button type="submit" color="primary" className="mr-1 px-3">
-              {submitText || intl.formatMessage({ id: 'Finish' })}
-            </Button>{' '}
+          <Row>
+            <Col xs={12} className="d-flex justify-content-end align-items-center mb-2">
+              {footerCOM}
+            </Col>
           </Row>
         )}
       </Form>
@@ -338,7 +361,9 @@ ProjectCUForm.propTypes = {
   onCancel: func,
   initValues: object,
   isReadOnly: bool,
-  submitText: string
+  submitText: string,
+  submitButton: element,
+  cancelButton: element
 }
 
 export default injectIntl(ProjectCUForm)

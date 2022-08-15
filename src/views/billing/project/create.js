@@ -22,10 +22,6 @@ const CreateProject = ({ intl }) => {
     layout: { skin }
   } = useSelector((state) => state)
 
-  // const handleCancel = () => {
-  //   history.push(ROUTER_URL.BILLING_PROJECT)
-  // }
-
   const handleCancel = () => {
     return MySweetAlert.fire({
       title: intl.formatMessage({ id: 'Cancel' }),
@@ -68,7 +64,10 @@ const CreateProject = ({ intl }) => {
       postProject({
         params,
         callback: (res) => {
-          history.push(`${ROUTER_URL.BILLING_PROJECT}/${res.id}`)
+          history.push({
+            pathname: `${ROUTER_URL.BILLING_PROJECT}/${res.id}`,
+            state: { isFromCreateStep: true, allowUpdate: true }
+          })
         }
       })
     )
