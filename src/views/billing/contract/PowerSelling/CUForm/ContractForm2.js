@@ -20,8 +20,8 @@ const ContractForm2COM = ({ intl, isReadOnly }) => {
           autoComplete="on"
           disabled={isReadOnly}
           innerRef={register()}
-          invalid={!!errors.lossRate}
-          valid={getValues('lossRate')?.trim() && !errors.lossRate}
+          invalid={!isReadOnly && !!errors.lossRate}
+          valid={!isReadOnly && getValues('lossRate')?.trim() && !errors.lossRate}
           placeholder={intl.formatMessage({ id: 'Enter rate' })}
         />
         {errors?.lossRate && <FormFeedback className="d-block">{errors?.lossRate?.message}</FormFeedback>}

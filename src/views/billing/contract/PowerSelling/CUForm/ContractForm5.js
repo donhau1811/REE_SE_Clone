@@ -19,8 +19,8 @@ const ContractForm5COM = ({ intl, isReadOnly }) => {
           name="revenueShareRatio"
           autoComplete="on"
           innerRef={register()}
-          invalid={!!errors.revenueShareRatio}
-          valid={getValues('revenueShareRatio')?.trim() && !errors.revenueShareRatio}
+          invalid={!isReadOnly && !!errors.revenueShareRatio}
+          valid={!isReadOnly && getValues('revenueShareRatio')?.trim() && !errors.revenueShareRatio}
           disabled={isReadOnly}
           placeholder={intl.formatMessage({ id: 'Enter rate' })}
         />

@@ -1,35 +1,33 @@
 import React, { useEffect, useState } from 'react'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import { Badge, Button, Col, Row } from 'reactstrap'
 import { Plus } from 'react-feather'
 import Table from '@src/views/common/table/CustomDataTable'
 import NoDataCOM from '@src/views/common/NoDataCOM'
-import { array, bool, func, string } from 'prop-types'
+import { array, bool, func, object, string } from 'prop-types'
 import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit.svg'
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
 import ClockCUForm from './ClockCUForm'
 import { cloneDeep } from 'lodash'
 import moment from 'moment'
 import { DISPLAY_DATE_FORMAT } from '@src/utility/constants'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+
+import SweetAlert from 'sweetalert2'
+import classNames from 'classnames'
+import '@src/@core/scss/billing-sweet-alert.scss'
+import withReactContent from 'sweetalert2-react-content'
 import { getAllClockByContractId } from './store/actions'
 
-const Clock = ({ data, onChange, disabled, contractId }) => {
-  const dispatch = useDispatch()
-  console.log('data', data)
+const MySweetAlert = withReactContent(SweetAlert)
 
-  useEffect(() => {
-    if (contractId > 0) {
-      dispatch(
-        getAllClockByContractId({
-          id: contractId,
-          callback: (res) => {
-            onChange?.((res || []))
-          }
-        })
-      )
-    }
-  }, [contractId])
+const Clock = ({ data, onChange, disabled, intl, contractId }) => {
+  const {
+    layout: { skin }
+  } = useSelector((state) => state)
+
+  const dispatch = useDispatch()
+
   const [currClock, setCurrClock] = useState(null)
   const handleAddClock = () => {
     setCurrClock({
@@ -37,17 +35,50 @@ const Clock = ({ data, onChange, disabled, contractId }) => {
     })
   }
 
+  useEffect(() => {
+    if (contractId > 0) {
+      dispatch(
+        getAllClockByContractId({
+          id: contractId,
+          isSavedToState: true
+        })
+      )
+    }
+  }, [contractId])
+
   const handleEditClock = (clock) => () => {
     setCurrClock(clock)
   }
 
   const handleDeleteClock = (clock) => () => {
-    const newData = data.reduce((array, item) => {
-      if (item.id !== clock.id) return [...array, item]
-      if (item.isCreate) return array
-      return [...array, { ...item, isDelete: true }]
-    }, [])
-    onChange?.(newData)
+    MySweetAlert.fire({
+      title: intl.formatMessage({ id: 'Delete operating customer title' }),
+      text: intl.formatMessage({ id: 'Delete billing information message' }),
+      showCancelButton: true,
+      confirmButtonText: intl.formatMessage({ id: 'Yes' }),
+      cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),
+      customClass: {
+        popup: classNames({
+          'sweet-alert-popup--dark': skin === 'dark',
+          'sweet-popup': true
+        }),
+        header: 'sweet-title',
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-outline-secondary ml-1',
+        actions: 'sweet-actions',
+        content: 'sweet-content'
+      },
+      buttonsStyling: false
+    }).then(({ isConfirmed }) => {
+      if (isConfirmed) {
+        const newData = data.reduce((array, item) => {
+          if (item.id !== clock.id) return [...array, item]
+          if (item.isCreate) return array
+          return [...array, { ...item, isDelete: true }]
+        }, [])
+        onChange?.(newData)
+      }
+    })
   }
 
   const columns = [
@@ -60,32 +91,31 @@ const Clock = ({ data, onChange, disabled, contractId }) => {
     {
       name: <FormattedMessage id="Device name" />,
       selector: 'name',
-      sortable: true,
+
       center: true
     },
     {
       name: <FormattedMessage id="Serial number of clock" />,
       selector: 'seri',
-      sortable: true,
+
       center: true
     },
     {
       name: <FormattedMessage id="Type of clock" />,
       selector: 'type',
-      sortable: true,
+
       center: true
     },
     {
       name: <FormattedMessage id="Manufacturer" />,
       selector: 'manufacturer',
-      center: true,
-      sortable: true
+      center: true
     },
     {
       name: <FormattedMessage id="Inspection valid until" />,
       selector: 'inspectionDate',
       center: true,
-      sortable: true,
+
       cell: (row) => <span>{!!row.inspectionDate && moment(row.inspectionDate).format(DISPLAY_DATE_FORMAT)}</span>
     },
     {
@@ -99,7 +129,7 @@ const Clock = ({ data, onChange, disabled, contractId }) => {
           <Badge onClick={handleEditClock(row)}>
             <IconEdit id={`editBtn_${row.id}`} />
           </Badge>
-          <Badge onClick={handleDeleteClock(row)} disabled={disabled}>
+          <Badge onClick={handleDeleteClock(row)}>
             <IconDelete id={`deleteBtn_${row.id}`} />
           </Badge>
         </>
@@ -158,7 +188,8 @@ Clock.propTypes = {
   data: array,
   onChange: func,
   disabled: bool,
-  contractId: string
+  contractId: string,
+  intl: object
 }
 
-export default Clock
+export default injectIntl(Clock)

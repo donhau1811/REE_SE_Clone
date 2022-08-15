@@ -27,6 +27,7 @@ import settings from '@src/views/billing/settings/store/reducer'
 import billingContacts from '@src/views/billing/contact/store/reducer'
 import projects from '@src/views/billing/project/store/reducer'
 import projectContracts from '@src/views/billing/contract/store/reducer'
+import contractClock from '@src/views/billing/clock/store/reducer'
 
 const rootReducer = combineReducers({
   auth,
@@ -53,7 +54,8 @@ const rootReducer = combineReducers({
   settings,
   billingContacts,
   projects,
-  projectContracts
+  projectContracts,
+  contractClock
 })
 
 export default rootReducer

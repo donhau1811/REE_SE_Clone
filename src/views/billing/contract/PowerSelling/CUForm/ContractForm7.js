@@ -19,8 +19,8 @@ const ContractForm7COM = ({ intl, isReadOnly }) => {
           name="chargeRate"
           autoComplete="on"
           innerRef={register()}
-          invalid={!!errors.chargeRate}
-          valid={getValues('chargeRate')?.trim() && !errors.chargeRate}
+          invalid={!isReadOnly && !!errors.chargeRate}
+          valid={!isReadOnly && getValues('chargeRate')?.trim() && !errors.chargeRate}
           disabled={isReadOnly}
           placeholder={intl.formatMessage({ id: 'Enter rate' })}
         />

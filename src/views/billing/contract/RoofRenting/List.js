@@ -10,18 +10,23 @@ import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-de
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
 import NoDataCOM from '@src/views/common/NoDataCOM'
 import { useHistory, useParams } from 'react-router-dom'
+import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit.svg'
 
 function RoofRenting({ disabled, intl, data, onDelete }) {
   const { id } = useParams()
-
 
   const history = useHistory()
   const handleDeleteContract = (contractItem) => () => {
     onDelete?.(contractItem)
   }
-  const handleRedirectUpdatePage = (idUpdate) => () => {
+  const handleRedirectUpdatePage = (idUpdate, allowUpdate) => () => {
     if (idUpdate) {
-      history.push(ROUTER_URL.BILLING_PROJECT_UPDATE_ROOF_VENDOR.replace(':projectId', id).replace(':id', idUpdate))
+      history.push({
+        pathname: ROUTER_URL.BILLING_PROJECT_UPDATE_ROOF_VENDOR.replace(':projectId', id).replace(':id', idUpdate),
+        state: {
+          allowUpdate
+        }
+      })
     }
   }
   const columns = [
@@ -34,7 +39,6 @@ function RoofRenting({ disabled, intl, data, onDelete }) {
     {
       name: intl.formatMessage({ id: 'Contract number' }),
       selector: 'code',
-      sortable: true,
       center: true,
       minWidth: '200px'
     },
@@ -42,20 +46,17 @@ function RoofRenting({ disabled, intl, data, onDelete }) {
       name: intl.formatMessage({ id: 'Signed date' }),
       selector: 'startDate',
       cell: (row) => <span>{moment(row.startDate).format(DISPLAY_DATE_FORMAT)}</span>,
-      sortable: true,
       center: true
     },
     {
       name: intl.formatMessage({ id: 'Unit-code' }),
       selector: 'customerCode',
-      sortable: true,
       center: true,
       cell: (row) => <span>{row?.roofVendor?.code}</span>
     },
     {
       name: intl.formatMessage({ id: 'Roof rental unit name' }),
       selector: 'companyName',
-      sortable: true,
       center: true,
       minWidth: '300px',
       cell: (row) => <span>{row?.roofVendor?.name}</span>
@@ -63,14 +64,12 @@ function RoofRenting({ disabled, intl, data, onDelete }) {
     {
       name: intl.formatMessage({ id: 'billing-customer-list-taxCode' }),
       selector: 'taxCode',
-      sortable: true,
       center: true,
       cell: (row) => <span>{row?.roofVendor?.taxCode}</span>
     },
     {
       name: intl.formatMessage({ id: 'Address' }),
       selector: 'address',
-      sortable: true,
       center: true,
       minWidth: '350px',
       cell: (row) => <span>{row?.roofVendor?.address}</span>
@@ -85,6 +84,9 @@ function RoofRenting({ disabled, intl, data, onDelete }) {
           {' '}
           <Badge onClick={handleRedirectUpdatePage(row.id)}>
             <IconView id={`editBtn_${row.id}`} />
+          </Badge>
+          <Badge>
+            <IconEdit id={`editBtn_${row.id}`} onClick={handleRedirectUpdatePage(row.id, true)} />
           </Badge>
           <Badge onClick={handleDeleteContract(row)}>
             <IconDelete id={`deleteBtn_${row.id}`} />

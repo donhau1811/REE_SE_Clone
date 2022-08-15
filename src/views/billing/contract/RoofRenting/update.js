@@ -1,11 +1,10 @@
-/* eslint-disable no-unused-vars */
 import { ISO_STANDARD_FORMAT, ROUTER_URL } from '@src/utility/constants'
 import moment from 'moment'
 import { object } from 'prop-types'
 import { useEffect, useState } from 'react'
 import { injectIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory, useParams } from 'react-router-dom'
+import { useHistory, useLocation, useParams } from 'react-router-dom'
 import { getContractById, putContractRoofVendor } from '../store/actions'
 import RoofVendorContractCUForm from './RoofVendorContractCUForm'
 import SweetAlert from 'sweetalert2'
@@ -22,6 +21,7 @@ const UpdateRoofVendorContract = ({ intl }) => {
   const {
     projects: { selectedProject: selectedBillingProject }
   } = useSelector((state) => state)
+  const location = useLocation()
 
   const dispatch = useDispatch()
   const history = useHistory()
@@ -32,6 +32,10 @@ const UpdateRoofVendorContract = ({ intl }) => {
   useEffect(() => {
     dispatch(getContractById({ id }))
   }, [id])
+
+  useEffect(() => {
+    if (location.state?.allowUpdate) setIsReadOnly(false)
+  }, [location.state?.allowUpdate])
 
   useEffect(() => {
     if (Number(projectId) !== Number(selectedBillingProject?.id)) {
@@ -103,6 +107,7 @@ const UpdateRoofVendorContract = ({ intl }) => {
     if (isReadOnly) {
       setIsReadOnly(false)
     } else {
+      // eslint-disable-next-line no-unused-vars
       const { address, taxCode, contractCode, effectiveDate, expirationDate, contractType, ...newvalue } = value
       newvalue.id = Number(id)
       dispatch(
