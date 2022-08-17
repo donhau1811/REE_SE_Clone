@@ -37,19 +37,19 @@ const PageHeader = ({ intl, searchValue, onSearch }) => {
               className=""
               bsSize="sm"
               id="search-input"
-              placeholder={intl.formatMessage({ id: 'operation-unit-list-search-input-placeholder' })}
+              placeholder={intl.formatMessage({ id: 'find by code name settings' })}
               value={value}
               onChange={handleSearchInputChange}
               onKeyDown={handleSearchInputKeyDown}
             />
-            <InputGroupAddon addonType="append" role="button">
+            <InputGroupAddon addonType="append" role="button" >
               <InputGroupText>
-                <IconSearch onClick={handleClickToSearch} />
+                <IconSearch  onClick={handleClickToSearch} />
               </InputGroupText>
             </InputGroupAddon>
           </InputGroup>
           <UncontrolledTooltip placement="top" target={`search-input`}>
-            {intl.formatMessage({ id: 'operation-unit-list-search-input-placeholder' })}
+            {intl.formatMessage({ id: 'find by code name settings' })}
           </UncontrolledTooltip>
         </Col>
       </Row>

@@ -17,7 +17,7 @@ const Filter = ({ intl, children, onSubmit = () => {} }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [startDate, setStartDate] = useState(null)
   const [endDate, setEndDate] = useState(null)
-  const [status, setStatus] = useState('all')
+  const [status, setStatus] = useState('')
   const handleStartDateChange = (newValue) => {
     setStartDate(newValue)
   }
@@ -35,8 +35,9 @@ const Filter = ({ intl, children, onSubmit = () => {} }) => {
   }
 
   const handleSubmitFilterForm = () => {
-    const payload = {
-      createDate: {
+    const payload = {}
+    if (startDate && endDate) {
+      payload.modifyDate = {
         value: {
           start: moment(startDate),
           end: moment(endDate)
@@ -44,13 +45,11 @@ const Filter = ({ intl, children, onSubmit = () => {} }) => {
         type: 'dateRange'
       }
     }
-
-    if (status !== 'all') {
-      payload.state = {
-        value: status,
-        type: 'exact'
-      }
+    payload.state = {
+      value: status,
+      type: 'exact'
     }
+
     onSubmit?.(payload)
     toggle()
   }
@@ -66,7 +65,7 @@ const Filter = ({ intl, children, onSubmit = () => {} }) => {
                 {intl.formatMessage({ id: 'Status' })}
               </Label>
               <Input value={status} onChange={handleStatusChange} type="select" name="select" id="exampleSelect">
-                <option value="all">{intl.formatMessage({ id: 'AllStatus' })}</option>
+                <option value="">{intl.formatMessage({ id: 'AllStatus' })}</option>
                 <option value={OPERATION_UNIT_STATUS.ACTIVE}>{intl.formatMessage({ id: 'Active' })}</option>
                 <option value={OPERATION_UNIT_STATUS.INACTIVE}>{intl.formatMessage({ id: 'Inactive' })}</option>
               </Input>

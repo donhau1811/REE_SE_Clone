@@ -220,9 +220,9 @@ const OperationUnit = ({ intl }) => {
     },
     {
       name: intl.formatMessage({ id: 'Update Date' }),
-      selector: 'modifiedDate',
+      selector: 'modifyDate',
       sortable: true,
-      cell: (row) => moment(row.modifiedDate).format(DISPLAY_DATE_FORMAT),
+      cell: (row) => moment(row.modifyDate).format(DISPLAY_DATE_FORMAT),
       center: true
     },
     {

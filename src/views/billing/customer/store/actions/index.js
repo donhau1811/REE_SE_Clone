@@ -1,5 +1,3 @@
-import { ReactComponent as CicleFailed } from '@src/assets/images/svg/circle-failed.svg'
-import { ReactComponent as CicleSuccess } from '@src/assets/images/svg/circle-success.svg'
 import {
   API_ADD_CONTACT,
   API_ADD_CUSTOMER_V2,
@@ -12,10 +10,6 @@ import {
 import { FETCH_CUSTOMERS_REQUEST } from '@src/utility/constants/actions'
 import { showToast } from '@src/utility/Utils'
 import axios from 'axios'
-import classNames from 'classnames'
-import SweetAlert from 'sweetalert2'
-import withReactContent from 'sweetalert2-react-content'
-const MySweetAlert = withReactContent(SweetAlert)
 import { SET_SELECTED_BILLING_CUSTOMER, SET_CONTACT } from '@constants/actions'
 import { handleCRUDOfContacts } from '@src/views/billing/contact/util'
 
@@ -55,7 +49,7 @@ export const getListCustomer = (params) => {
   }
 }
 
-export const postCustomer = ({ params, callback, skin, intl }) => {
+export const postCustomer = ({ params, callback, intl }) => {
   return async () => {
     const { contacts, ...customerPayload } = params
     await axios
@@ -70,67 +64,28 @@ export const postCustomer = ({ params, callback, skin, intl }) => {
             axios.post(API_ADD_CONTACT, { ...contact, customerId, state: 'ACTIVE' })
           )
           Promise.all(addCusContactReq)
-            .then(() => {
-              MySweetAlert.fire({
-                iconHtml: <CicleSuccess />,
-                text: intl.formatMessage({ id: 'New customer is added successfully' }),
-                customClass: {
-                  popup: classNames({
-                    'sweet-alert-popup--dark': skin === 'dark'
-                  }),
-                  confirmButton: 'btn btn-primary mt-2',
-                  icon: 'border-0'
-                },
-                width: 'max-content',
-                showCloseButton: true,
-                confirmButtonText: 'OK'
-              }).then(() => {
-                callback?.()
-              })
-            })
-            .catch((err) => {
-              throw new Error(err.toString())
-            })
+          .then(() => {
+            console.log(response)
+
+            showToast('success', intl.formatMessage({ id: 'Create info success' }))
+            callback?.()
+          })
+          .catch(() => {
+            showToast('error', intl.formatMessage({ id: 'data create failed, please try again' }))
+          })
         } else {
           throw new Error(response.data?.message)
         }
       })
-      .catch((err) => {
-        console.log('err', err)
-        MySweetAlert.fire({
-          iconHtml: <CicleFailed />,
-          text: err?.toString(),
-          customClass: {
-            popup: classNames({
-              'sweet-alert-popup--dark': skin === 'dark'
-            }),
-            confirmButton: 'btn btn-primary mt-2',
-            icon: 'border-0'
-          },
-          width: 'max-content',
-          showCloseButton: true,
-          confirmButtonText: intl.formatMessage({ id: 'Try again' })
-        })
+      .catch(() => {
+        showToast('error', intl.formatMessage({ id: 'data create failed, please try again' }))
+
       })
   }
 }
 
-export const putCustomer = ({ params, callback, skin, intl }) => {
+export const putCustomer = ({ params, callback, intl }) => {
   return async () => {
-    const errorAlert = {
-      iconHtml: <CicleFailed />,
-      text: intl.formatMessage({ id: 'Failed to update data. Please try again' }),
-      customClass: {
-        popup: classNames({
-          'sweet-alert-popup--dark': skin === 'dark'
-        }),
-        confirmButton: 'btn btn-primary mt-2',
-        icon: 'border-0'
-      },
-      width: 'max-content',
-      showCloseButton: true,
-      confirmButtonText: intl.formatMessage({ id: 'Try again' })
-    }
     const { contacts, ...customerPayload } = params
     await axios
       .put(API_UPDATE_CUSTOMER_V2, { ...customerPayload, provinceCode: 'HCM' })
@@ -139,79 +94,40 @@ export const putCustomer = ({ params, callback, skin, intl }) => {
           const contactsModifyRes = handleCRUDOfContacts({ contacts, customerId: customerPayload.id })
           console.log('handleCRUDOfContacts')
           return Promise.all(contactsModifyRes)
-            .then(() => {
-              MySweetAlert.fire({
-                iconHtml: <CicleSuccess />,
-                text: intl.formatMessage({ id: 'Data is updated successfully' }),
-                customClass: {
-                  popup: classNames({
-                    'sweet-alert-popup--dark': skin === 'dark'
-                  }),
-                  confirmButton: 'btn btn-primary mt-2',
-                  icon: 'border-0'
-                },
-                width: 'max-content',
-                showCloseButton: true,
-                confirmButtonText: 'OK'
-              }).then(() => {
-                callback?.()
-              })
-            })
-            .catch((err) => {
-              console.log('err', err)
-              MySweetAlert.fire(errorAlert)
-            })
+          .then(() => {
+            console.log(response)
+
+            showToast('success', intl.formatMessage({ id: 'Update info success' }))
+            callback?.()
+          })
+          .catch(() => {
+            showToast('error', intl.formatMessage({ id: 'data update failed, please try again' }))
+          })
         } else {
           throw new Error(response.data?.message)
         }
       })
       .catch(() => {
-        MySweetAlert.fire(errorAlert)
+        showToast('error', intl.formatMessage({ id: 'data update failed, please try again' }))
       })
   }
 }
 
-export const deleteCustomer = ({ id, skin, intl, callback }) => {
+export const deleteCustomer = ({ id, intl, callback }) => {
   return async () => {
     await axios
       .delete(`${API_DELETE_CUSTOMER_V2}/${id}`)
       .then((response) => {
-        if (response.status === 200 && response.data.data) {
-          MySweetAlert.fire({
-            iconHtml: <CicleSuccess />,
-            text: intl.formatMessage({ id: 'Delete billing customer success' }),
-            customClass: {
-              popup: classNames({
-                'sweet-alert-popup--dark': skin === 'dark'
-              }),
-              confirmButton: 'btn btn-primary mt-2',
-              icon: 'border-0'
-            },
-            width: 'max-content',
-            showCloseButton: true,
-            confirmButtonText: 'OK'
-          }).then(() => {
-            callback?.()
-          })
+        if (response.status === 200 && response.data?.data) {
+          showToast('success', intl.formatMessage({ id: 'Delete info success' }))
+
+          callback?.()
         } else {
-          throw new Error(response.data.message)
+          throw new Error(response.data?.message)
         }
       })
       .catch(() => {
-        MySweetAlert.fire({
-          iconHtml: <CicleFailed />,
-          text: intl.formatMessage({ id: 'Delete billing customer failed' }),
-          customClass: {
-            popup: classNames({
-              'sweet-alert-popup--dark': skin === 'dark'
-            }),
-            confirmButton: 'btn btn-primary mt-2',
-            icon: 'border-0'
-          },
-          width: 'max-content',
-          showCloseButton: true,
-          confirmButtonText: intl.formatMessage({ id: 'Try again' })
-        })
+        showToast('error', intl.formatMessage({ id: 'data delete failed, please try again' }))
       })
   }
 }

@@ -9,194 +9,85 @@ import {
   API_UPDATE_BILLING_SETTING_VALUE
 } from '@src/utility/constants'
 import axios from 'axios'
-import withReactContent from 'sweetalert2-react-content'
-import SweetAlert from 'sweetalert2'
-import { ReactComponent as CicleSuccess } from '@src/assets/images/svg/circle-success.svg'
-import { ReactComponent as CicleFailed } from '@src/assets/images/svg/circle-failed.svg'
-import classNames from 'classnames'
 import { FETCH_SETTINGS_REQUEST, SET_SELECTED_BILLING_SETTING, SET_SETTING_BY_CODE } from '@constants/actions'
 import { get } from 'lodash'
 import { GENERAL_STATUS } from '@src/utility/constants/billing'
+import { showToast } from '@src/utility/Utils'
 
-const MySweetAlert = withReactContent(SweetAlert)
 
-export const postSettingsValue = ({ params, callback, skin, intl }) => {
+export const postSettingsValue = ({ params, callback, intl }) => {
   return async () => {
     await axios
       .post(API_CREATE_BILLING_SETTING_VALUE, params)
       .then((response) => {
-        if (response.status === 200 && response.data.data) {
-          MySweetAlert.fire({
-            iconHtml: <CicleSuccess />,
-            text: intl.formatMessage({ id: 'Settings is added successfully' }),
-            customClass: {
-              popup: classNames({
-                'sweet-alert-popup--dark': skin === 'dark'
-              }),
-              confirmButton: 'btn btn-primary mt-2',
-              icon: 'border-0'
-            },
-            width: 'max-content',
-            showCloseButton: true,
-            confirmButtonText: 'OK'
-          }).then(() => {
-            if (callback) callback()
-          })
+        if (response.status === 200 && response.data?.data) {
+          showToast('success', intl.formatMessage({ id: 'Create info success' }))
+          callback?.()
         } else {
+          console.log('err')
           throw new Error(response.data?.message)
         }
       })
       .catch((err) => {
         console.log('err', err)
-        MySweetAlert.fire({
-          iconHtml: <CicleFailed />,
-          text: intl.formatMessage({ id: 'Failed to update data. Please try again' }),
-          customClass: {
-            popup: classNames({
-              'sweet-alert-popup--dark': skin === 'dark'
-            }),
-            confirmButton: 'btn btn-primary mt-2',
-            icon: 'border-0'
-          },
-          width: 'max-content',
-          showCloseButton: true,
-          confirmButtonText: intl.formatMessage({ id: 'Try again' })
-        })
+        showToast('error', intl.formatMessage({ id: 'data create failed, please try again' }))
       })
   }
 }
-export const putSettingsValue = ({ params, callback, intl, skin }) => {
+export const putSettingsValue = ({ params, callback, intl }) => {
   return async () => {
     await axios
       .put(API_UPDATE_BILLING_SETTING_VALUE, params)
       .then((response) => {
-        if (response.status === 200 && response.data.data) {
-          MySweetAlert.fire({
-            iconHtml: <CicleSuccess />,
-            text: intl.formatMessage({ id: 'Data is updated successfully' }),
-            customClass: {
-              popup: classNames({
-                'sweet-alert-popup--dark': skin === 'dark'
-              }),
-              confirmButton: 'btn btn-primary mt-2',
-              icon: 'border-0'
-            },
-            width: 'max-content',
-            showCloseButton: true,
-            confirmButtonText: 'OK'
-          }).then(() => {
-            callback?.()
-          })
+        if (response.status === 200 && response.data?.data) {
+          showToast('success', intl.formatMessage({ id: 'Update info success' }))
+          callback?.()
         } else {
+          console.log('err')
           throw new Error(response.data?.message)
         }
       })
       .catch((err) => {
         console.log('err', err)
-        MySweetAlert.fire({
-          iconHtml: <CicleFailed />,
-          text: intl.formatMessage({ id: 'Failed to update data. Please try again' }),
-          customClass: {
-            popup: classNames({
-              'sweet-alert-popup--dark': skin === 'dark'
-            }),
-            confirmButton: 'btn btn-primary mt-2',
-            icon: 'border-0'
-          },
-          width: 'max-content',
-          showCloseButton: true,
-          confirmButtonText: intl.formatMessage({ id: 'Try again' })
-        })
+        showToast('error', intl.formatMessage({ id: 'data update failed, please try again' }))
       })
   }
 }
-export const putSettings = ({ params, callback, intl, skin }) => {
+export const putSettings = ({ params, callback, intl }) => {
   return async () => {
     await axios
       .put(API_UPDATE_BILLING_SETTING, params)
       .then((response) => {
-        if (response.status === 200 && response.data.data) {
-          MySweetAlert.fire({
-            iconHtml: <CicleSuccess />,
-            text: intl.formatMessage({ id: 'Data is updated successfully' }),
-            customClass: {
-              popup: classNames({
-                'sweet-alert-popup--dark': skin === 'dark'
-              }),
-              confirmButton: 'btn btn-primary mt-2',
-              icon: 'border-0'
-            },
-            width: 'max-content',
-            showCloseButton: true,
-            confirmButtonText: 'OK'
-          }).then(() => {
-            callback?.()
-          })
+        if (response.status === 200 && response.data?.data) {
+          showToast('success', intl.formatMessage({ id: 'Update info success' }))
+          callback?.()
         } else {
+          console.log('err')
           throw new Error(response.data?.message)
         }
       })
       .catch((err) => {
         console.log('err', err)
-        MySweetAlert.fire({
-          iconHtml: <CicleFailed />,
-          text: intl.formatMessage({ id: 'Failed to update data. Please try again' }),
-          customClass: {
-            popup: classNames({
-              'sweet-alert-popup--dark': skin === 'dark'
-            }),
-            confirmButton: 'btn btn-primary mt-2',
-            icon: 'border-0'
-          },
-          width: 'max-content',
-          showCloseButton: true,
-          confirmButtonText: intl.formatMessage({ id: 'Try again' })
-        })
+        showToast('error', intl.formatMessage({ id: 'data update failed, please try again' }))
       })
   }
 }
 
-export const deleteSettingsValue = ({ id, callback, skin, intl }) => {
+export const deleteSettingsValue = ({ id, callback, intl }) => {
   return async () => {
     await axios
       .delete(`${API_DELETE_BILLING_SETTING_VALUE}/${id}`)
       .then((response) => {
-        if (response.status === 200 && response.data.data) {
-          MySweetAlert.fire({
-            iconHtml: <CicleSuccess />,
-            text: intl.formatMessage({ id: 'Delete settings success' }),
-            customClass: {
-              popup: classNames({
-                'sweet-alert-popup--dark': skin === 'dark'
-              }),
-              confirmButton: 'btn btn-primary mt-2',
-              icon: 'border-0'
-            },
-            width: 'max-content',
-            showCloseButton: true,
-            confirmButtonText: 'OK'
-          }).then(() => {
-            callback?.()
-          })
+        if (response.status === 200 && response.data?.data) {
+          showToast('success', intl.formatMessage({ id: 'Delete info success' }))
+
+          callback?.()
         } else {
-          throw new Error(response.data.message)
+          throw new Error(response.data?.message)
         }
       })
       .catch(() => {
-        MySweetAlert.fire({
-          iconHtml: <CicleFailed />,
-          text: intl.formatMessage({ id: 'Delete settings failure' }),
-          customClass: {
-            popup: classNames({
-              'sweet-alert-popup--dark': skin === 'dark'
-            }),
-            confirmButton: 'btn btn-primary mt-2',
-            icon: 'border-0'
-          },
-          width: 'max-content',
-          showCloseButton: true,
-          confirmButtonText: intl.formatMessage({ id: 'Yes' })
-        })
+        showToast('error', intl.formatMessage({ id: 'data delete failed, please try again' }))
       })
   }
 }

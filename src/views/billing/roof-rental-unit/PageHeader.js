@@ -45,7 +45,7 @@ const PageHeader = ({ intl, onSearch = () => {}, searchValue}) => {
               type="search"
               bsSize="sm"
               id="search-input"
-              placeholder={intl.formatMessage({ id: 'operation-unit-list-search-input-placeholder' })}
+              placeholder={intl.formatMessage({ id: 'find by code company, name company' })}
               value={value}
               onChange={handleSearchInputChange}
               onKeyDown={handleSearchInputKeyDown}
@@ -57,7 +57,7 @@ const PageHeader = ({ intl, onSearch = () => {}, searchValue}) => {
             </InputGroupAddon>
           </InputGroup>
           <UncontrolledTooltip placement="top" target={`search-input`}>
-            {intl.formatMessage({ id: 'operation-unit-list-search-input-placeholder' })}
+            {intl.formatMessage({ id: 'find by code company, name company' })}
           </UncontrolledTooltip>
         </Col>
 

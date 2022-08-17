@@ -116,8 +116,8 @@ export const deleteBillingProjectById = ({ id, callback, intl }) => {
           throw new Error(response.data?.message)
         }
       })
-      .catch((err) => {
-        showToast('error', err.toString())
+      .catch(() => {
+        showToast('error', intl.formatMessage({ id: 'data delete failed, please try again' }))
       })
   }
 }

@@ -103,7 +103,7 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
   const handleSubmitRoofVendorsForm = async (values) => {
 
     const isDupicateCode = await checkDuplicate({
-      params: { code: values.code }
+      params: { code: values.code }, id: initValues?.id, intl
     })
     if (initValues?.code !== values.code && isDupicateCode) {
       setError('code', { type: 'focus', message: intl.formatMessage({ id: 'dubplicated-validate' })}, { shouldFocus: true })
