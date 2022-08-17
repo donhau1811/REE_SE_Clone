@@ -10,7 +10,6 @@ import InputGroup from 'reactstrap/es/InputGroup'
 import InputGroupAddon from 'reactstrap/es/InputGroupAddon'
 import InputGroupText from 'reactstrap/es/InputGroupText'
 
-
 const PageHeader = ({ intl, onSearch = () => {}, searchValue }) => {
   const history = useHistory()
   const [value, setValue] = useState('')
@@ -42,26 +41,8 @@ const PageHeader = ({ intl, onSearch = () => {}, searchValue }) => {
     <>
       <Row className="mb-2">
         <Col lg="4" md="8" className="my-lg-0 mb-1 d-flex justify-content-end align-items-center">
-         
-          {/* <InputGroup className="input-group-merge">
-            <Input
-              className=""
-              bsSize="sm"
-              id="search-input"
-              placeholder={intl.formatMessage({ id: 'project-list-search-input-placeholder' })}
-              value={value}
-              onChange={handleSearchInputChange}
-              onKeyDown={handleSearchInputKeyDown}
-            />
-            <InputGroupAddon addonType="append" className="" role="button">
-              <InputGroupText>
-                <IconSearch onClick={handleClickToSearch} />
-              </InputGroupText>
-            </InputGroupAddon>
-          </InputGroup>
-          <UncontrolledTooltip placement="top" target={`search-input`}>
-            {intl.formatMessage({ id: 'project-list-search-input-placeholder' })}
-          </UncontrolledTooltip> */}
+          {/*  <SearchBar intl={intl} onSearch={onSearch} searchValue={searchValue} placeholder={'project-list-search-input-placeholder'}/>
+           */}
         </Col>
 
         <Col lg={{ offset: 4, size: 4 }} md={4} className="d-flex justify-content-end align-items-center">

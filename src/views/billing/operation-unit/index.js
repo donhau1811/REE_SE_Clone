@@ -47,10 +47,10 @@ const OperationUnit = ({ intl }) => {
     const initParams = {
       pagination: {
         rowsPerPage: ROWS_PER_PAGE_DEFAULT,
-        currentPage: 1,
-        sortBy: 'code',
-        sortDirection: 'asc'
-      }
+        currentPage: 1
+      },
+      sortBy: 'code',
+      sortDirection: 'asc'
     }
     fetchOperationUnit(initParams)
     return () => {
