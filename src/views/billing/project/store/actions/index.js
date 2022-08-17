@@ -103,21 +103,21 @@ export const getBillingProjectById = ({ id, isSavedToState, callback }) => {
   }
 }
 
-export const deleteBillingProjectById = ({ id, callback, intl }) => {
+export const deleteBillingProjectById = ({ id, callback }) => {
   return async () => {
     await axios
       .delete(`${API_DELETE_PROJECTS}/${id}`)
       .then((response) => {
         if (response.status === 200 && response.data?.data) {
-          showToast('success', intl.formatMessage({ id: 'Delete info success' }))
+          showToast('success', <FormattedMessage  id= 'Delete info success' />)
 
           callback?.(response.data.data)
         } else {
           throw new Error(response.data?.message)
         }
       })
-      .catch((err) => {
-        showToast('error', err.toString())
+      .catch(() => {
+        showToast('error', <FormattedMessage  id= 'data delete failed, please try again' />)
       })
   }
 }
