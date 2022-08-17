@@ -14,6 +14,8 @@ import axios from 'axios'
 import { showToast } from '@src/utility/Utils'
 import { handleCRUDOfContacts } from '@src/views/billing/contact/util'
 import { get } from 'lodash'
+import { FormattedMessage } from 'react-intl'
+
 
 export const getAllRoofVendor = () => {
   return async (dispatch) => {
@@ -71,13 +73,13 @@ export const getRoofVendor = (params) => {
   }
 }
 
-export const deleteBillingRoofRentalUnit = ({ id, intl, callback }) => {
+export const deleteBillingRoofRentalUnit = ({ id, callback }) => {
   return async () => {
     await axios
       .delete(`${API_DELETE_ROOF_VENDORS}/${id}`)
       .then((response) => {
         if (response.status === 200 && response.data?.data) {
-          showToast('success', intl.formatMessage({ id: 'Delete info success' }))
+          showToast('success', <FormattedMessage id= 'Delete info success' />)
 
           callback?.()
         } else {
@@ -85,7 +87,7 @@ export const deleteBillingRoofRentalUnit = ({ id, intl, callback }) => {
         }
       })
       .catch(() => {
-        showToast('error', intl.formatMessage({ id: 'data delete failed, please try again' }))
+        showToast('error', <FormattedMessage id= 'data delete failed, please try again' />)
       })
   }
 }
@@ -114,7 +116,7 @@ export const getRoofVendorById = ({ id, isSavedToState, callback }) => {
   }
 }
 
-export const postRoofVendors = ({ params, callback, intl }) => {
+export const postRoofVendors = ({ params, callback }) => {
   return async () => {
     const { contacts, ...roofVendor } = params
     await axios
@@ -134,23 +136,23 @@ export const postRoofVendors = ({ params, callback, intl }) => {
           )
           Promise.all(addRoofVendorContact)
             .then(() => {
-              showToast('success', intl.formatMessage({ id: 'Create info success' }))
+              showToast('success', <FormattedMessage id= 'Create info success' />)
               callback?.(false)
             })
             .catch((err) => {
               console.log('err', err)
-              showToast('error', intl.formatMessage({ id: 'data create failed, please try again' }))
+              showToast('error', <FormattedMessage id= 'data create failed, please try again' />)
             })
         } else {
           throw new Error(response.data?.message)
         }
       })
       .catch(() => {
-        showToast('error', intl.formatMessage({ id: 'data create failed, please try again' }))
+        showToast('error', <FormattedMessage id= 'data create failed, please try again' />)
       })
   }
 }
-export const putRoofVendors = ({ params, callback, intl }) => {
+export const putRoofVendors = ({ params, callback }) => {
   return async () => {
     const { contacts, ...roofVendor } = params
 
@@ -161,20 +163,19 @@ export const putRoofVendors = ({ params, callback, intl }) => {
           const contactsModifyRes = handleCRUDOfContacts({ contacts, roofVendorId: roofVendor.id })
           return Promise.all(contactsModifyRes)
             .then(() => {
-              console.log(response)
 
-              showToast('success', intl.formatMessage({ id: 'Update info success' }))
+              showToast('success', <FormattedMessage id= 'Update info success' />)
               callback?.()
             })
             .catch(() => {
-              showToast('error', intl.formatMessage({ id: 'data update failed, please try again' }))
+              showToast('error', <FormattedMessage id= 'data update failed, please try again' />)
             })
         } else {
           throw new Error(response.data?.message)
         }
       })
       .catch(() => {
-        showToast('error', intl.formatMessage({ id: 'data update failed, please try again' }))
+        showToast('error', <FormattedMessage id= 'data update failed, please try again' />)
       })
   }
 }

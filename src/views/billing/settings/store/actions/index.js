@@ -13,15 +13,16 @@ import { FETCH_SETTINGS_REQUEST, SET_SELECTED_BILLING_SETTING, SET_SETTING_BY_CO
 import { get } from 'lodash'
 import { GENERAL_STATUS } from '@src/utility/constants/billing'
 import { showToast } from '@src/utility/Utils'
+import { FormattedMessage } from 'react-intl'
 
 
-export const postSettingsValue = ({ params, callback, intl }) => {
+export const postSettingsValue = ({ params, callback }) => {
   return async () => {
     await axios
       .post(API_CREATE_BILLING_SETTING_VALUE, params)
       .then((response) => {
         if (response.status === 200 && response.data?.data) {
-          showToast('success', intl.formatMessage({ id: 'Create info success' }))
+          showToast('success', <FormattedMessage id= 'Create info success' />)
           callback?.()
         } else {
           console.log('err')
@@ -30,17 +31,17 @@ export const postSettingsValue = ({ params, callback, intl }) => {
       })
       .catch((err) => {
         console.log('err', err)
-        showToast('error', intl.formatMessage({ id: 'data create failed, please try again' }))
+        showToast('error', <FormattedMessage id= 'data create failed, please try again' />)
       })
   }
 }
-export const putSettingsValue = ({ params, callback, intl }) => {
+export const putSettingsValue = ({ params, callback }) => {
   return async () => {
     await axios
       .put(API_UPDATE_BILLING_SETTING_VALUE, params)
       .then((response) => {
         if (response.status === 200 && response.data?.data) {
-          showToast('success', intl.formatMessage({ id: 'Update info success' }))
+          showToast('success', <FormattedMessage id= 'Update info success' />)
           callback?.()
         } else {
           console.log('err')
@@ -49,17 +50,17 @@ export const putSettingsValue = ({ params, callback, intl }) => {
       })
       .catch((err) => {
         console.log('err', err)
-        showToast('error', intl.formatMessage({ id: 'data update failed, please try again' }))
+        showToast('error', <FormattedMessage id= 'data update failed, please try again' />)
       })
   }
 }
-export const putSettings = ({ params, callback, intl }) => {
+export const putSettings = ({ params, callback }) => {
   return async () => {
     await axios
       .put(API_UPDATE_BILLING_SETTING, params)
       .then((response) => {
         if (response.status === 200 && response.data?.data) {
-          showToast('success', intl.formatMessage({ id: 'Update info success' }))
+          showToast('success', <FormattedMessage id= 'Update info success' />)
           callback?.()
         } else {
           console.log('err')
@@ -68,18 +69,18 @@ export const putSettings = ({ params, callback, intl }) => {
       })
       .catch((err) => {
         console.log('err', err)
-        showToast('error', intl.formatMessage({ id: 'data update failed, please try again' }))
+        showToast('error', <FormattedMessage id= 'data update failed, please try again' />)
       })
   }
 }
 
-export const deleteSettingsValue = ({ id, callback, intl }) => {
+export const deleteSettingsValue = ({ id, callback }) => {
   return async () => {
     await axios
       .delete(`${API_DELETE_BILLING_SETTING_VALUE}/${id}`)
       .then((response) => {
         if (response.status === 200 && response.data?.data) {
-          showToast('success', intl.formatMessage({ id: 'Delete info success' }))
+          showToast('success', <FormattedMessage id= 'Delete info success' />)
 
           callback?.()
         } else {
@@ -87,7 +88,7 @@ export const deleteSettingsValue = ({ id, callback, intl }) => {
         }
       })
       .catch(() => {
-        showToast('error', intl.formatMessage({ id: 'data delete failed, please try again' }))
+        showToast('error', <FormattedMessage id= 'data delete failed, please try again' />)
       })
   }
 }

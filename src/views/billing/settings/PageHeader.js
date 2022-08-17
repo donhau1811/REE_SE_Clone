@@ -2,7 +2,7 @@ import { func, object, string } from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { injectIntl } from 'react-intl'
 import { Col, Row } from 'reactstrap'
-import SearchBar from '@src/views/common/searchBar'
+import SearchBar from '@src/views/common/SearchBar'
 
 const PageHeader = ({ intl, searchValue, onSearch }) => {
   const [value, setValue] = useState('')

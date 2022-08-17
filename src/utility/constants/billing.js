@@ -102,3 +102,9 @@ export const mockUser = [
   { value: 3, label: 'Nguyễn Duy Long' },
   { value: 4, label: 'La Duệ Tân' }
 ]
+export const VALUE_OF_ROOF_CONTRACT = {
+  'Không tính phí': 1,
+  'Tiền thuê cố định theo tháng': 2,
+  'Tiền thuê cố định theo quý': 3,
+  'Tiền thuê theo phần trăm doanh thu': 4
+}

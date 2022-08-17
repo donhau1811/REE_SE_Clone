@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { NUMBER_REGEX, EMAIL_REGEX } from '@src/utility/constants'
-import { selectThemeColors } from '@src/utility/Utils'
+import { selectThemeColors, showToast } from '@src/utility/Utils'
 import { func, object, bool } from 'prop-types'
 import { Controller, useForm } from 'react-hook-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -20,8 +20,7 @@ import { ReactComponent as CicleFailed } from '@src/assets/images/svg/circle-fai
 
 const MySweetAlert = withReactContent(SweetAlert)
 
-const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, isReadOnly, contacts
-}) => {
+const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, isReadOnly, contacts }) => {
   const [contactsRoofVendor, setContactsRoofVendor] = useState([])
   const OPERATION_UNIT_STATUS_OPTS = [
     { value: OPERATION_UNIT_STATUS.ACTIVE, label: intl.formatMessage({ id: 'Active' }) },
@@ -43,7 +42,6 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
   const handleContactformSubmit = (value) => {
     setContactsRoofVendor(value)
   }
-
 
   const ValidateSchema = yup.object().shape(
     {
@@ -85,7 +83,6 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
     ['name', 'code', 'taxCode', 'address', 'phone', 'email', 'note', 'state']
   )
 
-
   useEffect(() => {
     setContactsRoofVendor(contacts)
   }, [contacts])
@@ -96,19 +93,40 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
     defaultValues: initValues || initState
   })
 
-
   useEffect(() => {
     reset({ ...initValues, state: OPERATION_UNIT_STATUS_OPTS.find((item) => item.value === initValues?.state) })
   }, [initValues])
   const handleSubmitRoofVendorsForm = async (values) => {
-
-    const isDupicateCode = await checkDuplicate({
-      params: { code: values.code }, id: initValues?.id, intl
-    })
-    if (initValues?.code !== values.code && isDupicateCode) {
-      setError('code', { type: 'focus', message: intl.formatMessage({ id: 'dubplicated-validate' })}, { shouldFocus: true })
+    if (isReadOnly) {
+      onSubmit?.(initValues)
+      return
+    }
+    try {
+      const isDupicateCode = await checkDuplicate({
+        params: { code: values.code },
+        id: initValues?.id,
+        intl
+      })
+      if (initValues?.code !== values.code && isDupicateCode) {
+        setError(
+          'code',
+          { type: 'focus', message: intl.formatMessage({ id: 'dubplicated-validate' }) },
+          { shouldFocus: true }
+        )
+        return
+      }
+    } catch (err) {
+      const alert = initValues?.id
+        ? 'Failed to update data. Please try again'
+        : 'Failed to create data. Please try again'
+      showToast(
+        'error',
+        intl.formatMessage({
+          id: alert
+        })
+      )
       return 
-    } 
+    }
     if (!contactsRoofVendor?.filter((item) => !item.isDelete).length > 0) {
       return MySweetAlert.fire({
         // icon: 'success',
@@ -126,11 +144,10 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
         confirmButtonText: intl.formatMessage({ id: 'Try again' })
       })
     }
-      onSubmit?.({
-        ...values,
-        contacts : contactsRoofVendor
-      })
-    
+    onSubmit?.({
+      ...values,
+      contacts: contactsRoofVendor
+    })
   }
   return (
     <>
@@ -313,7 +330,7 @@ RoofUnit.propTypes = {
   onCancel: func,
   initValues: object,
   isReadOnly: bool,
-  contacts:object
+  contacts: object
 }
 
 export default injectIntl(RoofUnit)

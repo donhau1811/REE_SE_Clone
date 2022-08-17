@@ -56,6 +56,10 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
   }, [initValues])
 
   const handleSubmitOperationUnitForm = async (values) => {
+       if (isReadOnly) {
+      onSubmit?.(initValues)
+      return
+    }
     try {
       const dataCheck = { code: values.code }
       if (initValues?.id) dataCheck.id = initValues?.id
@@ -64,8 +68,6 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
         setError('code', { type: 'custom', message: intl.formatMessage({ id: 'dubplicated-validate' }) })
         return
       }
-
-      onSubmit?.(values)
     } catch (err) {
       const alert = initValues?.id
         ? 'Failed to update data. Please try again'
@@ -76,7 +78,10 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
           id: alert
         })
       )
+      return
     }
+      onSubmit?.(values)
+   
   }
 
   return (

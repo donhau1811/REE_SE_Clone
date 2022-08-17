@@ -8,12 +8,7 @@ import Select from 'react-select'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { selectThemeColors, showToast } from '@src/utility/Utils'
-import {
-  API_CHECK_PROJECT,
-  API_GET_ALL_OPERATION_UNIT,
-  ISO_STANDARD_FORMAT,
-  REAL_NUMBER
-} from '@src/utility/constants'
+import { API_CHECK_PROJECT, API_GET_ALL_OPERATION_UNIT, ISO_STANDARD_FORMAT, REAL_NUMBER } from '@src/utility/constants'
 import axios from 'axios'
 import Contract from './contract'
 import ValueContOfMultipleSelect from '@src/utility/components/ReactSelectCustomCOM/ValueContOfMultipleSelect'
@@ -61,7 +56,7 @@ const ProjectCUForm = ({
       }*/
       const [allCompaniesRes] = await Promise.all([
         axios.get(API_GET_ALL_OPERATION_UNIT)
-       // axios.get(API_GET_USERS, initParam)
+        // axios.get(API_GET_USERS, initParam)
       ])
 
       if (allCompaniesRes.status === 200 && allCompaniesRes.data?.data) {
@@ -149,11 +144,24 @@ const ProjectCUForm = ({
       onSubmit?.(initValues)
       return
     }
-    const dataCheck = { code: values.code }
-    if (initValues?.id) dataCheck.id = initValues?.id
-    const checkDupCodeRes = await axios.post(API_CHECK_PROJECT, dataCheck)
-    if (checkDupCodeRes.status === 200 && checkDupCodeRes.data?.data) {
-      setError('code', { type: 'custom', message: intl.formatMessage({ id: 'dubplicated-validate' }) })
+    try {
+      const dataCheck = { code: values.code }
+      if (initValues?.id) dataCheck.id = initValues?.id
+      const checkDupCodeRes = await axios.post(API_CHECK_PROJECT, dataCheck)
+      if (checkDupCodeRes.status === 200 && checkDupCodeRes.data?.data) {
+        setError('code', { type: 'custom', message: intl.formatMessage({ id: 'dubplicated-validate' }) })
+        return
+      }
+    } catch (err) {
+      const alert = initValues?.id
+        ? 'Failed to update data. Please try again'
+        : 'Failed to create data. Please try again'
+      showToast(
+        'error',
+        intl.formatMessage({
+          id: alert
+        })
+      )
       return
     }
 

@@ -283,7 +283,9 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
     // check trùng  mã khách hàng
     const dataCheck = { code: values.code }
     if (initValues?.id) dataCheck.id = initValues?.id
-    const checkDupCodeRes = await axios.post(API_CHECK_CODE_CONTRACT, dataCheck)
+    try {
+      const checkDupCodeRes = await axios.post(API_CHECK_CODE_CONTRACT, dataCheck)
+  
     if (checkDupCodeRes.status === 200 && checkDupCodeRes.data?.data) {
       setError('code', {
         type: 'custom',
@@ -292,6 +294,17 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
       })
       return
     }
+  } catch (err) {
+    const alert = initValues?.id
+      ? 'Failed to update data. Please try again'
+      : 'Failed to create data. Please try again'
+    showToast(
+      'error',
+      intl.formatMessage({
+        id: alert
+      })
+    )
+  }
     if (!(values.clocks || [])?.filter((item) => !item.isDelete).length > 0) {
       showToast('error', <FormattedMessage id="Need at least 1 clock to add contract. Please try again" />)
       return

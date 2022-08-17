@@ -6,9 +6,9 @@ import { ReactComponent as IconFilter } from '@src/assets/images/svg/table/ic-fi
 import { useHistory } from 'react-router-dom'
 import { ROUTER_URL } from '@src/utility/constants'
 import Filter from './Filter'
-import  SearchBar  from '@src/views/common/searchBar/index'
+import  SearchBar  from '@src/views/common/SearchBar/index'
 
-const PageHeader = ({ intl, onSearch = () => {}, onFilter, searchValue }) => {
+const PageHeader = ({  onSearch = () => {}, onFilter, searchValue }) => {
   const history = useHistory()
   const [value, setValue] = useState('')
 
@@ -29,7 +29,7 @@ const PageHeader = ({ intl, onSearch = () => {}, onFilter, searchValue }) => {
               <IconFilter />
             </span>
           </Filter>
-          <SearchBar intl={intl} onSearch={onSearch} searchValue={searchValue} placeholder={'operation-unit-list-search-input-placeholder'}/>
+          <SearchBar onSearch={onSearch} searchValue={searchValue} placeholder={'operation-unit-list-search-input-placeholder'}/>
         </Col>
 
         <Col lg={{ offset: 4, size: 4 }} md={4} className="d-flex justify-content-end align-items-center">

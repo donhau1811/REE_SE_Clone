@@ -12,6 +12,7 @@ import { showToast } from '@src/utility/Utils'
 import axios from 'axios'
 import { SET_SELECTED_BILLING_CUSTOMER, SET_CONTACT } from '@constants/actions'
 import { handleCRUDOfContacts } from '@src/views/billing/contact/util'
+import { FormattedMessage } from 'react-intl'
 
 export const getListCustomer = (params) => {
   return async (dispatch) => {
@@ -31,7 +32,6 @@ export const getListCustomer = (params) => {
     await axios
       .post(API_GET_LIST_CUSTOMER, payload)
       .then((response) => {
-        console.log(response)
         if (response.status === 200 && response.data.data) {
           dispatch({
             type: FETCH_CUSTOMERS_REQUEST,
@@ -49,7 +49,7 @@ export const getListCustomer = (params) => {
   }
 }
 
-export const postCustomer = ({ params, callback, intl }) => {
+export const postCustomer = ({ params, callback }) => {
   return async () => {
     const { contacts, ...customerPayload } = params
     await axios
@@ -64,27 +64,24 @@ export const postCustomer = ({ params, callback, intl }) => {
             axios.post(API_ADD_CONTACT, { ...contact, customerId, state: 'ACTIVE' })
           )
           Promise.all(addCusContactReq)
-          .then(() => {
-            console.log(response)
-
-            showToast('success', intl.formatMessage({ id: 'Create info success' }))
-            callback?.()
-          })
-          .catch(() => {
-            showToast('error', intl.formatMessage({ id: 'data create failed, please try again' }))
-          })
+            .then(() => {
+              showToast('success', <FormattedMessage id="Create info success" />)
+              callback?.()
+            })
+            .catch(() => {
+              showToast('error', <FormattedMessage id="data create failed, please try again" />)
+            })
         } else {
           throw new Error(response.data?.message)
         }
       })
       .catch(() => {
-        showToast('error', intl.formatMessage({ id: 'data create failed, please try again' }))
-
+        showToast('error', <FormattedMessage id="data create failed, please try again" />)
       })
   }
 }
 
-export const putCustomer = ({ params, callback, intl }) => {
+export const putCustomer = ({ params, callback }) => {
   return async () => {
     const { contacts, ...customerPayload } = params
     await axios
@@ -92,34 +89,31 @@ export const putCustomer = ({ params, callback, intl }) => {
       .then((response) => {
         if (response.status === 200 && response.data.data) {
           const contactsModifyRes = handleCRUDOfContacts({ contacts, customerId: customerPayload.id })
-          console.log('handleCRUDOfContacts')
           return Promise.all(contactsModifyRes)
-          .then(() => {
-            console.log(response)
-
-            showToast('success', intl.formatMessage({ id: 'Update info success' }))
-            callback?.()
-          })
-          .catch(() => {
-            showToast('error', intl.formatMessage({ id: 'data update failed, please try again' }))
-          })
+            .then(() => {
+              showToast('success', <FormattedMessage id="Update info success" />)
+              callback?.()
+            })
+            .catch(() => {
+              showToast('error', <FormattedMessage id="data update failed, please try again" />)
+            })
         } else {
           throw new Error(response.data?.message)
         }
       })
       .catch(() => {
-        showToast('error', intl.formatMessage({ id: 'data update failed, please try again' }))
+        showToast('error', <FormattedMessage id="data update failed, please try again" />)
       })
   }
 }
 
-export const deleteCustomer = ({ id, intl, callback }) => {
+export const deleteCustomer = ({ id, callback }) => {
   return async () => {
     await axios
       .delete(`${API_DELETE_CUSTOMER_V2}/${id}`)
       .then((response) => {
         if (response.status === 200 && response.data?.data) {
-          showToast('success', intl.formatMessage({ id: 'Delete info success' }))
+          showToast('success', <FormattedMessage id="Delete info success" />)
 
           callback?.()
         } else {
@@ -127,7 +121,7 @@ export const deleteCustomer = ({ id, intl, callback }) => {
         }
       })
       .catch(() => {
-        showToast('error', intl.formatMessage({ id: 'data delete failed, please try again' }))
+        showToast('error', <FormattedMessage id="data delete failed, please try again" />)
       })
   }
 }

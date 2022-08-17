@@ -5,9 +5,9 @@ import { Button, Col, Row } from 'reactstrap'
 
 import { useHistory } from 'react-router-dom'
 import { ROUTER_URL } from '@src/utility/constants'
-import SearchBar from '@src/views/common/searchBar'
+import SearchBar from '@src/views/common/SearchBar'
 
-const PageHeader = ({ intl, onSearch = () => {}, searchValue}) => {
+const PageHeader = ({  onSearch = () => {}, searchValue}) => {
   const history = useHistory()
   const [value, setValue] = useState('')
 
@@ -23,7 +23,7 @@ const PageHeader = ({ intl, onSearch = () => {}, searchValue}) => {
       <Row className="mb-2">
         <Col lg="4" md="8" className="my-lg-0 mb-1 d-flex justify-content-end align-items-center">
 
-        <SearchBar intl={intl} onSearch={onSearch} searchValue={searchValue} placeholder={'find by code company, name company'}/>
+        <SearchBar onSearch={onSearch} searchValue={searchValue} placeholder={'find by code company, name company'}/>
 
         </Col>
 

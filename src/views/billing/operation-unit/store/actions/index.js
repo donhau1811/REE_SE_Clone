@@ -83,13 +83,13 @@ export const getListOperationUnit = (params = {}) => {
   }
 }
 
-export const deleteOperationUnit = ({ id, intl, callback }) => {
+export const deleteOperationUnit = ({ id, callback }) => {
   return async () => {
     await axios
       .delete(`${API_DELETE_OPERATING_COMPANY}`, { data: { id } })
       .then((response) => {
         if (response.status === 200 && response.data?.data) {
-          showToast('success', intl.formatMessage({ id: 'Delete info success' }))
+          showToast('success', <FormattedMessage id= 'Delete info success' />)
 
           callback?.()
         } else {
@@ -97,7 +97,7 @@ export const deleteOperationUnit = ({ id, intl, callback }) => {
         }
       })
       .catch(() => {
-        showToast('error', intl.formatMessage({ id: 'data delete failed, please try again' }))
+        showToast('error', <FormattedMessage id= 'data delete failed, please try again' />)
       })
   }
 }

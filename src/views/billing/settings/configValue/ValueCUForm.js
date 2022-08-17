@@ -21,7 +21,11 @@ function ValueCUForm({ value, intl, onSubmit = () => {}, onCancel }) {
       value: yup
         .string()
         .required(intl.formatMessage({ id: 'required-validate' }))
-        .max(225, intl.formatMessage({ id: 'max-validate' }))
+        .max(255, intl.formatMessage({ id: 'max-validate' })),
+      description: yup
+      .string()
+      .required(intl.formatMessage({ id: 'required-validate' }))
+      .max(255, intl.formatMessage({ id: 'max-validate' }))
     },
     ['value', 'description']
   )
@@ -113,7 +117,7 @@ function ValueCUForm({ value, intl, onSubmit = () => {}, onCancel }) {
                   name="description"
                   autoComplete="on"
                   innerRef={register()}
-                  invalid={!!errors.note}
+                  invalid={!!errors.description}
                   valid={getValues('description')?.trim() && !errors.description}
                   placeholder={intl.formatMessage({ id: 'Enter Config Explain' })}
                   type="textarea"
