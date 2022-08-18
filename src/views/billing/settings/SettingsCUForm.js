@@ -51,7 +51,7 @@ const SettingsCUForm = ({ isViewed, intl, onSubmit = () => {}, onCancel = () => 
   }, [initValues])
   return (
     <>
-      <Form key="customer-form" onSubmit={handleSubmit(onSubmit)}>
+      <Form className='billing-form' key="customer-form" onSubmit={handleSubmit(onSubmit)}>
         <Row>
           <Col className="mb-2" md={4}>
             <Label className="general-label" for="code">
@@ -64,8 +64,8 @@ const SettingsCUForm = ({ isViewed, intl, onSubmit = () => {}, onCancel = () => 
               name="code"
               autoComplete="on"
               innerRef={register()}
-              invalid={!!errors.code}
-              valid={getValues('code')?.trim() && !errors.code}
+              invalid={!isViewed && !!errors.code}
+              valid={!isViewed && getValues('code')?.trim() && !errors.code}
               placeholder={intl.formatMessage({ id: 'Enter Config Code' })}
             />
             {errors?.code && <FormFeedback>{errors?.code?.message}</FormFeedback>}
@@ -80,8 +80,8 @@ const SettingsCUForm = ({ isViewed, intl, onSubmit = () => {}, onCancel = () => 
               id="name"
               name="name"
               autoComplete="on"
-              invalid={!!errors.name}
-              valid={getValues('name')?.trim() && !errors.name}
+              invalid={!isViewed && !!errors.name}
+              valid={!isViewed && getValues('name')?.trim() && !errors.name}
               innerRef={register()}
               placeholder={intl.formatMessage({ id: 'Enter Config Name' })}
             />
@@ -119,8 +119,8 @@ const SettingsCUForm = ({ isViewed, intl, onSubmit = () => {}, onCancel = () => 
               name="description"
               autoComplete="on"
               innerRef={register()}
-              invalid={!!errors.description}
-              valid={getValues('description')?.trim() && !errors.description}
+              invalid={!isViewed && !!errors.description}
+              valid={!isViewed && getValues('description')?.trim() && !errors.description}
               placeholder={intl.formatMessage({ id: 'Enter Config Explain' })}
             />
             {errors?.description && <FormFeedback>{errors?.description?.message}</FormFeedback>}

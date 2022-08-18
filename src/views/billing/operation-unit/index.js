@@ -158,22 +158,22 @@ const OperationUnit = ({ intl }) => {
       name: intl.formatMessage({ id: 'operation-unit-form-code' }),
       selector: 'code',
       sortable: true,
-      center: true,
       minWidth: '150px'
     },
     {
       name: intl.formatMessage({ id: 'operation-unit-form-name' }),
       sortable: true,
       selector: 'name',
-      cell: (row) => <Link to={`${ROUTER_URL.BILLING_OPERATION_UNIT}/${row.id}`}>{row?.name}</Link>,
-      center: true,
+      cell: (row) => (
+        <Link to={ `${ROUTER_URL.BILLING_OPERATION_UNIT}/${row.id}`}>{row?.name}</Link>
+
+      ),
       minWidth: '200px'
     },
     {
       name: intl.formatMessage({ id: 'operation-unit-form-taxCode' }),
       selector: 'taxCode',
       sortable: true,
-      center: true,
       minWidth: '200px'
     },
     {
@@ -200,8 +200,7 @@ const OperationUnit = ({ intl }) => {
       name: intl.formatMessage({ id: 'operation-unit-form-mobile' }),
       selector: 'phone',
       sortable: true,
-      minWidth: '150px',
-      center: true
+      minWidth: '150px'
     },
     {
       name: intl.formatMessage({ id: 'Status' }),

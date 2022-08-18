@@ -88,20 +88,17 @@ const OperationUnit = ({ intl }) => {
     {
       name: intl.formatMessage({ id: 'Config Code' }),
       selector: 'code',
-      sortable: true,
-      center: true
+      sortable: true
     },
     {
       name: intl.formatMessage({ id: 'Config Name' }),
       sortable: true,
       selector: 'name',
-      cell: (row) => <Link to={`${ROUTER_URL.BILLING_SETTING}/${row.id}`}>{row?.name}</Link>,
-      center: true
+      cell: (row) => <Link to={`${ROUTER_URL.BILLING_SETTING}/${row.id}`}>{row?.name}</Link>
     },
     {
       name: intl.formatMessage({ id: 'description' }),
-      selector: 'description',
-      center: true
+      selector: 'description'
     },
     {
       name: intl.formatMessage({ id: 'Status' }),
