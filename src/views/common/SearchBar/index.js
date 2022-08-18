@@ -17,17 +17,18 @@ const SearchBar = ({ intl, onSearch = () => {}, searchValue, placeholder }) => {
   }, [searchValue])
 
   const handleClickToSearch = () => {
-    onSearch?.(value)
+    onSearch?.(value.trim())
   }
 
   const handleSearchInputChange = (e) => {
-    setValue(e.target.value)
+    
+    setValue(e?.target?.value)
   }
 
   const handleSearchInputKeyDown = (event) => {
     if (event.keyCode === 13) {
       event.preventDefault()
-      onSearch?.(value)
+      onSearch?.(value.trim())
     }
   }
   return (
