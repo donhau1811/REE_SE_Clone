@@ -1848,5 +1848,9 @@
   "find by code name settings":"Tìm theo mã , tên cấu hình ",
   "find by code company, name company":"Tìm theo mã đơn vị, tên đơn vị",
   "data create failed, please try again":"Thêm mới dữ liệu thất bại, vui lòng thử lại",
-  "data update failed, please try again":"Cập nhật dữ liệu thất bại , vui lòng thử lại"
+  "data update failed, please try again":"Cập nhật dữ liệu thất bại , vui lòng thử lại",
+  "delete contact success":"Xóa liên hệ thành công",
+  "update contact success":"Sửa liên hệ thành công",
+  "create contact success":"Tạo liên hệ thành công"
+
 }

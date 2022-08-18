@@ -135,7 +135,6 @@ const RoofVendor = ({ intl }) => {
     {
       name: intl.formatMessage({ id: 'Roof rental unit name' }),
       selector: 'name',
-      center: true,
       sortable: true,
       cell: (row) => (
         <Link to={ `${ROUTER_URL.BILLING_ROOF_RENTAL_UNIT}/${row.id}`}>{row?.name}</Link>),
@@ -145,8 +144,7 @@ const RoofVendor = ({ intl }) => {
     {
       name: intl.formatMessage({ id: 'operation-unit-form-taxCode' }),
       selector: 'taxCode',
-      sortable: true,
-      center: true
+      sortable: true
     },
 
     {
@@ -179,13 +177,13 @@ const RoofVendor = ({ intl }) => {
     {
       name: intl.formatMessage({ id: 'Email' }),
       selector: 'email',
-      sortable: true,
-      center: true
+      sortable: true
     },
     {
       name: intl.formatMessage({ id: 'Status' }),
       selector: 'state',
       sortable: true,
+      center:true,
       cell: (row) => {
         return row.state === OPERATION_UNIT_STATUS.ACTIVE ? (
           <Badge pill color="light-success"  className="custom-bagde">

@@ -153,7 +153,6 @@ const OperationUnit = ({ intl }) => {
     {
       name: intl.formatMessage({ id: 'Customer Company' }),
       selector: 'fullName',
-      center: true,
       sortable: true,
       cell: (row) => (
         <Link to={ `${ROUTER_URL.BILLING_CUSTOMER}/${row.id}`}>{row?.fullName}</Link>
@@ -165,15 +164,13 @@ const OperationUnit = ({ intl }) => {
       name: intl.formatMessage({ id: 'Company Type Short' }),
       selector: 'type',
       sortable: true,
-      center: true,
       cell: (row) => <span>{GENERAL_CUSTOMER_TYPE.find((item) => item.value === row.type)?.label}</span>,
       minWidth: '150px'
     },
     {
       name: intl.formatMessage({ id: 'billing-customer-list-taxCode' }),
       selector: 'taxCode',
-      sortable: true,
-      center: true
+      sortable: true
     },
     {
       name: intl.formatMessage({ id: 'operation-unit-form-address' }),
@@ -198,8 +195,7 @@ const OperationUnit = ({ intl }) => {
     {
       name: intl.formatMessage({ id: 'operation-unit-form-mobile' }),
       selector: 'phone',
-      sortable: true,
-      center: true
+      sortable: true
     },
     {
       name: intl.formatMessage({ id: 'Status' }),

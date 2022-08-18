@@ -1742,6 +1742,9 @@
   "data delete failed, please try again":"Data delete failed, please try again",
   "find by code company, name company":"Find by code company, name company",
   "data create failed, please try again":"Data create failed, please try again",
-  "data update failed, please try again":"Data update failed, please try again"
+  "data update failed, please try again":"Data update failed, please try again",
+  "delete contact success":"Delete contact success",
+  "update contact success":"Update contact success",
+  "create contact success":"Create contact success"
 
 }
