@@ -9,7 +9,7 @@ import { useEffect } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { Badge, Col, Row, UncontrolledTooltip } from 'reactstrap'
+import { Badge, CardLink, Col, Row, UncontrolledTooltip } from 'reactstrap'
 import SweetAlert from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import PageHeader from './PageHeader'
@@ -57,7 +57,10 @@ const OperationUnit = ({ intl }) => {
   const handleRedirectToUpdatePage = (id) => () => {
     if (id) history.push(`${ROUTER_URL.BILLING_CUSTOMER}/${id}`)
   }
+  const clickOnRow = (row) => {
+    if (row?.id) history.push(`${ROUTER_URL.BILLING_CUSTOMER}/${row?.id}`)
 
+  }
   const handleChangePage = (e) => {
     fetchListCustomers({
       pagination: {
@@ -154,7 +157,11 @@ const OperationUnit = ({ intl }) => {
       selector: 'fullName',
       center: true,
       sortable: true,
-      cell: (row) => <span>{row.fullName}</span>,
+      cell: (row) => (
+        <CardLink className="text-primary" onClick={() => clickOnRow(row)}>
+          {row.fullName}
+        </CardLink>
+      ),
       minWidth: '360px'
     },
     {
@@ -205,7 +212,7 @@ const OperationUnit = ({ intl }) => {
       minWidth: '150px',
       cell: (row) => {
         return row.state === OPERATION_UNIT_STATUS.ACTIVE ? (
-          <Badge pill color="light-success">
+          <Badge pill color="light-success" className='cursor-pointer'>
             <FormattedMessage id="Active" />
           </Badge>
         ) : (

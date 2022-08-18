@@ -8,7 +8,7 @@ import { useEffect } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { Badge, Col, Row, UncontrolledTooltip } from 'reactstrap'
+import { Badge, CardLink, Col, Row, UncontrolledTooltip } from 'reactstrap'
 import PageHeader from './PageHeader'
 import { getListBillingSetting } from './store/actions'
 
@@ -34,7 +34,9 @@ const OperationUnit = ({ intl }) => {
       pagination: {
         rowsPerPage: ROWS_PER_PAGE_DEFAULT,
         currentPage: 1
-      }
+      },
+      sortBy: 'code',
+      sortDirection: 'asc'
     }
     fetchBillingSetting(initParams)
     return () => {
@@ -47,6 +49,10 @@ const OperationUnit = ({ intl }) => {
 
   const handleRedirectToUpdatePage = (id) => () => {
     if (id) history.push(`${ROUTER_URL.BILLING_SETTING}/${id}`)
+  }
+  const  clickOnRow = (row) => {
+    if (row?.id) history.push(`${ROUTER_URL.BILLING_SETTING}/${row?.id}`)
+
   }
 
   const handleChangePage = (e) => {
@@ -92,7 +98,11 @@ const OperationUnit = ({ intl }) => {
       name: intl.formatMessage({ id: 'Config Name' }),
       sortable: true,
       selector: 'name',
-      cell: (row) => <span>{row.name}</span>,
+      cell: (row) => (
+        <CardLink className="text-primary" onClick={() => clickOnRow(row)}>
+          {row.name}
+        </CardLink>
+      ),
       center: true
     },
     {

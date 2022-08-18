@@ -65,7 +65,7 @@ const OperationCUForm = ({
       taxCode: yup
         .string()
         .required(intl.formatMessage({ id: 'required-validate' }))
-        .max(20, intl.formatMessage({ id: 'max-validate' })),
+        .max(15, intl.formatMessage({ id: 'max-validate' })),
 
       address: yup
         .string()

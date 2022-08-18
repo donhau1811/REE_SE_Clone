@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { Badge, Col, Row, UncontrolledTooltip } from 'reactstrap'
+import { Badge, CardLink, Col, Row, UncontrolledTooltip } from 'reactstrap'
 import SweetAlert from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import PageHeader from './PageHeader'
@@ -78,6 +78,13 @@ const Project = ({ intl }) => {
     if (id) {
       history.push({
         pathname: `${ROUTER_URL.BILLING_PROJECT}/${id}`
+      })
+    }
+  }
+  const clickOnRow = (row) => {
+    if (row?.id) {
+      history.push({
+        pathname: `${ROUTER_URL.BILLING_PROJECT}/${row?.id}`
       })
     }
   }
@@ -155,7 +162,11 @@ const Project = ({ intl }) => {
       name: intl.formatMessage({ id: 'Project Name' }),
       sortable: true,
       selector: 'name',
-      cell: (row) => <span>{row.name}</span>,
+      cell: (row) => (
+        <CardLink className="text-primary" onClick={() => clickOnRow(row)}>
+          {row.name}
+        </CardLink>
+      ),
       center: true,
       minWidth: '100px'
     },

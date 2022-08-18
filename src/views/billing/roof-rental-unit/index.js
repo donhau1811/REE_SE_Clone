@@ -8,7 +8,7 @@ import { useEffect } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { Badge, Col, Row, UncontrolledTooltip } from 'reactstrap'
+import { Badge, Col, Row, UncontrolledTooltip, CardLink } from 'reactstrap'
 import SweetAlert from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import PageHeader from './PageHeader'
@@ -27,8 +27,7 @@ const RoofVendor = ({ intl }) => {
   const {
     layout: { skin }
   } = useSelector((state) => state)
-    
-   
+
   const fetchRoofVendor = (payload) => {
     dispatch(
       getRoofVendor({
@@ -37,13 +36,17 @@ const RoofVendor = ({ intl }) => {
       })
     )
   }
-   
+  const clickOnRow = (row) => {
+    if (row?.id) history.push(`${ROUTER_URL.BILLING_ROOF_RENTAL_UNIT}/${row.id}`)
+  }
   useEffect(() => {
     fetchRoofVendor({
       pagination: {
         rowsPerPage: ROWS_PER_PAGE_DEFAULT,
         currentPage: 1
-      }
+      },
+      sortBy: 'code',
+      sortDirection: 'asc'
     })
   }, [])
   const handleChangePage = (e) => {
@@ -104,14 +107,16 @@ const RoofVendor = ({ intl }) => {
       buttonsStyling: false
     }).then(({ isConfirmed }) => {
       if (isConfirmed) {
-        dispatch(deleteBillingRoofRentalUnit({
-          id,
-          skin,
-          intl,
-          callback : () => {
-            fetchRoofVendor()
-          }
-        }))
+        dispatch(
+          deleteBillingRoofRentalUnit({
+            id,
+            skin,
+            intl,
+            callback: () => {
+              fetchRoofVendor()
+            }
+          })
+        )
       }
     })
   }
@@ -133,7 +138,11 @@ const RoofVendor = ({ intl }) => {
       selector: 'name',
       center: true,
       sortable: true,
-      cell: (row) => <span>{row.name}</span>,
+      cell: (row) => (
+        <CardLink className="text-primary" onClick={() => clickOnRow(row)}>
+          {row.name}
+        </CardLink>
+      ),
       minWidth: '20%'
     },
     {
@@ -142,7 +151,6 @@ const RoofVendor = ({ intl }) => {
       sortable: true,
       center: true
     },
-
 
     {
       name: intl.formatMessage({ id: 'Address' }),
@@ -216,13 +224,15 @@ const RoofVendor = ({ intl }) => {
       <Row>
         <Col sm="12">
           <PageHeader onSearch={handleSearch} searchValue={searchValue} />
-          <Table columns={columns} 
+          <Table
+            columns={columns}
             data={data}
             total={total}
             onPageChange={handleChangePage}
             onPerPageChange={handlePerPageChange}
             onSort={handleSort}
-            {...pagination}/>
+            {...pagination}
+          />
         </Col>
       </Row>
     </>

@@ -15,7 +15,7 @@ import { useEffect } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { Badge, Col, Row, UncontrolledTooltip } from 'reactstrap'
+import { Badge, CardLink, Col, Row, UncontrolledTooltip } from 'reactstrap'
 import SweetAlert from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import PageHeader from './PageHeader'
@@ -63,6 +63,9 @@ const OperationUnit = ({ intl }) => {
 
   const handleRedirectToUpdatePage = (id) => () => {
     if (id) history.push(`${ROUTER_URL.BILLING_OPERATION_UNIT}/${id}`)
+  }
+  const clickOnRow = (row) => {
+    if (row?.id) history.push(`${ROUTER_URL.BILLING_OPERATION_UNIT}/${row?.id}`)
   }
   const handleChangePage = (e) => {
     fetchOperationUnit({
@@ -163,7 +166,11 @@ const OperationUnit = ({ intl }) => {
       name: intl.formatMessage({ id: 'operation-unit-form-name' }),
       sortable: true,
       selector: 'name',
-      cell: (row) => <span>{row.name}</span>,
+      cell: (row) => (
+        <CardLink className="text-primary" onClick={() => clickOnRow(row)}>
+          {row.name}
+        </CardLink>
+      ),
       center: true,
       minWidth: '200px'
     },
@@ -208,11 +215,11 @@ const OperationUnit = ({ intl }) => {
       minWidth: '170px',
       cell: (row) => {
         return row.state === OPERATION_UNIT_STATUS.ACTIVE ? (
-          <Badge pill color="light-success">
+          <Badge pill color="light-success" className="custom-bagde">
             <FormattedMessage id="Active" />
           </Badge>
         ) : (
-          <Badge pill color="light-muted">
+          <Badge pill color="light-muted" className="custom-bagde">
             <FormattedMessage id="Inactive" />
           </Badge>
         )
