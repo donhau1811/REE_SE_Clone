@@ -8,6 +8,7 @@ import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
 import ContactCUForm from './ContactCUForm'
 import { cloneDeep } from 'lodash'
+import { showToast } from '@src/utility/Utils'
 
 const Contact = ({ data, onChange, disabled }) => {
   const [currContact, setCurrContact] = useState(null)
@@ -27,6 +28,7 @@ const Contact = ({ data, onChange, disabled }) => {
       if (item.isCreate) return array
       return [...array, { ...item, isDelete: true }]
     }, [])
+    showToast('success',  <FormattedMessage id="Delete operating customer success" />)
     onChange?.(newData)
   }
 

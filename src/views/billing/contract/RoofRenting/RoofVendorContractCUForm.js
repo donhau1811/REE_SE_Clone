@@ -18,6 +18,7 @@ import { useParams } from 'react-router-dom'
 import { XCircle } from 'react-feather'
 import { ReactComponent as Attachment } from '@src/assets/images/svg/attachment-file.svg'
 import { getSettingValuesByCode } from '@src/views/billing/settings/store/actions'
+import { VALUE_OF_ROOF_CONTRACT } from '@src/utility/constants/billing'
 
 const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSubmit }) => {
   const [valueSetting, setValueSetting] = useState([])
@@ -53,10 +54,9 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
     setValueSetting(
       (setting?.Roof_Vendor_Contract || [])?.map((item) => ({
         ...item,
-        value: setting?.Roof_Vendor_Contract?.findIndex(x => x?.value === item?.value) + 1
+        value: VALUE_OF_ROOF_CONTRACT[item?.value] || 0
       }))
     )
-
   }, [setting])
   const {
     billingContacts: { contacts }

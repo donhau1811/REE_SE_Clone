@@ -1,25 +1,21 @@
 import {
-  API_DELETE_ROOF_VENDORS,
-  API_GET_ROOF_VENDOR_BY_ID,
-  API_GET_ROOF_VENDOR,
-  API_CREATE_ROOF_VENDOR,
-  API_UPDATE_ROOF_VENDOR,
-  API_CHECK_CODE_ROOF_VENDORS,
-  API_GET_CONTACT_BY_ROOF_VENDOR_ID,
   API_ADD_CONTACT,
-  API_GET_ALL_ROOF_VENDOR
+  API_CHECK_CODE_ROOF_VENDORS,
+  API_CREATE_ROOF_VENDOR,
+  API_DELETE_ROOF_VENDORS,
+  API_GET_ALL_ROOF_VENDOR,
+  API_GET_CONTACT_BY_ROOF_VENDOR_ID,
+  API_GET_ROOF_VENDOR,
+  API_GET_ROOF_VENDOR_BY_ID,
+  API_UPDATE_ROOF_VENDOR
 } from '@src/utility/constants'
 import { FETCH_ROOF_RENTAL_UNIT_REQUEST, SET_CONTACT, SET_SELECTED_ROOF_VENDOR } from '@src/utility/constants/actions'
 import axios from 'axios'
-import classNames from 'classnames'
-import SweetAlert from 'sweetalert2'
-import withReactContent from 'sweetalert2-react-content'
-import { ReactComponent as CicleFailed } from '@src/assets/images/svg/circle-failed.svg'
-import { ReactComponent as CicleSuccess } from '@src/assets/images/svg/circle-success.svg'
-import { get } from 'lodash'
+import { showToast } from '@src/utility/Utils'
 import { handleCRUDOfContacts } from '@src/views/billing/contact/util'
+import { get } from 'lodash'
+import { FormattedMessage } from 'react-intl'
 
-const MySweetAlert = withReactContent(SweetAlert)
 
 export const getAllRoofVendor = () => {
   return async (dispatch) => {
@@ -40,7 +36,7 @@ export const getAllRoofVendor = () => {
         console.log('err', err)
       })
   }
-  }
+}
 
 export const getRoofVendor = (params) => {
   return async (dispatch) => {
@@ -77,48 +73,21 @@ export const getRoofVendor = (params) => {
   }
 }
 
-export const deleteBillingRoofRentalUnit = ({ id, skin, intl, callback }) => {
+export const deleteBillingRoofRentalUnit = ({ id, callback }) => {
   return async () => {
     await axios
       .delete(`${API_DELETE_ROOF_VENDORS}/${id}`)
       .then((response) => {
-        if (response?.status === 200 && response.data) {
-          MySweetAlert.fire({
-            iconHtml: <CicleSuccess />,
-            text: intl.formatMessage({ id: 'Delete billing customer success' }),
-            customClass: {
-              popup: classNames({
-                'sweet-alert-popup--dark': skin === 'dark'
-              }),
-              confirmButton: 'btn btn-primary mt-2',
-              icon: 'border-0'
-            },
-            width: 'max-content',
-            showCloseButton: true,
-            confirmButtonText: 'OK'
-          }).then(() => {
-            callback?.()
-          })
+        if (response.status === 200 && response.data?.data) {
+          showToast('success', <FormattedMessage id= 'Delete info success' />)
+
+          callback?.()
         } else {
-          throw new Error(response.data.message)
+          throw new Error(response.data?.message)
         }
       })
-      .catch((err) => {
-        console.log('err', err)
-        MySweetAlert.fire({
-          iconHtml: <CicleFailed />,
-          text: intl.formatMessage({ id: 'Delete billing roof rental unit' }),
-          customClass: {
-            popup: classNames({
-              'sweet-alert-popup--dark': skin === 'dark'
-            }),
-            confirmButton: 'btn btn-primary mt-2',
-            icon: 'border-0'
-          },
-          width: 'max-content',
-          showCloseButton: true,
-          confirmButtonText: intl.formatMessage({ id: 'Try again' })
-        })
+      .catch(() => {
+        showToast('error', <FormattedMessage id= 'data delete failed, please try again' />)
       })
   }
 }
@@ -147,7 +116,7 @@ export const getRoofVendorById = ({ id, isSavedToState, callback }) => {
   }
 }
 
-export const postRoofVendors = ({ params, callback, skin, intl }) => {
+export const postRoofVendors = ({ params, callback }) => {
   return async () => {
     const { contacts, ...roofVendor } = params
     await axios
@@ -156,116 +125,61 @@ export const postRoofVendors = ({ params, callback, skin, intl }) => {
         if (response.status === 200 && response.data?.data) {
           const roofVendorId = response.data?.data?.id
           // eslint-disable-next-line no-unused-vars
-          const addRoofVendorContact = contacts.map(({ id, ...contact }) => 
+          const addRoofVendorContact = contacts.map(({ id, ...contact }) =>
             // eslint-disable-next-line implicit-arrow-linebreak
             axios.post(API_ADD_CONTACT, {
               ...contact,
-              position: contact.position?.value || '',
+              position: contact.position || '',
               roofVendorId,
               state: 'ACTIVE'
             })
           )
           Promise.all(addRoofVendorContact)
             .then(() => {
-              MySweetAlert.fire({
-                iconHtml: <CicleSuccess />,
-                text: intl.formatMessage({ id: 'Roof Vendor is added successfully' }),
-                customClass: {
-                  popup: classNames({
-                    'sweet-alert-popup--dark': skin === 'dark'
-                  }),
-                  confirmButton: 'btn btn-primary mt-2',
-                  icon: 'border-0'
-                },
-                width: 'max-content',
-                showCloseButton: true,
-                confirmButtonText: 'OK'
-              }).then(() => {
-                callback?.(false)
-              })
+              showToast('success', <FormattedMessage id= 'Create info success' />)
+              callback?.(false)
             })
             .catch((err) => {
-              throw new Error(err.toString())
+              console.log('err', err)
+              showToast('error', <FormattedMessage id= 'data create failed, please try again' />)
             })
         } else {
           throw new Error(response.data?.message)
         }
       })
-      .catch((err) => {
-        console.log('err', err)
-        MySweetAlert.fire({
-          iconHtml: <CicleFailed />,
-          text: intl.formatMessage({ id: 'Failed to update data. Please try again' }),
-          customClass: {
-            popup: classNames({
-              'sweet-alert-popup--dark': skin === 'dark'
-            }),
-            confirmButton: 'btn btn-primary mt-2',
-            icon: 'border-0'
-          },
-          width: 'max-content',
-          showCloseButton: true,
-          confirmButtonText: intl.formatMessage({ id: 'Try again' })
-        })
+      .catch(() => {
+        showToast('error', <FormattedMessage id= 'data create failed, please try again' />)
       })
   }
 }
-export const putRoofVendors = ({ params, callback, intl, skin }) => {
+export const putRoofVendors = ({ params, callback }) => {
   return async () => {
-    const errorAlert = {
-      iconHtml: <CicleFailed />,
-      text: intl.formatMessage({ id: 'Failed to update data. Please try again' }),
-      customClass: {
-        popup: classNames({
-          'sweet-alert-popup--dark': skin === 'dark'
-        }),
-        confirmButton: 'btn btn-primary mt-2',
-        icon: 'border-0'
-      },
-      width: 'max-content',
-      showCloseButton: true,
-      confirmButtonText: intl.formatMessage({ id: 'Try again' })
-    }
-    const {contacts, ...roofVendor} = params
+    const { contacts, ...roofVendor } = params
+
     await axios
       .put(API_UPDATE_ROOF_VENDOR, params)
       .then((response) => {
         if (response.status === 200 && response.data?.data) {
           const contactsModifyRes = handleCRUDOfContacts({ contacts, roofVendorId: roofVendor.id })
           return Promise.all(contactsModifyRes)
-          .then(() => {
-            MySweetAlert.fire({
-              iconHtml: <CicleSuccess />,
-              text: intl.formatMessage({ id: 'Data is updated successfully' }),
-              customClass: {
-                popup: classNames({
-                  'sweet-alert-popup--dark': skin === 'dark'
-                }),
-                confirmButton: 'btn btn-primary mt-2',
-                icon: 'border-0'
-              },
-              width: 'max-content',
-              showCloseButton: true,
-              confirmButtonText: 'OK'
-            }).then(() => {
+            .then(() => {
+
+              showToast('success', <FormattedMessage id= 'Update info success' />)
               callback?.()
             })
-          })
-          .catch((err) => {
-            console.log('err', err)
-            MySweetAlert.fire(errorAlert)
-          })
-      } else {
-        throw new Error(response.data?.message)
-      }
-    })
-    .catch((err) => {
-      console.log('err', err)
-      MySweetAlert.fire(errorAlert)
-    })
+            .catch(() => {
+              showToast('error', <FormattedMessage id= 'data update failed, please try again' />)
+            })
+        } else {
+          throw new Error(response.data?.message)
+        }
+      })
+      .catch(() => {
+        showToast('error', <FormattedMessage id= 'data update failed, please try again' />)
+      })
+  }
 }
-}
-export const checkDuplicate = async ({ params }) => {
+export const checkDuplicate = async ({ params, id, intl }) => {
   return axios
     .post(API_CHECK_CODE_ROOF_VENDORS, params)
     .then((response) => {
@@ -275,6 +189,13 @@ export const checkDuplicate = async ({ params }) => {
     })
     .catch((err) => {
       console.log('err', err)
+      const alert = id ? 'Failed to update data. Please try again' : 'Failed to create data. Please try again'
+      showToast(
+        'error',
+        intl.formatMessage({
+          id: alert
+        })
+      )
       return true
     })
 }

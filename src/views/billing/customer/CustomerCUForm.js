@@ -4,7 +4,7 @@ import { useForm, Controller } from 'react-hook-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Button, Col, Form, FormFeedback, Input, Label, Row } from 'reactstrap'
 import Select from 'react-select'
-import { selectThemeColors } from '@src/utility/Utils'
+import { selectThemeColors, showToast } from '@src/utility/Utils'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { API_CHECK_DUPLICATE_CUSTOMER_CODE, NUMBER_REGEX } from '@src/utility/constants'
@@ -66,7 +66,7 @@ const OperationCUForm = ({
       taxCode: yup
         .string()
         .required(intl.formatMessage({ id: 'required-validate' }))
-        .max(20, intl.formatMessage({ id: 'max-validate' })),
+        .max(15, intl.formatMessage({ id: 'max-validate' })),
 
       address: yup
         .string()
@@ -114,11 +114,24 @@ const OperationCUForm = ({
       // check trùng  mã khách hàng
       const dataCheck = { code: values.code }
       if (initValues?.id) dataCheck.id = initValues?.id
+      try {
       const checkDupCodeRes = await axios.post(API_CHECK_DUPLICATE_CUSTOMER_CODE, dataCheck)
       if (checkDupCodeRes.status === 200 && checkDupCodeRes.data?.data) {
         setError('code', { type: 'custom', message: intl.formatMessage({ id: 'dubplicated-validate' }) })
         return
       }
+    } catch (err) {
+      const alert = initValues?.id
+        ? 'Failed to update data. Please try again'
+        : 'Failed to create data. Please try again'
+      showToast(
+        'error',
+        intl.formatMessage({
+          id: alert
+        })
+      )
+      return
+    }
       if (!contactsState?.filter((item) => !item.isDelete).length > 0) {
         return MySweetAlert.fire({
           // icon: 'success',

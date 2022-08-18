@@ -36,13 +36,13 @@ export const getAllContractByProjectId = ({ id, isSavedToState, callback }) => {
   }
 }
 
-export const deleteContractById = ({ id, callback, intl }) => {
+export const deleteContractById = ({ id, callback }) => {
   return async () => {
     await axios
       .delete(`${API_DELETE_CONTRACT}/${id}`)
       .then((response) => {
         if (response.status === 200 && response.data?.data) {
-          showToast('success', intl.formatMessage({ id: 'Delete info success' }))
+          showToast('success', <FormattedMessage id= 'Delete info success' />)
 
           callback?.()
         } else {
@@ -50,7 +50,7 @@ export const deleteContractById = ({ id, callback, intl }) => {
         }
       })
       .catch(() => {
-        showToast('error', intl.formatMessage({ id: 'data delete failed, please try again' }))
+        showToast('error', <FormattedMessage id= 'data delete failed, please try again' />)
       })
   }
 }
@@ -128,13 +128,13 @@ export const putCustomerContract = ({ payload: { clocks, ...params }, callback }
       })
   }
 }
-export const postContractRoofVendor = ({ newvalue, callback, intl }) => {
+export const postContractRoofVendor = ({ newvalue, callback }) => {
   return async () => {
     await axios
       .post(`${API_ADD_CONTRACT}`, newvalue)
       .then((response) => {
         if (response.status === 200 && response.data?.data) {
-          showToast('success', intl.formatMessage({ id: 'Create info success' }))
+          showToast('success', <FormattedMessage id= 'Create info success' />)
           callback?.()
         } else {
           console.log('err')
@@ -143,17 +143,17 @@ export const postContractRoofVendor = ({ newvalue, callback, intl }) => {
       })
       .catch((err) => {
         console.log('err', err)
-        showToast('error', intl.formatMessage({ id: 'data create failed, please try again' }))
+        showToast('error', <FormattedMessage id= 'data create failed, please try again' />)
       })
   }
 }
-export const putContractRoofVendor = ({ newvalue, callback, intl }) => {
+export const putContractRoofVendor = ({ newvalue, callback }) => {
   return async () => {
     await axios
       .put(`${API_UPDATE_CONTRACT}`, newvalue)
       .then((response) => {
         if (response.status === 200 && response.data?.data) {
-          showToast('success', intl.formatMessage({ id: 'Update info success' }))
+          showToast('success', <FormattedMessage id='Update info success' />)
           callback?.()
         } else {
           console.log('err')
@@ -162,7 +162,7 @@ export const putContractRoofVendor = ({ newvalue, callback, intl }) => {
       })
       .catch((err) => {
         console.log('err', err)
-        showToast('error', intl.formatMessage({ id: 'data update failed, please try again' }))
+        showToast('error', <FormattedMessage id='data update failed, please try again' />)
       })
   }
 }

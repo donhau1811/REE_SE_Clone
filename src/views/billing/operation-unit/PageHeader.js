@@ -1,18 +1,14 @@
-/* eslint-disable no-unused-vars */
 import { func, object, string } from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { Button, Col, Input, Row, UncontrolledTooltip } from 'reactstrap'
-import InputGroupAddon from 'reactstrap/es/InputGroupAddon'
-import InputGroupText from 'reactstrap/es/InputGroupText'
-import InputGroup from 'reactstrap/es/InputGroup'
-import { ReactComponent as IconSearch } from '@src/assets/images/svg/table/ic-search.svg'
+import { Button, Col, Row } from 'reactstrap'
 import { ReactComponent as IconFilter } from '@src/assets/images/svg/table/ic-filter.svg'
 import { useHistory } from 'react-router-dom'
 import { ROUTER_URL } from '@src/utility/constants'
 import Filter from './Filter'
+import  SearchBar  from '@src/views/common/SearchBar/index'
 
-const PageHeader = ({ intl, onSearch = () => {}, onFilter, searchValue }) => {
+const PageHeader = ({  onSearch = () => {}, onFilter, searchValue }) => {
   const history = useHistory()
   const [value, setValue] = useState('')
 
@@ -24,21 +20,6 @@ const PageHeader = ({ intl, onSearch = () => {}, onFilter, searchValue }) => {
     history.push(ROUTER_URL.BILLING_OPERATION_UNIT_CREATE)
   }
 
-  const handleClickToSearch = () => {
-    onSearch?.(value)
-  }
-
-  const handleSearchInputChange = (e) => {
-    setValue(e.target.value)
-  }
-
-  const handleSearchInputKeyDown = (event) => {
-    if (event.keyCode === 13) {
-      event.preventDefault()
-      onSearch?.(value)
-    }
-  }
-
   return (
     <>
       <Row className="mb-2">
@@ -48,26 +29,7 @@ const PageHeader = ({ intl, onSearch = () => {}, onFilter, searchValue }) => {
               <IconFilter />
             </span>
           </Filter>
-
-          <InputGroup className="input-group-merge">
-            <Input
-              className=""
-              bsSize="sm"
-              id="search-input"
-              placeholder={intl.formatMessage({ id: 'operation-unit-list-search-input-placeholder' })}
-              value={value}
-              onChange={handleSearchInputChange}
-              onKeyDown={handleSearchInputKeyDown}
-            />
-            <InputGroupAddon addonType="append" className="" role="button">
-              <InputGroupText>
-                <IconSearch onClick={handleClickToSearch} />
-              </InputGroupText>
-            </InputGroupAddon>
-          </InputGroup>
-          <UncontrolledTooltip placement="top" target={`search-input`}>
-            {intl.formatMessage({ id: 'operation-unit-list-search-input-placeholder' })}
-          </UncontrolledTooltip>
+          <SearchBar onSearch={onSearch} searchValue={searchValue} placeholder={'operation-unit-list-search-input-placeholder'}/>
         </Col>
 
         <Col lg={{ offset: 4, size: 4 }} md={4} className="d-flex justify-content-end align-items-center">

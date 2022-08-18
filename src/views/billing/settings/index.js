@@ -8,6 +8,7 @@ import { useEffect } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom/cjs/react-router-dom.min'
 import { Badge, Col, Row, UncontrolledTooltip } from 'reactstrap'
 import PageHeader from './PageHeader'
 import { getListBillingSetting } from './store/actions'
@@ -34,7 +35,9 @@ const OperationUnit = ({ intl }) => {
       pagination: {
         rowsPerPage: ROWS_PER_PAGE_DEFAULT,
         currentPage: 1
-      }
+      },
+      sortBy: 'code',
+      sortDirection: 'asc'
     }
     fetchBillingSetting(initParams)
     return () => {
@@ -92,7 +95,7 @@ const OperationUnit = ({ intl }) => {
       name: intl.formatMessage({ id: 'Config Name' }),
       sortable: true,
       selector: 'name',
-      cell: (row) => <span>{row.name}</span>,
+      cell: (row) => <Link to={`${ROUTER_URL.BILLING_SETTING}/${row.id}`}>{row?.name}</Link>,
       center: true
     },
     {
@@ -107,11 +110,11 @@ const OperationUnit = ({ intl }) => {
       sortable: true,
       cell: (row) => {
         return row.state === OPERATION_UNIT_STATUS.ACTIVE ? (
-          <Badge pill color="light-success">
+          <Badge pill color="light-success"  className="custom-bagde">
             <FormattedMessage id="Active" />
           </Badge>
         ) : (
-          <Badge pill color="light-muted">
+          <Badge pill color="light-muted"  className="custom-bagde">
             <FormattedMessage id="Inactive" />
           </Badge>
         )

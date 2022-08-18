@@ -64,6 +64,14 @@ const ThemeNavbar = (props) => {
         ]
         return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
       }
+      case `${ROUTER_URL.BILLING_OPERATION_UNIT_CREATE}`: {
+        const tempItems = [
+          { name: intl.formatMessage({ id: 'billing' }), link: '' },
+          { name: intl.formatMessage({ id: 'operation-units' }), link: ROUTER_URL.BILLING_OPERATION_UNIT },
+          { name: intl.formatMessage({ id: 'create-operation-unit' }), link: '' }
+        ]
+        return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
+      }
       case `${ROUTER_URL.BILLING_ROOF_RENTAL_UNIT}/${selectedRoofVendor?.id}`: {
         const tempItems = [
           { name: intl.formatMessage({ id: 'billing' }), link: '' },
@@ -88,6 +96,15 @@ const ThemeNavbar = (props) => {
           { name: intl.formatMessage({ id: 'billing' }), link: '' },
           { name: intl.formatMessage({ id: 'customers' }), link: ROUTER_URL.BILLING_CUSTOMER },
           { name: selectedCustomer?.fullName, link: '' }
+        ]
+        return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
+      }
+      case `${ROUTER_URL.BILLING_CUSTOMER_CREATE}`: {
+        const tempItems = [
+          { name: intl.formatMessage({ id: 'billing' }), link: '' },
+          { name: intl.formatMessage({ id: 'customers' }), link: ROUTER_URL.BILLING_CUSTOMER },
+          { name: intl.formatMessage({ id: 'create-customer' }), link: '' }
+
         ]
         return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
       }

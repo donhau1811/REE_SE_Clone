@@ -15,10 +15,10 @@ import moment from 'moment'
 const intitValue = {
   type: 'all',
   state: 'all',
-  fromCreatedDate: null,
-  toCreatedDate: null,
-  fromModifyDate: null,
-  toModifyDate: null
+  fromCreatedDate: new Date(),
+  toCreatedDate:  new Date(),
+  fromModifyDate:  new Date(),
+  toModifyDate:  new Date()
 }
 
 const FilterCustomer = ({ intl, children, onSubmit = () => {} }) => {
@@ -30,7 +30,7 @@ const FilterCustomer = ({ intl, children, onSubmit = () => {} }) => {
   }
   const handleChange = (type) => (e) => {
     let value
-    if (e.target) value = e.target.value
+    if (e?.target) value = e?.target?.value
     else {
       value = moment(e)
     }
@@ -58,10 +58,11 @@ const FilterCustomer = ({ intl, children, onSubmit = () => {} }) => {
     }
 
     if (fromCreatedDate || toCreatedDate) {
+
       payload.createDate = {
         value: {
-          start: formData.fromCreatedDate ? moment(formData.fromCreatedDate) : null,
-          end: formData.toCreatedDate ? moment(formData.toCreatedDate) : null
+          start: formData.fromCreatedDate ? moment(formData.fromCreatedDate).utc() : null,
+          end: formData.toCreatedDate ? moment(formData.toCreatedDate).utc() : null
         },
         type: 'dateRange'
       }
@@ -69,8 +70,8 @@ const FilterCustomer = ({ intl, children, onSubmit = () => {} }) => {
     if (fromModifyDate || toModifyDate) {
       payload.modifyDate = {
         value: {
-          start: formData.fromModifyDate ? moment(formData.fromModifyDate) : null,
-          end: formData.toModifyDate ? moment(formData.toModifyDate) : null
+          start: formData.fromModifyDate ? moment(formData.fromModifyDate).utc() : null,
+          end: formData.toModifyDate ? moment(formData.toModifyDate).utc() : null
         },
         type: 'dateRange'
       }
