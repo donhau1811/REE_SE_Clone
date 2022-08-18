@@ -3,7 +3,7 @@ import { ISO_DISPLAY_DATE_TIME_FORMAT, ROUTER_URL } from '@src/utility/constants
 import moment from 'moment'
 import { object } from 'prop-types'
 import React, { useEffect, useState } from 'react'
-import { injectIntl } from 'react-intl'
+import { injectIntl, useIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useLocation, useParams } from 'react-router-dom'
 import ProjectCUForm from './ProjectCUForm'
@@ -12,6 +12,7 @@ import SweetAlert from 'sweetalert2'
 import classNames from 'classnames'
 import '@src/@core/scss/billing-sweet-alert.scss'
 import withReactContent from 'sweetalert2-react-content'
+import BreadCrumbs from '@src/views/common/breadcrumbs'
 
 const MySweetAlert = withReactContent(SweetAlert)
 
@@ -30,7 +31,6 @@ const UpdateOperationUnit = ({ intl }) => {
   const { id } = useParams()
 
   useEffect(() => {
-  
     if (location.state?.allowUpdate) setIsReadOnly(false)
   }, [location.state?.allowUpdate])
 
@@ -107,7 +107,7 @@ const UpdateOperationUnit = ({ intl }) => {
         submitText={intl.formatMessage({
           id: location.state?.isFromCreateStep ? 'Finish' : isReadOnly ? 'Update' : 'Save'
         })}
-        cancelButton={  location.state?.isFromCreateStep && null}
+        cancelButton={location.state?.isFromCreateStep && null}
       />
     </>
   )
@@ -118,3 +118,17 @@ UpdateOperationUnit.propTypes = {
 }
 
 export default injectIntl(UpdateOperationUnit)
+
+export const Navbar = () => {
+  const intl = useIntl()
+  const {
+    projects: { selectedProject: selectedBillingProject }
+  } = useSelector((state) => state)
+  const tempItems = [
+    { name: intl.formatMessage({ id: 'billing' }), link: '' },
+    { name: intl.formatMessage({ id: 'project management' }), link: '' },
+    { name: intl.formatMessage({ id: 'project' }), link: ROUTER_URL.BILLING_PROJECT },
+    { name: selectedBillingProject?.name, link: '' }
+  ]
+  return <BreadCrumbs breadCrumbItems={tempItems} />
+}

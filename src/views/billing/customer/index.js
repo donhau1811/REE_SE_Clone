@@ -42,10 +42,10 @@ const OperationUnit = ({ intl }) => {
     const initParamsToFetch = {
       pagination: {
         rowsPerPage: ROWS_PER_PAGE_DEFAULT,
-        currentPage: 1,
-        sortBy: 'code',
-        sortDirection: 'asc'
-      }
+        currentPage: 1
+      },
+      sortBy: 'code',
+      sortDirection: 'asc'
     }
     fetchListCustomers(initParamsToFetch)
     return () => {
@@ -155,9 +155,8 @@ const OperationUnit = ({ intl }) => {
       selector: 'fullName',
       sortable: true,
       cell: (row) => (
-        <Link to={ `${ROUTER_URL.BILLING_CUSTOMER}/${row.id}`}>{row?.fullName}</Link>
+        <Link to={ `${ROUTER_URL.BILLING_CUSTOMER}/${row.id}`}>{row?.fullName}</Link>),
 
-      ),
       minWidth: '360px'
     },
     {
@@ -205,11 +204,11 @@ const OperationUnit = ({ intl }) => {
       minWidth: '150px',
       cell: (row) => {
         return row.state === OPERATION_UNIT_STATUS.ACTIVE ? (
-          <Badge pill color="light-success"  className="custom-bagde">
+          <Badge pill color="light-success" className="custom-bagde">
             <FormattedMessage id="Active" />
           </Badge>
         ) : (
-          <Badge pill color="light-muted"  className="custom-bagde">
+          <Badge pill color="light-muted" className="custom-bagde">
             <FormattedMessage id="Inactive" />
           </Badge>
         )
@@ -245,6 +244,7 @@ const OperationUnit = ({ intl }) => {
             onPageChange={handleChangePage}
             onPerPageChange={handlePerPageChange}
             onSort={handleSort}
+            defaultSortAsc={false}
             {...pagination}
           />
         </Col>

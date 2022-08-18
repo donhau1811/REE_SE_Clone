@@ -28,6 +28,7 @@ const OperationCUForm = ({
   onCancel = () => {},
   initValues,
   submitText,
+  cancelText,
   contacts
 }) => {
   const [contactsState, setContactsState] = useState([])
@@ -96,7 +97,7 @@ const OperationCUForm = ({
       type: GENERAL_CUSTOMER_TYPE.find((item) => item.value === initValues?.type)
     }
     reset(tempValues)
-  }, [initValues?.id])
+  }, [initValues])
 
   useEffect(() => {
     if (!isEqual(contacts, contactsState)) {
@@ -149,7 +150,7 @@ const OperationCUForm = ({
         })
       }
     }
-
+   console.log('values', values)
     onSubmit?.({
       ...values,
       contacts: contactsState
@@ -157,7 +158,7 @@ const OperationCUForm = ({
   }
   return (
     <>
-      <Form key="customer-form" onSubmit={handleSubmit(handleSubmitCustomerForm)}>
+      <Form className="billing-form" onSubmit={handleSubmit(handleSubmitCustomerForm)}>
         <Row className="mb-2">
           <Col>
             <h4 className="typo-section">
@@ -176,10 +177,11 @@ const OperationCUForm = ({
               name="fullName"
               disabled={isViewed}
               autoComplete="on"
-              invalid={!!errors.fullName}
-              valid={getValues('fullName')?.trim() && !errors.fullName}
+              invalid={!isViewed && !!errors.fullName}
+              valid={!isViewed && getValues('fullName')?.trim() && !errors.fullName}
               innerRef={register()}
               placeholder={intl.formatMessage({ id: 'operation-unit-form-name-placeholder' })}
+              className=""
             />
             {errors?.fullName && <FormFeedback>{errors?.fullName?.message}</FormFeedback>}
           </Col>
@@ -194,8 +196,8 @@ const OperationCUForm = ({
               autoComplete="on"
               disabled={isViewed}
               innerRef={register()}
-              invalid={!!errors.code}
-              valid={getValues('code')?.trim() && !errors.code}
+              invalid={!isViewed && !!errors.code}
+              valid={!isViewed && getValues('code')?.trim() && !errors.code}
               placeholder={intl.formatMessage({ id: 'Enter Customer Code' })}
             />
             {errors?.code && <FormFeedback>{errors?.code?.message}</FormFeedback>}
@@ -233,8 +235,8 @@ const OperationCUForm = ({
               autoComplete="on"
               innerRef={register()}
               disabled={isViewed}
-              invalid={!!errors.taxCode}
-              valid={getValues('taxCode')?.trim() && !errors.taxCode}
+              invalid={!isViewed && !!errors.taxCode}
+              valid={!isViewed && getValues('taxCode')?.trim() && !errors.taxCode}
               placeholder={intl.formatMessage({ id: 'operation-unit-form-taxCode-placeholder' })}
             />
             {errors?.taxCode && <FormFeedback>{errors?.taxCode?.message}</FormFeedback>}
@@ -250,8 +252,8 @@ const OperationCUForm = ({
               autoComplete="on"
               innerRef={register()}
               disabled={isViewed}
-              invalid={!!errors.address}
-              valid={getValues('address')?.trim() && !errors.address}
+              invalid={!isViewed && !!errors.address}
+              valid={!isViewed && getValues('address')?.trim() && !errors.address}
               placeholder={intl.formatMessage({ id: 'operation-unit-form-address-placeholder' })}
             />
             {errors?.address && <FormFeedback>{errors?.address?.message}</FormFeedback>}
@@ -266,8 +268,8 @@ const OperationCUForm = ({
               autoComplete="on"
               innerRef={register()}
               disabled={isViewed}
-              invalid={!!errors.phone}
-              valid={getValues('phone')?.trim() && !errors.phone}
+              invalid={!isViewed && !!errors.phone}
+              valid={!isViewed && getValues('phone')?.trim() && !errors.phone}
               placeholder={intl.formatMessage({ id: 'operation-unit-form-mobile-placeholder' })}
             />
             {errors?.phone && <FormFeedback>{errors?.phone?.message}</FormFeedback>}
@@ -303,8 +305,8 @@ const OperationCUForm = ({
               autoComplete="on"
               disabled={isViewed}
               innerRef={register()}
-              invalid={!!errors.note}
-              valid={getValues('note')?.trim() && !errors.note}
+              invalid={!isViewed && !!errors.note}
+              valid={!isViewed && getValues('note')?.trim() && !errors.note}
               placeholder={intl.formatMessage({ id: 'Please enter note' })}
             />
             {errors?.note && <FormFeedback>{errors?.note?.message}</FormFeedback>}
@@ -313,12 +315,12 @@ const OperationCUForm = ({
         <Contact  disabled={isViewed} onChange={handleSubmitContactForm} data={contactsState} />
 
         <Row>
-          <Col className="d-flex justify-content-end align-items-center">
+          <Col className="d-flex justify-content-end align-items-center mb-2">
             <Button type="submit" color="primary" className="mr-1 px-3">
               {submitText || intl.formatMessage({ id: 'Save' })}
             </Button>{' '}
             <Button color="secondary" onClick={onCancel}>
-              {intl.formatMessage({ id: 'Cancel' })}
+              {cancelText || intl.formatMessage({ id: 'Cancel' })}
             </Button>{' '}
           </Col>
         </Row>
@@ -334,7 +336,8 @@ OperationCUForm.propTypes = {
   initValues: object,
   submitText: string,
   isViewed: bool,
-  contacts: array
+  contacts: array,
+  cancelText: string
 }
 
 export default injectIntl(OperationCUForm)

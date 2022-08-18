@@ -86,7 +86,7 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
 
   return (
     <>
-      <Form onSubmit={handleSubmit(handleSubmitOperationUnitForm)}>
+      <Form className='billing-form' onSubmit={handleSubmit(handleSubmitOperationUnitForm)}>
         <Row>
           <Col className="mb-2" md={4}>
             <Label className="general-label" for="name">
@@ -98,8 +98,8 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
               name="name"
               disabled={isReadOnly}
               autoComplete="on"
-              invalid={!!errors.name}
-              valid={getValues('name')?.trim() && !errors.name}
+              invalid={!isReadOnly && !!errors.name}
+              valid={!isReadOnly && getValues('name')?.trim() && !errors.name}
               innerRef={register()}
               placeholder={intl.formatMessage({ id: 'operation-unit-form-name-placeholder' })}
             />
@@ -116,8 +116,8 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
               autoComplete="on"
               innerRef={register()}
               disabled={isReadOnly}
-              invalid={!!errors.code}
-              valid={getValues('code')?.trim() && !errors.code}
+              invalid={!isReadOnly && !!errors.code}
+              valid={!isReadOnly && getValues('code')?.trim() && !errors.code}
               placeholder={intl.formatMessage({ id: 'operation-unit-form-code-placeholder' })}
             />
             {errors?.code && <FormFeedback>{errors?.code?.message}</FormFeedback>}
@@ -133,8 +133,8 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
               autoComplete="on"
               innerRef={register()}
               disabled={isReadOnly}
-              invalid={!!errors.taxCode}
-              valid={getValues('taxCode')?.trim() && !errors.taxCode}
+              invalid={!isReadOnly && !!errors.taxCode}
+              valid={!isReadOnly && getValues('taxCode')?.trim() && !errors.taxCode}
               placeholder={intl.formatMessage({ id: 'operation-unit-form-taxCode-placeholder' })}
             />
             {errors?.taxCode && <FormFeedback>{errors?.taxCode?.message}</FormFeedback>}
@@ -151,8 +151,8 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
               autoComplete="on"
               innerRef={register()}
               disabled={isReadOnly}
-              invalid={!!errors.address}
-              valid={getValues('address')?.trim() && !errors.address}
+              invalid={!isReadOnly && !!errors.address}
+              valid={!isReadOnly && getValues('address')?.trim() && !errors.address}
               placeholder={intl.formatMessage({ id: 'operation-unit-form-address-placeholder' })}
             />
             {errors?.address && <FormFeedback>{errors?.address?.message}</FormFeedback>}
@@ -167,8 +167,8 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
               autoComplete="on"
               disabled={isReadOnly}
               innerRef={register()}
-              invalid={!!errors.phone}
-              valid={getValues('phone')?.trim() && !errors.phone}
+              invalid={!isReadOnly && !!errors.phone}
+              valid={!isReadOnly && getValues('phone')?.trim() && !errors.phone}
               placeholder={intl.formatMessage({ id: 'operation-unit-form-mobile-placeholder' })}
             />
             {errors?.phone && <FormFeedback>{errors?.phone?.message}</FormFeedback>}
@@ -200,7 +200,7 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
             {submitText || intl.formatMessage({ id: 'Save' })}
           </Button>{' '}
           <Button color="secondary" onClick={onCancel}>
-            {intl.formatMessage({ id: 'Cancel' })}
+            {intl.formatMessage({ id: 'Back' })}
           </Button>{' '}
         </Row>
       </Form>

@@ -151,7 +151,7 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
   }
   return (
     <>
-      <Form onSubmit={handleSubmit(handleSubmitRoofVendorsForm)}>
+      <Form className='billing-form' onSubmit={handleSubmit(handleSubmitRoofVendorsForm)}>
         <Row className="mb-2">
           <Col>
             <h4 className="typo-section">
@@ -172,8 +172,8 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
               disabled={isReadOnly}
               name="name"
               autoComplete="on"
-              invalid={!!errors.name}
-              valid={getValues('name')?.trim() && !errors.name}
+              invalid={!isReadOnly && !!errors.name}
+              valid={!isReadOnly && getValues('name')?.trim() && !errors.name}
               innerRef={register()}
               placeholder={intl.formatMessage({ id: 'Enter-unit-name' })}
             />
@@ -190,8 +190,8 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
               name="code"
               autoComplete="on"
               innerRef={register()}
-              invalid={!!errors.code}
-              valid={getValues('code')?.trim() && !errors.code}
+              invalid={!isReadOnly && !!errors.code}
+              valid={!isReadOnly && getValues('code')?.trim() && !errors.code}
               placeholder={intl.formatMessage({ id: 'Enter-unit-code' })}
             />
             {errors?.code && <FormFeedback>{errors?.code?.message}</FormFeedback>}
@@ -208,8 +208,8 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
               name="taxCode"
               autoComplete="on"
               innerRef={register()}
-              invalid={!!errors.taxCode}
-              valid={getValues('taxCode')?.trim() && !errors.taxCode}
+              invalid={!isReadOnly && !!errors.taxCode}
+              valid={!isReadOnly && getValues('taxCode')?.trim() && !errors.taxCode}
               placeholder={intl.formatMessage({ id: 'Enter-unit-taxCode' })}
             />
             {errors?.taxCode && <FormFeedback>{errors?.taxCode?.message}</FormFeedback>}
@@ -228,8 +228,8 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
               name="address"
               autoComplete="on"
               innerRef={register()}
-              invalid={!!errors.address}
-              valid={getValues('address')?.trim() && !errors.address}
+              invalid={!isReadOnly && !!errors.address}
+              valid={!isReadOnly && getValues('address')?.trim() && !errors.address}
               placeholder={intl.formatMessage({ id: 'Enter-unit-address' })}
             />
             {errors?.address && <FormFeedback>{errors?.address?.message}</FormFeedback>}
@@ -247,8 +247,8 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
               name="email"
               autoComplete="on"
               innerRef={register()}
-              invalid={!!errors.email}
-              valid={getValues('email')?.trim() && !errors.email}
+              invalid={!isReadOnly && !!errors.email}
+              valid={!isReadOnly && getValues('email')?.trim() && !errors.email}
               placeholder={intl.formatMessage({ id: 'Enter-unit-email' })}
             />
             {errors?.email && <FormFeedback>{errors?.email?.message}</FormFeedback>}
@@ -265,8 +265,8 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
               disabled={isReadOnly}
               autoComplete="on"
               innerRef={register()}
-              invalid={!!errors.phone}
-              valid={getValues('phone')?.trim() && !errors.phone}
+              invalid={!isReadOnly && !!errors.phone}
+              valid={!isReadOnly && getValues('phone')?.trim() && !errors.phone}
               placeholder={intl.formatMessage({ id: 'Enter-unit-phone' })}
             />
             {errors?.phone && <FormFeedback>{errors?.phone?.message}</FormFeedback>}
