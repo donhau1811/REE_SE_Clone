@@ -1,11 +1,27 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Col, Row, UncontrolledTooltip } from 'reactstrap'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { object } from 'prop-types'
 import Table from '@src/views/common/table/CustomDataTable'
 import { billElectricArray } from './mock-data'
+import { ROWS_PER_PAGE_DEFAULT } from '@src/utility/constants'
 
 const ProjectTable = ({ intl }) => {
+  const [pagination, setPagination] = useState({ rowsPerPage: ROWS_PER_PAGE_DEFAULT, currentPage: 1 })
+
+  const handleChangePage = (e) => {
+    setPagination({
+      ...pagination,
+      currentPage: e.selected + 1
+    })
+  }
+
+  const handlePerPageChange = (e) => {
+    setPagination({
+      rowsPerPage: e.value,
+      currentPage: 1
+    })
+  }
   const columns = [
     {
       name: intl.formatMessage({ id: 'No.' }),
@@ -19,7 +35,7 @@ const ProjectTable = ({ intl }) => {
       name: intl.formatMessage({ id: 'projectCode' }),
       selector: 'projectCode',
       sortable: true,
-      maxWidth: '72px'
+      maxWidth: '150px'
     },
     {
       name: intl.formatMessage({ id: 'projectName' }),
@@ -60,7 +76,14 @@ const ProjectTable = ({ intl }) => {
     <>
       <Row>
         <Col sm="12">
-          <Table columns={columns} data={billElectricArray} />
+          <Table
+            columns={columns}
+            data={billElectricArray}
+            total={billElectricArray.length}
+            onPageChange={handleChangePage}
+            onPerPageChange={handlePerPageChange}
+            {...pagination}
+          />
         </Col>
       </Row>
     </>

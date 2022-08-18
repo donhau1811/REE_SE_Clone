@@ -4,20 +4,16 @@ import './styles.scss'
 import { FormattedMessage } from 'react-intl'
 import { element } from 'prop-types'
 
-const NoDataCOM = ({title}) => {
+const NoDataCOM = ({ title }) => {
   return (
     <>
       <div className="customer-contact-no-data">
-        <NoDataIcon key='acb' />
+        <NoDataIcon key="acb" />
         <div className="no-data-title mt-2 font-weight-bolder">
           {' '}
           <FormattedMessage id="No data" />
         </div>
-        <div className="no-data-title mt-2">
-          {title}
-          {' '}
-         
-        </div>
+        <div className="no-data-title mt-2">{title} </div>
       </div>
     </>
   )

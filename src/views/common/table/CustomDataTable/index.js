@@ -1,8 +1,9 @@
 import classNames from 'classnames'
-import { array, func, number } from 'prop-types'
+import { array, element, func, number } from 'prop-types'
 import React from 'react'
 import DataTable from 'react-data-table-component'
 import { Code } from 'react-feather'
+import NoDataCOM from '../../NoDataCOM'
 import Pagination from './Pagination'
 import './style.scss'
 
@@ -16,6 +17,7 @@ const Table = ({
   rowsPerPageOptions,
   onPerPageChange,
   onPageChange,
+  noDataTitle,
   ...rest
 }) => {
   const paginationProps = {
@@ -35,7 +37,7 @@ const Table = ({
         noHeader
         pagination
         paginationServer
-        className={classNames(`react-dataTable react-dataTable--projects hover`, {
+        className={classNames(`react-dataTable react-dataTable--projects hover react-dataTable-version-2`, {
           'overflow-hidden': data?.length <= 0
         })}
         fixedHeader
@@ -54,6 +56,7 @@ const Table = ({
         sortServer
         {...rest}
       />
+      {!(data || []).length > 0 && <NoDataCOM title={noDataTitle} />}
     </>
   )
 }
@@ -67,7 +70,8 @@ Table.propTypes = {
   currentPage: number,
   rowsPerPageOptions: array,
   onPerPageChange: func,
-  onPageChange: func
+  onPageChange: func,
+  noDataTitle: element 
 }
 
 export default Table

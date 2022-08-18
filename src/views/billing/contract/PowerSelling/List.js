@@ -9,7 +9,6 @@ import { DISPLAY_DATE_FORMAT, ROUTER_URL } from '@src/utility/constants'
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
 import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit.svg'
-import NoDataCOM from '@src/views/common/NoDataCOM'
 import { useHistory, useParams } from 'react-router-dom'
 
 function PowerSelling({ disabled, intl, data, onDelete }) {
@@ -129,10 +128,13 @@ function PowerSelling({ disabled, intl, data, onDelete }) {
           </Button.Ripple>
         </Col>
         <Col xs={12}>
-          <Table tableId="project" columns={columns} data={data} pagination={null} />
-          {!data?.length > 0 && (
-            <NoDataCOM title={<FormattedMessage id="Add notification of electricity fee now or later" />} />
-          )}
+          <Table
+            tableId="project"
+            columns={columns}
+            data={data}
+            pagination={null}
+            noDataTitle={<FormattedMessage id="Add notification of electricity fee now or later" />}
+          />
         </Col>
       </Row>
     </>
