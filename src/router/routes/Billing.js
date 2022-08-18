@@ -164,6 +164,7 @@ export const BillingRoutes = [
   {
     path: ROUTER_URL.BILLING_PROJECT_UPDATE,
     component: lazy(() => import('../../views/billing/project/update')),
+    navbar: require('../../views/billing/project/update')?.Navbar,
     exact: true,
     meta: {
       action: 'manage',
