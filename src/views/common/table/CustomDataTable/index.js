@@ -3,6 +3,7 @@ import { array, element, func, number } from 'prop-types'
 import React from 'react'
 import DataTable from 'react-data-table-component'
 import { Code } from 'react-feather'
+import { FormattedMessage } from 'react-intl'
 import NoDataCOM from '../../NoDataCOM'
 import Pagination from './Pagination'
 import './style.scss'
@@ -56,7 +57,9 @@ const Table = ({
         sortServer
         {...rest}
       />
-      {!(data || []).length > 0 && <NoDataCOM title={noDataTitle} />}
+      {!(data || []).length > 0 && (
+        <NoDataCOM title={noDataTitle || <FormattedMessage id="Add or update record later" />} />
+      )}
     </>
   )
 }
@@ -71,7 +74,7 @@ Table.propTypes = {
   rowsPerPageOptions: array,
   onPerPageChange: func,
   onPageChange: func,
-  noDataTitle: element 
+  noDataTitle: element
 }
 
 export default Table

@@ -19,14 +19,16 @@ function PowerSelling({ disabled, intl, data, onDelete }) {
     onDelete?.(contractItem)
   }
 
-  const handleRedirectToUpdateContract = (contractItem, allowUpdate) => () => {
-    history.push({
-      pathname: ROUTER_URL.BILLING_PROJECT_UPDATE_CONTRACT_POWER_SELLING.replace(':projectId', id).replace(
-        ':id',
-        contractItem.id
-      ),
-      state: { allowUpdate }
-    })
+  const handleRedirectToUpdateContract = (contractItem, allowUpdate = null) => {
+    return () => {
+      history.push({
+        pathname: ROUTER_URL.BILLING_PROJECT_UPDATE_CONTRACT_POWER_SELLING.replace(':projectId', id).replace(
+          ':id',
+          contractItem.id
+        ),
+        state: { allowUpdate }
+      })
+    }
   }
 
   const columns = [
@@ -128,13 +130,7 @@ function PowerSelling({ disabled, intl, data, onDelete }) {
           </Button.Ripple>
         </Col>
         <Col xs={12}>
-          <Table
-            tableId="project"
-            columns={columns}
-            data={data}
-            pagination={null}
-            noDataTitle={<FormattedMessage id="Add notification of electricity fee now or later" />}
-          />
+          <Table tableId="project" columns={columns} data={data} pagination={null} />
         </Col>
       </Row>
     </>

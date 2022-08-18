@@ -119,13 +119,7 @@ function RoofRenting({ disabled, intl, data, onDelete }) {
           </Button.Ripple>
         </Col>
         <Col xs={12}>
-          <Table
-            tableId="project"
-            columns={columns}
-            data={data}
-            pagination={null}
-            noDataTitle={<FormattedMessage id="Add notification of electricity fee now or later" />}
-          />
+          <Table tableId="project" columns={columns} data={data} pagination={null} />
         </Col>
       </Row>
     </>
