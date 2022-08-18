@@ -8,7 +8,8 @@ import { useEffect } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { Badge, CardLink, Col, Row, UncontrolledTooltip } from 'reactstrap'
+import { Link } from 'react-router-dom/cjs/react-router-dom.min'
+import { Badge, Col, Row, UncontrolledTooltip } from 'reactstrap'
 import PageHeader from './PageHeader'
 import { getListBillingSetting } from './store/actions'
 
@@ -49,10 +50,6 @@ const OperationUnit = ({ intl }) => {
 
   const handleRedirectToUpdatePage = (id) => () => {
     if (id) history.push(`${ROUTER_URL.BILLING_SETTING}/${id}`)
-  }
-  const  clickOnRow = (row) => {
-    if (row?.id) history.push(`${ROUTER_URL.BILLING_SETTING}/${row?.id}`)
-
   }
 
   const handleChangePage = (e) => {
@@ -98,11 +95,7 @@ const OperationUnit = ({ intl }) => {
       name: intl.formatMessage({ id: 'Config Name' }),
       sortable: true,
       selector: 'name',
-      cell: (row) => (
-        <CardLink className="text-primary" onClick={() => clickOnRow(row)}>
-          {row.name}
-        </CardLink>
-      ),
+      cell: (row) => <Link to={`${ROUTER_URL.BILLING_SETTING}/${row.id}`}>{row?.name}</Link>,
       center: true
     },
     {
@@ -117,11 +110,11 @@ const OperationUnit = ({ intl }) => {
       sortable: true,
       cell: (row) => {
         return row.state === OPERATION_UNIT_STATUS.ACTIVE ? (
-          <Badge pill color="light-success">
+          <Badge pill color="light-success"  className="custom-bagde">
             <FormattedMessage id="Active" />
           </Badge>
         ) : (
-          <Badge pill color="light-muted">
+          <Badge pill color="light-muted"  className="custom-bagde">
             <FormattedMessage id="Inactive" />
           </Badge>
         )

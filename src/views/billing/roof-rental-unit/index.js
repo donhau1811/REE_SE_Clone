@@ -8,13 +8,14 @@ import { useEffect } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { Badge, Col, Row, UncontrolledTooltip, CardLink } from 'reactstrap'
+import { Badge, Col, Row, UncontrolledTooltip } from 'reactstrap'
 import SweetAlert from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import PageHeader from './PageHeader'
 import { deleteBillingRoofRentalUnit, getRoofVendor } from './store/actions'
 import './styles.scss'
 import { ROUTER_URL, ROWS_PER_PAGE_DEFAULT } from '@src/utility/constants'
+import { Link } from 'react-router-dom/cjs/react-router-dom.min'
 
 const MySweetAlert = withReactContent(SweetAlert)
 
@@ -36,9 +37,7 @@ const RoofVendor = ({ intl }) => {
       })
     )
   }
-  const clickOnRow = (row) => {
-    if (row?.id) history.push(`${ROUTER_URL.BILLING_ROOF_RENTAL_UNIT}/${row.id}`)
-  }
+
   useEffect(() => {
     fetchRoofVendor({
       pagination: {
@@ -139,10 +138,8 @@ const RoofVendor = ({ intl }) => {
       center: true,
       sortable: true,
       cell: (row) => (
-        <CardLink className="text-primary" onClick={() => clickOnRow(row)}>
-          {row.name}
-        </CardLink>
-      ),
+        <Link to={ `${ROUTER_URL.BILLING_ROOF_RENTAL_UNIT}/${row.id}`}>{row?.name}</Link>),
+
       minWidth: '20%'
     },
     {
@@ -191,11 +188,11 @@ const RoofVendor = ({ intl }) => {
       sortable: true,
       cell: (row) => {
         return row.state === OPERATION_UNIT_STATUS.ACTIVE ? (
-          <Badge pill color="light-success">
+          <Badge pill color="light-success"  className="custom-bagde">
             <FormattedMessage id="Active" />
           </Badge>
         ) : (
-          <Badge pill color="light-muted">
+          <Badge pill color="light-muted"  className="custom-bagde">
             <FormattedMessage id="Inactive" />
           </Badge>
         )

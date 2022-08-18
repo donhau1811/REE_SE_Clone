@@ -15,7 +15,8 @@ import { useEffect } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { Badge, CardLink, Col, Row, UncontrolledTooltip } from 'reactstrap'
+import { Link } from 'react-router-dom/cjs/react-router-dom.min'
+import { Badge, Col, Row, UncontrolledTooltip } from 'reactstrap'
 import SweetAlert from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import PageHeader from './PageHeader'
@@ -64,9 +65,7 @@ const OperationUnit = ({ intl }) => {
   const handleRedirectToUpdatePage = (id) => () => {
     if (id) history.push(`${ROUTER_URL.BILLING_OPERATION_UNIT}/${id}`)
   }
-  const clickOnRow = (row) => {
-    if (row?.id) history.push(`${ROUTER_URL.BILLING_OPERATION_UNIT}/${row?.id}`)
-  }
+
   const handleChangePage = (e) => {
     fetchOperationUnit({
       pagination: {
@@ -167,9 +166,8 @@ const OperationUnit = ({ intl }) => {
       sortable: true,
       selector: 'name',
       cell: (row) => (
-        <CardLink className="text-primary" onClick={() => clickOnRow(row)}>
-          {row.name}
-        </CardLink>
+        <Link to={ `${ROUTER_URL.BILLING_OPERATION_UNIT}/${row.id}`}>{row?.name}</Link>
+
       ),
       center: true,
       minWidth: '200px'

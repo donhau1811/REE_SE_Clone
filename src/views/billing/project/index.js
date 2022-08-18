@@ -10,12 +10,13 @@ import { useEffect, useState } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { Badge, CardLink, Col, Row, UncontrolledTooltip } from 'reactstrap'
+import { Badge, Col, Row, UncontrolledTooltip } from 'reactstrap'
 import SweetAlert from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import PageHeader from './PageHeader'
 import { deleteBillingProjectById, getListProject } from './store/actions/index'
 import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit.svg'
+import { Link } from 'react-router-dom/cjs/react-router-dom.min'
 
 const MySweetAlert = withReactContent(SweetAlert)
 const Project = ({ intl }) => {
@@ -81,13 +82,7 @@ const Project = ({ intl }) => {
       })
     }
   }
-  const clickOnRow = (row) => {
-    if (row?.id) {
-      history.push({
-        pathname: `${ROUTER_URL.BILLING_PROJECT}/${row?.id}`
-      })
-    }
-  }
+
   const handleChangePage = (e) => {
     fetchProject({
       pagination: {
@@ -163,9 +158,7 @@ const Project = ({ intl }) => {
       sortable: true,
       selector: 'name',
       cell: (row) => (
-        <CardLink className="text-primary" onClick={() => clickOnRow(row)}>
-          {row.name}
-        </CardLink>
+        <Link to={ `${ROUTER_URL.BILLING_PROJECT}/${row.id}`}>{row?.name}</Link>
       ),
       center: true,
       minWidth: '100px'
@@ -214,11 +207,11 @@ const Project = ({ intl }) => {
       minWidth: '150px',
       cell: (row) => {
         return row.state === PROJECT_STATUS.ACTIVE ? (
-          <Badge pill color="light-success">
+          <Badge pill color="light-success"  className="custom-bagde">
             <FormattedMessage id="Active" />
           </Badge>
         ) : (
-          <Badge pill color="light-muted">
+          <Badge pill color="light-muted"  className="custom-bagde">
             <FormattedMessage id="Inactive" />
           </Badge>
         )
