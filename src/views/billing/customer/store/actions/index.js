@@ -37,7 +37,6 @@ export const getListCustomer = (params) => {
     await axios
       .post(API_GET_LIST_CUSTOMER, payload)
       .then((response) => {
-        console.log(response)
         if (response.status === 200 && response.data.data) {
           dispatch({
             type: FETCH_CUSTOMERS_REQUEST,

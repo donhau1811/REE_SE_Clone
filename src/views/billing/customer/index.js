@@ -41,10 +41,10 @@ const OperationUnit = ({ intl }) => {
     const initParamsToFetch = {
       pagination: {
         rowsPerPage: ROWS_PER_PAGE_DEFAULT,
-        currentPage: 1,
-        sortBy: 'code',
-        sortDirection: 'asc'
-      }
+        currentPage: 1
+      },
+      sortBy: 'code',
+      sortDirection: 'asc'
     }
     fetchListCustomers(initParamsToFetch)
     return () => {
@@ -152,7 +152,7 @@ const OperationUnit = ({ intl }) => {
     {
       name: intl.formatMessage({ id: 'Customer Company' }),
       selector: 'fullName',
-      center: true,
+
       sortable: true,
       cell: (row) => <span>{row.fullName}</span>,
       minWidth: '360px'
@@ -161,15 +161,14 @@ const OperationUnit = ({ intl }) => {
       name: intl.formatMessage({ id: 'Company Type Short' }),
       selector: 'type',
       sortable: true,
-      center: true,
+
       cell: (row) => <span>{GENERAL_CUSTOMER_TYPE.find((item) => item.value === row.type)?.label}</span>,
       minWidth: '150px'
     },
     {
       name: intl.formatMessage({ id: 'billing-customer-list-taxCode' }),
       selector: 'taxCode',
-      sortable: true,
-      center: true
+      sortable: true
     },
     {
       name: intl.formatMessage({ id: 'operation-unit-form-address' }),
@@ -205,11 +204,11 @@ const OperationUnit = ({ intl }) => {
       minWidth: '150px',
       cell: (row) => {
         return row.state === OPERATION_UNIT_STATUS.ACTIVE ? (
-          <Badge pill color="light-success">
+          <Badge pill color="light-success" className="custom-bagde">
             <FormattedMessage id="Active" />
           </Badge>
         ) : (
-          <Badge pill color="light-muted">
+          <Badge pill color="light-muted" className="custom-bagde">
             <FormattedMessage id="Inactive" />
           </Badge>
         )
@@ -245,6 +244,7 @@ const OperationUnit = ({ intl }) => {
             onPageChange={handleChangePage}
             onPerPageChange={handlePerPageChange}
             onSort={handleSort}
+            defaultSortAsc={false}
             {...pagination}
           />
         </Col>

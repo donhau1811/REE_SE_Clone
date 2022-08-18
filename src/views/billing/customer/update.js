@@ -81,6 +81,7 @@ const UpdateOperationUnit = ({ intl }) => {
           initValues={selectedCustomer}
           contacts={contacts}
           submitText={intl.formatMessage({ id: isReadOnly ? 'Update' : 'Save' })}
+          cancelText={intl.formatMessage({ id: isReadOnly ? 'Back' : 'Cancel' })}
         />
       )}
       {activeTab === 2 && <ProjectTable />}

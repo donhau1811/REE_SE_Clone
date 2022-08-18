@@ -161,7 +161,7 @@ const ProjectCUForm = ({
   }
   return (
     <>
-      <Form onSubmit={handleSubmit(handleSubmitOperationUnitForm)}>
+      <Form className='billing-form' onSubmit={handleSubmit(handleSubmitOperationUnitForm)}>
         <Row className="mb-2">
           <Col>
             <h4 className="typo-section">
