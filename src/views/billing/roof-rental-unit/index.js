@@ -15,6 +15,7 @@ import PageHeader from './PageHeader'
 import { deleteBillingRoofRentalUnit, getRoofVendor } from './store/actions'
 import './styles.scss'
 import { ROUTER_URL, ROWS_PER_PAGE_DEFAULT } from '@src/utility/constants'
+import { Link } from 'react-router-dom/cjs/react-router-dom.min'
 
 const MySweetAlert = withReactContent(SweetAlert)
 
@@ -27,8 +28,7 @@ const RoofVendor = ({ intl }) => {
   const {
     layout: { skin }
   } = useSelector((state) => state)
-    
-   
+
   const fetchRoofVendor = (payload) => {
     dispatch(
       getRoofVendor({
@@ -37,13 +37,15 @@ const RoofVendor = ({ intl }) => {
       })
     )
   }
-   
+
   useEffect(() => {
     fetchRoofVendor({
       pagination: {
         rowsPerPage: ROWS_PER_PAGE_DEFAULT,
         currentPage: 1
-      }
+      },
+      sortBy: 'code',
+      sortDirection: 'asc'
     })
   }, [])
   const handleChangePage = (e) => {
@@ -104,14 +106,16 @@ const RoofVendor = ({ intl }) => {
       buttonsStyling: false
     }).then(({ isConfirmed }) => {
       if (isConfirmed) {
-        dispatch(deleteBillingRoofRentalUnit({
-          id,
-          skin,
-          intl,
-          callback : () => {
-            fetchRoofVendor()
-          }
-        }))
+        dispatch(
+          deleteBillingRoofRentalUnit({
+            id,
+            skin,
+            intl,
+            callback: () => {
+              fetchRoofVendor()
+            }
+          })
+        )
       }
     })
   }
@@ -133,7 +137,9 @@ const RoofVendor = ({ intl }) => {
       selector: 'name',
       center: true,
       sortable: true,
-      cell: (row) => <span>{row.name}</span>,
+      cell: (row) => (
+        <Link to={ `${ROUTER_URL.BILLING_ROOF_RENTAL_UNIT}/${row.id}`}>{row?.name}</Link>),
+
       minWidth: '20%'
     },
     {
@@ -142,7 +148,6 @@ const RoofVendor = ({ intl }) => {
       sortable: true,
       center: true
     },
-
 
     {
       name: intl.formatMessage({ id: 'Address' }),
@@ -183,11 +188,11 @@ const RoofVendor = ({ intl }) => {
       sortable: true,
       cell: (row) => {
         return row.state === OPERATION_UNIT_STATUS.ACTIVE ? (
-          <Badge pill color="light-success">
+          <Badge pill color="light-success"  className="custom-bagde">
             <FormattedMessage id="Active" />
           </Badge>
         ) : (
-          <Badge pill color="light-muted">
+          <Badge pill color="light-muted"  className="custom-bagde">
             <FormattedMessage id="Inactive" />
           </Badge>
         )
@@ -216,13 +221,15 @@ const RoofVendor = ({ intl }) => {
       <Row>
         <Col sm="12">
           <PageHeader onSearch={handleSearch} searchValue={searchValue} />
-          <Table columns={columns} 
+          <Table
+            columns={columns}
             data={data}
             total={total}
             onPageChange={handleChangePage}
             onPerPageChange={handlePerPageChange}
             onSort={handleSort}
-            {...pagination}/>
+            {...pagination}
+          />
         </Col>
       </Row>
     </>

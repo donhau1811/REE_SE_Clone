@@ -15,6 +15,7 @@ import withReactContent from 'sweetalert2-react-content'
 import PageHeader from './PageHeader'
 import { deleteCustomer, getListCustomer } from './store/actions'
 import './styles.scss'
+import { Link } from 'react-router-dom/cjs/react-router-dom.min'
 
 const MySweetAlert = withReactContent(SweetAlert)
 
@@ -154,7 +155,10 @@ const OperationUnit = ({ intl }) => {
       selector: 'fullName',
       center: true,
       sortable: true,
-      cell: (row) => <span>{row.fullName}</span>,
+      cell: (row) => (
+        <Link to={ `${ROUTER_URL.BILLING_CUSTOMER}/${row.id}`}>{row?.fullName}</Link>
+
+      ),
       minWidth: '360px'
     },
     {
@@ -205,11 +209,11 @@ const OperationUnit = ({ intl }) => {
       minWidth: '150px',
       cell: (row) => {
         return row.state === OPERATION_UNIT_STATUS.ACTIVE ? (
-          <Badge pill color="light-success">
+          <Badge pill color="light-success"  className="custom-bagde">
             <FormattedMessage id="Active" />
           </Badge>
         ) : (
-          <Badge pill color="light-muted">
+          <Badge pill color="light-muted"  className="custom-bagde">
             <FormattedMessage id="Inactive" />
           </Badge>
         )

@@ -64,7 +64,7 @@ function ContactCUForm({ contact, intl, onSubmit = () => {}, onCancel }) {
     <>
       <Modal isOpen={isOpen} className="modal-dialog-centered" backdrop="static">
         <ModalHeader>
-          <FormattedMessage id={contact?.id ? 'Update contact' : 'Add new contact'} />
+          <FormattedMessage id={contact?.id !== '-1' ? 'Update contact' : 'Add new contact'} />
         </ModalHeader>
         <ModalBody>
           <Form key="contact-from">

@@ -15,6 +15,7 @@ import { useEffect } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom/cjs/react-router-dom.min'
 import { Badge, Col, Row, UncontrolledTooltip } from 'reactstrap'
 import SweetAlert from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
@@ -64,6 +65,7 @@ const OperationUnit = ({ intl }) => {
   const handleRedirectToUpdatePage = (id) => () => {
     if (id) history.push(`${ROUTER_URL.BILLING_OPERATION_UNIT}/${id}`)
   }
+
   const handleChangePage = (e) => {
     fetchOperationUnit({
       pagination: {
@@ -163,7 +165,10 @@ const OperationUnit = ({ intl }) => {
       name: intl.formatMessage({ id: 'operation-unit-form-name' }),
       sortable: true,
       selector: 'name',
-      cell: (row) => <span>{row.name}</span>,
+      cell: (row) => (
+        <Link to={ `${ROUTER_URL.BILLING_OPERATION_UNIT}/${row.id}`}>{row?.name}</Link>
+
+      ),
       center: true,
       minWidth: '200px'
     },
@@ -208,11 +213,11 @@ const OperationUnit = ({ intl }) => {
       minWidth: '170px',
       cell: (row) => {
         return row.state === OPERATION_UNIT_STATUS.ACTIVE ? (
-          <Badge pill color="light-success">
+          <Badge pill color="light-success" className="custom-bagde">
             <FormattedMessage id="Active" />
           </Badge>
         ) : (
-          <Badge pill color="light-muted">
+          <Badge pill color="light-muted" className="custom-bagde">
             <FormattedMessage id="Inactive" />
           </Badge>
         )
