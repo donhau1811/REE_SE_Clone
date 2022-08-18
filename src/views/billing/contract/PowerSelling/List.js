@@ -19,14 +19,16 @@ function PowerSelling({ disabled, intl, data, onDelete }) {
     onDelete?.(contractItem)
   }
 
-  const handleRedirectToUpdateContract = (contractItem, allowUpdate) => () => {
-    history.push({
-      pathname: ROUTER_URL.BILLING_PROJECT_UPDATE_CONTRACT_POWER_SELLING.replace(':projectId', id).replace(
-        ':id',
-        contractItem.id
-      ),
-      state: { allowUpdate }
-    })
+  const handleRedirectToUpdateContract = (contractItem, allowUpdate = null) => {
+    return () => {
+      history.push({
+        pathname: ROUTER_URL.BILLING_PROJECT_UPDATE_CONTRACT_POWER_SELLING.replace(':projectId', id).replace(
+          ':id',
+          contractItem.id
+        ),
+        state: { allowUpdate }
+      })
+    }
   }
 
   const columns = [

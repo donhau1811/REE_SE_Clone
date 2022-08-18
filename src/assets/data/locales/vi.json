@@ -1680,7 +1680,7 @@
   "Need at least 1 contact to add customer. Please try again": "Phải có ít nhất 1 thông tin liên hệ được thêm mới. Vui lòng thử lại!",
   "Failed to update data. Please try again": "Dữ liệu cập nhật không thành công, vui lòng thử lại!",
   "Failed to create data. Please try again": "Dữ liệu thêm mới không thành công, vui lòng thử lại",
-  "data delete failed, please try again":"Dữ liệu xóa không thành công , vui lòng thử  lại",
+  "data delete failed, please try again": "Dữ liệu xóa không thành công , vui lòng thử  lại",
   "New customer is added successfully": "Khách hàng đã được thêm mới thành công!",
   "update-customer": "Cập nhật thông tin khách hàng",
   "Data is updated successfully": "Dữ liệu đã được cập nhật thành công",
@@ -1845,9 +1845,11 @@
   "You want to cancel update": "Bạn có muốn hủy bỏ việc chỉnh sửa ?",
   "You want to cancel create/update": "Bạn có muốn hủy bỏ việc thêm mới/chỉnh sửa ?",
   "project management": "Quản lý dự án",
-  "find by code name settings":"Tìm theo mã , tên cấu hình ",
-  "find by code company, name company":"Tìm theo mã đơn vị, tên đơn vị",
-  "data create failed, please try again":"Thêm mới dữ liệu thất bại, vui lòng thử lại",
-  "data update failed, please try again":"Cập nhật dữ liệu thất bại , vui lòng thử lại",
-  "Add or update record later":"Thêm mới thông tin hoặc cập nhật sau"
+  "find by code name settings": "Tìm theo mã , tên cấu hình ",
+  "find by code company, name company": "Tìm theo mã đơn vị, tên đơn vị",
+  "data create failed, please try again": "Thêm mới dữ liệu thất bại, vui lòng thử lại",
+  "data update failed, please try again": "Cập nhật dữ liệu thất bại , vui lòng thử lại",
+  "Add or update record later": "Thêm mới thông tin hoặc cập nhật sau",
+  "Cancel confirmation": "Xác nhận hủy bỏ",
+  "Are you sure to cancel?":"Bạn có chắc chắn muốn hủy bỏ?"
 }

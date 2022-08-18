@@ -20,33 +20,41 @@ function PowerSellingUpdateCOM({ intl }) {
     layout: { skin }
   } = useSelector((state) => state)
 
-  const handleCancel = () => {
-    return MySweetAlert.fire({
-      title: intl.formatMessage({ id: 'Cancel' }),
-      text: intl.formatMessage({ id: 'You want to cancel add new' }),
-      showCancelButton: true,
-      confirmButtonText: intl.formatMessage({ id: 'Yes' }),
-      cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),
-      customClass: {
-        popup: classNames({
-          'sweet-alert-popup--dark': skin === 'dark',
-          'sweet-popup': true
-        }),
-        header: 'sweet-title',
-        confirmButton: 'btn btn-primary',
-        cancelButton: 'btn btn-outline-secondary ml-1',
-        actions: 'sweet-actions',
-        content: 'sweet-content'
-      },
-      buttonsStyling: false
-    }).then(({ isConfirmed }) => {
-      if (isConfirmed) {
-        history.push({
-          pathname: `${ROUTER_URL.BILLING_PROJECT}/${projectId}`,
-          state: {
-            allowUpdate: true
-          }
-        })
+  const handleCancel = (isDirty) => {
+    if (isDirty) {
+      return MySweetAlert.fire({
+        title: intl.formatMessage({ id: 'Cancel confirmation' }),
+        text: intl.formatMessage({ id: 'Are you sure to cancel?' }),
+        showCancelButton: true,
+        confirmButtonText: intl.formatMessage({ id: 'Yes' }),
+        cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),
+        customClass: {
+          popup: classNames({
+            'sweet-alert-popup--dark': skin === 'dark',
+            'sweet-popup': true
+          }),
+          header: 'sweet-title',
+          confirmButton: 'btn btn-primary',
+          cancelButton: 'btn btn-secondary ml-1',
+          actions: 'sweet-actions',
+          content: 'sweet-content'
+        },
+        buttonsStyling: false
+      }).then(({ isConfirmed }) => {
+        if (isConfirmed) {
+          history.push({
+            pathname: `${ROUTER_URL.BILLING_PROJECT}/${projectId}`,
+            state: {
+              allowUpdate: true
+            }
+          })
+        }
+      })
+    }
+    history.push({
+      pathname: `${ROUTER_URL.BILLING_PROJECT}/${projectId}`,
+      state: {
+        allowUpdate: true
       }
     })
   }

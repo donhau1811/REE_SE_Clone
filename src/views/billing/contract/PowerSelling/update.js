@@ -30,11 +30,11 @@ function PowerSellingCreateCOM({ intl }) {
     if (location.state?.allowUpdate) setIsReadOnly(false)
   }, [location.state?.allowUpdate])
 
-  const handleCancel = () => {
-    if (!isReadOnly) {
+  const handleCancel = (isDirty) => {
+    if (!isReadOnly && isDirty) {
       return MySweetAlert.fire({
-        title: intl.formatMessage({ id: 'Cancel' }),
-        text: intl.formatMessage({ id: 'You want to cancel update' }),
+        title: intl.formatMessage({ id: 'Cancel confirmation' }),
+        text: intl.formatMessage({ id: 'Are you sure to cancel?' }),
         showCancelButton: true,
         confirmButtonText: intl.formatMessage({ id: 'Yes' }),
         cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),
@@ -45,7 +45,7 @@ function PowerSellingCreateCOM({ intl }) {
           }),
           header: 'sweet-title',
           confirmButton: 'btn btn-primary',
-          cancelButton: 'btn btn-outline-secondary ml-1',
+          cancelButton: 'btn btn-secondary ml-1',
           actions: 'sweet-actions',
           content: 'sweet-content'
         },

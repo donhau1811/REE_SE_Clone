@@ -115,7 +115,18 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
     defaultValues: initValues || formInitValues
   })
 
-  const { handleSubmit, getValues, errors, control, register, setValue, watch, setError, reset } = methods
+  const {
+    handleSubmit,
+    getValues,
+    errors,
+    control,
+    register,
+    setValue,
+    watch,
+    setError,
+    reset,
+    formState: { isDirty }
+  } = methods
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'billingCycle'
@@ -285,26 +296,26 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
     if (initValues?.id) dataCheck.id = initValues?.id
     try {
       const checkDupCodeRes = await axios.post(API_CHECK_CODE_CONTRACT, dataCheck)
-  
-    if (checkDupCodeRes.status === 200 && checkDupCodeRes.data?.data) {
-      setError('code', {
-        type: 'custom',
-        message: intl.formatMessage({ id: 'dubplicated-validate' }),
-        shouldFocus: true
-      })
-      return
+
+      if (checkDupCodeRes.status === 200 && checkDupCodeRes.data?.data) {
+        setError('code', {
+          type: 'custom',
+          message: intl.formatMessage({ id: 'dubplicated-validate' }),
+          shouldFocus: true
+        })
+        return
+      }
+    } catch (err) {
+      const alert = initValues?.id
+        ? 'Failed to update data. Please try again'
+        : 'Failed to create data. Please try again'
+      showToast(
+        'error',
+        intl.formatMessage({
+          id: alert
+        })
+      )
     }
-  } catch (err) {
-    const alert = initValues?.id
-      ? 'Failed to update data. Please try again'
-      : 'Failed to create data. Please try again'
-    showToast(
-      'error',
-      intl.formatMessage({
-        id: alert
-      })
-    )
-  }
     if (!(values.clocks || [])?.filter((item) => !item.isDelete).length > 0) {
       showToast('error', <FormattedMessage id="Need at least 1 clock to add contract. Please try again" />)
       return
@@ -366,6 +377,10 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
       chargeRate: values.chargeRate
     }
     onSubmit?.({ ...payload, details: contractDetail, clocks: values.clocks })
+  }
+
+  const handleCancel = () => {
+    onCancel?.(isDirty)
   }
 
   return (
@@ -860,7 +875,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
               <Button type="submit" color="primary" className="mr-1 px-3">
                 {submitText || intl.formatMessage({ id: 'Save' })}
               </Button>{' '}
-              <Button color="secondary" onClick={onCancel}>
+              <Button color="secondary" onClick={handleCancel}>
                 {cancelText || intl.formatMessage({ id: 'Cancel' })}
               </Button>{' '}
             </Col>
