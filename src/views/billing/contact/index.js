@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
-import { Badge, Button, Col, Row } from 'reactstrap'
+import { Badge, Button, Col, Row, UncontrolledTooltip } from 'reactstrap'
 import { Plus } from 'react-feather'
 import Table from '@src/views/common/table/CustomDataTable'
 import { array, bool, func } from 'prop-types'
@@ -12,27 +12,36 @@ import { showToast } from '@src/utility/Utils'
 import SweetAlert from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import classnames from 'classnames'
-import {  useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
+import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
 
 const MySweetAlert = withReactContent(SweetAlert)
 
 const Contact = ({ data, onChange, disabled }) => {
   const intl = useIntl()
+  const [isReadOnly, setIsReadOnly] = useState(false)
   const [currContact, setCurrContact] = useState(null)
   const handleAddContact = () => {
     setCurrContact({
       id: '-1'
     })
+    setIsReadOnly(false)
   }
   const {
     layout: { skin }
   } = useSelector((state) => state)
 
-  const handleEditContact = (contact) => () => {
+  const handleRedirectToViewPage = (contact) => () => {
     setCurrContact(contact)
-
+    setIsReadOnly(true)
   }
-
+  const handleRedirectToUpdatePage = (contact) => () => {
+    setCurrContact(contact)
+    setIsReadOnly(false)
+  }
+  const handleSetStateReadOnly = (value) => {
+    setIsReadOnly(value)
+  }
   const handleDeleteContact = (contact) => () => {
     return MySweetAlert.fire({
       title: intl.formatMessage({ id: 'Delete billing customer title' }),
@@ -60,11 +69,10 @@ const Contact = ({ data, onChange, disabled }) => {
           if (item.isCreate) return array
           return [...array, { ...item, isDelete: true }]
         }, [])
-        showToast('success',  <FormattedMessage id="delete contact success" />)
+        showToast('success', <FormattedMessage id="delete contact success" />)
         onChange?.(newData)
       }
     })
-
   }
 
   const columns = [
@@ -104,12 +112,24 @@ const Contact = ({ data, onChange, disabled }) => {
       cell: (row) => (
         <>
           {' '}
-          <Badge onClick={handleEditContact(row)}>
-            <IconEdit id={`editBtn_${row.id}`} />
+          <Badge onClick={handleRedirectToViewPage(row)}>
+            <IconView id={`editBtn_${row.id}`} />
           </Badge>
-          <Badge onClick={handleDeleteContact(row)} disabled={disabled}>
+          <UncontrolledTooltip placement="auto" target={`editBtn_${row.id}`}>
+            <FormattedMessage id="View Project" />
+          </UncontrolledTooltip>
+          <Badge onClick={handleRedirectToUpdatePage(row)}>
+            <IconEdit id={`updateBtn_${row.id}`} />
+          </Badge>
+          <UncontrolledTooltip placement="auto" target={`updateBtn_${row.id}`}>
+            <FormattedMessage id="Update Project" />
+          </UncontrolledTooltip>
+          <Badge onClick={handleDeleteContact(row.id)}>
             <IconDelete id={`deleteBtn_${row.id}`} />
           </Badge>
+          <UncontrolledTooltip placement="auto" target={`deleteBtn_${row.id}`}>
+            <FormattedMessage id="Delete Project" />
+          </UncontrolledTooltip>
         </>
       )
     }
@@ -124,10 +144,9 @@ const Contact = ({ data, onChange, disabled }) => {
 
     if (currContact?.id === '-1') {
       newData.push({ ...values, id: -Number(new Date().getTime()) })
-      showToast('success',  <FormattedMessage id="create contact success" />)
-
+      showToast('success', <FormattedMessage id="create contact success" />)
     } else {
-      showToast('success',  <FormattedMessage id="update contact success" />)
+      showToast('success', <FormattedMessage id="update contact success" />)
 
       newData = newData.map((contact) => {
         if (contact.id === currContact?.id) return { ...contact, ...values }
@@ -168,7 +187,13 @@ const Contact = ({ data, onChange, disabled }) => {
           />
         </Col>
       </Row>
-      <ContactCUForm contact={currContact} onSubmit={handleSubmitContactForm} onCancel={handleCancelContactForm} />
+      <ContactCUForm
+        isReadOnly={isReadOnly}
+        contact={currContact}
+        onSubmit={handleSubmitContactForm}
+        onCancel={handleCancelContactForm}
+        changeStateReadOnly={handleSetStateReadOnly}
+      />
     </>
   )
 }
@@ -176,7 +201,6 @@ Contact.propTypes = {
   data: array,
   onChange: func,
   disabled: bool
-
 }
 
 export default Contact

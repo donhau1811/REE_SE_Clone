@@ -1,5 +1,6 @@
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
+import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit.svg'
 import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
 import Table from '@src/views/common/table/CustomDataTable'
 import classnames from 'classnames'
@@ -82,8 +83,23 @@ const RoofVendor = ({ intl }) => {
     })
   }
   const handleRedirectToUpdatePage = (id) => () => {
-    if (id) history.push(`${ROUTER_URL.BILLING_ROOF_RENTAL_UNIT}/${id}`)
+    if (id) {
+      history.push({
+        pathname: `${ROUTER_URL.BILLING_ROOF_RENTAL_UNIT}/${id}`,
+        state: {
+          allowUpdate: true
+        }
+      })
+    }
   }
+
+  const handleRedirectToViewPage = (id) => () => {
+    if (id) {
+      history.push(`${ROUTER_URL.BILLING_ROOF_RENTAL_UNIT}/${id}`
+      )
+    }
+  }
+
   const handleDeleteRoofRentalUnit = (id) => () => {
     return MySweetAlert.fire({
       title: intl.formatMessage({ id: 'Delete billing customer title' }),
@@ -136,10 +152,9 @@ const RoofVendor = ({ intl }) => {
       name: intl.formatMessage({ id: 'Roof rental unit name' }),
       selector: 'name',
       sortable: true,
-      cell: (row) => (
-        <Link to={ `${ROUTER_URL.BILLING_ROOF_RENTAL_UNIT}/${row.id}`}>{row?.name}</Link>),
+      cell: (row) => <Link to={`${ROUTER_URL.BILLING_ROOF_RENTAL_UNIT}/${row.id}`}>{row?.name}</Link>,
 
-      minWidth: '20%'
+      minWidth: '100px'
     },
     {
       name: intl.formatMessage({ id: 'operation-unit-form-taxCode' }),
@@ -183,14 +198,14 @@ const RoofVendor = ({ intl }) => {
       name: intl.formatMessage({ id: 'Status' }),
       selector: 'state',
       sortable: true,
-      center:true,
+      center: true,
       cell: (row) => {
         return row.state === OPERATION_UNIT_STATUS.ACTIVE ? (
-          <Badge pill color="light-success"  className="custom-bagde">
+          <Badge pill color="light-success" className="custom-bagde">
             <FormattedMessage id="Active" />
           </Badge>
         ) : (
-          <Badge pill color="light-muted"  className="custom-bagde">
+          <Badge pill color="light-muted" className="custom-bagde">
             <FormattedMessage id="Inactive" />
           </Badge>
         )
@@ -203,9 +218,18 @@ const RoofVendor = ({ intl }) => {
       cell: (row) => (
         <>
           {' '}
-          <Badge onClick={handleRedirectToUpdatePage(row.id)}>
+          <Badge onClick={handleRedirectToViewPage(row.id)}>
             <IconView id={`editBtn_${row.id}`} />
           </Badge>
+          <UncontrolledTooltip placement="auto" target={`editBtn_${row.id}`}>
+            <FormattedMessage id="View Project" />
+          </UncontrolledTooltip>
+          <Badge onClick={handleRedirectToUpdatePage(row.id)}>
+            <IconEdit id={`updateBtn_${row.id}`} />
+          </Badge>
+          <UncontrolledTooltip placement="auto" target={`updateBtn_${row.id}`}>
+            <FormattedMessage id="Update Project" />
+          </UncontrolledTooltip>
           <Badge onClick={handleDeleteRoofRentalUnit(row.id)}>
             <IconDelete id={`deleteBtn_${row.id}`} />
           </Badge>

@@ -8,6 +8,7 @@ import CustomerCUForm from './CustomerCUForm'
 import { getCustomerWithContactsById, putCustomer } from './store/actions'
 import { Tab, Tabs } from '@mui/material'
 import ProjectTable from './ProjectTable'
+import { useLocation } from 'react-router-dom/cjs/react-router-dom.min'
 
 const UpdateOperationUnit = ({ intl }) => {
   const history = useHistory()
@@ -15,6 +16,7 @@ const UpdateOperationUnit = ({ intl }) => {
   const dispatch = useDispatch()
   const [activeTab, setActiveTab] = useState(1)
   const { id } = useParams()
+  const location = useLocation()
 
   const [isReadOnly, setIsReadOnly] = useState(true)
 
@@ -30,7 +32,9 @@ const UpdateOperationUnit = ({ intl }) => {
   const handleChangeTab = (event, newValue) => {
     setActiveTab(newValue)
   }
-
+  useEffect(() => {
+    if (location.state?.allowUpdate) setIsReadOnly(false)
+  }, [location.state?.allowUpdate])
   useEffect(() => {
     dispatch(
       getCustomerWithContactsById({

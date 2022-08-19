@@ -1670,7 +1670,7 @@
   "Update contact": "Cập nhật thông tin liên hệ",
   "Contact Name": "Họ tên người liên hệ",
   "No data": "Danh sách trống!",
-  "Add contact info to create new customer": "Thêm mới ít nhất 1 liên hệ để hoàn tất việc khai báo khách hàng mới",
+  "Add contact info to create new customer": "Thêm mới ít nhất 1 liên hệ để hoàn tất việc khai báo thông tin mới",
   "Enter Contact Name": "Nhập họ tên người liên hệ",
   "Choose position": "Chọn chức vụ",
   "Enter email of contact": "Nhập địa chỉ email người liên hệ",
@@ -1768,7 +1768,7 @@
   "Operation date": "Ngày vận hành",
   "Wattage": "Công suất",
   "Edit Project": "Sửa dự án",
-  "Delete Project": "Xoá dự án",
+  "Delete Project": "Xoá dữ liệu",
   "Project is added successfully": "Thêm mới dự án thành công",
   "Delete project successfully": "Xóa dự án thành công",
   "Delete project failed": "Xóa dự án thất bại",
@@ -1854,5 +1854,8 @@
   "data update failed, please try again": "Cập nhật dữ liệu thất bại , vui lòng thử lại",
   "Add or update record later": "Thêm mới thông tin hoặc cập nhật sau",
   "Cancel confirmation": "Xác nhận hủy bỏ",
-  "Are you sure to cancel?":"Bạn có chắc chắn muốn hủy bỏ?"
+  "Are you sure to cancel?":"Bạn có chắc chắn muốn hủy bỏ?",
+  "View Project":"Xem dữ liệu",
+  "Update Project":"Chỉnh sửa dữ liệu",
+  "View info contact":"Xem chi tiết thông tin liên hệ"
 }

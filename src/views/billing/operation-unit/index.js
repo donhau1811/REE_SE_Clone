@@ -1,4 +1,5 @@
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
+import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit.svg'
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
 import {
   DISPLAY_DATE_FORMAT,
@@ -62,10 +63,19 @@ const OperationUnit = ({ intl }) => {
     }
   }, [])
 
-  const handleRedirectToUpdatePage = (id) => () => {
+  const handleRedirectToViewPage = (id) => () => {
     if (id) history.push(`${ROUTER_URL.BILLING_OPERATION_UNIT}/${id}`)
   }
-
+  const handleRedirectToUpdatePage = (id) => () => {
+    if (id) {
+      history.push({
+        pathname: `${ROUTER_URL.BILLING_OPERATION_UNIT}/${id}`,
+        state: {
+          allowUpdate: true
+        }
+      })
+    }
+  }
   const handleChangePage = (e) => {
     fetchOperationUnit({
       pagination: {
@@ -232,11 +242,17 @@ const OperationUnit = ({ intl }) => {
       cell: (row) => (
         <>
           {' '}
-          <Badge onClick={handleRedirectToUpdatePage(row.id)}>
+          <Badge onClick={handleRedirectToViewPage(row.id)}>
             <IconView id={`editBtn_${row.id}`} />
           </Badge>
           <UncontrolledTooltip placement="auto" target={`editBtn_${row.id}`}>
-            <FormattedMessage id="Edit Operation Unit" />
+            <FormattedMessage id="View Project" />
+          </UncontrolledTooltip>
+          <Badge onClick={handleRedirectToUpdatePage(row.id)}>
+            <IconEdit id={`updateBtn_${row.id}`} />
+          </Badge>
+          <UncontrolledTooltip placement="auto" target={`updateBtn_${row.id}`}>
+            <FormattedMessage id="Update Project" />
           </UncontrolledTooltip>
           <Badge>
             <IconDelete onClick={handleDeleteOperationCompany(row.id)} id={`deleteBtn_${row.id}`} />

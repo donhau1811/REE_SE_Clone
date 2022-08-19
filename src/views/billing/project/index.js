@@ -1,5 +1,6 @@
 import '@src/@core/scss/billing-sweet-alert.scss'
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
+import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit.svg'
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
 import { ROUTER_URL, ROWS_PER_PAGE_DEFAULT } from '@src/utility/constants'
 import { GENERAL_STATUS as PROJECT_STATUS, mockUser } from '@src/utility/constants/billing'
@@ -10,13 +11,12 @@ import { useEffect, useState } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom/cjs/react-router-dom.min'
 import { Badge, Col, Row, UncontrolledTooltip } from 'reactstrap'
 import SweetAlert from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import PageHeader from './PageHeader'
 import { deleteBillingProjectById, getListProject } from './store/actions/index'
-import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit.svg'
-import { Link } from 'react-router-dom/cjs/react-router-dom.min'
 
 const MySweetAlert = withReactContent(SweetAlert)
 const Project = ({ intl }) => {
@@ -167,7 +167,7 @@ const Project = ({ intl }) => {
       name: intl.formatMessage({ id: 'Address' }),
       selector: 'address',
       sortable: true,
-      minWidth: '350px',
+      minWidth: '300px',
       cell: (row) => {
         return (
           <>

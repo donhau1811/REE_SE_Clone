@@ -1675,7 +1675,7 @@
   "Operation date": "Operation date",
   "Wattage": "Wattage",
   "Edit Project": "Edit Project",
-  "Delete Project": "Delete Project",
+  "Delete Project": "Delete",
   "Project is added successfully": "Project is added successfully",
   "Delete project successfully": "Delete project successfully",
   "Delete project failed": "Delete project failed",
@@ -1745,6 +1745,9 @@
   "data update failed, please try again":"Data update failed, please try again",
   "delete contact success":"Delete contact success",
   "update contact success":"Update contact success",
-  "create contact success":"Create contact success"
+  "create contact success":"Create contact success",
+  "View Project":"View",
+  "Update Project":"Update",
+  "View info contact":"View details contact"
 
 }
