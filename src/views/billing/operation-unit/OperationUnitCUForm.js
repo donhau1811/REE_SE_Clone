@@ -8,13 +8,15 @@ import { GENERAL_STATUS_OPTS } from '@src/utility/constants/billing'
 import { selectThemeColors, showToast } from '@src/utility/Utils'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { CHECK_DUPLICATE_OPRERATION_UNIT_CODE, NUMBER_REGEX } from '@src/utility/constants'
+import { CHECK_DUPLICATE_OPRERATION_UNIT_CODE, NUMBER_REGEX, SET_FORM_DIRTY } from '@src/utility/constants'
 import axios from 'axios'
+import { useDispatch } from 'react-redux'
 
 const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, isReadOnly, submitText }) => {
   const initState = {
     state: GENERAL_STATUS_OPTS[0]
   }
+  const dispatch = useDispatch()
 
   const ValidateSchema = yup.object().shape(
     {
@@ -45,12 +47,17 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
     ['name', 'code', 'taxCode', 'address', 'phone']
   )
 
-  const { handleSubmit, getValues, errors, control, register, reset, setError } = useForm({
+  const { handleSubmit, getValues, errors, control, register, reset, setError, formState: { isDirty } } = useForm({
     mode: 'onChange',
     resolver: yupResolver(isReadOnly ? yup.object().shape({}) : ValidateSchema),
     defaultValues: initValues || initState
   })
-
+  useEffect(() => {
+    dispatch({
+      type: SET_FORM_DIRTY,
+      payload: isDirty
+    })
+  }, [isDirty])
   useEffect(() => {
     reset({ ...initValues, state: GENERAL_STATUS_OPTS.find((item) => item.value === initValues?.state) })
   }, [initValues])
@@ -83,7 +90,9 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
       onSubmit?.(values)
    
   }
-
+  const handleCancel = () => {
+    onCancel?.(isDirty)
+  }
   return (
     <>
       <Form className='billing-form' onSubmit={handleSubmit(handleSubmitOperationUnitForm)}>
@@ -199,7 +208,7 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
           <Button type="submit" color="primary" className="mr-1 px-3">
             {submitText || intl.formatMessage({ id: 'Save' })}
           </Button>{' '}
-          <Button color="secondary" onClick={onCancel}>
+          <Button color="secondary" onClick={handleCancel}>
             {intl.formatMessage({ id: 'Back' })}
           </Button>{' '}
         </Row>
