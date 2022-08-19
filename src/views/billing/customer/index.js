@@ -1,7 +1,8 @@
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
+import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit.svg'
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
-import { GENERAL_CUSTOMER_TYPE, GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
 import { ROUTER_URL, ROWS_PER_PAGE_DEFAULT, SET_CUSTOMER_PARAMS } from '@src/utility/constants'
+import { GENERAL_CUSTOMER_TYPE, GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
 import Table from '@src/views/common/table/CustomDataTable'
 import classnames from 'classnames'
 import { object } from 'prop-types'
@@ -9,13 +10,13 @@ import { useEffect } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom/cjs/react-router-dom.min'
 import { Badge, Col, Row, UncontrolledTooltip } from 'reactstrap'
 import SweetAlert from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import PageHeader from './PageHeader'
 import { deleteCustomer, getListCustomer } from './store/actions'
 import './styles.scss'
-import { Link } from 'react-router-dom/cjs/react-router-dom.min'
 
 const MySweetAlert = withReactContent(SweetAlert)
 
@@ -55,10 +56,19 @@ const OperationUnit = ({ intl }) => {
       })
     }
   }, [])
-  const handleRedirectToUpdatePage = (id) => () => {
+  const handleRedirectToViewPage = (id) => () => {
     if (id) history.push(`${ROUTER_URL.BILLING_CUSTOMER}/${id}`)
   }
-
+  const handleRedirectToUpdatePage = (id) => () => {
+    if (id) {
+      history.push({
+        pathname: `${ROUTER_URL.BILLING_CUSTOMER}/${id}`,
+        state: {
+          allowUpdate: true
+        }
+      })
+    }
+  }
   const handleChangePage = (e) => {
     fetchListCustomers({
       pagination: {
@@ -221,12 +231,24 @@ const OperationUnit = ({ intl }) => {
       cell: (row) => (
         <>
           {' '}
-          <Badge onClick={handleRedirectToUpdatePage(row.id)}>
+          <Badge onClick={handleRedirectToViewPage(row.id)}>
             <IconView id={`editBtn_${row.id}`} />
           </Badge>
+          <UncontrolledTooltip placement="auto" target={`editBtn_${row.id}`}>
+            <FormattedMessage id="View Project" />
+          </UncontrolledTooltip>
+          <Badge onClick={handleRedirectToUpdatePage(row.id)}>
+            <IconEdit id={`updateBtn_${row.id}`} />
+          </Badge>
+          <UncontrolledTooltip placement="auto" target={`updateBtn_${row.id}`}>
+            <FormattedMessage id="Update Project" />
+          </UncontrolledTooltip>
           <Badge onClick={handleDeleteCustomer(row.id)}>
             <IconDelete id={`deleteBtn_${row.id}`} />
           </Badge>
+          <UncontrolledTooltip placement="auto" target={`deleteBtn_${row.id}`}>
+            <FormattedMessage id="Delete Project" />
+          </UncontrolledTooltip>
         </>
       ),
       center: true

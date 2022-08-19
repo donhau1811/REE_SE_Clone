@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { injectIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
+import { useLocation } from 'react-router-dom/cjs/react-router-dom.min'
 import OperationCUForm from './OperationUnitCUForm'
 import { getOperationUnitById, putOperationUnit } from './store/actions'
 
@@ -14,6 +15,11 @@ const UpdateOperationUnit = ({ intl }) => {
   const {
     company: { selectedCompany }
   } = useSelector((state) => state)
+  const location = useLocation()
+
+  useEffect(() => {
+    if (location.state?.allowUpdate) setIsReadOnly(false)
+  }, [location.state?.allowUpdate])
 
   const { id } = useParams()
   useEffect(() => {

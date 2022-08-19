@@ -8,10 +8,16 @@ import { Tab, Tabs } from '@mui/material'
 import ProjectTable from './ProjectTable'
 import { useDispatch, useSelector } from 'react-redux'
 import { getRoofVendorWithContactsById, putRoofVendors } from './store/actions/index'
+import { useLocation } from 'react-router-dom/cjs/react-router-dom.min'
 const UpdateRoofRentalUnit = ({ intl }) => {
   const dispatch = useDispatch()
   const history = useHistory()
   const [isReadOnly, setIsReadOnly] = useState(true)
+  const location = useLocation()
+  useEffect(() => {
+    if (location.state?.allowUpdate) setIsReadOnly(false)
+  }, [location.state?.allowUpdate])
+
   const {
     layout: { skin },
     roofUnit: { selectedRoofVendor },
