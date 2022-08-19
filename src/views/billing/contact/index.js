@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import { Badge, Button, Col, Row } from 'reactstrap'
 import { Plus } from 'react-feather'
 import Table from '@src/views/common/table/CustomDataTable'
@@ -9,27 +9,62 @@ import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-de
 import ContactCUForm from './ContactCUForm'
 import { cloneDeep } from 'lodash'
 import { showToast } from '@src/utility/Utils'
+import SweetAlert from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+import classnames from 'classnames'
+import {  useSelector } from 'react-redux'
+
+const MySweetAlert = withReactContent(SweetAlert)
 
 const Contact = ({ data, onChange, disabled }) => {
+  const intl = useIntl()
   const [currContact, setCurrContact] = useState(null)
   const handleAddContact = () => {
     setCurrContact({
       id: '-1'
     })
   }
+  const {
+    layout: { skin }
+  } = useSelector((state) => state)
 
   const handleEditContact = (contact) => () => {
     setCurrContact(contact)
+
   }
 
   const handleDeleteContact = (contact) => () => {
-    const newData = data.reduce((array, item) => {
-      if (item.id !== contact.id) return [...array, item]
-      if (item.isCreate) return array
-      return [...array, { ...item, isDelete: true }]
-    }, [])
-    showToast('success',  <FormattedMessage id="Delete operating customer success" />)
-    onChange?.(newData)
+    return MySweetAlert.fire({
+      title: intl.formatMessage({ id: 'Delete billing customer title' }),
+      html: intl.formatMessage({ id: 'Delete billing information message' }),
+      showCancelButton: true,
+      showCloseButton: true,
+      confirmButtonText: intl.formatMessage({ id: 'Yes' }),
+      cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),
+      customClass: {
+        popup: classnames({
+          'sweet-alert-popup--dark': skin === 'dark',
+          'sweet-popup': true
+        }),
+        header: 'sweet-title',
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-outline-secondary ml-1',
+        actions: 'sweet-actions',
+        content: 'sweet-content'
+      },
+      buttonsStyling: false
+    }).then(({ isConfirmed }) => {
+      if (isConfirmed) {
+        const newData = data.reduce((array, item) => {
+          if (item.id !== contact.id) return [...array, item]
+          if (item.isCreate) return array
+          return [...array, { ...item, isDelete: true }]
+        }, [])
+        showToast('success',  <FormattedMessage id="delete contact success" />)
+        onChange?.(newData)
+      }
+    })
+
   }
 
   const columns = [
@@ -41,29 +76,24 @@ const Contact = ({ data, onChange, disabled }) => {
     },
     {
       name: <FormattedMessage id="Contact Name" />,
-      selector: 'fullName',
-      center: true
+      selector: 'fullName'
     },
     {
       name: <FormattedMessage id="Position" />,
-      selector: 'position',
-      center: true
+      selector: 'position'
     },
     {
       name: <FormattedMessage id="operation-unit-form-mobile" />,
-      selector: 'phone',
-      center: true
+      selector: 'phone'
     },
     {
       name: 'Email',
       selector: 'email',
-      center: true,
       cell: (row) => <span>{row.email}</span>
     },
     {
       name: <FormattedMessage id="note" />,
       selector: 'note',
-      center: true,
       cell: (row) => <span>{row.note}</span>
     },
     {
@@ -94,7 +124,11 @@ const Contact = ({ data, onChange, disabled }) => {
 
     if (currContact?.id === '-1') {
       newData.push({ ...values, id: -Number(new Date().getTime()) })
+      showToast('success',  <FormattedMessage id="create contact success" />)
+
     } else {
+      showToast('success',  <FormattedMessage id="update contact success" />)
+
       newData = newData.map((contact) => {
         if (contact.id === currContact?.id) return { ...contact, ...values }
         return contact
@@ -142,6 +176,7 @@ Contact.propTypes = {
   data: array,
   onChange: func,
   disabled: bool
+
 }
 
 export default Contact

@@ -107,19 +107,16 @@ const ValueTable = ({ configId, disabled, intl }) => {
     {
       name: <FormattedMessage id="Config Name" />,
       selector: 'name',
-      center: true,
       cell: () => <span>{selectedSetting.name}</span>
     },
     {
       name: <FormattedMessage id="Configuration Value" />,
       selector: 'value',
-      center: true,
       cell: (row) => <span>{row.value}</span>
     },
     {
       name: <FormattedMessage id="explain" />,
-      selector: 'description',
-      center: true
+      selector: 'description'
     },
     {
       name: <FormattedMessage id="Status" />,

@@ -97,7 +97,7 @@ const OperationCUForm = ({
       type: GENERAL_CUSTOMER_TYPE.find((item) => item.value === initValues?.type)
     }
     reset(tempValues)
-  }, [initValues?.id])
+  }, [initValues])
 
   useEffect(() => {
     if (!isEqual(contacts, contactsState)) {
@@ -150,7 +150,7 @@ const OperationCUForm = ({
         })
       }
     }
-
+   console.log('values', values)
     onSubmit?.({
       ...values,
       contacts: contactsState
@@ -312,7 +312,7 @@ const OperationCUForm = ({
             {errors?.note && <FormFeedback>{errors?.note?.message}</FormFeedback>}
           </Col>
         </Row>
-        <Contact disabled={isViewed} onChange={handleSubmitContactForm} data={contactsState} />
+        <Contact  disabled={isViewed} onChange={handleSubmitContactForm} data={contactsState} />
 
         <Row>
           <Col className="d-flex justify-content-end align-items-center mb-2">

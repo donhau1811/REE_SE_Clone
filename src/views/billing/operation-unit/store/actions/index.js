@@ -86,7 +86,7 @@ export const getListOperationUnit = (params = {}) => {
 export const deleteOperationUnit = ({ id, callback }) => {
   return async () => {
     await axios
-      .delete(`${API_DELETE_OPERATING_COMPANY}`, { data: { id } })
+      .delete(`${API_DELETE_OPERATING_COMPANY}/${id}`)
       .then((response) => {
         if (response.status === 200 && response.data?.data) {
           showToast('success', <FormattedMessage id= 'Delete info success' />)
