@@ -39,9 +39,7 @@ const Contact = ({ data, onChange, disabled }) => {
     setCurrContact(contact)
     setIsReadOnly(false)
   }
-  const handleSetStateReadOnly = (value) => {
-    setIsReadOnly(value)
-  }
+
   const handleDeleteContact = (contact) => () => {
     return MySweetAlert.fire({
       title: intl.formatMessage({ id: 'Delete billing customer title' }),
@@ -140,21 +138,25 @@ const Contact = ({ data, onChange, disabled }) => {
   }
 
   const handleSubmitContactForm = (values) => {
-    let newData = cloneDeep(data) || []
-
-    if (currContact?.id === '-1') {
-      newData.push({ ...values, id: -Number(new Date().getTime()) })
-      showToast('success', <FormattedMessage id="create contact success" />)
+    if (isReadOnly) {
+      setIsReadOnly(false)
     } else {
-      showToast('success', <FormattedMessage id="update contact success" />)
+      let newData = cloneDeep(data) || []
 
-      newData = newData.map((contact) => {
-        if (contact.id === currContact?.id) return { ...contact, ...values }
-        return contact
-      })
+      if (currContact?.id === '-1') {
+        newData.push({ ...values, id: -Number(new Date().getTime()) })
+        showToast('success', <FormattedMessage id="create contact success" />)
+      } else {
+        showToast('success', <FormattedMessage id="update contact success" />)
+
+        newData = newData.map((contact) => {
+          if (contact.id === currContact?.id) return { ...contact, ...values }
+          return contact
+        })
+      }
+      setCurrContact({})
+      onChange?.(newData)
     }
-    setCurrContact({})
-    onChange?.(newData)
   }
 
   return (
@@ -192,7 +194,6 @@ const Contact = ({ data, onChange, disabled }) => {
         contact={currContact}
         onSubmit={handleSubmitContactForm}
         onCancel={handleCancelContactForm}
-        changeStateReadOnly={handleSetStateReadOnly}
       />
     </>
   )

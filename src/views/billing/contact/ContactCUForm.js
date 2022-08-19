@@ -10,7 +10,7 @@ import Select from 'react-select'
 import { selectThemeColors } from '@src/utility/Utils'
 import { POSITION_OPTIONS } from '@src/utility/constants/billing'
 
-function ContactCUForm({ contact, intl, onSubmit = () => {}, onCancel, isReadOnly, changeStateReadOnly }) {
+function ContactCUForm({ contact, intl, onSubmit = () => {}, onCancel, isReadOnly }) {
   const [isOpen, setIsOpen] = useState(false)
   const validateSchema = yup.object().shape(
     {
@@ -51,17 +51,13 @@ function ContactCUForm({ contact, intl, onSubmit = () => {}, onCancel, isReadOnl
   }, [contact?.id])
 
   const handleSubmitContact = (values) => {
-    if (isReadOnly) {
-      changeStateReadOnly(false)
-    } else {
-      const payload = {
-        ...values,
-        position: values.position?.value
-      }
-      if (contact?.id > 0) payload.isUpdate = true
-      else payload.isCreate = true
-      onSubmit?.(payload)
+    const payload = {
+      ...values,
+      position: values.position?.value
     }
+    if (contact?.id > 0) payload.isUpdate = true
+    else payload.isCreate = true
+    onSubmit?.(payload)
   }
   return (
     <>
@@ -186,8 +182,7 @@ ContactCUForm.propTypes = {
   intl: object,
   onSubmit: func,
   onCancel: func,
-  isReadOnly: bool,
-  changeStateReadOnly: func
+  isReadOnly: bool
 }
 
 export default injectIntl(ContactCUForm)
