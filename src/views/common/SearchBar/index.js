@@ -42,6 +42,7 @@ const SearchBar = ({ intl, onSearch = () => {}, searchValue, placeholder }) => {
           value={value}
           onChange={handleSearchInputChange}
           onKeyDown={handleSearchInputKeyDown}
+          type="search"
         />
         <InputGroupAddon addonType="append" className="" role="button">
           <InputGroupText>
