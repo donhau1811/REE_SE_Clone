@@ -104,7 +104,6 @@ const ThemeNavbar = (props) => {
           { name: intl.formatMessage({ id: 'billing' }), link: '' },
           { name: intl.formatMessage({ id: 'customers' }), link: ROUTER_URL.BILLING_CUSTOMER },
           { name: intl.formatMessage({ id: 'create-customer' }), link: '' }
-
         ]
         return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
       }
@@ -141,15 +140,7 @@ const ThemeNavbar = (props) => {
         ]
         return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
       }
-      case ROUTER_URL.BILLING_PROJECT_CREATE_CONTRACT_POWER_SELLING.replace(':projectId', selectedBillingProject.id): {
-        const tempItems = [
-          { name: intl.formatMessage({ id: 'billing' }), link: '' },
-          { name: intl.formatMessage({ id: 'project management' }), link: '' },
-          { name: intl.formatMessage({ id: 'project' }), link: ROUTER_URL.BILLING_PROJECT },
-          { name: intl.formatMessage({ id: 'power-selling-contract' }), link: '' }
-        ]
-        return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
-      }
+
       case ROUTER_URL.BILLING_PROJECT_UPDATE_CONTRACT_POWER_SELLING.replace(
         ':projectId',
         selectedBillingProject.id

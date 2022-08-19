@@ -175,6 +175,7 @@ export const BillingRoutes = [
   {
     path: ROUTER_URL.BILLING_PROJECT_CREATE_CONTRACT_POWER_SELLING,
     component: lazy(() => import('../../views/billing/contract/PowerSelling/create')),
+    navbar: require('../../views/billing/contract/PowerSelling/create')?.Navbar,
     exact: true,
     meta: {
       action: 'manage',

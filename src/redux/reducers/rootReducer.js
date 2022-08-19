@@ -5,6 +5,7 @@ import { combineReducers } from 'redux'
 import auth from './auth'
 import navbar from './navbar'
 import layout from './layout'
+import form from './form'
 import customer from '@src/views/settings/customers/store/reducer'
 import billingCustomer from '@src/views/billing/customer/store/reducer'
 import customerProject from '@src/views/monitoring/projects/store/reducer'
@@ -55,7 +56,8 @@ const rootReducer = combineReducers({
   billingContacts,
   projects,
   projectContracts,
-  contractClock
+  contractClock,
+  form
 })
 
 export default rootReducer
