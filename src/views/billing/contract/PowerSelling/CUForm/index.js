@@ -6,12 +6,16 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { bool, func, object, string } from 'prop-types'
 import { Button, Col, Form, FormFeedback, Input, Label, Row } from 'reactstrap'
-import { API_CHECK_CODE_CONTRACT, API_GET_ALL_CUSTOMER, ISO_STANDARD_FORMAT } from '@src/utility/constants'
+import {
+  API_CHECK_CODE_CONTRACT,
+  API_GET_ALL_CUSTOMER,
+  ISO_STANDARD_FORMAT,
+  SET_FORM_DIRTY
+} from '@src/utility/constants'
 import Table from '@src/views/common/table/CustomDataTable'
 import Select from 'react-select'
 import axios from 'axios'
 import Clock from '@src/views/billing/clock'
-
 import { ReactComponent as Attachment } from '@src/assets/images/svg/attachment-file.svg'
 import { PlusCircle, Trash2, XCircle } from 'react-feather'
 import { useDispatch, useSelector } from 'react-redux'
@@ -63,7 +67,6 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
     confirmAlert: 0,
     billingAlert: 0,
     vat: 8
-    // clocks:
   }
 
   const { projectId } = useParams()
@@ -131,6 +134,13 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
     control,
     name: 'billingCycle'
   })
+
+  useEffect(() => {
+    dispatch({
+      type: SET_FORM_DIRTY,
+      payload: isDirty
+    })
+  }, [isDirty])
 
   useEffect(async () => {
     if (initValues?.id) {
