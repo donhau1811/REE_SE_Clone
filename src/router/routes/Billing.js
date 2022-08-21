@@ -16,6 +16,8 @@ export const BillingRoutes = [
     path: ROUTER_URL.BILLING_OPERATION_UNIT_CREATE,
     exact: true,
     component: lazy(() => import('../../views/billing/operation-unit/create')),
+    navbar: require('../../views/billing/operation-unit/create')?.Navbar,
+
     meta: {
       action: 'manage',
       resource: ROUTER_URL.BILLING_OPERATION_UNIT,
@@ -26,6 +28,7 @@ export const BillingRoutes = [
     path: ROUTER_URL.BILLING_OPERATION_UNIT_UPDATE,
     component: lazy(() => import('../../views/billing/operation-unit/update')),
     exact: true,
+    navbar: require('../../views/billing/operation-unit/update')?.Navbar,
     meta: {
       action: 'manage',
       resource: ROUTER_URL.BILLING_OPERATION_UNIT,
@@ -84,6 +87,7 @@ export const BillingRoutes = [
   {
     path: ROUTER_URL.BILLING_ROOF_RENTAL_UNIT_CREATE,
     component: lazy(() => import('../../views/billing/roof-rental-unit/create')),
+    navbar: require('../../views/billing/roof-rental-unit/create')?.Navbar,
     exact: true,
     meta: {
       action: 'manage',
@@ -94,6 +98,7 @@ export const BillingRoutes = [
   {
     path: ROUTER_URL.BILLING_ROOF_RENTAL_UNIT_UPDATE,
     component: lazy(() => import('../../views/billing/roof-rental-unit/update')),
+    navbar: require('../../views/billing/roof-rental-unit/update')?.Navbar,
     exact: true,
     meta: {
       action: 'manage',

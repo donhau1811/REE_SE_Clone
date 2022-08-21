@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { NUMBER_REGEX, EMAIL_REGEX } from '@src/utility/constants'
+import { NUMBER_REGEX, EMAIL_REGEX, SET_FORM_DIRTY } from '@src/utility/constants'
 import { selectThemeColors, showToast } from '@src/utility/Utils'
 import { func, object, bool } from 'prop-types'
 import { Controller, useForm } from 'react-hook-form'
@@ -12,7 +12,7 @@ import './styles.scss'
 import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
 import React, { useState, useEffect } from 'react'
 import { checkDuplicate } from './store/actions'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import withReactContent from 'sweetalert2-react-content'
 import classNames from 'classnames'
 import SweetAlert from 'sweetalert2'
@@ -35,6 +35,8 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
     phone: null,
     note: null
   }
+  const dispatch = useDispatch()
+
   const {
     layout: { skin }
   } = useSelector((state) => state)
@@ -87,12 +89,17 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
     setContactsRoofVendor(contacts)
   }, [contacts])
 
-  const { handleSubmit, getValues, errors, control, register, reset, setError } = useForm({
+  const { handleSubmit, getValues, errors, control, register, reset, setError, formState: { isDirty } } = useForm({
     mode: 'onChange',
     resolver: yupResolver(isReadOnly ? yup.object().shape({}) : ValidateSchema),
     defaultValues: initValues || initState
   })
-
+  useEffect(() => {
+    dispatch({
+      type: SET_FORM_DIRTY,
+      payload: isDirty
+    })
+  }, [isDirty])
   useEffect(() => {
     reset({ ...initValues, state: OPERATION_UNIT_STATUS_OPTS.find((item) => item.value === initValues?.state) })
   }, [initValues])
@@ -148,6 +155,9 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
       ...values,
       contacts: contactsRoofVendor
     })
+  }
+  const handleCancel = () => {
+    onCancel?.(isDirty)
   }
   return (
     <>
@@ -315,7 +325,7 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
           <Button type="submit" color="primary" className="mr-1 px-3">
             {intl.formatMessage({ id: isReadOnly ? 'Update' : 'Save' })}
           </Button>
-          <Button onClick={onCancel} color="secondary">
+          <Button onClick={handleCancel} color="secondary">
             {intl.formatMessage({ id: 'Cancel' })}
           </Button>
         </Row>
