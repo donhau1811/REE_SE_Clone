@@ -2,7 +2,9 @@ import {
   API_CREATE_PROJECT,
   API_DELETE_PROJECTS,
   API_GET_NEW_PROJECT,
+  API_GET_PROJECT_BY_CUSTOMER_ID,
   API_GET_PROJECT_BY_ID,
+  API_GET_PROJECT_BY_ROOF_VENDOR_ID,
   API_UPDATE_PROJECT
 } from '@src/utility/constants'
 import axios from 'axios'
@@ -19,7 +21,6 @@ export const getListProject = (params = {}) => {
       limit: pagination.rowsPerPage,
       offset: pagination.rowsPerPage * (pagination.currentPage - 1)
     }
-    console.log(payload)
 
     await axios
       .post(API_GET_NEW_PROJECT, payload)
@@ -109,7 +110,7 @@ export const deleteBillingProjectById = ({ id, callback }) => {
       .delete(`${API_DELETE_PROJECTS}/${id}`)
       .then((response) => {
         if (response.status === 200 && response.data?.data) {
-          showToast('success', <FormattedMessage  id= 'Delete info success' />)
+          showToast('success', <FormattedMessage id="Delete info success" />)
 
           callback?.(response.data.data)
         } else {
@@ -117,7 +118,55 @@ export const deleteBillingProjectById = ({ id, callback }) => {
         }
       })
       .catch(() => {
-        showToast('error', <FormattedMessage  id= 'data delete failed, please try again' />)
+        showToast('error', <FormattedMessage id="data delete failed, please try again" />)
+      })
+  }
+}
+
+export const getListProjectByCustomerId = ({ payload, callback }) => {
+  return async () => {
+    const { customerId, pagination, params } = payload
+    const query = `${API_GET_PROJECT_BY_CUSTOMER_ID}/${customerId}`
+    const URLParamsObject = {
+      ...params,
+      limit: pagination.rowsPerPage,
+      offset: pagination.rowsPerPage * (pagination.currentPage - 1)
+    }
+
+    await axios
+      .get(`${query}`, { params: URLParamsObject })
+      .then((response) => {
+        if (response.status === 200 && response.data.data) {
+          callback?.(response.data)
+        } else {
+          throw new Error(response.data.message)
+        }
+      })
+      .catch((err) => {
+        showToast('error', `${err.response ? err.response.data.message : err.message}`)
+      })
+  }
+}
+export const getListProjectByRoofVendorId = ({ payload, callback }) => {
+  return async () => {
+    const { roofVendorId, pagination, params } = payload
+    const URLParamsObject = {
+      ...params,
+      limit: pagination.rowsPerPage,
+      offset: pagination.rowsPerPage * (pagination.currentPage - 1)
+    }
+
+    await axios
+      .get(`${API_GET_PROJECT_BY_ROOF_VENDOR_ID}/${roofVendorId}`, { params: URLParamsObject })
+      .then((response) => {
+        if (response.status === 200 && response.data.data) {
+          callback?.(response.data)
+        } else {
+          throw new Error(response.data.message)
+        }
+      })
+      .catch((err) => {
+        showToast('error', `${err.response ? err.response.data.message : err.message}`)
       })
   }
 }

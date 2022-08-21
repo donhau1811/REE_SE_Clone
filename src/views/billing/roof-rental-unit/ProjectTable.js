@@ -1,30 +1,93 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Col, Row, UncontrolledTooltip } from 'reactstrap'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { object } from 'prop-types'
 import Table from '@src/views/common/table/CustomDataTable'
-import { billElectricArray } from './mock-data'
+import { useParams } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { getListProjectByRoofVendorId } from '../project/store/actions'
 
 const ProjectTable = ({ intl }) => {
+  const { id } = useParams()
+  const [projects, setProjects] = useState([])
+  const dispatch = useDispatch()
+  const [pagination, setPagination] = useState({ rowsPerPage: 25, currentPage: 1 })
+  const [params, setParams] = useState({
+    sortBy: 'code',
+    sortDirection: 'asc'
+  })
+
+  const [total, setTotal] = useState(0)
+
+  const fetchListProject = (payload = {}) => {
+    const tempPayload = {
+      roofVendorId: id,
+      pagination,
+      params,
+      ...payload
+    }
+    dispatch(
+      getListProjectByRoofVendorId({
+        payload: tempPayload,
+
+        callback: (res) => {
+          setProjects(res.data || [])
+          setTotal(res?.count || 0)
+          setPagination(tempPayload.pagination)
+          setParams(tempPayload.params)
+        }
+      })
+    )
+  }
+
+  useEffect(() => {
+    fetchListProject()
+  }, [])
+
+  const handleChangePage = (e) => {
+    fetchListProject({
+      pagination: {
+        ...pagination,
+        currentPage: e.selected + 1
+      }
+    })
+  }
+
+  const handlePerPageChange = (e) => {
+    fetchListProject({
+      pagination: {
+        rowsPerPage: e.value,
+        currentPage: 1
+      }
+    })
+  }
+
+  const handleSort = (column, direction) => {
+    fetchListProject({
+      params: {
+        sortBy: column.selector,
+        sortDirection: direction
+      }
+    })
+  }
   const columns = [
     {
       name: intl.formatMessage({ id: 'No.' }),
       sortable: true,
       cell: (row, index) => index + 1,
       center: true,
-      maxWidth: '40px',
-      style: { fontSize: '18px' }
+      maxWidth: '40px'
     },
     {
       name: intl.formatMessage({ id: 'projectCode' }),
-      selector: 'projectCode',
+      selector: 'code',
       sortable: true,
       maxWidth: '125px'
     },
     {
       name: intl.formatMessage({ id: 'projectName' }),
       selector: 'name',
-      center: true,
+
       sortable: true,
       cell: (row) => <span>{row.name}</span>
     },
@@ -32,7 +95,7 @@ const ProjectTable = ({ intl }) => {
       name: intl.formatMessage({ id: 'Address' }),
       selector: 'address',
       sortable: true,
-      center: true,
+
       cell: (row) => {
         return (
           <>
@@ -51,8 +114,10 @@ const ProjectTable = ({ intl }) => {
     {
       name: intl.formatMessage({ id: 'PatternBillElectricity' }),
       selector: 'billElectric',
-      sortable: true,
-      center: true
+      cell: (row) => {
+        const details = JSON.parse(row.contractDetails)
+        return <span>{details?.id || ''}</span>
+      }
     }
   ]
 
@@ -60,7 +125,15 @@ const ProjectTable = ({ intl }) => {
     <>
       <Row>
         <Col sm="12">
-          <Table columns={columns} data={billElectricArray} />
+          <Table
+            columns={columns}
+            data={projects}
+            total={total}
+            onPageChange={handleChangePage}
+            onPerPageChange={handlePerPageChange}
+            onSort={handleSort}
+            {...pagination}
+          />
         </Col>
       </Row>
     </>

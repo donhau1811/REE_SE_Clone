@@ -18,7 +18,7 @@ import { useParams } from 'react-router-dom'
 import { XCircle } from 'react-feather'
 import { ReactComponent as Attachment } from '@src/assets/images/svg/attachment-file.svg'
 import { getSettingValuesByCode } from '@src/views/billing/settings/store/actions'
-import { VALUE_OF_ROOF_CONTRACT } from '@src/utility/constants/billing'
+import { GENERAL_STATUS, VALUE_OF_ROOF_CONTRACT } from '@src/utility/constants/billing'
 import SweetAlert from 'sweetalert2'
 import '@src/@core/scss/billing-sweet-alert.scss'
 import withReactContent from 'sweetalert2-react-content'
@@ -77,9 +77,11 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
 
   const { data } = useSelector((state) => state.roofUnit)
 
-  const listOfRoofvendor = data.map((item) => {
-    return { value: item.id, label: item.name }
-  })
+  const listOfRoofvendor = data
+    .filter((item) => item.state === GENERAL_STATUS.ACTIVE)
+    .map((item) => {
+      return { value: item.id, label: item.name }
+    })
 
   const [validForm, setValidForm] = useState(defaultValid)
 

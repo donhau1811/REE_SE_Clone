@@ -38,6 +38,7 @@ function ValueCUForm({ value, intl, onSubmit = () => {}, onCancel, isReadOnly })
     },
     ['value', 'description']
   )
+
   const initState = {
     state: CONFIG_VALUE_STATUS_OPTS[0]
   }
@@ -54,6 +55,7 @@ function ValueCUForm({ value, intl, onSubmit = () => {}, onCancel, isReadOnly })
     resolver: yupResolver(isReadOnly ? yup.object().shape({}) : validateSchema),
     defaultValues: value || initState
   })
+
   const toggle = () => {
     if (isDirty) {
       return MySweetAlert.fire({
