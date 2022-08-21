@@ -21,7 +21,7 @@ import { PlusCircle, Trash2, XCircle } from 'react-feather'
 import { useDispatch, useSelector } from 'react-redux'
 import { getCustomerWithContactsById } from '@src/views/billing/customer/store/actions'
 import './style.scss'
-import { get } from 'lodash'
+import { get, isEqual } from 'lodash'
 import classNames from 'classnames'
 import {
   DAYS_OF_MONTH_OPTIONS,
@@ -44,11 +44,16 @@ import { useParams } from 'react-router-dom'
 import { getBillingProjectById } from '@src/views/billing/project/store/actions'
 import moment from 'moment'
 import { getSettingValuesByCode } from '@src/views/billing/settings/store/actions'
+import SweetAlert from 'sweetalert2'
+import '@src/@core/scss/billing-sweet-alert.scss'
+import withReactContent from 'sweetalert2-react-content'
+const MySweetAlert = withReactContent(SweetAlert)
 
 function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel, onSubmit, cancelText }) {
   const {
     projects: { selectedProject: selectedBillingProject },
-    contractClock: { clocks }
+    contractClock: { clocks },
+    layout: { skin }
   } = useSelector((state) => state)
 
   const { setting } = useSelector((state) => state.settings)
@@ -66,7 +71,8 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
     manualInputAlert: 0,
     confirmAlert: 0,
     billingAlert: 0,
-    vat: 8
+    vat: 8,
+    clocks: []
   }
 
   const { projectId } = useParams()
@@ -128,12 +134,14 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
     watch,
     setError,
     reset,
-    formState: { isDirty }
+    formState: { isDirty: isDirtyForm }
   } = methods
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'billingCycle'
   })
+
+  const isDirty = isDirtyForm || !isEqual(watch('clocks'), clocks)
 
   useEffect(() => {
     dispatch({
@@ -390,13 +398,38 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
   }
 
   const handleCancel = () => {
+    if (isDirty) {
+      return MySweetAlert.fire({
+        title: intl.formatMessage({ id: 'Cancel confirmation' }),
+        text: intl.formatMessage({ id: 'Are you sure to cancel?' }),
+        showCancelButton: true,
+        confirmButtonText: intl.formatMessage({ id: 'Yes' }),
+        cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),
+        customClass: {
+          popup: classNames({
+            'sweet-alert-popup--dark': skin === 'dark',
+            'sweet-popup': true
+          }),
+          header: 'sweet-title',
+          confirmButton: 'btn btn-primary',
+          cancelButton: 'btn btn-secondary ml-1',
+          actions: 'sweet-actions',
+          content: 'sweet-content'
+        },
+        buttonsStyling: false
+      }).then(({ isConfirmed }) => {
+        if (isConfirmed) {
+          onCancel?.(isDirty)
+        }
+      })
+    }
     onCancel?.(isDirty)
   }
 
   return (
     <>
       <FormProvider {...methods}>
-        <Form onSubmit={handleSubmit(handleSubmitForm)}>
+        <Form className="billing-form" onSubmit={handleSubmit(handleSubmitForm)}>
           <Row>
             <Col className="mb-2" xs={6} lg={3}>
               <Label className="general-label" for="code">
@@ -615,7 +648,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                             defaultValue={item.month}
                           />
                         </Col>
-                        {fields.length > 1 && (
+                        {!isReadOnly && fields.length > 1 && (
                           <Col xs={12} lg="auto" className="d-flex align-items-center">
                             <span role="button" onClick={handleRemoveCycle(index)}>
                               <Trash2 size={18} />
@@ -624,7 +657,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                         )}
                       </Row>
                     </div>
-                    {index === fields.length - 1 && (
+                    {!isReadOnly && index === fields.length - 1 && (
                       <div className="ml-1" role="button" onClick={handleAppendCycle}>
                         <PlusCircle color="#e9eef6" fill="#0394FF" />
                       </div>

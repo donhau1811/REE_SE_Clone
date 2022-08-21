@@ -120,15 +120,56 @@ UpdateOperationUnit.propTypes = {
 export default injectIntl(UpdateOperationUnit)
 
 export const Navbar = () => {
-  const intl = useIntl()
   const {
+    layout: { skin },
+    form: { isFormGlobalDirty },
     projects: { selectedProject: selectedBillingProject }
   } = useSelector((state) => state)
+  const intl = useIntl()
+  const history = useHistory()
+
+  const handleBreadCrumbsRedirct = (event) => {
+    event.preventDefault()
+    if (isFormGlobalDirty) {
+      return MySweetAlert.fire({
+        title: intl.formatMessage({ id: 'Cancel confirmation' }),
+        text: intl.formatMessage({ id: 'Are you sure to cancel?' }),
+        showCancelButton: true,
+        confirmButtonText: intl.formatMessage({ id: 'Yes' }),
+        cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),
+        customClass: {
+          popup: classNames({
+            'sweet-alert-popup--dark': skin === 'dark',
+            'sweet-popup': true
+          }),
+          header: 'sweet-title',
+          confirmButton: 'btn btn-primary',
+          cancelButton: 'btn btn-secondary ml-1',
+          actions: 'sweet-actions',
+          content: 'sweet-content'
+        },
+        buttonsStyling: false
+      }).then(({ isConfirmed }) => {
+        if (isConfirmed) {
+          history.push(ROUTER_URL.BILLING_PROJECT)
+        }
+      })
+    }
+    history.push(ROUTER_URL.BILLING_PROJECT)
+  }
+
   const tempItems = [
     { name: intl.formatMessage({ id: 'billing' }), link: '' },
     { name: intl.formatMessage({ id: 'project management' }), link: '' },
-    { name: intl.formatMessage({ id: 'project' }), link: ROUTER_URL.BILLING_PROJECT },
+    {
+      name: intl.formatMessage({ id: 'project' }),
+      innerProps: { tag: 'a', href: '#', onClick: handleBreadCrumbsRedirct }
+    },
     { name: selectedBillingProject?.name, link: '' }
   ]
-  return <BreadCrumbs breadCrumbItems={tempItems} />
+  return (
+    <>
+      <BreadCrumbs breadCrumbItems={tempItems} />
+    </>
+  )
 }

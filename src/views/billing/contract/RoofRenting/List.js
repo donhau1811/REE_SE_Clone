@@ -3,7 +3,7 @@ import React from 'react'
 import { Plus } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Table from '@src/views/common/table/CustomDataTable'
-import { Badge, Button, Col, Row } from 'reactstrap'
+import { Badge, Button, Col, Row, UncontrolledTooltip } from 'reactstrap'
 import moment from 'moment'
 import { DISPLAY_DATE_FORMAT, ROUTER_URL } from '@src/utility/constants'
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
@@ -71,7 +71,22 @@ function RoofRenting({ disabled, intl, data, onDelete }) {
       selector: 'address',
       center: true,
       minWidth: '350px',
-      cell: (row) => <span>{row?.roofVendor?.address}</span>
+      cell: (row) => {
+        return (
+          <>
+            <div id={`view_name${row.id}`}>
+              {row?.roofVendor?.address?.length > 150
+                ? `${row.roofVendor.address.slice(0, 150)}...`
+                : row.roofVendor.address}
+            </div>
+            {row?.roofVendor?.address?.length > 150 && (
+              <UncontrolledTooltip placement="auto" target={`view_name${row.id}`}>
+                <FormattedMessage id={row.roofVendor.address} />
+              </UncontrolledTooltip>
+            )}
+          </>
+        )
+      }
     },
     {
       name: intl.formatMessage({ id: 'Actions' }),

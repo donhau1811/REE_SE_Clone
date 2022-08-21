@@ -46,18 +46,10 @@ export const BillingRoutes = [
     }
   },
   {
-    path: ROUTER_URL.BILLING_CUSTOMER,
-    component: lazy(() => import('../../views/billing/customer')),
-    exact: true,
-    meta: {
-      action: 'manage',
-      resource: ROUTER_URL.BILLING_CUSTOMER,
-      navLink: ROUTER_URL.BILLING_CUSTOMER
-    }
-  },
-  {
     path: ROUTER_URL.BILLING_CUSTOMER_UPDATE,
     component: lazy(() => import('../../views/billing/customer/update')),
+    exact: true,
+    navbar: require('../../views/billing/customer/update')?.Navbar,
     meta: {
       action: 'manage',
       resource: ROUTER_URL.BILLING_CUSTOMER,
@@ -67,6 +59,7 @@ export const BillingRoutes = [
   {
     path: ROUTER_URL.BILLING_CUSTOMER_CREATE,
     exact: true,
+    navbar: require('../../views/billing/customer/create')?.Navbar,
     component: lazy(() => import('../../views/billing/customer/create')),
     meta: {
       action: 'manage',
@@ -139,6 +132,8 @@ export const BillingRoutes = [
   {
     path: ROUTER_URL.BILLING_PROJECT_CREATE_ROOF_VENDOR,
     component: lazy(() => import('../../views/billing/contract/RoofRenting/create')),
+    navbar: require('../../views/billing/contract/RoofRenting/create')?.Navbar,
+
     exact: true,
     meta: {
       action: 'manage',
@@ -149,6 +144,8 @@ export const BillingRoutes = [
   {
     path: ROUTER_URL.BILLING_PROJECT_UPDATE_ROOF_VENDOR,
     component: lazy(() => import('../../views/billing/contract/RoofRenting/update')),
+    navbar: require('../../views/billing/contract/RoofRenting/update')?.Navbar,
+
     exact: true,
     meta: {
       action: 'manage',
@@ -159,6 +156,8 @@ export const BillingRoutes = [
   {
     path: ROUTER_URL.BILLING_PROJECT_CREATE,
     component: lazy(() => import('../../views/billing/project/create')),
+    navbar: require('../../views/billing/project/create')?.Navbar,
+
     exact: true,
     meta: {
       action: 'manage',
@@ -191,6 +190,8 @@ export const BillingRoutes = [
   {
     path: ROUTER_URL.BILLING_PROJECT_UPDATE_CONTRACT_POWER_SELLING,
     component: lazy(() => import('../../views/billing/contract/PowerSelling/update')),
+    navbar: require('../../views/billing/contract/PowerSelling/update')?.Navbar,
+
     exact: true,
     meta: {
       action: 'manage',

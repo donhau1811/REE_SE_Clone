@@ -9,8 +9,17 @@ import * as yup from 'yup'
 import Select from 'react-select'
 import { selectThemeColors } from '@src/utility/Utils'
 import { POSITION_OPTIONS } from '@src/utility/constants/billing'
+import classNames from 'classnames'
+import { useSelector } from 'react-redux'
+import withReactContent from 'sweetalert2-react-content'
+import SweetAlert from 'sweetalert2'
+
+const MySweetAlert = withReactContent(SweetAlert)
 
 function ContactCUForm({ contact, intl, onSubmit = () => {}, onCancel, isReadOnly }) {
+  const {
+    layout: { skin }
+  } = useSelector((state) => state)
   const [isOpen, setIsOpen] = useState(false)
   const validateSchema = yup.object().shape(
     {
@@ -34,13 +43,47 @@ function ContactCUForm({ contact, intl, onSubmit = () => {}, onCancel, isReadOnl
     ['fullName', 'phone', 'note', 'email']
   )
 
-  const { getValues, errors, register, control, handleSubmit, reset } = useForm({
+  const {
+    getValues,
+    errors,
+    register,
+    control,
+    handleSubmit,
+    reset,
+    formState: { isDirty }
+  } = useForm({
     mode: 'onChange',
     resolver: yupResolver(isReadOnly ? yup.object().shape({}) : validateSchema),
     defaultValues: contact || {}
   })
 
   const handleCancel = () => {
+    if (isDirty) {
+      return MySweetAlert.fire({
+        title: intl.formatMessage({ id: 'Cancel confirmation' }),
+        text: intl.formatMessage({ id: 'Are you sure to cancel?' }),
+        showCancelButton: true,
+        confirmButtonText: intl.formatMessage({ id: 'Yes' }),
+        cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),
+        customClass: {
+          popup: classNames({
+            'sweet-alert-popup--dark': skin === 'dark',
+            'sweet-popup': true
+          }),
+          header: 'sweet-title',
+          confirmButton: 'btn btn-primary',
+          cancelButton: 'btn btn-secondary ml-1',
+          actions: 'sweet-actions',
+          content: 'sweet-content'
+        },
+        buttonsStyling: false
+      }).then(({ isConfirmed }) => {
+        if (isConfirmed) {
+          setIsOpen((preState) => !preState)
+          onCancel?.()
+        }
+      })
+    }
     setIsOpen((preState) => !preState)
     onCancel?.()
   }

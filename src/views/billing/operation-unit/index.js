@@ -174,10 +174,7 @@ const OperationUnit = ({ intl }) => {
       name: intl.formatMessage({ id: 'operation-unit-form-name' }),
       sortable: true,
       selector: 'name',
-      cell: (row) => (
-        <Link to={ `${ROUTER_URL.BILLING_OPERATION_UNIT}/${row.id}`}>{row?.name}</Link>
-
-      ),
+      cell: (row) => <Link to={`${ROUTER_URL.BILLING_OPERATION_UNIT}/${row.id}`}>{row?.name}</Link>,
       minWidth: '200px'
     },
     {
@@ -210,12 +207,14 @@ const OperationUnit = ({ intl }) => {
       name: intl.formatMessage({ id: 'operation-unit-form-mobile' }),
       selector: 'phone',
       sortable: true,
-      minWidth: '150px'
+      minWidth: '150px',
+      center: true
     },
     {
       name: intl.formatMessage({ id: 'Status' }),
       selector: 'state',
       sortable: true,
+      center: true,
       minWidth: '170px',
       cell: (row) => {
         return row.state === OPERATION_UNIT_STATUS.ACTIVE ? (
@@ -234,11 +233,13 @@ const OperationUnit = ({ intl }) => {
       selector: 'modifyDate',
       sortable: true,
       cell: (row) => moment(row.modifyDate).format(DISPLAY_DATE_FORMAT),
-      center: true
+      center: true,
+      minWidth: '150px'
     },
     {
       name: intl.formatMessage({ id: 'Actions' }),
       selector: '#',
+
       cell: (row) => (
         <>
           {' '}
@@ -258,7 +259,7 @@ const OperationUnit = ({ intl }) => {
             <IconDelete onClick={handleDeleteOperationCompany(row.id)} id={`deleteBtn_${row.id}`} />
           </Badge>
           <UncontrolledTooltip placement="auto" target={`deleteBtn_${row.id}`}>
-            <FormattedMessage id="Delete Operation Unit" />
+            <FormattedMessage id="Delete Project" />
           </UncontrolledTooltip>
         </>
       ),

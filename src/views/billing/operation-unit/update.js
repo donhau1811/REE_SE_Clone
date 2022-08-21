@@ -100,7 +100,7 @@ const UpdateOperationUnit = ({ intl }) => {
         onCancel={handleCancel}
         initValues={selectedCompany}
         isReadOnly={isReadOnly}
-        submitText={intl.formatMessage({ id: isReadOnly ? 'Update' : 'Save' })}
+        // submitText={intl.formatMessage({ id: isReadOnly ? 'Update' : 'Save' })}
       />
     </>
   )

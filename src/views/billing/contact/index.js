@@ -106,7 +106,7 @@ const Contact = ({ data, onChange, disabled }) => {
       name: <FormattedMessage id="Actions" />,
       selector: '#',
       center: true,
-      isHidden: disabled,
+
       cell: (row) => (
         <>
           {' '}
@@ -116,18 +116,23 @@ const Contact = ({ data, onChange, disabled }) => {
           <UncontrolledTooltip placement="auto" target={`editBtn_${row.id}`}>
             <FormattedMessage id="View Project" />
           </UncontrolledTooltip>
-          <Badge onClick={handleRedirectToUpdatePage(row)}>
-            <IconEdit id={`updateBtn_${row.id}`} />
-          </Badge>
-          <UncontrolledTooltip placement="auto" target={`updateBtn_${row.id}`}>
-            <FormattedMessage id="Update Project" />
-          </UncontrolledTooltip>
-          <Badge onClick={handleDeleteContact(row.id)}>
-            <IconDelete id={`deleteBtn_${row.id}`} />
-          </Badge>
-          <UncontrolledTooltip placement="auto" target={`deleteBtn_${row.id}`}>
-            <FormattedMessage id="Delete Project" />
-          </UncontrolledTooltip>
+          {!disabled && (
+            <>
+              {' '}
+              <Badge onClick={handleRedirectToUpdatePage(row)}>
+                <IconEdit id={`updateBtn_${row.id}`} />
+              </Badge>
+              <UncontrolledTooltip placement="auto" target={`updateBtn_${row.id}`}>
+                <FormattedMessage id="Update Project" />
+              </UncontrolledTooltip>
+              <Badge onClick={handleDeleteContact(row.id)}>
+                <IconDelete id={`deleteBtn_${row.id}`} />
+              </Badge>
+              <UncontrolledTooltip placement="auto" target={`deleteBtn_${row.id}`}>
+                <FormattedMessage id="Delete Project" />
+              </UncontrolledTooltip>
+            </>
+          )}
         </>
       )
     }

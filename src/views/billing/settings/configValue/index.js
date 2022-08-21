@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { Badge, Button, Col, Row } from 'reactstrap'
+import { Badge, Button, Col, Row, UncontrolledTooltip } from 'reactstrap'
+import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
 import Table from '@src/views/common/table/CustomDataTable'
 import { array, bool, func, object, string } from 'prop-types'
 import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit.svg'
@@ -22,6 +23,7 @@ import './styles.scss'
 const MySweetAlert = withReactContent(SweetAlert)
 
 const ValueTable = ({ configId, disabled, intl }) => {
+  const [isReadOnly, setIsReadOnly] = useState(true)
   const [currValue, setCurrentValue] = useState(null)
   const [configValues, setConfigValues] = useState([])
   const dispatch = useDispatch()
@@ -51,7 +53,8 @@ const ValueTable = ({ configId, disabled, intl }) => {
     })
   }
 
-  const handleEditValue = (changeValue) => () => {
+  const handleEditValue = (changeValue, _isReadOnly) => () => {
+    setIsReadOnly(_isReadOnly)
     setCurrentValue({ ...changeValue, name: selectedSetting?.name })
   }
 
@@ -125,11 +128,11 @@ const ValueTable = ({ configId, disabled, intl }) => {
       sortable: true,
       cell: (row) => {
         return row.state === OPERATION_UNIT_STATUS.ACTIVE ? (
-          <Badge pill color="light-success">
+          <Badge pill color="light-success" className="custom-bagde">
             <FormattedMessage id="Active" />
           </Badge>
         ) : (
-          <Badge pill color="light-muted">
+          <Badge pill color="light-muted" className="custom-bagde">
             <FormattedMessage id="Inactive" />
           </Badge>
         )
@@ -143,18 +146,34 @@ const ValueTable = ({ configId, disabled, intl }) => {
       cell: (row) => (
         <>
           {' '}
+          <Badge onClick={handleEditValue(row, true)}>
+            <IconView id={`viewBtn_${row.id}`} />
+          </Badge>
+          <UncontrolledTooltip placement="auto" target={`viewBtn_${row.id}`}>
+            <FormattedMessage id="View Project" />
+          </UncontrolledTooltip>
           <Badge onClick={handleEditValue(row)}>
             <IconEdit id={`editBtn_${row.id}`} />
           </Badge>
+          <UncontrolledTooltip placement="auto" target={`editBtn_${row.id}`}>
+            <FormattedMessage id="Update Project" />
+          </UncontrolledTooltip>
           <Badge onClick={handleDeleteValue(row)}>
             <IconDelete id={`deleteBtn_${row.id}`} />
           </Badge>
+          <UncontrolledTooltip placement="auto" target={`deleteBtn_${row.id}`}>
+            <FormattedMessage id="Delete Project" />
+          </UncontrolledTooltip>
         </>
       )
     }
   ]
 
   const handleSubmitValueForm = (values) => {
+    if (isReadOnly) {
+      setIsReadOnly(false)
+      return
+    }
     const payload = {
       state: values.state?.value,
       value: values.value,
@@ -204,7 +223,12 @@ const ValueTable = ({ configId, disabled, intl }) => {
           <Table columns={columns} pagination={null} data={configValues} />
         </Col>
       </Row>
-      <ValueCUForm value={currValue} onSubmit={handleSubmitValueForm} onCancel={handleCancelValueForm} />
+      <ValueCUForm
+        isReadOnly={isReadOnly}
+        value={currValue}
+        onSubmit={handleSubmitValueForm}
+        onCancel={handleCancelValueForm}
+      />
     </>
   )
 }

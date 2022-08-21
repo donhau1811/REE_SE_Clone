@@ -12,7 +12,7 @@ import { CHECK_DUPLICATE_OPRERATION_UNIT_CODE, NUMBER_REGEX, SET_FORM_DIRTY } fr
 import axios from 'axios'
 import { useDispatch } from 'react-redux'
 
-const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, isReadOnly, submitText }) => {
+const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, isReadOnly }) => {
   const initState = {
     state: GENERAL_STATUS_OPTS[0]
   }
@@ -34,8 +34,10 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
         .required(intl.formatMessage({ id: 'required-validate' }))
         .max(20, intl.formatMessage({ id: 'max-validate' })),
 
-      address: yup.string().required(intl.formatMessage({ id: 'required-validate' }))
-      .max(255, intl.formatMessage({ id: 'max-validate' })),
+      address: yup
+        .string()
+        .required(intl.formatMessage({ id: 'required-validate' }))
+        .max(255, intl.formatMessage({ id: 'max-validate' })),
       phone: yup
         .string()
         .matches(NUMBER_REGEX, {
@@ -47,7 +49,16 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
     ['name', 'code', 'taxCode', 'address', 'phone']
   )
 
-  const { handleSubmit, getValues, errors, control, register, reset, setError, formState: { isDirty } } = useForm({
+  const {
+    handleSubmit,
+    getValues,
+    errors,
+    control,
+    register,
+    reset,
+    setError,
+    formState: { isDirty }
+  } = useForm({
     mode: 'onChange',
     resolver: yupResolver(isReadOnly ? yup.object().shape({}) : ValidateSchema),
     defaultValues: initValues || initState
@@ -63,7 +74,7 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
   }, [initValues])
 
   const handleSubmitOperationUnitForm = async (values) => {
-       if (isReadOnly) {
+    if (isReadOnly) {
       onSubmit?.(initValues)
       return
     }
@@ -87,15 +98,14 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
       )
       return
     }
-      onSubmit?.(values)
-   
+    onSubmit?.(values)
   }
   const handleCancel = () => {
     onCancel?.(isDirty)
   }
   return (
     <>
-      <Form className='billing-form' onSubmit={handleSubmit(handleSubmitOperationUnitForm)}>
+      <Form className="billing-form" onSubmit={handleSubmit(handleSubmitOperationUnitForm)}>
         <Row>
           <Col className="mb-2" md={4}>
             <Label className="general-label" for="name">
@@ -206,10 +216,10 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
         </Row>
         <Row className="d-flex justify-content-end align-items-center">
           <Button type="submit" color="primary" className="mr-1 px-3">
-            {submitText || intl.formatMessage({ id: 'Save' })}
+            {intl.formatMessage({ id: isReadOnly ? 'Update' : 'Save' })}
           </Button>{' '}
           <Button color="secondary" onClick={handleCancel}>
-            {intl.formatMessage({ id: 'Back' })}
+            {intl.formatMessage({ id: isReadOnly ? 'Back' : 'Cancel' })}
           </Button>{' '}
         </Row>
       </Form>

@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { func, object } from 'prop-types'
+import { bool, func, object } from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -8,8 +8,17 @@ import * as yup from 'yup'
 import Select from 'react-select'
 import { selectThemeColors } from '@src/utility/Utils'
 import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
+import classNames from 'classnames'
+import { useSelector } from 'react-redux'
+import withReactContent from 'sweetalert2-react-content'
+import SweetAlert from 'sweetalert2'
 
-function ValueCUForm({ value, intl, onSubmit = () => {}, onCancel }) {
+const MySweetAlert = withReactContent(SweetAlert)
+
+function ValueCUForm({ value, intl, onSubmit = () => {}, onCancel, isReadOnly }) {
+  const {
+    layout: { skin }
+  } = useSelector((state) => state)
   const CONFIG_VALUE_STATUS_OPTS = [
     { value: OPERATION_UNIT_STATUS.ACTIVE, label: intl.formatMessage({ id: 'Active' }) },
     { value: OPERATION_UNIT_STATUS.INACTIVE, label: intl.formatMessage({ id: 'Inactive' }) }
@@ -23,21 +32,55 @@ function ValueCUForm({ value, intl, onSubmit = () => {}, onCancel }) {
         .required(intl.formatMessage({ id: 'required-validate' }))
         .max(255, intl.formatMessage({ id: 'max-validate' })),
       description: yup
-      .string()
-      .required(intl.formatMessage({ id: 'required-validate' }))
-      .max(255, intl.formatMessage({ id: 'max-validate' }))
+        .string()
+        .required(intl.formatMessage({ id: 'required-validate' }))
+        .max(255, intl.formatMessage({ id: 'max-validate' }))
     },
     ['value', 'description']
   )
   const initState = {
     state: CONFIG_VALUE_STATUS_OPTS[0]
   }
-  const { getValues, errors, register, control, handleSubmit, reset } = useForm({
+  const {
+    getValues,
+    errors,
+    register,
+    control,
+    reset,
+    handleSubmit,
+    formState: { isDirty }
+  } = useForm({
     mode: 'onChange',
-    resolver: yupResolver(validateSchema),
+    resolver: yupResolver(isReadOnly ? yup.object().shape({}) : validateSchema),
     defaultValues: value || initState
   })
   const toggle = () => {
+    if (isDirty) {
+      return MySweetAlert.fire({
+        title: intl.formatMessage({ id: 'Cancel confirmation' }),
+        text: intl.formatMessage({ id: 'Are you sure to cancel?' }),
+        showCancelButton: true,
+        confirmButtonText: intl.formatMessage({ id: 'Yes' }),
+        cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),
+        customClass: {
+          popup: classNames({
+            'sweet-alert-popup--dark': skin === 'dark',
+            'sweet-popup': true
+          }),
+          header: 'sweet-title',
+          confirmButton: 'btn btn-primary',
+          cancelButton: 'btn btn-secondary ml-1',
+          actions: 'sweet-actions',
+          content: 'sweet-content'
+        },
+        buttonsStyling: false
+      }).then(({ isConfirmed }) => {
+        if (isConfirmed) {
+          setIsOpen((preState) => !preState)
+          onCancel?.()
+        }
+      })
+    }
     setIsOpen((preState) => !preState)
     onCancel?.()
   }
@@ -47,6 +90,10 @@ function ValueCUForm({ value, intl, onSubmit = () => {}, onCancel }) {
     if (value?.id) reset({ ...value, state: CONFIG_VALUE_STATUS_OPTS.find((item) => item.value === value?.state) })
   }, [value?.id])
 
+  const handleSubmitForm = (values) => {
+    onSubmit?.(values)
+  }
+
   return (
     <>
       <Modal isOpen={isOpen} className="modal-dialog-centered" backdrop="static">
@@ -54,7 +101,7 @@ function ValueCUForm({ value, intl, onSubmit = () => {}, onCancel }) {
           <FormattedMessage id={value?.id ? 'Update new config value' : 'Add new config value'} />
         </ModalHeader>
         <ModalBody>
-          <Form key="value-from">
+          <Form className="billing-form" key="value-from">
             <Row>
               <Col className="mb-2" xs={12}>
                 <Label className="general-label" for="name">
@@ -65,12 +112,12 @@ function ValueCUForm({ value, intl, onSubmit = () => {}, onCancel }) {
                   name="name"
                   autoComplete="on"
                   disabled
-                  invalid={!!errors.name}
-                  valid={getValues('name')?.trim() && !errors.name}
+                  // invalid={!!errors.name}
+                  // valid={getValues('name')?.trim() && !errors.name}
                   innerRef={register()}
                   placeholder={intl.formatMessage({ id: 'Enter Config Name' })}
                 />
-                {errors?.name && <FormFeedback>{errors?.name?.message}</FormFeedback>}
+                {/* {errors?.name && <FormFeedback>{errors?.name?.message}</FormFeedback>} */}
               </Col>
 
               <Col className="mb-2" xs={12}>
@@ -83,8 +130,9 @@ function ValueCUForm({ value, intl, onSubmit = () => {}, onCancel }) {
                   name="value"
                   autoComplete="on"
                   innerRef={register()}
-                  invalid={!!errors.value}
-                  valid={getValues('value')?.trim() && !errors.value}
+                  disabled={isReadOnly}
+                  invalid={!isReadOnly && !!errors.value}
+                  valid={!isReadOnly && getValues('value')?.trim() && !errors.value}
                   placeholder={intl.formatMessage({ id: 'Enter Configuration Value' })}
                 />
                 {errors?.value && <FormFeedback>{errors?.value?.message}</FormFeedback>}
@@ -99,6 +147,7 @@ function ValueCUForm({ value, intl, onSubmit = () => {}, onCancel }) {
                   theme={selectThemeColors}
                   name="state"
                   id="state"
+                  isDisabled={isReadOnly}
                   innerRef={register()}
                   options={CONFIG_VALUE_STATUS_OPTS}
                   className="react-select"
@@ -117,8 +166,9 @@ function ValueCUForm({ value, intl, onSubmit = () => {}, onCancel }) {
                   name="description"
                   autoComplete="on"
                   innerRef={register()}
-                  invalid={!!errors.description}
-                  valid={getValues('description')?.trim() && !errors.description}
+                  disabled={isReadOnly}
+                  invalid={!isReadOnly && !!errors.description}
+                  valid={!isReadOnly && getValues('description')?.trim() && !errors.description}
                   placeholder={intl.formatMessage({ id: 'Enter Config Explain' })}
                   type="textarea"
                 />
@@ -127,11 +177,11 @@ function ValueCUForm({ value, intl, onSubmit = () => {}, onCancel }) {
             </Row>
             <Row>
               <Col className="d-flex justify-content-end align-items-center">
-                <Button onClick={handleSubmit(onSubmit)} color="primary" className="mr-1 px-3">
-                  {intl.formatMessage({ id: 'Finish' })}
+                <Button onClick={handleSubmit(handleSubmitForm)} color="primary" className="mr-1 px-3">
+                  {intl.formatMessage({ id: isReadOnly ? 'Update' : 'Finish' })}
                 </Button>{' '}
                 <Button color="secondary" onClick={toggle}>
-                  {intl.formatMessage({ id: 'Cancel' })}
+                  {intl.formatMessage({ id: isReadOnly ? 'Close' : 'Cancel' })}
                 </Button>{' '}
               </Col>
             </Row>
@@ -146,7 +196,8 @@ ValueCUForm.propTypes = {
   value: object,
   intl: object,
   onSubmit: func,
-  onCancel: func
+  onCancel: func,
+  isReadOnly: bool
 }
 
 export default injectIntl(ValueCUForm)

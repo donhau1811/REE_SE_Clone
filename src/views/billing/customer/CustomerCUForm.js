@@ -1,5 +1,5 @@
 import { array, bool, func, object, string } from 'prop-types'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Button, Col, Form, FormFeedback, Input, Label, Row } from 'reactstrap'
@@ -7,14 +7,14 @@ import Select from 'react-select'
 import { selectThemeColors, showToast } from '@src/utility/Utils'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { API_CHECK_DUPLICATE_CUSTOMER_CODE, NUMBER_REGEX } from '@src/utility/constants'
+import { API_CHECK_DUPLICATE_CUSTOMER_CODE, NUMBER_REGEX, SET_FORM_DIRTY } from '@src/utility/constants'
 import { GENERAL_CUSTOMER_TYPE, GENERAL_STATUS } from '@src/utility/constants/billing'
 import SweetAlert from 'sweetalert2'
 import './styles.scss'
 import Contact from '../contact'
 import withReactContent from 'sweetalert2-react-content'
 import classNames from 'classnames'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { ReactComponent as CicleFailed } from '@src/assets/images/svg/circle-failed.svg'
 import axios from 'axios'
 import { isEqual } from 'lodash'
@@ -31,13 +31,11 @@ const OperationCUForm = ({
   cancelText,
   contacts
 }) => {
-  const [contactsState, setContactsState] = useState([])
-
   const CUSTOMER_STATUS_OPTS = [
     { value: GENERAL_STATUS.ACTIVE, label: intl.formatMessage({ id: 'Active' }) },
     { value: GENERAL_STATUS.INACTIVE, label: intl.formatMessage({ id: 'Inactive' }) }
   ]
-
+  const dispatch = useDispatch()
   const {
     layout: { skin }
   } = useSelector((state) => state)
@@ -84,11 +82,35 @@ const OperationCUForm = ({
     ['fullName', 'code', 'taxCode', 'address', 'phone', 'note']
   )
 
-  const { handleSubmit, getValues, errors, control, reset, register, setError } = useForm({
+  const {
+    handleSubmit,
+    getValues,
+    errors,
+    control,
+    reset,
+    register,
+    setError,
+    watch,
+    setValue,
+    formState: { isDirty }
+  } = useForm({
     mode: 'onChange',
     resolver: yupResolver(isViewed ? yup.object().shape({}) : ValidateSchema),
     defaultValues: initValues || initState
   })
+
+  const isDirtyForm = isDirty || !isEqual(watch('contacts'), contacts)
+
+  useEffect(() => {
+    register('contacts')
+  }, [register])
+
+  useEffect(() => {
+    dispatch({
+      type: SET_FORM_DIRTY,
+      payload: isDirtyForm
+    })
+  }, [isDirtyForm])
 
   useEffect(() => {
     const tempValues = {
@@ -100,13 +122,13 @@ const OperationCUForm = ({
   }, [initValues])
 
   useEffect(() => {
-    if (!isEqual(contacts, contactsState)) {
-      setContactsState(contacts)
+    if (!isEqual(contacts, watch('contacts'))) {
+      setValue('contacts', contacts)
     }
   }, [contacts])
 
   const handleSubmitContactForm = (values) => {
-    setContactsState(values)
+    setValue('contacts', values)
   }
 
   const handleSubmitCustomerForm = async (values) => {
@@ -115,24 +137,24 @@ const OperationCUForm = ({
       const dataCheck = { code: values.code }
       if (initValues?.id) dataCheck.id = initValues?.id
       try {
-      const checkDupCodeRes = await axios.post(API_CHECK_DUPLICATE_CUSTOMER_CODE, dataCheck)
-      if (checkDupCodeRes.status === 200 && checkDupCodeRes.data?.data) {
-        setError('code', { type: 'custom', message: intl.formatMessage({ id: 'dubplicated-validate' }) })
+        const checkDupCodeRes = await axios.post(API_CHECK_DUPLICATE_CUSTOMER_CODE, dataCheck)
+        if (checkDupCodeRes.status === 200 && checkDupCodeRes.data?.data) {
+          setError('code', { type: 'custom', message: intl.formatMessage({ id: 'dubplicated-validate' }) })
+          return
+        }
+      } catch (err) {
+        const alert = initValues?.id
+          ? 'Failed to update data. Please try again'
+          : 'Failed to create data. Please try again'
+        showToast(
+          'error',
+          intl.formatMessage({
+            id: alert
+          })
+        )
         return
       }
-    } catch (err) {
-      const alert = initValues?.id
-        ? 'Failed to update data. Please try again'
-        : 'Failed to create data. Please try again'
-      showToast(
-        'error',
-        intl.formatMessage({
-          id: alert
-        })
-      )
-      return
-    }
-      if (!contactsState?.filter((item) => !item.isDelete).length > 0) {
+      if (!watch('contacts')?.filter((item) => !item.isDelete).length > 0) {
         return MySweetAlert.fire({
           // icon: 'success',
           iconHtml: <CicleFailed />,
@@ -150,11 +172,40 @@ const OperationCUForm = ({
         })
       }
     }
-   console.log('values', values)
+
     onSubmit?.({
-      ...values,
-      contacts: contactsState
+      ...values
     })
+  }
+
+  const handleCancelForm = () => {
+    // console.log('isDirty', isDirty)
+    if (isDirtyForm) {
+      return MySweetAlert.fire({
+        title: intl.formatMessage({ id: 'Cancel confirmation' }),
+        text: intl.formatMessage({ id: 'Are you sure to cancel?' }),
+        showCancelButton: true,
+        confirmButtonText: intl.formatMessage({ id: 'Yes' }),
+        cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),
+        customClass: {
+          popup: classNames({
+            'sweet-alert-popup--dark': skin === 'dark',
+            'sweet-popup': true
+          }),
+          header: 'sweet-title',
+          confirmButton: 'btn btn-primary',
+          cancelButton: 'btn btn-secondary ml-1',
+          actions: 'sweet-actions',
+          content: 'sweet-content'
+        },
+        buttonsStyling: false
+      }).then(({ isConfirmed }) => {
+        if (isConfirmed) {
+          onCancel?.()
+        }
+      })
+    }
+    onCancel?.()
   }
   return (
     <>
@@ -312,14 +363,14 @@ const OperationCUForm = ({
             {errors?.note && <FormFeedback>{errors?.note?.message}</FormFeedback>}
           </Col>
         </Row>
-        <Contact  disabled={isViewed} onChange={handleSubmitContactForm} data={contactsState} />
+        <Contact disabled={isViewed} onChange={handleSubmitContactForm} data={watch('contacts')} />
 
         <Row>
           <Col className="d-flex justify-content-end align-items-center mb-2">
             <Button type="submit" color="primary" className="mr-1 px-3">
               {submitText || intl.formatMessage({ id: 'Save' })}
             </Button>{' '}
-            <Button color="secondary" onClick={onCancel}>
+            <Button color="secondary" onClick={handleCancelForm}>
               {cancelText || intl.formatMessage({ id: 'Cancel' })}
             </Button>{' '}
           </Col>
