@@ -29,7 +29,7 @@ const PageHeader = ({  onFilter, onSearch, searchValue }) => {
               <IconFilter />
             </span>
           </Filter>
-          <SearchBar onSearch={onSearch} searchValue={searchValue} placeholder={'operation-unit-list-search-input-placeholder'}/>
+          <SearchBar onSearch={onSearch} searchValue={searchValue} placeholder={'customer-list-search-input-placeholder'}/>
 
         </Col>
 

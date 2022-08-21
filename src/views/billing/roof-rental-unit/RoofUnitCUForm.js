@@ -89,7 +89,16 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
     setContactsRoofVendor(contacts)
   }, [contacts])
 
-  const { handleSubmit, getValues, errors, control, register, reset, setError, formState: { isDirty } } = useForm({
+  const {
+    handleSubmit,
+    getValues,
+    errors,
+    control,
+    register,
+    reset,
+    setError,
+    formState: { isDirty }
+  } = useForm({
     mode: 'onChange',
     resolver: yupResolver(isReadOnly ? yup.object().shape({}) : ValidateSchema),
     defaultValues: initValues || initState
@@ -132,7 +141,7 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
           id: alert
         })
       )
-      return 
+      return
     }
     if (!contactsRoofVendor?.filter((item) => !item.isDelete).length > 0) {
       return MySweetAlert.fire({
@@ -159,9 +168,10 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
   const handleCancel = () => {
     onCancel?.(isDirty)
   }
+
   return (
     <>
-      <Form className='billing-form' onSubmit={handleSubmit(handleSubmitRoofVendorsForm)}>
+      <Form className="billing-form" onSubmit={handleSubmit(handleSubmitRoofVendorsForm)}>
         <Row className="mb-2">
           <Col>
             <h4 className="typo-section">
@@ -321,13 +331,15 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
         <Input id="contacts" name="contacts" autoComplete="on" innerRef={register()} type="hidden" />
         <Contact disabled={isReadOnly} onChange={handleContactformSubmit} data={contactsRoofVendor} />
 
-        <Row className="d-flex justify-content-end align-items-center mt-5">
-          <Button type="submit" color="primary" className="mr-1 px-3">
-            {intl.formatMessage({ id: isReadOnly ? 'Update' : 'Save' })}
-          </Button>
-          <Button onClick={handleCancel} color="secondary">
-            {intl.formatMessage({ id: 'Cancel' })}
-          </Button>
+        <Row>
+          <Col className="d-flex justify-content-end align-items-center mt-5 mb-2">
+            <Button type="submit" color="primary" className="mr-1 px-3">
+              {intl.formatMessage({ id: isReadOnly ? 'Update' : 'Save' })}
+            </Button>
+            <Button onClick={handleCancel} color="secondary">
+              {intl.formatMessage({ id: 'Cancel' })}
+            </Button>
+          </Col>
         </Row>
       </Form>
     </>

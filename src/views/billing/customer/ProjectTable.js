@@ -4,17 +4,14 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { object } from 'prop-types'
 import Table from '@src/views/common/table/CustomDataTable'
 
-// import { ROWS_PER_PAGE_DEFAULT } from '@src/utility/constants'
+import { ROWS_PER_PAGE_DEFAULT } from '@src/utility/constants'
 import { useDispatch } from 'react-redux'
 import { getListProjectByCustomerId } from '../project/store/actions'
 import { useParams } from 'react-router-dom'
 
 const ProjectTable = ({ intl }) => {
-  const [pagination, setPagination] = useState({ rowsPerPage: 25, currentPage: 1 })
-  const [params, setParams] = useState({
-    sortBy: 'code',
-    sortDirection: 'asc'
-  })
+  const [pagination, setPagination] = useState()
+  const [params, setParams] = useState()
 
   const [total, setTotal] = useState(0)
   const { id } = useParams()
@@ -44,7 +41,10 @@ const ProjectTable = ({ intl }) => {
   }
 
   useEffect(() => {
-    fetchListProject()
+    fetchListProject({
+      params: { sortBy: 'code', sortDirection: 'asc' },
+      pagination: { rowsPerPage: ROWS_PER_PAGE_DEFAULT, currentPage: 1 }
+    })
   }, [])
 
   const handleChangePage = (e) => {
@@ -134,6 +134,7 @@ const ProjectTable = ({ intl }) => {
             onPageChange={handleChangePage}
             onPerPageChange={handlePerPageChange}
             onSort={handleSort}
+            defaultSortAsc={params.sortDirection === 'asc'}
             {...pagination}
           />
         </Col>

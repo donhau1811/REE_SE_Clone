@@ -46,6 +46,7 @@ const ValueTable = ({ configId, disabled, intl }) => {
     fetchConfigValue()
   }, [configId])
   const handleAddValue = () => {
+    setIsReadOnly(false)
     setCurrentValue({
       id: '-1',
       name: selectedSetting?.name,

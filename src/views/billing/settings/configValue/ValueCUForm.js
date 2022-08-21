@@ -33,7 +33,7 @@ function ValueCUForm({ value, intl, onSubmit = () => {}, onCancel, isReadOnly })
         .max(255, intl.formatMessage({ id: 'max-validate' })),
       description: yup
         .string()
-        .required(intl.formatMessage({ id: 'required-validate' }))
+        // .required(intl.formatMessage({ id: 'required-validate' }))
         .max(255, intl.formatMessage({ id: 'max-validate' }))
     },
     ['value', 'description']
@@ -95,12 +95,13 @@ function ValueCUForm({ value, intl, onSubmit = () => {}, onCancel, isReadOnly })
   const handleSubmitForm = (values) => {
     onSubmit?.(values)
   }
+  console.log('grdyh', value, value?.id === '-1')
 
   return (
     <>
       <Modal isOpen={isOpen} className="modal-dialog-centered" backdrop="static">
         <ModalHeader>
-          <FormattedMessage id={value?.id ? 'Update new config value' : 'Add new config value'} />
+          <FormattedMessage id={value?.id === '-1' ? 'Add new config value' : 'Update new config value'} />
         </ModalHeader>
         <ModalBody>
           <Form className="billing-form" key="value-from">

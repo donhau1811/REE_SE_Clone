@@ -95,8 +95,7 @@ const RoofVendor = ({ intl }) => {
 
   const handleRedirectToViewPage = (id) => () => {
     if (id) {
-      history.push(`${ROUTER_URL.BILLING_ROOF_RENTAL_UNIT}/${id}`
-      )
+      history.push(`${ROUTER_URL.BILLING_ROOF_RENTAL_UNIT}/${id}`)
     }
   }
 
@@ -238,6 +237,7 @@ const RoofVendor = ({ intl }) => {
       center: true
     }
   ]
+
   return (
     <>
       <Row>
@@ -250,6 +250,7 @@ const RoofVendor = ({ intl }) => {
             onPageChange={handleChangePage}
             onPerPageChange={handlePerPageChange}
             onSort={handleSort}
+            defaultSortAsc={params.sortDirection === 'asc'}
             {...pagination}
           />
         </Col>

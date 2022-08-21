@@ -163,6 +163,7 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
           <Col className="mb-2" md={8}>
             <Label className="general-label" for="address">
               <FormattedMessage id="operation-unit-form-address" />
+              <span className="text-danger">&nbsp;(*)</span>
             </Label>
             <Input
               id="address"

@@ -21,7 +21,13 @@ const SearchBar = ({ intl, onSearch = () => {}, searchValue, placeholder }) => {
   }
 
   const handleSearchInputChange = (e) => {
-    
+    const {
+      nativeEvent: { inputType }
+    } = e
+    if (!inputType && e?.target?.value === '') {
+      onSearch('')
+      return
+    }
     setValue(e?.target?.value)
   }
 
@@ -31,6 +37,7 @@ const SearchBar = ({ intl, onSearch = () => {}, searchValue, placeholder }) => {
       onSearch?.(value.trim())
     }
   }
+
   return (
     <>
       <InputGroup className="input-group-merge">

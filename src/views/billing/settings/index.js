@@ -107,11 +107,11 @@ const OperationUnit = ({ intl }) => {
       sortable: true,
       cell: (row) => {
         return row.state === OPERATION_UNIT_STATUS.ACTIVE ? (
-          <Badge pill color="light-success"  className="custom-bagde">
+          <Badge pill color="light-success" className="custom-bagde">
             <FormattedMessage id="Active" />
           </Badge>
         ) : (
-          <Badge pill color="light-muted"  className="custom-bagde">
+          <Badge pill color="light-muted" className="custom-bagde">
             <FormattedMessage id="Inactive" />
           </Badge>
         )
@@ -156,6 +156,7 @@ const OperationUnit = ({ intl }) => {
             onPageChange={handleChangePage}
             onPerPageChange={handlePerPageChange}
             onSort={handleSort}
+            defaultSortAsc={params.sortDirection === 'asc'}
             {...pagination}
           />
         </Col>
