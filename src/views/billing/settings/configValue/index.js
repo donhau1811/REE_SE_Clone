@@ -126,7 +126,7 @@ const ValueTable = ({ configId, disabled, intl }) => {
       name: <FormattedMessage id="Status" />,
       center: true,
       selector: 'status',
-      sortable: true,
+
       cell: (row) => {
         return row.state === OPERATION_UNIT_STATUS.ACTIVE ? (
           <Badge pill color="light-success" className="custom-bagde">
