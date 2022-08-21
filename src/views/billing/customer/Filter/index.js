@@ -16,9 +16,9 @@ const intitValue = {
   type: 'all',
   state: 'all',
   fromCreatedDate: new Date(),
-  toCreatedDate:  new Date(),
-  fromModifyDate:  new Date(),
-  toModifyDate:  new Date()
+  toCreatedDate: new Date(),
+  fromModifyDate: new Date(),
+  toModifyDate: new Date()
 }
 
 const FilterCustomer = ({ intl, children, onSubmit = () => {} }) => {
@@ -58,11 +58,10 @@ const FilterCustomer = ({ intl, children, onSubmit = () => {} }) => {
     }
 
     if (fromCreatedDate || toCreatedDate) {
-
       payload.createDate = {
         value: {
-          start: formData.fromCreatedDate ? moment(formData.fromCreatedDate).utc() : null,
-          end: formData.toCreatedDate ? moment(formData.toCreatedDate).utc() : null
+          start: formData.fromCreatedDate ? moment(formData.fromCreatedDate).startOf('day') : null,
+          end: formData.toCreatedDate ? moment(formData.toCreatedDate).endOf('day') : null
         },
         type: 'dateRange'
       }
@@ -70,8 +69,8 @@ const FilterCustomer = ({ intl, children, onSubmit = () => {} }) => {
     if (fromModifyDate || toModifyDate) {
       payload.modifyDate = {
         value: {
-          start: formData.fromModifyDate ? moment(formData.fromModifyDate).utc() : null,
-          end: formData.toModifyDate ? moment(formData.toModifyDate).utc() : null
+          start: formData.fromModifyDate ? moment(formData.fromModifyDate).startOf('day') : null,
+          end: formData.toModifyDate ? moment(formData.toModifyDate).endOf('day') : null
         },
         type: 'dateRange'
       }
