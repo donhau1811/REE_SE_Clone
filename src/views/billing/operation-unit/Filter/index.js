@@ -39,8 +39,8 @@ const Filter = ({ intl, children, onSubmit = () => {} }) => {
     if (startDate && endDate) {
       payload.modifyDate = {
         value: {
-          start: moment(startDate),
-          end: moment(endDate)
+          start: startDate ? moment(startDate).startOf('day') : null,
+          end: endDate ? moment(endDate).endOf('day') : null
         },
         type: 'dateRange'
       }
