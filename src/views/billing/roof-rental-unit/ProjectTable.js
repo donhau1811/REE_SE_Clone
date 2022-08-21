@@ -6,16 +6,14 @@ import Table from '@src/views/common/table/CustomDataTable'
 import { useParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { getListProjectByRoofVendorId } from '../project/store/actions'
+import { ROWS_PER_PAGE_DEFAULT } from '@src/utility/constants'
 
 const ProjectTable = ({ intl }) => {
   const { id } = useParams()
   const [projects, setProjects] = useState([])
   const dispatch = useDispatch()
-  const [pagination, setPagination] = useState({ rowsPerPage: 25, currentPage: 1 })
-  const [params, setParams] = useState({
-    sortBy: 'code',
-    sortDirection: 'asc'
-  })
+  const [pagination, setPagination] = useState({})
+  const [params, setParams] = useState({})
 
   const [total, setTotal] = useState(0)
 
@@ -26,10 +24,10 @@ const ProjectTable = ({ intl }) => {
       params,
       ...payload
     }
+
     dispatch(
       getListProjectByRoofVendorId({
         payload: tempPayload,
-
         callback: (res) => {
           setProjects(res.data || [])
           setTotal(res?.count || 0)
@@ -41,7 +39,10 @@ const ProjectTable = ({ intl }) => {
   }
 
   useEffect(() => {
-    fetchListProject()
+    fetchListProject({
+      params: { sortBy: 'code', sortDirection: 'asc' },
+      pagination: { rowsPerPage: ROWS_PER_PAGE_DEFAULT, currentPage: 1 }
+    })
   }, [])
 
   const handleChangePage = (e) => {
@@ -133,6 +134,7 @@ const ProjectTable = ({ intl }) => {
             onPerPageChange={handlePerPageChange}
             onSort={handleSort}
             {...pagination}
+            defaultSortAsc={params.sortDirection === 'asc'}
           />
         </Col>
       </Row>

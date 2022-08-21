@@ -64,9 +64,12 @@ const Contact = ({ data, onChange, disabled }) => {
       if (isConfirmed) {
         const newData = data.reduce((array, item) => {
           if (item.id !== contact.id) return [...array, item]
+
           if (item.isCreate) return array
+
           return [...array, { ...item, isDelete: true }]
         }, [])
+
         showToast('success', <FormattedMessage id="delete contact success" />)
         onChange?.(newData)
       }
@@ -125,7 +128,7 @@ const Contact = ({ data, onChange, disabled }) => {
               <UncontrolledTooltip placement="auto" target={`updateBtn_${row.id}`}>
                 <FormattedMessage id="Update Project" />
               </UncontrolledTooltip>
-              <Badge onClick={handleDeleteContact(row.id)}>
+              <Badge onClick={handleDeleteContact(row)}>
                 <IconDelete id={`deleteBtn_${row.id}`} />
               </Badge>
               <UncontrolledTooltip placement="auto" target={`deleteBtn_${row.id}`}>
