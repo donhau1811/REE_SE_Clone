@@ -157,9 +157,7 @@ const Project = ({ intl }) => {
       name: intl.formatMessage({ id: 'Project Name' }),
       sortable: true,
       selector: 'name',
-      cell: (row) => (
-        <Link to={ `${ROUTER_URL.BILLING_PROJECT}/${row.id}`}>{row?.name}</Link>
-      ),
+      cell: (row) => <Link to={`${ROUTER_URL.BILLING_PROJECT}/${row.id}`}>{row?.name}</Link>,
       center: true,
       minWidth: '100px'
     },
@@ -187,7 +185,7 @@ const Project = ({ intl }) => {
       name: intl.formatMessage({ id: 'Customer Company' }),
       selector: 'companyName',
       sortable: true,
-      center: true,
+
       minWidth: '200px'
     },
 
@@ -195,8 +193,7 @@ const Project = ({ intl }) => {
       name: intl.formatMessage({ id: 'Manager' }),
       selector: 'userIds',
       sortable: true,
-      minWidth: '200px',
-      center: true
+      minWidth: '200px'
     },
 
     {
@@ -207,11 +204,11 @@ const Project = ({ intl }) => {
       minWidth: '150px',
       cell: (row) => {
         return row.state === PROJECT_STATUS.ACTIVE ? (
-          <Badge pill color="light-success"  className="custom-bagde">
+          <Badge pill color="light-success" className="custom-bagde">
             <FormattedMessage id="Active" />
           </Badge>
         ) : (
-          <Badge pill color="light-muted"  className="custom-bagde">
+          <Badge pill color="light-muted" className="custom-bagde">
             <FormattedMessage id="Inactive" />
           </Badge>
         )

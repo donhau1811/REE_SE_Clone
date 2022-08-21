@@ -127,7 +127,7 @@ const OperationUnit = ({ intl }) => {
             <IconView id={`editBtn_${row.id}`} />
           </Badge>
           <UncontrolledTooltip placement="auto" target={`editBtn_${row.id}`}>
-            <FormattedMessage id="Edit Operation Unit" />
+            <FormattedMessage id="View Project" />
           </UncontrolledTooltip>
         </>
       ),

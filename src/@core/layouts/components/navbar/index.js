@@ -24,7 +24,6 @@ const ThemeNavbar = (props) => {
   breadCrumbItems.shift()
   const {
     customerProject: { selectedProject },
-    billingCustomer: { selectedCustomer },
     settings: { selectedSetting },
     projects: { selectedProject: selectedBillingProject },
     projectContracts: { selectedContract }
@@ -54,22 +53,7 @@ const ThemeNavbar = (props) => {
 
         return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
       }
-      case `${ROUTER_URL.BILLING_CUSTOMER}/${selectedCustomer?.id}`: {
-        const tempItems = [
-          { name: intl.formatMessage({ id: 'billing' }), link: '' },
-          { name: intl.formatMessage({ id: 'customers' }), link: ROUTER_URL.BILLING_CUSTOMER },
-          { name: selectedCustomer?.fullName, link: '' }
-        ]
-        return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
-      }
-      case `${ROUTER_URL.BILLING_CUSTOMER_CREATE}`: {
-        const tempItems = [
-          { name: intl.formatMessage({ id: 'billing' }), link: '' },
-          { name: intl.formatMessage({ id: 'customers' }), link: ROUTER_URL.BILLING_CUSTOMER },
-          { name: intl.formatMessage({ id: 'create-customer' }), link: '' }
-        ]
-        return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
-      }
+
       case `${ROUTER_URL.BILLING_SETTING}/${selectedSetting?.id}`: {
         const tempItems = [
           { name: intl.formatMessage({ id: 'billing' }), link: '' },
@@ -117,35 +101,35 @@ const ThemeNavbar = (props) => {
         ]
         return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
       }
-      case ROUTER_URL.BILLING_PROJECT_CREATE_ROOF_VENDOR.replace(':projectId', selectedBillingProject.id): {
-        const tempItems = [
-          { name: intl.formatMessage({ id: 'billing' }), link: '' },
-          { name: intl.formatMessage({ id: 'project management' }), link: '' },
-          { name: intl.formatMessage({ id: 'project' }), link: ROUTER_URL.BILLING_PROJECT },
-          {
-            name: selectedBillingProject?.name,
-            link: ROUTER_URL.BILLING_PROJECT_UPDATE.replace(':id', selectedBillingProject.id)
-          },
-          { name: intl.formatMessage({ id: 'Add roof renting contract' }), link: '' }
-        ]
-        return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
-      }
-      case ROUTER_URL.BILLING_PROJECT_UPDATE_ROOF_VENDOR.replace(':projectId', selectedBillingProject.id).replace(
-        ':id',
-        selectedContract?.id
-      ): {
-        const tempItems = [
-          { name: intl.formatMessage({ id: 'billing' }), link: '' },
-          { name: intl.formatMessage({ id: 'project management' }), link: '' },
-          { name: intl.formatMessage({ id: 'project' }), link: ROUTER_URL.BILLING_PROJECT },
-          {
-            name: selectedBillingProject?.name,
-            link: ROUTER_URL.BILLING_PROJECT_UPDATE.replace(':id', selectedBillingProject.id)
-          },
-          { name: selectedContract?.id, link: '' }
-        ]
-        return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
-      }
+      // case ROUTER_URL.BILLING_PROJECT_CREATE_ROOF_VENDOR.replace(':projectId', selectedBillingProject.id): {
+      //   const tempItems = [
+      //     { name: intl.formatMessage({ id: 'billing' }), link: '' },
+      //     { name: intl.formatMessage({ id: 'project management' }), link: '' },
+      //     { name: intl.formatMessage({ id: 'project' }), link: ROUTER_URL.BILLING_PROJECT },
+      //     {
+      //       name: selectedBillingProject?.name,
+      //       link: ROUTER_URL.BILLING_PROJECT_UPDATE.replace(':id', selectedBillingProject.id)
+      //     },
+      //     { name: intl.formatMessage({ id: 'Add roof renting contract' }), link: '' }
+      //   ]
+      //   return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
+      // }
+      // case ROUTER_URL.BILLING_PROJECT_UPDATE_ROOF_VENDOR.replace(':projectId', selectedBillingProject.id).replace(
+      //   ':id',
+      //   selectedContract?.id
+      // ): {
+      //   const tempItems = [
+      //     { name: intl.formatMessage({ id: 'billing' }), link: '' },
+      //     { name: intl.formatMessage({ id: 'project management' }), link: '' },
+      //     { name: intl.formatMessage({ id: 'project' }), link: ROUTER_URL.BILLING_PROJECT },
+      //     {
+      //       name: selectedBillingProject?.name,
+      //       link: ROUTER_URL.BILLING_PROJECT_UPDATE.replace(':id', selectedBillingProject.id)
+      //     },
+      //     { name: selectedContract?.id, link: '' }
+      //   ]
+      //   return <BreadCrumbs breadCrumbTitle={breadCrumbItems[0]} breadCrumbItems={tempItems} />
+      // }
       default:
         return (
           <BreadCrumbs

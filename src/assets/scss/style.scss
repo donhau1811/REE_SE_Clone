@@ -1538,6 +1538,9 @@ footer.footer {
   .select--is-disabled,
   .select__single-value--is-disabled {
     color: #7897b4 !important;
+    .multiple-value-container {
+      color: #7897b4 !important;
+    }
   }
 }
 

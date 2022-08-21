@@ -138,7 +138,7 @@ export const Navbar = () => {
   const {
     layout: { skin },
     form: { isFormGlobalDirty },
-    company: { selectedCompany }
+    roofUnit: { selectedRoofVendor }
   } = useSelector((state) => state)
   const intl = useIntl()
   const history = useHistory()
@@ -179,7 +179,7 @@ export const Navbar = () => {
       name: intl.formatMessage({ id: 'roof-rental-unit' }),
       innerProps: { tag: 'a', href: '#', onClick: handleBreadCrumbsRedirct }
     },
-    { name: selectedCompany?.name, link: '' }
+    { name: selectedRoofVendor?.name, link: '' }
   ]
   return (
     <>

@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { API_CHECK_CODE_CONTRACT, NUMBER_REGEX, REAL_NUMBER } from '@src/utility/constants'
+import { API_CHECK_CODE_CONTRACT, NUMBER_REGEX, REAL_NUMBER, SET_FORM_DIRTY } from '@src/utility/constants'
 import { selectThemeColors, showToast } from '@src/utility/Utils'
 import Table from '@src/views/common/table/CustomDataTable'
 import axios from 'axios'
@@ -18,7 +18,12 @@ import { useParams } from 'react-router-dom'
 import { XCircle } from 'react-feather'
 import { ReactComponent as Attachment } from '@src/assets/images/svg/attachment-file.svg'
 import { getSettingValuesByCode } from '@src/views/billing/settings/store/actions'
-import { VALUE_OF_ROOF_CONTRACT } from '@src/utility/constants/billing'
+import { GENERAL_STATUS, VALUE_OF_ROOF_CONTRACT } from '@src/utility/constants/billing'
+import SweetAlert from 'sweetalert2'
+import '@src/@core/scss/billing-sweet-alert.scss'
+import withReactContent from 'sweetalert2-react-content'
+import classNames from 'classnames'
+const MySweetAlert = withReactContent(SweetAlert)
 
 const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSubmit }) => {
   const [valueSetting, setValueSetting] = useState([])
@@ -27,6 +32,10 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
     contractType: valueSetting[0]
   }
   const { setting } = useSelector((state) => state.settings)
+
+  const {
+    layout: { skin }
+  } = useSelector((state) => state)
 
   const defaultValid = {
     roofVendorName: yup.object().shape({
@@ -68,9 +77,11 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
 
   const { data } = useSelector((state) => state.roofUnit)
 
-  const listOfRoofvendor = data.map((item) => {
-    return { value: item.id, label: item.name }
-  })
+  const listOfRoofvendor = data
+    .filter((item) => item.state === GENERAL_STATUS.ACTIVE)
+    .map((item) => {
+      return { value: item.id, label: item.name }
+    })
 
   const [validForm, setValidForm] = useState(defaultValid)
 
@@ -115,7 +126,25 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
     resolver: yupResolver(isReadOnly ? yup.object().shape({}) : ValidateSchema),
     defaultValues: initValues || defaultValues
   })
-  const { handleSubmit, getValues, errors, control, register, reset, watch, setValue, setError } = methods
+  const {
+    handleSubmit,
+    getValues,
+    errors,
+    control,
+    register,
+    reset,
+    watch,
+    setValue,
+    setError,
+    formState: { isDirty }
+  } = methods
+
+  useEffect(() => {
+    dispatch({
+      type: SET_FORM_DIRTY,
+      payload: isDirty
+    })
+  }, [isDirty])
 
   const typeContract = watch('contractType', valueSetting[0])
 
@@ -250,9 +279,39 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
     }
     onSubmit?.(newValue)
   }
+
+  const handleCancelForm = () => {
+    if (isDirty) {
+      return MySweetAlert.fire({
+        title: intl.formatMessage({ id: 'Cancel confirmation' }),
+        text: intl.formatMessage({ id: 'Are you sure to cancel?' }),
+        showCancelButton: true,
+        confirmButtonText: intl.formatMessage({ id: 'Yes' }),
+        cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),
+        customClass: {
+          popup: classNames({
+            'sweet-alert-popup--dark': skin === 'dark',
+            'sweet-popup': true
+          }),
+          header: 'sweet-title',
+          confirmButton: 'btn btn-primary',
+          cancelButton: 'btn btn-secondary ml-1',
+          actions: 'sweet-actions',
+          content: 'sweet-content'
+        },
+        buttonsStyling: false
+      }).then(({ isConfirmed }) => {
+        if (isConfirmed) {
+          onCancel?.(isDirty)
+        }
+      })
+    }
+    onCancel?.(isDirty)
+  }
+
   return (
     <FormProvider {...methods}>
-      <Form onSubmit={handleSubmit(handleProcessFormData)}>
+      <Form className="billing-form" onSubmit={handleSubmit(handleProcessFormData)}>
         <Row>
           <Col className="mb-3" md={3} xs={12} lg={4}>
             <Label className="general-label">
@@ -414,13 +473,15 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
         </Row>
         {isCyclicalContract && <MonthlyRent isReadOnly={isReadOnly} typeContract={typeContract} />}
         {typeContract?.value === 4 && <ContractByPercentage isReadOnly={isReadOnly} />}
-        <Row className="d-flex justify-content-end align-items-center">
-          <Button type="submit" color="primary" className="mr-1 px-3">
-            {intl.formatMessage({ id: isReadOnly ? 'Update' : 'Save' })}
-          </Button>{' '}
-          <Button color="secondary" onClick={onCancel}>
-            {intl.formatMessage({ id: 'Cancel' })}
-          </Button>{' '}
+        <Row>
+          <Col className="d-flex justify-content-end align-items-center mb-2">
+            <Button type="submit" color="primary" className="mr-1 px-3 ">
+              {intl.formatMessage({ id: isReadOnly ? 'Update' : 'Save' })}
+            </Button>{' '}
+            <Button color="secondary" onClick={handleCancelForm}>
+              {intl.formatMessage({ id: 'Cancel' })}
+            </Button>{' '}
+          </Col>
         </Row>
       </Form>
     </FormProvider>

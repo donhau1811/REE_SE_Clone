@@ -158,15 +158,13 @@ const OperationUnit = ({ intl }) => {
       name: intl.formatMessage({ id: 'Customer Code' }),
       selector: 'code',
       sortable: true,
-      maxWidth: '100px'
+      minWidth: '100px'
     },
     {
       name: intl.formatMessage({ id: 'Customer Company' }),
       selector: 'fullName',
       sortable: true,
-      cell: (row) => (
-        <Link to={ `${ROUTER_URL.BILLING_CUSTOMER}/${row.id}`}>{row?.fullName}</Link>),
-
+      cell: (row) => <Link to={`${ROUTER_URL.BILLING_CUSTOMER}/${row.id}`}>{row?.fullName}</Link>,
       minWidth: '360px'
     },
     {
@@ -204,14 +202,16 @@ const OperationUnit = ({ intl }) => {
     {
       name: intl.formatMessage({ id: 'operation-unit-form-mobile' }),
       selector: 'phone',
-      sortable: true
+      sortable: true,
+      center: true,
+      minWidth: '150px'
     },
     {
       name: intl.formatMessage({ id: 'Status' }),
       selector: 'state',
       sortable: true,
       center: true,
-      minWidth: '150px',
+      minWidth: '250px',
       cell: (row) => {
         return row.state === OPERATION_UNIT_STATUS.ACTIVE ? (
           <Badge pill color="light-success" className="custom-bagde">

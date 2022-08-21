@@ -8,12 +8,24 @@ import Select from 'react-select'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { selectThemeColors, showToast } from '@src/utility/Utils'
-import { API_CHECK_PROJECT, API_GET_ALL_OPERATION_UNIT, ISO_STANDARD_FORMAT, REAL_NUMBER } from '@src/utility/constants'
+import {
+  API_CHECK_PROJECT,
+  API_GET_ALL_OPERATION_UNIT,
+  ISO_STANDARD_FORMAT,
+  REAL_NUMBER,
+  SET_FORM_DIRTY
+} from '@src/utility/constants'
 import axios from 'axios'
 import Contract from './contract'
 import ValueContOfMultipleSelect from '@src/utility/components/ReactSelectCustomCOM/ValueContOfMultipleSelect'
 import { GENERAL_STATUS_OPTS, mockUser } from '@src/utility/constants/billing'
 import moment from 'moment'
+import classNames from 'classnames'
+import { useDispatch, useSelector } from 'react-redux'
+import withReactContent from 'sweetalert2-react-content'
+import SweetAlert from 'sweetalert2'
+
+const MySweetAlert = withReactContent(SweetAlert)
 
 const ProjectCUForm = ({
   intl,
@@ -25,27 +37,12 @@ const ProjectCUForm = ({
   submitButton,
   cancelButton
 }) => {
-  const footerCOM = (
-    <>
-      {typeof submitButton === 'undefined' ? (
-        <Button type="submit" color="primary" className="mr-1 px-3">
-          {submitText || intl.formatMessage({ id: 'Save' })}
-        </Button>
-      ) : submitButton ? (
-        cloneElement(submitButton)
-      ) : null}
-      {typeof cancelButton === 'undefined' ? (
-        <Button color="secondary" onClick={onCancel}>
-          {intl.formatMessage({ id: 'Cancel' })}
-        </Button>
-      ) : cancelButton ? (
-        cloneElement(cancelButton, { onClick: onCancel })
-      ) : null}
-    </>
-  )
-
+  const dispatch = useDispatch()
   const initState = { state: GENERAL_STATUS_OPTS[0] }
   const [companies, setCompanies] = useState([])
+  const {
+    layout: { skin }
+  } = useSelector((state) => state)
   useEffect(async () => {
     try {
       /*const initParam = {
@@ -109,11 +106,27 @@ const ProjectCUForm = ({
     ['name', 'code', 'companyId', 'address', 'accountantIds', 'power']
   )
 
-  const { handleSubmit, getValues, errors, control, register, reset, setError } = useForm({
+  const {
+    handleSubmit,
+    getValues,
+    errors,
+    control,
+    register,
+    reset,
+    setError,
+    formState: { isDirty }
+  } = useForm({
     mode: 'onChange',
     resolver: yupResolver(isReadOnly ? yup.object().shape({}) : ValidateSchema),
     defaultValues: initValues || initState
   })
+
+  useEffect(() => {
+    dispatch({
+      type: SET_FORM_DIRTY,
+      payload: isDirty
+    })
+  }, [isDirty])
 
   useEffect(() => {
     const tmpInitValues = {
@@ -167,9 +180,58 @@ const ProjectCUForm = ({
 
     onSubmit?.(values)
   }
+
+  const handleCancel = () => {
+    if (isDirty) {
+      return MySweetAlert.fire({
+        title: intl.formatMessage({ id: 'Cancel confirmation' }),
+        text: intl.formatMessage({ id: 'Are you sure to cancel?' }),
+        showCancelButton: true,
+        confirmButtonText: intl.formatMessage({ id: 'Yes' }),
+        cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),
+        customClass: {
+          popup: classNames({
+            'sweet-alert-popup--dark': skin === 'dark',
+            'sweet-popup': true
+          }),
+          header: 'sweet-title',
+          confirmButton: 'btn btn-primary',
+          cancelButton: 'btn btn-secondary ml-1',
+          actions: 'sweet-actions',
+          content: 'sweet-content'
+        },
+        buttonsStyling: false
+      }).then(({ isConfirmed }) => {
+        if (isConfirmed) {
+          onCancel?.()
+        }
+      })
+    }
+
+    onCancel?.()
+  }
+
+  const footerCOM = (
+    <>
+      {typeof submitButton === 'undefined' ? (
+        <Button type="submit" color="primary" className="mr-1 px-3">
+          {submitText || intl.formatMessage({ id: 'Save' })}
+        </Button>
+      ) : submitButton ? (
+        cloneElement(submitButton)
+      ) : null}
+      {typeof cancelButton === 'undefined' ? (
+        <Button color="secondary" onClick={handleCancel}>
+          {intl.formatMessage({ id: 'Cancel' })}
+        </Button>
+      ) : cancelButton ? (
+        cloneElement(cancelButton, { onClick: handleCancel })
+      ) : null}
+    </>
+  )
   return (
     <>
-      <Form className='billing-form' onSubmit={handleSubmit(handleSubmitOperationUnitForm)}>
+      <Form className="billing-form" onSubmit={handleSubmit(handleSubmitOperationUnitForm)}>
         <Row className="mb-2">
           <Col>
             <h4 className="typo-section">

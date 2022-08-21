@@ -2,7 +2,7 @@ import { ISO_STANDARD_FORMAT, ROUTER_URL } from '@src/utility/constants'
 import moment from 'moment'
 import { object } from 'prop-types'
 import { useEffect, useState } from 'react'
-import { injectIntl } from 'react-intl'
+import { injectIntl, useIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useLocation, useParams } from 'react-router-dom'
 import { getContractById, putContractRoofVendor } from '../store/actions'
@@ -12,12 +12,10 @@ import classNames from 'classnames'
 import '@src/@core/scss/billing-sweet-alert.scss'
 import withReactContent from 'sweetalert2-react-content'
 import { getBillingProjectById } from '../../project/store/actions'
+import BreadCrumbs from '@src/views/common/breadcrumbs'
 
 const MySweetAlert = withReactContent(SweetAlert)
 const UpdateRoofVendorContract = ({ intl }) => {
-  const {
-    layout: { skin }
-  } = useSelector((state) => state)
   const {
     projects: { selectedProject: selectedBillingProject }
   } = useSelector((state) => state)
@@ -66,36 +64,6 @@ const UpdateRoofVendorContract = ({ intl }) => {
   }, [selectedContract])
 
   const handleCancel = () => {
-    if (!isReadOnly) {
-      return MySweetAlert.fire({
-        title: intl.formatMessage({ id: 'Cancel' }),
-        text: intl.formatMessage({ id: 'You want to cancel update' }),
-        showCancelButton: true,
-        confirmButtonText: intl.formatMessage({ id: 'Yes' }),
-        cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),
-        customClass: {
-          popup: classNames({
-            'sweet-alert-popup--dark': skin === 'dark',
-            'sweet-popup': true
-          }),
-          header: 'sweet-title',
-          confirmButton: 'btn btn-primary',
-          cancelButton: 'btn btn-outline-secondary ml-1',
-          actions: 'sweet-actions',
-          content: 'sweet-content'
-        },
-        buttonsStyling: false
-      }).then(({ isConfirmed }) => {
-        if (isConfirmed) {
-          history.push({
-            pathname: `${ROUTER_URL.BILLING_PROJECT}/${projectId}`,
-            state: {
-              allowUpdate: true
-            }
-          })
-        }
-      })
-    }
     history.push({
       pathname: `${ROUTER_URL.BILLING_PROJECT}/${projectId}`,
       state: {
@@ -140,3 +108,66 @@ UpdateRoofVendorContract.propTypes = {
 }
 
 export default injectIntl(UpdateRoofVendorContract)
+
+export const Navbar = () => {
+  const {
+    layout: { skin },
+    form: { isFormGlobalDirty },
+    projects: { selectedProject: selectedBillingProject }
+  } = useSelector((state) => state)
+  const intl = useIntl()
+  const history = useHistory()
+
+  const handleBreadCrumbsRedirct = (pathname) => (event) => {
+    event.preventDefault()
+    if (isFormGlobalDirty) {
+      return MySweetAlert.fire({
+        title: intl.formatMessage({ id: 'Cancel confirmation' }),
+        text: intl.formatMessage({ id: 'Are you sure to cancel?' }),
+        showCancelButton: true,
+        confirmButtonText: intl.formatMessage({ id: 'Yes' }),
+        cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),
+        customClass: {
+          popup: classNames({
+            'sweet-alert-popup--dark': skin === 'dark',
+            'sweet-popup': true
+          }),
+          header: 'sweet-title',
+          confirmButton: 'btn btn-primary',
+          cancelButton: 'btn btn-secondary ml-1',
+          actions: 'sweet-actions',
+          content: 'sweet-content'
+        },
+        buttonsStyling: false
+      }).then(({ isConfirmed }) => {
+        if (isConfirmed) {
+          history.push(pathname)
+        }
+      })
+    }
+    history.push(pathname)
+  }
+
+  const tempItems = [
+    { name: intl.formatMessage({ id: 'billing' }), link: '' },
+    { name: intl.formatMessage({ id: 'project management' }), link: '' },
+    {
+      name: intl.formatMessage({ id: 'project' }),
+      innerProps: { tag: 'a', href: '#', onClick: handleBreadCrumbsRedirct(ROUTER_URL.BILLING_PROJECT) }
+    },
+    {
+      name: selectedBillingProject?.name,
+      innerProps: {
+        tag: 'a',
+        href: '#',
+        onClick: handleBreadCrumbsRedirct(`${ROUTER_URL.BILLING_PROJECT}/${selectedBillingProject?.id}`)
+      }
+    },
+    { name: intl.formatMessage({ id: 'Update roof renting contract' }), link: '' }
+  ]
+  return (
+    <>
+      <BreadCrumbs breadCrumbItems={tempItems} />
+    </>
+  )
+}
