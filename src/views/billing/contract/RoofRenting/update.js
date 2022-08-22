@@ -46,14 +46,13 @@ const UpdateRoofVendorContract = ({ intl }) => {
     }
   }, [projectId])
   const { selectedContract } = useSelector((state) => state.projectContracts)
-
   useEffect(() => {
     setCleanData({
       contractCode: selectedContract.code,
       effectiveDate: moment(selectedContract.startDate).utc().format(ISO_STANDARD_FORMAT),
       expirationDate: moment(selectedContract.endDate).utc().format(ISO_STANDARD_FORMAT),
       roofId: selectedContract.roofVendorId,
-      typeContract: selectedContract.details?.id,
+      typeContract: Number(selectedContract.details?.id),
       percentTurnover: selectedContract.details?.percent,
       confirmationReminder: selectedContract.alerts?.confirmAlert,
       announcementDate: selectedContract.alerts?.billingAlert,

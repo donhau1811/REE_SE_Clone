@@ -146,7 +146,6 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
   }, [isDirty])
 
   const typeContract = watch('contractType', valueSetting[0])
-
   const selectRoofVendor = watch(
     'roofVendorName',
     listOfRoofvendor.find((item) => item.value === initValues?.roofId)
@@ -233,7 +232,6 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
     }
     reset(contractValue)
   }, [initValues])
-
   const handleProcessFormData = async (value) => {
     const dataCheck = { code: value?.contractCode }
     if (initValues?.id) dataCheck.id = initValues?.id
@@ -468,7 +466,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
               invalid={!!errors.contractType}
               formatOptionLabel={(option) => <> {option.label}</>}
             />
-              {!!errors?.contractType && (
+            {!!errors?.contractType && (
               <FormFeedback className="d-block">{errors?.contractType?.value?.message}</FormFeedback>
             )}
           </Col>
@@ -481,7 +479,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
               {intl.formatMessage({ id: isReadOnly ? 'Update' : 'Save' })}
             </Button>{' '}
             <Button color="secondary" onClick={handleCancelForm}>
-              {intl.formatMessage({ id: isReadOnly ? 'Back' : 'Cancel'  })}
+              {intl.formatMessage({ id: isReadOnly ? 'Back' : 'Cancel' })}
             </Button>{' '}
           </Col>
         </Row>
