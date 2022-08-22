@@ -35,6 +35,7 @@ const Filter = ({ intl, children, onSubmit = () => {} }) => {
   }
 
   const handleSubmitFilterForm = () => {
+    console.log('date', moment(startDate).startOf('day'), moment(endDate).endOf('day'))
     const payload = {}
     if (startDate && endDate) {
       payload.modifyDate = {

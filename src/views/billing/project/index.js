@@ -150,7 +150,6 @@ const Project = ({ intl }) => {
       name: intl.formatMessage({ id: 'Project code' }),
       selector: 'code',
       sortable: true,
-      center: true,
       minWidth: '100px'
     },
     {
@@ -158,7 +157,6 @@ const Project = ({ intl }) => {
       sortable: true,
       selector: 'name',
       cell: (row) => <Link to={`${ROUTER_URL.BILLING_PROJECT}/${row.id}`}>{row?.name}</Link>,
-      center: true,
       minWidth: '100px'
     },
     {
@@ -190,7 +188,7 @@ const Project = ({ intl }) => {
     },
 
     {
-      name: intl.formatMessage({ id: 'Manager' }),
+      name: intl.formatMessage({ id: 'Assigned accountant' }),
       selector: 'userIds',
       sortable: true,
       minWidth: '200px'
