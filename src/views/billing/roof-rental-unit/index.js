@@ -250,8 +250,7 @@ const RoofVendor = ({ intl }) => {
             onSort={handleSort}
             defaultSortAsc={params.sortDirection === 'asc'}
             {...pagination}
-            noDataTitle={<FormattedMessage id={'No roof vendor found, please try again'} />}
-          />
+no configuration          />
         </Col>
       </Row>
     </>
