@@ -76,9 +76,9 @@ const ProjectTable = ({ intl }) => {
   const columns = [
     {
       name: intl.formatMessage({ id: 'No.' }),
-      sortable: true,
       cell: (row, index) => index + 1,
-      maxWidth: '40px'
+      maxWidth: '40px',
+      center: true
     },
     {
       name: intl.formatMessage({ id: 'projectCode' }),
@@ -123,6 +123,8 @@ const ProjectTable = ({ intl }) => {
     }
   ]
 
+  console.log('params', params)
+
   return (
     <>
       <Row>
@@ -134,7 +136,8 @@ const ProjectTable = ({ intl }) => {
             onPageChange={handleChangePage}
             onPerPageChange={handlePerPageChange}
             onSort={handleSort}
-            defaultSortAsc={params.sortDirection === 'asc'}
+            defaultSortAsc={params?.sortDirection === 'asc'}
+            defaultSortField={params?.sortBy}
             {...pagination}
           />
         </Col>

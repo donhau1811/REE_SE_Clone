@@ -1,43 +1,33 @@
 import React, { useState, cloneElement } from 'react'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Label, Input, Col, Row } from 'reactstrap'
-import TextField from '@mui/material/TextField'
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker'
-import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 import { object, func } from 'prop-types'
-import { ReactComponent as Carlendar } from '@src/assets/images/svg/carlendar.svg'
 import './style.scss'
-import { DISPLAY_DATE_FORMAT } from '@src/utility/constants'
 import { injectIntl } from 'react-intl'
 import { GENERAL_STATUS as OPERATION_UNIT_STATUS, GENERAL_CUSTOMER_TYPE } from '@src/utility/constants/billing'
 import moment from 'moment'
+import { ISO_STANDARD_FORMAT } from '@src/utility/constants'
 
 const intitValue = {
   type: 'all',
   state: 'all',
-  fromCreatedDate: new Date(),
-  toCreatedDate: new Date(),
-  fromModifyDate: new Date(),
-  toModifyDate: new Date()
+  fromCreatedDate: moment().format(ISO_STANDARD_FORMAT),
+  toCreatedDate: moment().format(ISO_STANDARD_FORMAT),
+  fromModifyDate: moment().format(ISO_STANDARD_FORMAT),
+  toModifyDate: moment().format(ISO_STANDARD_FORMAT)
 }
 
 const FilterCustomer = ({ intl, children, onSubmit = () => {} }) => {
   const [formData, setFormData] = useState(intitValue)
+
   const [isOpen, setIsOpen] = useState(false)
 
   const toggle = () => {
     setIsOpen(!isOpen)
   }
   const handleChange = (type) => (e) => {
-    let value
-    if (e?.target) value = e?.target?.value
-    else {
-      value = moment(e)
-    }
-
     setFormData((prevState) => ({
       ...prevState,
-      [type]: value
+      [type]: e?.target?.value
     }))
   }
 
@@ -57,20 +47,20 @@ const FilterCustomer = ({ intl, children, onSubmit = () => {} }) => {
       }
     }
 
-    if (fromCreatedDate || toCreatedDate) {
+    if (moment(fromCreatedDate).isValid() || moment(toCreatedDate).isValid()) {
       payload.createDate = {
         value: {
-          start: formData.fromCreatedDate ? moment(formData.fromCreatedDate).startOf('day') : null,
-          end: formData.toCreatedDate ? moment(formData.toCreatedDate).endOf('day') : null
+          start: moment(fromCreatedDate).isValid() ? moment(fromCreatedDate).startOf('day') : null,
+          end: moment(toCreatedDate).isValid() ? moment(toCreatedDate).endOf('day') : null
         },
         type: 'dateRange'
       }
     }
-    if (fromModifyDate || toModifyDate) {
+    if (moment(fromModifyDate).isValid() || moment(toModifyDate).isValid()) {
       payload.modifyDate = {
         value: {
-          start: formData.fromModifyDate ? moment(formData.fromModifyDate).startOf('day') : null,
-          end: formData.toModifyDate ? moment(formData.toModifyDate).endOf('day') : null
+          start: moment(fromModifyDate).isValid() ? moment(fromModifyDate).startOf('day') : null,
+          end: moment(toModifyDate).isValid() ? moment(toModifyDate).endOf('day') : null
         },
         type: 'dateRange'
       }
@@ -121,71 +111,55 @@ const FilterCustomer = ({ intl, children, onSubmit = () => {} }) => {
                 {intl.formatMessage({ id: 'CreatedDate' })}
               </Label>
 
-              <LocalizationProvider dateAdapter={AdapterMoment}>
-                <Row className="mb-2">
-                  <Col md={6}>
-                    <DesktopDatePicker
-                      components={{
-                        OpenPickerIcon: Carlendar
-                      }}
-                      inputVariant="outlined"
-                      label=""
-                      name="fromCreatedDate"
-                      inputFormat={DISPLAY_DATE_FORMAT}
-                      value={formData.fromCreatedDate}
-                      onChange={handleChange('fromCreatedDate')}
-                      renderInput={(params) => <TextField className="border border-secondary rounded " {...params} />}
-                    />
-                  </Col>
+              <Row className="mb-2">
+                <Col md={6}>
+                  <Input
+                    name="fromCreatedDate"
+                    autoComplete="on"
+                    type="date"
+                    className="custom-icon-input-date"
+                    value={formData.fromCreatedDate}
+                    onChange={handleChange('fromCreatedDate')}
+                  />
+                </Col>
 
-                  <Col md={6}>
-                    <DesktopDatePicker
-                      components={{
-                        OpenPickerIcon: Carlendar
-                      }}
-                      label=""
-                      inputFormat={DISPLAY_DATE_FORMAT}
-                      value={formData.toCreatedDate}
-                      name="toCreatedDate"
-                      onChange={handleChange('toCreatedDate')}
-                      renderInput={(params) => <TextField className="border border-secondary rounded " {...params} />}
-                      inputVariant="outlined"
-                    />
-                  </Col>
-                </Row>
-                <Label className="general-label" for="exampleSelect">
-                  {intl.formatMessage({ id: 'ModifyDate' })}
-                </Label>
-                <Row>
-                  <Col md={6}>
-                    <DesktopDatePicker
-                      components={{
-                        OpenPickerIcon: Carlendar
-                      }}
-                      inputVariant="outlined"
-                      label=""
-                      inputFormat={DISPLAY_DATE_FORMAT}
-                      value={formData.fromModifyDate}
-                      onChange={handleChange('fromModifyDate')}
-                      renderInput={(params) => <TextField className="border border-secondary rounded " {...params} />}
-                    />
-                  </Col>
+                <Col md={6}>
+                  <Input
+                    name="toCreatedDate"
+                    autoComplete="on"
+                    type="date"
+                    className="custom-icon-input-date"
+                    value={formData.toCreatedDate}
+                    onChange={handleChange('toCreatedDate')}
+                  />
+                </Col>
+              </Row>
+              <Label className="general-label" for="exampleSelect">
+                {intl.formatMessage({ id: 'ModifyDate' })}
+              </Label>
+              <Row>
+                <Col md={6}>
+                  <Input
+                    name="fromModifyDate"
+                    autoComplete="on"
+                    type="date"
+                    className="custom-icon-input-date"
+                    value={formData.fromModifyDate}
+                    onChange={handleChange('fromModifyDate')}
+                  />
+                </Col>
 
-                  <Col md={6}>
-                    <DesktopDatePicker
-                      components={{
-                        OpenPickerIcon: Carlendar
-                      }}
-                      label=""
-                      inputFormat={DISPLAY_DATE_FORMAT}
-                      value={formData.toModifyDate}
-                      onChange={handleChange('toModifyDate')}
-                      renderInput={(params) => <TextField className="border border-secondary rounded " {...params} />}
-                      inputVariant="outlined"
-                    />
-                  </Col>
-                </Row>
-              </LocalizationProvider>
+                <Col md={6}>
+                  <Input
+                    name="toModifyDate"
+                    autoComplete="on"
+                    type="date"
+                    className="custom-icon-input-date"
+                    value={formData.toModifyDate}
+                    onChange={handleChange('toModifyDate')}
+                  />
+                </Col>
+              </Row>
             </Col>
           </Row>
         </ModalBody>

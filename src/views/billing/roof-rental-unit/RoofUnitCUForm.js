@@ -17,6 +17,8 @@ import withReactContent from 'sweetalert2-react-content'
 import classNames from 'classnames'
 import SweetAlert from 'sweetalert2'
 import { ReactComponent as CicleFailed } from '@src/assets/images/svg/circle-failed.svg'
+import { handleCRUDOfContacts } from '../contact/util'
+import { getContactListByRoofVendorId } from '../contact/store/actions'
 
 const MySweetAlert = withReactContent(SweetAlert)
 
@@ -41,8 +43,38 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
     layout: { skin }
   } = useSelector((state) => state)
 
-  const handleContactformSubmit = (value) => {
-    setContactsRoofVendor(value)
+  // const handleContactformSubmit = (value) => {
+  //   setContactsRoofVendor(value)
+  // }
+
+  const handleContactformSubmit = async (changeContacts, changeId, callback) => {
+    const changeItem = changeContacts.filter((item) => item.id === changeId)
+    if (Number(initValues?.id) > 0) {
+      try {
+        Promise.all(handleCRUDOfContacts({ contacts: changeItem, roofVendorId: initValues.id })).then(() => {
+          dispatch(
+            getContactListByRoofVendorId({
+              id: initValues?.id,
+              isSavedToState: true,
+              callback
+            })
+          )
+        })
+      } catch (error) {
+        if (changeId < 0) {
+          showToast('error', <FormattedMessage id="data create failed, please try again" />)
+        } else {
+          if (changeItem[0]?.isDelete) {
+            showToast('error', <FormattedMessage id="data delete failed, please try again" />)
+          }
+          if (changeItem[0]?.isUpdate) {
+            showToast('error', <FormattedMessage id="data update failed, please try again" />)
+          }
+        }
+      }
+    } else {
+      setContactsRoofVendor(changeContacts)
+    }
   }
 
   const ValidateSchema = yup.object().shape(

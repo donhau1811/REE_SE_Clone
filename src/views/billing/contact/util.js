@@ -2,9 +2,10 @@ import { API_ADD_CONTACT, API_DELETE_CONTACT, API_UPDATE_CONTACT } from '@src/ut
 import axios from 'axios'
 
 export const handleCRUDOfContacts = ({ contacts, customerId, roofVendorId }) => {
+  
   return contacts.map((contact) => {
     const { fullName, position, email, phone, note, id } = contact
-    console.log('contact', contact)
+   
     if (contact.id < 0 && contact.isCreate)
       // eslint-disable-next-line nonblock-statement-body-position
       return axios.post(API_ADD_CONTACT, {

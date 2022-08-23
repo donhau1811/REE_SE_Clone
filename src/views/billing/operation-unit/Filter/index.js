@@ -2,14 +2,10 @@ import React, { useState, cloneElement } from 'react'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Label, Input, Col, Row } from 'reactstrap'
 import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
 
-import TextField from '@mui/material/TextField'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker'
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 import { object, func } from 'prop-types'
-import { ReactComponent as Carlendar } from '@src/assets/images/svg/carlendar.svg'
 import './style.scss'
-import { DISPLAY_DATE_FORMAT } from '@src/utility/constants'
 import { injectIntl } from 'react-intl'
 import moment from 'moment'
 
@@ -18,12 +14,12 @@ const Filter = ({ intl, children, onSubmit = () => {} }) => {
   const [startDate, setStartDate] = useState(null)
   const [endDate, setEndDate] = useState(null)
   const [status, setStatus] = useState('')
-  const handleStartDateChange = (newValue) => {
-    setStartDate(newValue)
+  const handleStartDateChange = (e) => {
+    setStartDate(e?.target?.value)
   }
 
-  const handleEndDateChange = (newValue) => {
-    setEndDate(newValue)
+  const handleEndDateChange = (e) => {
+    setEndDate(e?.target?.value)
   }
 
   const toggle = () => {
@@ -78,30 +74,22 @@ const Filter = ({ intl, children, onSubmit = () => {} }) => {
               <LocalizationProvider dateAdapter={AdapterMoment}>
                 <Row>
                   <Col md={6}>
-                    <DesktopDatePicker
-                      components={{
-                        OpenPickerIcon: Carlendar
-                      }}
-                      inputVariant="outlined"
-                      label=""
-                      inputFormat={DISPLAY_DATE_FORMAT}
+                    <Input
+                      autoComplete="on"
+                      type="date"
+                      className="custom-icon-input-date"
                       value={startDate}
                       onChange={handleStartDateChange}
-                      renderInput={(params) => <TextField className="border border-secondary rounded " {...params} />}
                     />
                   </Col>
 
                   <Col md={6}>
-                    <DesktopDatePicker
-                      components={{
-                        OpenPickerIcon: Carlendar
-                      }}
-                      label=""
-                      inputFormat={DISPLAY_DATE_FORMAT}
+                    <Input
+                      autoComplete="on"
+                      type="date"
+                      className="custom-icon-input-date"
                       value={endDate}
                       onChange={handleEndDateChange}
-                      renderInput={(params) => <TextField className="border border-secondary rounded" {...params} />}
-                      inputVariant="outlined"
                     />
                   </Col>
                 </Row>
