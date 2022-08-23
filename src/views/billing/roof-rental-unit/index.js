@@ -15,7 +15,7 @@ import withReactContent from 'sweetalert2-react-content'
 import PageHeader from './PageHeader'
 import { deleteBillingRoofRentalUnit, getRoofVendor } from './store/actions'
 import './styles.scss'
-import { ROUTER_URL, ROWS_PER_PAGE_DEFAULT } from '@src/utility/constants'
+import { ROUTER_URL, ROWS_PER_PAGE_DEFAULT, SET_ROOF_VENDOR_PARAMS } from '@src/utility/constants'
 import { Link } from 'react-router-dom/cjs/react-router-dom.min'
 
 const MySweetAlert = withReactContent(SweetAlert)
@@ -40,14 +40,21 @@ const RoofVendor = ({ intl }) => {
   }
 
   useEffect(() => {
-    fetchRoofVendor({
+    const initParams = {
       pagination: {
         rowsPerPage: ROWS_PER_PAGE_DEFAULT,
         currentPage: 1
       },
       sortBy: 'code',
       sortDirection: 'asc'
-    })
+    }
+    fetchRoofVendor(initParams)
+    return () => {
+      dispatch({
+        type: SET_ROOF_VENDOR_PARAMS,
+        payload: initParams
+      })
+    }
   }, [])
   const handleChangePage = (e) => {
     fetchRoofVendor({
@@ -250,7 +257,7 @@ const RoofVendor = ({ intl }) => {
             onSort={handleSort}
             defaultSortAsc={params.sortDirection === 'asc'}
             {...pagination}
-no configuration          />
+          />
         </Col>
       </Row>
     </>
