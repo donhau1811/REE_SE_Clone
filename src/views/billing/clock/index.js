@@ -9,7 +9,7 @@ import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-de
 import ClockCUForm from './ClockCUForm'
 import { cloneDeep } from 'lodash'
 import moment from 'moment'
-import { DISPLAY_DATE_FORMAT } from '@src/utility/constants'
+import { DISPLAY_DATE_FORMAT, SET_CLOCK } from '@src/utility/constants'
 import { useDispatch, useSelector } from 'react-redux'
 
 import SweetAlert from 'sweetalert2'
@@ -42,6 +42,11 @@ const Clock = ({ data, onChange, disabled, intl, contractId }) => {
           isSavedToState: true
         })
       )
+    } else {
+      dispatch({
+        type: SET_CLOCK,
+        payload: []
+      })
     }
   }, [contractId])
 
@@ -141,7 +146,6 @@ const Clock = ({ data, onChange, disabled, intl, contractId }) => {
   // }
 
   const handleCancelClockForm = () => {
-    console.log('currClock', currClock)
     return MySweetAlert.fire({
       title: intl.formatMessage({ id: 'Cancel' }),
       text: intl.formatMessage({ id: 'You want to cancel create/update' }),
