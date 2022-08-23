@@ -50,14 +50,14 @@ const UpdateRoofVendorContract = ({ intl }) => {
   useEffect(() => {
     setCleanData({
       contractCode: selectedContract.code,
-      effectiveDate: moment(selectedContract.startDate).utc().format(ISO_STANDARD_FORMAT),
-      expirationDate: moment(selectedContract.endDate).utc().format(ISO_STANDARD_FORMAT),
+      effectiveDate: moment(selectedContract.startDate).format(ISO_STANDARD_FORMAT),
+      expirationDate: moment(selectedContract.endDate).format(ISO_STANDARD_FORMAT),
       roofId: selectedContract.roofVendorId,
       typeContract: selectedContract.details?.id,
       percentTurnover: selectedContract.details?.percent,
       confirmationReminder: selectedContract.alerts?.confirmAlert,
       announcementDate: selectedContract.alerts?.billingAlert,
-      startDate: moment(selectedContract.details?.startDate).utc().format(ISO_STANDARD_FORMAT),
+      startDate: moment(selectedContract.details?.startDate).format(ISO_STANDARD_FORMAT),
       rentalAmount: selectedContract.details?.rentalAmount,
       id: selectedContract.id
     })
@@ -113,7 +113,9 @@ export const Navbar = () => {
   const {
     layout: { skin },
     form: { isFormGlobalDirty },
-    projects: { selectedProject: selectedBillingProject }
+    projects: { selectedProject: selectedBillingProject },
+    projectContracts : {selectedContract : selectedContract}
+
   } = useSelector((state) => state)
   const intl = useIntl()
   const history = useHistory()
@@ -156,14 +158,12 @@ export const Navbar = () => {
       innerProps: { tag: 'a', href: '#', onClick: handleBreadCrumbsRedirct(ROUTER_URL.BILLING_PROJECT) }
     },
     {
-      name: selectedBillingProject?.name,
-      innerProps: {
-        tag: 'a',
-        href: '#',
-        onClick: handleBreadCrumbsRedirct(`${ROUTER_URL.BILLING_PROJECT}/${selectedBillingProject?.id}`)
-      }
+      name: selectedBillingProject.name,
+      innerProps: { tag: 'a', href: '#', onClick: handleBreadCrumbsRedirct(`${ROUTER_URL.BILLING_PROJECT}/${selectedBillingProject?.id}`) }
     },
-    { name: intl.formatMessage({ id: 'Update roof renting contract' }), link: '' }
+    {
+      name: selectedContract?.code
+    }
   ]
   return (
     <>

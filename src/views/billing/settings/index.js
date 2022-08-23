@@ -158,6 +158,7 @@ const OperationUnit = ({ intl }) => {
             onSort={handleSort}
             defaultSortAsc={params.sortDirection === 'asc'}
             {...pagination}
+            noDataTitle={<FormattedMessage id={'no configuration found please try again'} />}
           />
         </Col>
       </Row>

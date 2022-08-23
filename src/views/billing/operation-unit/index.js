@@ -207,8 +207,7 @@ const OperationUnit = ({ intl }) => {
       name: intl.formatMessage({ id: 'operation-unit-form-mobile' }),
       selector: 'phone',
       sortable: true,
-      minWidth: '150px',
-      center: true
+      minWidth: '150px'
     },
     {
       name: intl.formatMessage({ id: 'Status' }),

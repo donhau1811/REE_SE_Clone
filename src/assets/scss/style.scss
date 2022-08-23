@@ -1524,7 +1524,6 @@ footer.footer {
   }
   .select__control:hover {
     border-color: $border-color;
-    box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.25);
   }
   .select__indicator {
     color: #7897b4 !important;
@@ -1545,5 +1544,8 @@ footer.footer {
 }
 
 .custom-bagde {
+  cursor: default !important;
+}
+.custom-breadcrumb {
   cursor: default !important;
 }
