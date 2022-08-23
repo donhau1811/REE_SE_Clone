@@ -75,7 +75,9 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
     clocks: []
   }
 
-  const { projectId } = useParams()
+  const [initValuesState, setInitValuesState] = useState(formInitValues)
+
+  const { projectId, id } = useParams()
 
   const [customers, setCustomers] = useState([])
 
@@ -121,7 +123,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
   const methods = useForm({
     mode: 'onChange',
     resolver: yupResolver(isReadOnly ? yup.object().shape({}) : ValidateSchema),
-    defaultValues: initValues || formInitValues
+    defaultValues: initValuesState || formInitValues
   })
 
   const {
@@ -134,7 +136,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
     watch,
     setError,
     reset,
-    formState: { isDirty: isDirtyForm }
+    formState: { isDirty: isDirtyForm, dirtyFields }
   } = methods
   const { fields, append, remove } = useFieldArray({
     control,
@@ -142,6 +144,17 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
   })
 
   const isDirty = isDirtyForm || !isEqual(watch('clocks'), clocks)
+  console.group()
+  console.log('isDirtyForm', isDirtyForm)
+  console.log('dirtyFields', dirtyFields)
+  console.log('watch clock', watch('clocks'))
+  console.log('clocks', clocks)
+  console.log("!isEqual(watch('clocks'), clocks)", !isEqual(watch('clocks'), clocks))
+  if (isDirty) {
+    console.error('isDirty')
+  }
+
+  console.groupEnd()
 
   useEffect(() => {
     dispatch({
@@ -151,7 +164,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
   }, [isDirty])
 
   useEffect(async () => {
-    if (initValues?.id) {
+    if (Number(initValues?.id) === Number(id)) {
       const dataValues = {
         ...initValues,
         formType: (setting.Elec_Selling_Type || []).find((item) => item.value === initValues?.details?.id),
@@ -176,6 +189,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
         currencyLow: initValues?.details?.foreignUnitPrice?.low,
         clocks
       }
+      setInitValuesState(dataValues)
       for (const key in dataValues) {
         if (Object.hasOwnProperty.call(dataValues, key)) {
           const element = dataValues[key]
@@ -183,11 +197,16 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
         }
       }
     } else {
-      reset({
-        ...formInitValues
-      })
+      setInitValuesState(formInitValues)
+      reset(formInitValues)
     }
-  }, [initValues?.id, customers?.length, setting.Currency?.length, setting.Elec_Selling_Type?.length, clocks?.length])
+  }, [
+    initValues?.id,
+    customers?.length,
+    setting.Currency?.length,
+    setting.Elec_Selling_Type?.length,
+    clocks?.map((item) => item.id).join(',')
+  ])
 
   const contactColumns = [
     {
@@ -333,6 +352,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
           id: alert
         })
       )
+      return
     }
     if (!(values.clocks || [])?.filter((item) => !item.isDelete).length > 0) {
       showToast('error', <FormattedMessage id="Need at least 1 clock to add contract. Please try again" />)
@@ -367,7 +387,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
         billingAlert: values.billingAlert
       }
     }
-    const contractDetail = {
+    let contractDetail = {
       id: values.formType?.value,
       name: intl.formatMessage(
         { id: 'Power billing form number' },
@@ -381,19 +401,58 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
         low: values.idlePrice,
         medium: values.midPointPrice,
         high: values.peakPrice
-      },
-      payoutRatio: values.payoutRatio,
-      lossRate: values.lossRate,
-      unitPriceRate: values.unitPriceRate,
-      currencyUnit: values.currency?.value,
-      foreignUnitPrice: {
-        low: values.currencyLow,
-        medium: values.currencyMedium,
-        high: values.currencyHigh
-      },
-      revenueShareRatio: values.revenueShareRatio,
-      chargeRate: values.chargeRate
+      }
     }
+
+    switch (values.formType?.value) {
+      case 'Mẫu 1':
+        contractDetail = {
+          ...contractDetail,
+          payoutRatio: values.payoutRatio
+        }
+        break
+      case 'Mẫu 2':
+        contractDetail = {
+          ...contractDetail,
+          payoutRatio: values.payoutRatio,
+          lossRate: values.lossRate
+        }
+        break
+      case 'Mẫu 3':
+        contractDetail = {
+          ...contractDetail,
+          lossRate: values.lossRate
+        }
+        break
+      case 'Mẫu 4':
+        contractDetail = {
+          ...contractDetail,
+          unitPriceRate: values.unitPriceRate,
+          currencyUnit: values.currency?.value,
+          foreignUnitPrice: {
+            low: values.currencyLow,
+            medium: values.currencyMedium,
+            high: values.currencyHigh
+          }
+        }
+        break
+      case 'Mẫu 5':
+        contractDetail = {
+          ...contractDetail,
+          revenueShareRatio: values.revenueShareRatio
+        }
+        break
+      case 'Mẫu 7':
+        contractDetail = {
+          ...contractDetail,
+          chargeRate: values.chargeRate
+        }
+        break
+
+      default:
+        break
+    }
+
     onSubmit?.({ ...payload, details: contractDetail, clocks: values.clocks })
   }
 

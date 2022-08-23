@@ -19,12 +19,7 @@ function PowerSellingUpdateCOM() {
   const { projectId } = useParams()
 
   const handleCancel = () => {
-    history.push({
-      pathname: `${ROUTER_URL.BILLING_PROJECT}/${projectId}`,
-      state: {
-        allowUpdate: true
-      }
-    })
+    history.push(`${ROUTER_URL.BILLING_PROJECT}/${projectId}`)
   }
 
   const handleSubmitCustomerContract = (payload) => {
@@ -32,12 +27,7 @@ function PowerSellingUpdateCOM() {
       postCustomerContract({
         payload,
         callback: () => {
-          history.push({
-            pathname: `${ROUTER_URL.BILLING_PROJECT}/${projectId}`,
-            state: {
-              allowUpdate: true
-            }
-          })
+          history.push(`${ROUTER_URL.BILLING_PROJECT}/${projectId}`)
         }
       })
     )

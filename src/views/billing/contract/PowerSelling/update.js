@@ -30,12 +30,7 @@ function PowerSellingCreateCOM({ intl }) {
   }, [location.state?.allowUpdate])
 
   const handleCancel = () => {
-    history.push({
-      pathname: `${ROUTER_URL.BILLING_PROJECT}/${projectId}`,
-      state: {
-        allowUpdate: true
-      }
-    })
+    history.push(`${ROUTER_URL.BILLING_PROJECT}/${projectId}`)
   }
 
   useEffect(() => {
@@ -55,12 +50,7 @@ function PowerSellingCreateCOM({ intl }) {
         putCustomerContract({
           payload: { ...payload, id: Number(id) },
           callback: () => {
-            history.push({
-              pathname: `${ROUTER_URL.BILLING_PROJECT}/${projectId}`,
-              state: {
-                allowUpdate: true
-              }
-            })
+            history.push(`${ROUTER_URL.BILLING_PROJECT}/${projectId}`)
           }
         })
       )
