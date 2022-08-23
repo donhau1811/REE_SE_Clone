@@ -200,7 +200,7 @@ function ContactCUForm({ clock, intl, onSubmit = () => {}, onCancel }) {
               </Col>
             </Row>
             <Row>
-              <Col className="d-flex justify-content-end align-items-center">
+              <Col className="d-flex justify-content-center align-items-center">
                 <Button onClick={handleSubmit(handleSubmitContact)} color="primary" className="mr-1 px-3">
                   {intl.formatMessage({ id: 'Finish' })}
                 </Button>{' '}

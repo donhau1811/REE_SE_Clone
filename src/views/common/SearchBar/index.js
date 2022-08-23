@@ -1,4 +1,6 @@
 import { ReactComponent as IconSearch } from '@src/assets/images/svg/table/ic-search.svg'
+import { ReactComponent as IconSearchEnable } from '@src/assets/images/svg/table/enableSearch.svg'
+
 import { func, object, string } from 'prop-types'
 import { useEffect, useState } from 'react'
 import { injectIntl } from 'react-intl'
@@ -7,13 +9,11 @@ import InputGroup from 'reactstrap/es/InputGroup'
 import InputGroupAddon from 'reactstrap/es/InputGroupAddon'
 import InputGroupText from 'reactstrap/es/InputGroupText'
 import './index.scss'
-import classnames from 'classnames'
 
 const SearchBar = ({ intl, onSearch = () => {}, searchValue, placeholder }) => {
   const [value, setValue] = useState('')
-
   useEffect(() => {
-    if (searchValue !== value) setValue(searchValue)
+  setValue(searchValue)
   }, [searchValue])
 
   const handleClickToSearch = () => {
@@ -30,14 +30,12 @@ const SearchBar = ({ intl, onSearch = () => {}, searchValue, placeholder }) => {
     }
     setValue(e?.target?.value)
   }
-
   const handleSearchInputKeyDown = (event) => {
     if (event.keyCode === 13) {
       event.preventDefault()
       onSearch?.(value.trim())
     }
   }
-
   return (
     <>
       <InputGroup className="input-group-merge">
@@ -53,7 +51,7 @@ const SearchBar = ({ intl, onSearch = () => {}, searchValue, placeholder }) => {
         />
         <InputGroupAddon addonType="append" className="" role="button">
           <InputGroupText>
-            <IconSearch className={classnames({ disable: (value?.length || 0) <= 0 })} onClick={handleClickToSearch} />
+            {value?.length > 0 ? <IconSearchEnable onClick={handleClickToSearch} /> : <IconSearch />}
           </InputGroupText>
         </InputGroupAddon>
       </InputGroup>
