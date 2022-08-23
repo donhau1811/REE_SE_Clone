@@ -76,7 +76,6 @@ const ProjectTable = ({ intl }) => {
   const columns = [
     {
       name: intl.formatMessage({ id: 'No.' }),
-      sortable: true,
       cell: (row, index) => index + 1,
       maxWidth: '40px'
     },

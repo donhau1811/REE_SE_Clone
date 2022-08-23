@@ -1,5 +1,5 @@
 import { ROWS_PER_PAGE_DEFAULT } from '@constants/index'
-import { FETCH_ROOF_RENTAL_UNIT_REQUEST, SET_SELECTED_ROOF_VENDOR } from '@constants/actions'
+import { FETCH_ROOF_RENTAL_UNIT_REQUEST, SET_ROOF_VENDOR_PARAMS, SET_SELECTED_ROOF_VENDOR } from '@constants/actions'
 
 // ** Initial State
 const initialState = {
@@ -27,6 +27,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         selectedRoofVendor: action.payload
+      }
+    case SET_ROOF_VENDOR_PARAMS:
+      return {
+        ...state,
+        params: action.payload
       }
     default:
       return state
