@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { array, element, func, number } from 'prop-types'
+import { array, bool, element, func, number } from 'prop-types'
 import React from 'react'
 import DataTable from 'react-data-table-component'
 import { Code } from 'react-feather'
@@ -19,6 +19,7 @@ const Table = ({
   onPerPageChange,
   onPageChange,
   noDataTitle,
+  isSearching,
   ...rest
 }) => {
   const paginationProps = {
@@ -58,7 +59,16 @@ const Table = ({
         {...rest}
       />
       {!(data || []).length > 0 && (
-        <NoDataCOM title={noDataTitle || <FormattedMessage id="Add or update record later" />} />
+        <NoDataCOM
+          title={
+            noDataTitle ||
+            (isSearching ? (
+              <FormattedMessage id="Not found any result. Please try again" />
+            ) : (
+              <FormattedMessage id="Add or update record later" />
+            ))
+          }
+        />
       )}
     </>
   )
@@ -74,7 +84,8 @@ Table.propTypes = {
   rowsPerPageOptions: array,
   onPerPageChange: func,
   onPageChange: func,
-  noDataTitle: element
+  noDataTitle: element,
+  isSearching: bool
 }
 
 export default Table

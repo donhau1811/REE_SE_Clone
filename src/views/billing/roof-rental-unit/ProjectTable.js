@@ -134,7 +134,8 @@ const ProjectTable = ({ intl }) => {
             onPerPageChange={handlePerPageChange}
             onSort={handleSort}
             {...pagination}
-            defaultSortAsc={params.sortDirection === 'asc'}
+            defaultSortAsc={params?.sortDirection === 'asc'}
+            defaultSortField={params?.sortBy}
           />
         </Col>
       </Row>
