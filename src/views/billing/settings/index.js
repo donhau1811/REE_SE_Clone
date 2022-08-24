@@ -159,7 +159,6 @@ const OperationUnit = ({ intl }) => {
             defaultSortAsc={params?.sortDirection === 'asc'}
             isSearching={searchValue?.trim()}
             {...pagination}
-            noDataTitle={<FormattedMessage id={'no configuration found please try again'} />}
           />
         </Col>
       </Row>

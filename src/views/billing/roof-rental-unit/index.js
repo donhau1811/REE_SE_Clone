@@ -252,7 +252,6 @@ const RoofVendor = ({ intl }) => {
             defaultSortAsc={params?.sortDirection === 'asc'}
             isSearching={searchValue?.trim()}
             {...pagination}
-            noDataTitle={<FormattedMessage id={'No roof vendor found, please try again'} />}
           />
         </Col>
       </Row>
