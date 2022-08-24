@@ -31,7 +31,7 @@ const ProjectCUForm = ({
   intl,
   onSubmit = () => {},
   onCancel = () => {},
-  initValues = {},
+  initValues,
   isReadOnly,
   submitText,
   submitButton,
@@ -150,8 +150,7 @@ const ProjectCUForm = ({
     }
 
     reset(tmpInitValues)
-  }, [initValues?.id, mockUser?.length, companies?.length])
-
+  }, [initValues, mockUser?.length, companies?.length])
   const handleSubmitOperationUnitForm = async (values) => {
     if (isReadOnly) {
       onSubmit?.(initValues)
