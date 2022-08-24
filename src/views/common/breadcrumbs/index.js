@@ -16,7 +16,7 @@ const BreadCrumbs = ({ breadCrumbItems }) => {
           key={index}
           tag="li"
           className={classnames({
-            ['text-primary font-weight-bolder']: index === items.length - 1
+            ['text-primary font-weight-bolder']: index === items.length - 1, 'custom-breadcrumb' : item.link === ""
           })}
           active={index === items.length - 1}
           {...item.innerProps}

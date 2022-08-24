@@ -134,10 +134,10 @@ function PowerSelling({ disabled, intl, data, onDelete }) {
           </h4>
 
           <Button.Ripple
-            disabled={disabled}
             color="primary"
             className="add-project add-contact-button"
             onClick={handleRedirectToCreateContract}
+            hidden={disabled}
           >
             <Plus className="mr-1" /> <FormattedMessage id="Add power selling contract" />
           </Button.Ripple>

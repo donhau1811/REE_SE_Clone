@@ -1445,7 +1445,7 @@
   "system-alert": "Cảnh báo hệ thống",
   "request": "Yêu cầu",
   "users": "Người dùng",
-  "billing": "Thanh toán  hóa đơn",
+  "billing": "Thanh toán & hóa đơn",
   "operation-units": "Công ty vận hành",
   "customers": "Khách hàng",
   "report": "Báo cáo",
@@ -1859,5 +1859,7 @@
   "Are you sure to cancel?": "Bạn có chắc chắn muốn hủy bỏ?",
   "View Project": "Xem dữ liệu",
   "Update Project": "Chỉnh sửa dữ liệu",
-  "View info contact": "Xem chi tiết thông tin liên hệ"
+  "View info contact": "Xem chi tiết thông tin liên hệ",
+  "No roof vendor found, please try again":"không tìm thấy đơn vị cho thuê mái nào. Xin vui lòng thử lại !",
+  "no configuration found please try again":"Không tìm thấy cấu hình nào. Xin vui lòng thử lại !"
 }
