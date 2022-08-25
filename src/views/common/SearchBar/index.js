@@ -13,7 +13,7 @@ import './index.scss'
 const SearchBar = ({ intl, onSearch = () => {}, searchValue, placeholder }) => {
   const [value, setValue] = useState('')
   useEffect(() => {
-  setValue(searchValue)
+    setValue(searchValue)
   }, [searchValue])
 
   const handleClickToSearch = () => {
@@ -21,9 +21,13 @@ const SearchBar = ({ intl, onSearch = () => {}, searchValue, placeholder }) => {
   }
 
   const handleSearchInputChange = (e) => {
+    if (searchValue === '') {
+      setValue('')
+    }
     const {
       nativeEvent: { inputType }
     } = e
+
     if (!inputType && e?.target?.value === '') {
       onSearch('')
       return
