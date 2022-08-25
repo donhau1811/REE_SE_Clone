@@ -98,6 +98,7 @@ const OperationUnit = ({ intl }) => {
     },
     {
       name: intl.formatMessage({ id: 'description' }),
+      sortable: true,
       selector: 'description'
     },
     {
