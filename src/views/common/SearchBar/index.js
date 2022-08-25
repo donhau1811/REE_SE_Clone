@@ -34,7 +34,7 @@ const SearchBar = ({ intl, onSearch = () => {}, searchValue, placeholder }) => {
   const handleSearchInputKeyDown = (event) => {
     if (event.keyCode === 13) {
       event.preventDefault()
-      onSearch?.(value.trim())
+      onSearch?.(value?.trim())
     }
   }
 

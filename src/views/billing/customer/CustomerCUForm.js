@@ -391,7 +391,12 @@ const OperationCUForm = ({
             {errors?.note && <FormFeedback>{errors?.note?.message}</FormFeedback>}
           </Col>
         </Row>
-        <Contact disabled={isViewed} onChange={handleSubmitContactForm} data={watch('contacts')} />
+        <Contact
+          disabled={isViewed}
+          onChange={handleSubmitContactForm}
+          data={watch('contacts')}
+          type={intl.formatMessage({ id: 'customers' })}
+        />
 
         <Row>
           <Col className="d-flex justify-content-end align-items-center mb-2">
