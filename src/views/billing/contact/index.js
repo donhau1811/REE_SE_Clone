@@ -3,7 +3,7 @@ import { FormattedMessage, useIntl } from 'react-intl'
 import { Badge, Button, Col, Row, UncontrolledTooltip } from 'reactstrap'
 import { Plus } from 'react-feather'
 import Table from '@src/views/common/table/CustomDataTable'
-import { array, bool, func } from 'prop-types'
+import { array, bool, func, string } from 'prop-types'
 import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit.svg'
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
 import ContactCUForm from './ContactCUForm'
@@ -19,7 +19,7 @@ import { ReactComponent as CicleFailed } from '@src/assets/images/svg/circle-fai
 
 const MySweetAlert = withReactContent(SweetAlert)
 
-const Contact = ({ data, onChange, disabled }) => {
+const Contact = ({ data, onChange, disabled, type }) => {
   const intl = useIntl()
   const [isReadOnly, setIsReadOnly] = useState(false)
   const [currContact, setCurrContact] = useState(null)
@@ -50,23 +50,7 @@ const Contact = ({ data, onChange, disabled }) => {
 
       return [...array, { ...item, isDelete: true }]
     }, [])
-    if (newData.filter((item) => !item.isDelete)?.length === 0) {
-      return MySweetAlert.fire({
-        // icon: 'success',
-        iconHtml: <CicleFailed />,
-        text: intl.formatMessage({ id: 'Need at least 1 contact to add customer. Please try again' }),
-        customClass: {
-          popup: classnames({
-            'sweet-alert-popup--dark': skin === 'dark'
-          }),
-          confirmButton: 'btn btn-primary mt-2',
-          icon: 'border-0'
-        },
-        width: 'max-content',
-        showCloseButton: true,
-        confirmButtonText: intl.formatMessage({ id: 'Try again' })
-      })
-    }
+
     return MySweetAlert.fire({
       title: intl.formatMessage({ id: 'Delete billing customer title' }),
       html: intl.formatMessage({ id: 'Delete billing information message' }),
@@ -88,6 +72,28 @@ const Contact = ({ data, onChange, disabled }) => {
       buttonsStyling: false
     }).then(({ isConfirmed }) => {
       if (isConfirmed) {
+        if (newData.filter((item) => !item.isDelete)?.length === 0) {
+          return MySweetAlert.fire({
+            // icon: 'success',
+            iconHtml: <CicleFailed />,
+            text: intl.formatMessage(
+              { id: 'need at least 1 contact. Please try again' },
+              {
+                name: type
+              }
+            ),
+            customClass: {
+              popup: classnames({
+                'sweet-alert-popup--dark': skin === 'dark'
+              }),
+              confirmButton: 'btn btn-primary mt-2',
+              icon: 'border-0'
+            },
+            width: 'max-content',
+            showCloseButton: true,
+            confirmButtonText: intl.formatMessage({ id: 'Try again' })
+          })
+        }
         onChange?.(newData, contact.id, () => {
           showToast('success', <FormattedMessage id="delete contact success" />)
         })
@@ -233,7 +239,8 @@ const Contact = ({ data, onChange, disabled }) => {
 Contact.propTypes = {
   data: array,
   onChange: func,
-  disabled: bool
+  disabled: bool,
+  type: string
 }
 
 export default Contact

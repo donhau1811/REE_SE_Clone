@@ -361,7 +361,12 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
         </Row>
 
         <Input id="contacts" name="contacts" autoComplete="on" innerRef={register()} type="hidden" />
-        <Contact disabled={isReadOnly} onChange={handleContactformSubmit} data={contactsRoofVendor} />
+        <Contact
+          disabled={isReadOnly}
+          onChange={handleContactformSubmit}
+          data={contactsRoofVendor}
+          type={intl.formatMessage({ id: 'Roof Rental Company' })}
+        />
 
         <Row>
           <Col className="d-flex justify-content-end align-items-center mt-5 mb-2">

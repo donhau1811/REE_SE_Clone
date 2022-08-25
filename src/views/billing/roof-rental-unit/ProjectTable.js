@@ -113,11 +113,8 @@ const ProjectTable = ({ intl }) => {
     },
     {
       name: intl.formatMessage({ id: 'PatternBillElectricity' }),
-      selector: 'billElectric',
-      cell: (row) => {
-        const details = JSON.parse(row.contractDetails)
-        return <span>{details?.id || ''}</span>
-      }
+      selector: 'contractName',
+      sortable: true
     }
   ]
 
@@ -135,6 +132,7 @@ const ProjectTable = ({ intl }) => {
             {...pagination}
             defaultSortAsc={params?.sortDirection === 'asc'}
             defaultSortField={params?.sortBy}
+            keyField="contractId"
           />
         </Col>
       </Row>

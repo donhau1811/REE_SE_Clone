@@ -30,7 +30,6 @@ const ProjectTable = ({ intl }) => {
         payload: tempPayload,
 
         callback: (res) => {
-          console.log('res', res)
           setProjects(res.data || [])
           setTotal(res?.count || 0)
           setPagination(tempPayload.pagination)
@@ -115,15 +114,10 @@ const ProjectTable = ({ intl }) => {
     },
     {
       name: intl.formatMessage({ id: 'PatternBillElectricity' }),
-      selector: 'billElectric',
-      cell: (row) => {
-        const details = JSON.parse(row.contractDetails)
-        return <span>{details?.id || ''}</span>
-      }
+      selector: 'contractName',
+      sortable: true
     }
   ]
-
-  console.log('params', params)
 
   return (
     <>
@@ -138,6 +132,7 @@ const ProjectTable = ({ intl }) => {
             onSort={handleSort}
             defaultSortAsc={params?.sortDirection === 'asc'}
             defaultSortField={params?.sortBy}
+            keyField="contractId"
             {...pagination}
           />
         </Col>
