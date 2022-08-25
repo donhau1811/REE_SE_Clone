@@ -14,7 +14,6 @@ import withReactContent from 'sweetalert2-react-content'
 import classnames from 'classnames'
 import { useSelector } from 'react-redux'
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
-
 import { ReactComponent as CicleFailed } from '@src/assets/images/svg/circle-failed.svg'
 
 const MySweetAlert = withReactContent(SweetAlert)
@@ -50,6 +49,28 @@ const Contact = ({ data, onChange, disabled, type }) => {
 
       return [...array, { ...item, isDelete: true }]
     }, [])
+    if (newData.filter((item) => !item.isDelete)?.length === 0) {
+      return MySweetAlert.fire({
+        // icon: 'success',
+        iconHtml: <CicleFailed />,
+        text: intl.formatMessage(
+          { id: 'need at least 1 contact. Please try again' },
+          {
+            name: type
+          }
+        ),
+        customClass: {
+          popup: classnames({
+            'sweet-alert-popup--dark': skin === 'dark'
+          }),
+          confirmButton: 'btn btn-primary mt-2',
+          icon: 'border-0'
+        },
+        width: 'max-content',
+        showCloseButton: true,
+        confirmButtonText: intl.formatMessage({ id: 'Try again' })
+      })
+    }
 
     return MySweetAlert.fire({
       title: intl.formatMessage({ id: 'Delete billing customer title' }),
@@ -72,28 +93,6 @@ const Contact = ({ data, onChange, disabled, type }) => {
       buttonsStyling: false
     }).then(({ isConfirmed }) => {
       if (isConfirmed) {
-        if (newData.filter((item) => !item.isDelete)?.length === 0) {
-          return MySweetAlert.fire({
-            // icon: 'success',
-            iconHtml: <CicleFailed />,
-            text: intl.formatMessage(
-              { id: 'need at least 1 contact. Please try again' },
-              {
-                name: type
-              }
-            ),
-            customClass: {
-              popup: classnames({
-                'sweet-alert-popup--dark': skin === 'dark'
-              }),
-              confirmButton: 'btn btn-primary mt-2',
-              icon: 'border-0'
-            },
-            width: 'max-content',
-            showCloseButton: true,
-            confirmButtonText: intl.formatMessage({ id: 'Try again' })
-          })
-        }
         onChange?.(newData, contact.id, () => {
           showToast('success', <FormattedMessage id="delete contact success" />)
         })
