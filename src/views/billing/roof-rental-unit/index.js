@@ -153,8 +153,7 @@ const RoofVendor = ({ intl }) => {
       selector: 'name',
       sortable: true,
       cell: (row) => <Link to={`${ROUTER_URL.BILLING_ROOF_RENTAL_UNIT}/${row.id}`}>{row?.name}</Link>,
-
-      minWidth: '100px'
+      minWidth: '200px'
     },
     {
       name: intl.formatMessage({ id: 'operation-unit-form-taxCode' }),
@@ -186,8 +185,7 @@ const RoofVendor = ({ intl }) => {
     {
       name: intl.formatMessage({ id: 'operation-unit-form-mobile' }),
       selector: 'phone',
-      sortable: true,
-      center: true
+      sortable: true
     },
     {
       name: intl.formatMessage({ id: 'Email' }),
