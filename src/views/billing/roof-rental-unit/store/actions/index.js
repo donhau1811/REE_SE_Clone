@@ -177,18 +177,7 @@ export const putRoofVendors = ({ params, callback }) => {
       })
   }
 }
-export const checkDuplicate = async ({ params }) => {
-  return axios
-    .post(API_CHECK_CODE_ROOF_VENDORS, params)
-    .then((response) => {
-      if (response.status === 200) {
-        return response.data?.data
-      }
-    })
-    .catch(() => {
-      return true
-    })
-}
+
 
 export const getRoofVendorWithContactsById = ({ id, isSavedToState, callback }) => {
   return async (dispatch) => {
