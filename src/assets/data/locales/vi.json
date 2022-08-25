@@ -1863,5 +1863,6 @@
   "Not found any result. Please try again":"Không tìm thấy kết quả nào. Xin vui lòng thử lại!",
   "need at least 1 contact. Please try again":"{name} phải có ít nhất 1 thông tin liên hệ. Vui lòng thử lại",
   "No roof vendor found, please try again":"không tìm thấy đơn vị cho thuê mái nào. Xin vui lòng thử lại !",
-  "no configuration found please try again":"Không tìm thấy cấu hình nào. Xin vui lòng thử lại !"
+  "no configuration found please try again":"Không tìm thấy cấu hình nào. Xin vui lòng thử lại !",
+  "Roof vendor alert form":"Mẫu TB thuê mái"
 }
