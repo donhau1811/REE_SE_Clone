@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { NUMBER_REGEX, EMAIL_REGEX, SET_FORM_DIRTY } from '@src/utility/constants'
+import { NUMBER_REGEX, EMAIL_REGEX, SET_FORM_DIRTY, API_CHECK_CODE_ROOF_VENDORS } from '@src/utility/constants'
 import { selectThemeColors, showToast } from '@src/utility/Utils'
 import { func, object, bool } from 'prop-types'
 import { Controller, useForm } from 'react-hook-form'
@@ -11,7 +11,6 @@ import * as yup from 'yup'
 import './styles.scss'
 import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
 import React, { useState, useEffect } from 'react'
-import { checkDuplicate } from './store/actions'
 import { useDispatch, useSelector } from 'react-redux'
 import withReactContent from 'sweetalert2-react-content'
 import classNames from 'classnames'
@@ -19,6 +18,7 @@ import SweetAlert from 'sweetalert2'
 import { ReactComponent as CicleFailed } from '@src/assets/images/svg/circle-failed.svg'
 import { handleCRUDOfContacts } from '../contact/util'
 import { getContactListByRoofVendorId } from '../contact/store/actions'
+import axios from 'axios'
 
 const MySweetAlert = withReactContent(SweetAlert)
 
@@ -112,7 +112,8 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
         .matches(EMAIL_REGEX, {
           message: intl.formatMessage({ id: 'invalid-character-validate' }),
           excludeEmptyString: true
-        })
+        }),
+      note: yup.string().max(255, intl.formatMessage({ id: 'max-validate' }))
     },
     ['name', 'code', 'taxCode', 'address', 'phone', 'email', 'note', 'state']
   )
@@ -149,32 +150,26 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
       onSubmit?.(initValues)
       return
     }
-    try {
-      const isDupicateCode = await checkDuplicate({
-        params: { code: values.code },
-        id: initValues?.id,
-        intl
-      })
-      if (initValues?.code !== values.code && isDupicateCode) {
-        setError(
-          'code',
-          { type: 'focus', message: intl.formatMessage({ id: 'dubplicated-validate' }) },
-          { shouldFocus: true }
+    const dataCheck = { code: values.code }
+      if (initValues?.id) dataCheck.id = initValues?.id
+      try {
+        const checkDupCodeRes = await axios.post(API_CHECK_CODE_ROOF_VENDORS, dataCheck)
+        if (checkDupCodeRes.status === 200 && checkDupCodeRes.data?.data) {
+          setError('code', { type: 'custom', message: intl.formatMessage({ id: 'dubplicated-validate' }) })
+          return
+        }
+      } catch (err) {
+        const alert = initValues?.id
+          ? 'Failed to update data. Please try again'
+          : 'Failed to create data. Please try again'
+        showToast(
+          'error',
+          intl.formatMessage({
+            id: alert
+          })
         )
         return
       }
-    } catch (err) {
-      const alert = initValues?.id
-        ? 'Failed to update data. Please try again'
-        : 'Failed to create data. Please try again'
-      showToast(
-        'error',
-        intl.formatMessage({
-          id: alert
-        })
-      )
-      return
-    }
     if (!contactsRoofVendor?.filter((item) => !item.isDelete).length > 0) {
       return MySweetAlert.fire({
         // icon: 'success',
@@ -354,9 +349,12 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
               id="note"
               autoComplete="on"
               disabled={isReadOnly}
+              invalid={!isReadOnly && !!errors.note}
+              valid={!isReadOnly && getValues('note')?.trim() && !errors.note}
               innerRef={register()}
               placeholder={intl.formatMessage({ id: 'Enter-unit-note' })}
             />
+            {errors?.note && <FormFeedback>{errors?.note?.message}</FormFeedback>}
           </Col>
         </Row>
 

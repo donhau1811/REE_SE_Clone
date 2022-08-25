@@ -1,6 +1,5 @@
 import {
   API_ADD_CONTACT,
-  API_CHECK_CODE_ROOF_VENDORS,
   API_CREATE_ROOF_VENDOR,
   API_DELETE_ROOF_VENDORS,
   API_GET_ALL_ROOF_VENDOR,
@@ -177,26 +176,7 @@ export const putRoofVendors = ({ params, callback }) => {
       })
   }
 }
-export const checkDuplicate = async ({ params, id, intl }) => {
-  return axios
-    .post(API_CHECK_CODE_ROOF_VENDORS, params)
-    .then((response) => {
-      if (response.status === 200) {
-        return response.data?.data
-      }
-    })
-    .catch((err) => {
-      console.log('err', err)
-      const alert = id ? 'Failed to update data. Please try again' : 'Failed to create data. Please try again'
-      showToast(
-        'error',
-        intl.formatMessage({
-          id: alert
-        })
-      )
-      return true
-    })
-}
+
 
 export const getRoofVendorWithContactsById = ({ id, isSavedToState, callback }) => {
   return async (dispatch) => {

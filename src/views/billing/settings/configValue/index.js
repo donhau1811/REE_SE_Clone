@@ -120,12 +120,15 @@ const ValueTable = ({ configId, disabled, intl }) => {
     },
     {
       name: <FormattedMessage id="explain" />,
-      selector: 'description'
+      selector: 'description',
+      maxWidth:'200px'
     },
     {
       name: <FormattedMessage id="Status" />,
       center: true,
       selector: 'status',
+      maxWidth:'200px',
+
 
       cell: (row) => {
         return row.state === OPERATION_UNIT_STATUS.ACTIVE ? (
