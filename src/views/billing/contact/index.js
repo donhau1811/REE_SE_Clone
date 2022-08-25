@@ -109,7 +109,7 @@ const Contact = ({ data, onChange, disabled, type }) => {
       maxWidth: '50px'
     },
     {
-      name: <FormattedMessage id="Contact Name" />,
+      name: <FormattedMessage id="represent" />,
       selector: 'fullName'
     },
     {

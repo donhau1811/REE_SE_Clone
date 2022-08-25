@@ -177,7 +177,7 @@ export const putRoofVendors = ({ params, callback }) => {
       })
   }
 }
-export const checkDuplicate = async ({ params, id, intl }) => {
+export const checkDuplicate = async ({ params }) => {
   return axios
     .post(API_CHECK_CODE_ROOF_VENDORS, params)
     .then((response) => {
@@ -185,15 +185,7 @@ export const checkDuplicate = async ({ params, id, intl }) => {
         return response.data?.data
       }
     })
-    .catch((err) => {
-      console.log('err', err)
-      const alert = id ? 'Failed to update data. Please try again' : 'Failed to create data. Please try again'
-      showToast(
-        'error',
-        intl.formatMessage({
-          id: alert
-        })
-      )
+    .catch(() => {
       return true
     })
 }
