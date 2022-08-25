@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { getListProjectByRoofVendorId } from '../project/store/actions'
 import { ROWS_PER_PAGE_DEFAULT } from '@src/utility/constants'
+import { VALUE_OF_ROOF_CONTRACT } from '@src/utility/constants/billing'
 
 const ProjectTable = ({ intl }) => {
   const { id } = useParams()
@@ -114,7 +115,13 @@ const ProjectTable = ({ intl }) => {
     {
       name: intl.formatMessage({ id: 'PatternBillElectricity' }),
       selector: 'contractName',
-      sortable: true
+      sortable: true,
+      cell: (row) => {
+        const contractType = Object.keys(VALUE_OF_ROOF_CONTRACT).find(
+          (item) => VALUE_OF_ROOF_CONTRACT[item] === row.contractName
+        )
+        return contractType
+      }
     }
   ]
 
