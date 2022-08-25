@@ -369,7 +369,7 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
               {intl.formatMessage({ id: isReadOnly ? 'Update' : 'Save' })}
             </Button>
             <Button onClick={handleCancel} color="secondary">
-              {intl.formatMessage({ id: 'Cancel' })}
+              {intl.formatMessage({ id: isReadOnly ? 'Back' : 'Cancel' })}
             </Button>
           </Col>
         </Row>
