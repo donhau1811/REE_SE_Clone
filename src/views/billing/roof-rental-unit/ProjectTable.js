@@ -113,7 +113,7 @@ const ProjectTable = ({ intl }) => {
       }
     },
     {
-      name: intl.formatMessage({ id: 'PatternBillElectricity' }),
+      name: intl.formatMessage({ id: 'Roof vendor alert form' }),
       selector: 'contractName',
       sortable: true,
       cell: (row) => {
@@ -137,9 +137,9 @@ const ProjectTable = ({ intl }) => {
             onPerPageChange={handlePerPageChange}
             onSort={handleSort}
             {...pagination}
+            keyField="contractId"
             defaultSortAsc={params?.sortDirection === 'asc'}
             defaultSortField={params?.sortBy}
-            keyField="contractId"
           />
         </Col>
       </Row>
