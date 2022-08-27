@@ -117,7 +117,7 @@ export const deleteCustomer = ({ id, callback }) => {
 
           callback?.()
         } else {
-          throw new Error(response.data?.message)
+          showToast('error', response.data?.message)
         }
       })
       .catch(() => {

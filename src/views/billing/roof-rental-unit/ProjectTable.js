@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { getListProjectByRoofVendorId } from '../project/store/actions'
 import { ROWS_PER_PAGE_DEFAULT } from '@src/utility/constants'
+import { VALUE_OF_ROOF_CONTRACT } from '@src/utility/constants/billing'
 
 const ProjectTable = ({ intl }) => {
   const { id } = useParams()
@@ -112,11 +113,14 @@ const ProjectTable = ({ intl }) => {
       }
     },
     {
-      name: intl.formatMessage({ id: 'PatternBillElectricity' }),
-      selector: 'billElectric',
+      name: intl.formatMessage({ id: 'Roof vendor alert form' }),
+      selector: 'contractName',
+      sortable: true,
       cell: (row) => {
-        const details = JSON.parse(row.contractDetails)
-        return <span>{details?.id || ''}</span>
+        const contractType = Object.keys(VALUE_OF_ROOF_CONTRACT).find(
+          (item) => VALUE_OF_ROOF_CONTRACT[item] === row.contractName
+        )
+        return contractType
       }
     }
   ]
@@ -133,7 +137,9 @@ const ProjectTable = ({ intl }) => {
             onPerPageChange={handlePerPageChange}
             onSort={handleSort}
             {...pagination}
-            defaultSortAsc={params.sortDirection === 'asc'}
+            keyField="contractId"
+            defaultSortAsc={params?.sortDirection === 'asc'}
+            defaultSortField={params?.sortBy}
           />
         </Col>
       </Row>

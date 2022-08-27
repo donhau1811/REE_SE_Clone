@@ -93,7 +93,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
       maxWidth: '50px'
     },
     {
-      name: <FormattedMessage id="Contact Name" />,
+      name: <FormattedMessage id="represent" />,
       selector: 'fullName',
       center: true
     },
