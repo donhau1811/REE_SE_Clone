@@ -50,6 +50,7 @@ const RoofVendor = ({ intl }) => {
     }
     fetchRoofVendor(initParams)
     return () => {
+      // hainm check
       dispatch({
         type: SET_ROOF_RENTAL_UNIT_PARAMS,
         payload: initParams
