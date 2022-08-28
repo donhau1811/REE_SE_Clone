@@ -34,7 +34,7 @@ function PowerSellingUpdateCOM() {
   }
   return (
     <>
-      <CUForm onCancel={handleCancel} onSubmit={handleSubmitCustomerContract} />
+      <CUForm onCancel={handleCancel} onSubmit={handleSubmitCustomerContract} initValues={{ id: -1 }} />
     </>
   )
 }

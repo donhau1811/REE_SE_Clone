@@ -58,10 +58,21 @@ function ContactCUForm({ clock, intl, onSubmit = () => {}, onCancel }) {
       .string()
       .required(intl.formatMessage({ id: 'required-validate' }))
       .max(50, intl.formatMessage({ id: 'max-validate' })),
-    type: yup.object().required(intl.formatMessage({ id: 'required-validate' }))
+    type: yup
+      .object()
+      .nullable()
+      .required(intl.formatMessage({ id: 'required-validate' }))
   })
 
-  const { getValues, errors, register, control, handleSubmit, reset } = useForm({
+  const {
+    getValues,
+    errors,
+    register,
+    control,
+    handleSubmit,
+    reset,
+    formState: { isDirty }
+  } = useForm({
     mode: 'onChange',
     resolver: yupResolver(validateSchema),
     defaultValues: clock || {}
@@ -69,7 +80,8 @@ function ContactCUForm({ clock, intl, onSubmit = () => {}, onCancel }) {
 
   const handleCancel = () => {
     // setIsOpen((preState) => !preState)
-    onCancel?.()
+
+    onCancel?.(isDirty)
   }
 
   useEffect(() => {

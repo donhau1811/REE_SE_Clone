@@ -59,14 +59,16 @@ function PowerSellingCreateCOM({ intl }) {
 
   return (
     <>
-      <CUForm
-        isReadOnly={isReadOnly}
-        onCancel={handleCancel}
-        onSubmit={handleSubmitCustomerContract}
-        initValues={selectedContract}
-        submitText={intl.formatMessage({ id: isReadOnly ? 'Update' : 'Save' })}
-        cancelText={intl.formatMessage({ id: isReadOnly ? 'Back' : 'Cancel' })}
-      />
+      {selectedContract?.id && (
+        <CUForm
+          isReadOnly={isReadOnly}
+          onCancel={handleCancel}
+          onSubmit={handleSubmitCustomerContract}
+          initValues={selectedContract}
+          submitText={intl.formatMessage({ id: isReadOnly ? 'Update' : 'Save' })}
+          cancelText={intl.formatMessage({ id: isReadOnly ? 'Back' : 'Cancel' })}
+        />
+      )}
     </>
   )
 }
@@ -82,8 +84,7 @@ export const Navbar = () => {
     layout: { skin },
     form: { isFormGlobalDirty },
     projects: { selectedProject: selectedBillingProject },
-    projectContracts : {selectedContract : selectedContract}
-
+    projectContracts: { selectedContract: selectedContract }
   } = useSelector((state) => state)
   const intl = useIntl()
   const history = useHistory()
@@ -133,7 +134,7 @@ export const Navbar = () => {
         onClick: handleBreadCrumbsRedirct(`${ROUTER_URL.BILLING_PROJECT}/${selectedBillingProject?.id}`)
       }
     },
-    { name: selectedContract?.code}
+    { name: selectedContract?.code }
   ]
 
   return (

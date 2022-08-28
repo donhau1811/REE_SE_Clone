@@ -74,6 +74,18 @@ export const ValidateSchemaObj = {
     .matches(REAL_NUMBER, {
       message: <FormattedMessage id="invalid-character-validate" />
     }),
+  clocks: yup.array(),
+  formType: yup.object()
+}
+
+export const ContractForm2Schema = {
+  lossRate: yup
+    .string()
+    .required(<FormattedMessage id="required-validate" />)
+    .max(4, <FormattedMessage id="max-validate" />)
+    .matches(REAL_NUMBER, {
+      message: <FormattedMessage id="invalid-character-validate" />
+    }),
   payoutRatio: yup
     .string()
     .required(<FormattedMessage id="required-validate" />)
@@ -82,9 +94,18 @@ export const ValidateSchemaObj = {
       message: <FormattedMessage id="invalid-character-validate" />
     })
 }
-
-export const ContractForm2Schema = {
+export const ContractForm3Schema = {
   lossRate: yup
+    .string()
+    .required(<FormattedMessage id="required-validate" />)
+    .max(4, <FormattedMessage id="max-validate" />)
+    .matches(REAL_NUMBER, {
+      message: <FormattedMessage id="invalid-character-validate" />
+    })
+}
+
+export const ContractForm1Schema = {
+  payoutRatio: yup
     .string()
     .required(<FormattedMessage id="required-validate" />)
     .max(4, <FormattedMessage id="max-validate" />)
