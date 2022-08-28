@@ -1445,7 +1445,7 @@
   "system-alert": "Cảnh báo hệ thống",
   "request": "Yêu cầu",
   "users": "Người dùng",
-  "billing": "Thanh toán  hóa đơn",
+  "billing": "Thanh toán & hóa đơn",
   "operation-units": "Công ty vận hành",
   "customers": "Khách hàng",
   "report": "Báo cáo",
@@ -1629,7 +1629,7 @@
   "dubplicated-validate": "Thông tin không được trùng",
   "invalid-format-validate": "Thông tin sai định dạng",
   "operation-unit-list-search-input-placeholder": "Tìm theo Mã công ty, Tên công ty, Mã số thuế, Địa chỉ, Số điện thoại",
-  "customer-list-search-input-placeholder":"Tìm theo Mã công ty, Tên công ty, Mã số thuế, Địa chỉ, Số điện thoại, Ghi chú",
+  "customer-list-search-input-placeholder":"Tìm theo Mã KH, Tên khách hàng, Mã số thuế, Địa chỉ, Số điện thoại",
   "create-operation-unit": "Thêm công ty vận hành",
   "operation-unit-form-name": "Tên công ty",
   "operation-unit-form-name-placeholder": "Nhập tên công ty",
@@ -1859,5 +1859,10 @@
   "Are you sure to cancel?": "Bạn có chắc chắn muốn hủy bỏ?",
   "View Project": "Xem dữ liệu",
   "Update Project": "Chỉnh sửa dữ liệu",
-  "View info contact": "Xem chi tiết thông tin liên hệ"
+  "View info contact": "Xem chi tiết thông tin liên hệ",
+  "Not found any result. Please try again":"Không tìm thấy kết quả nào. Xin vui lòng thử lại!",
+  "need at least 1 contact. Please try again":"{name} phải có ít nhất 1 thông tin liên hệ. Vui lòng thử lại",
+  "No roof vendor found, please try again":"không tìm thấy đơn vị cho thuê mái nào. Xin vui lòng thử lại !",
+  "no configuration found please try again":"Không tìm thấy cấu hình nào. Xin vui lòng thử lại !",
+  "Roof vendor alert form":"Mẫu TB thuê mái"
 }

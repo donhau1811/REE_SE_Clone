@@ -11,8 +11,7 @@ import { get } from 'lodash'
 import { showToast } from '@src/utility/Utils'
 import { FormattedMessage } from 'react-intl'
 
-
-export const postOperationUnit = ({ params, callback}) => {
+export const postOperationUnit = ({ params, callback }) => {
   return async () => {
     await axios
       .post(API_CREATE_OPERATION_UNIT, params)
@@ -89,15 +88,16 @@ export const deleteOperationUnit = ({ id, callback }) => {
       .delete(`${API_DELETE_OPERATING_COMPANY}/${id}`)
       .then((response) => {
         if (response.status === 200 && response.data?.data) {
-          showToast('success', <FormattedMessage id= 'Delete info success' />)
+          showToast('success', <FormattedMessage id="Delete info success" />)
 
           callback?.()
         } else {
-          throw new Error(response.data?.message)
+          // throw new Error(response.data?.message)
+          showToast('error', response.data?.message)
         }
       })
       .catch(() => {
-        showToast('error', <FormattedMessage id= 'data delete failed, please try again' />)
+        showToast('error', <FormattedMessage id="data delete failed, please try again" />)
       })
   }
 }

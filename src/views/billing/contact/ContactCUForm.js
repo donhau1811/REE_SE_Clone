@@ -115,7 +115,7 @@ function ContactCUForm({ contact, intl, onSubmit = () => {}, onCancel, isReadOnl
             <Row>
               <Col className="mb-2" xs={12}>
                 <Label className="general-label" for="fullName">
-                  <FormattedMessage id="Contact Name" />
+                  <FormattedMessage id="represent" />
                   <span className="text-danger">&nbsp;(*)</span>
                 </Label>
                 <Input

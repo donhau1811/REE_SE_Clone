@@ -1,6 +1,5 @@
 import {
   API_ADD_CONTACT,
-  API_CHECK_CODE_ROOF_VENDORS,
   API_CREATE_ROOF_VENDOR,
   API_DELETE_ROOF_VENDORS,
   API_GET_ALL_ROOF_VENDOR,
@@ -15,7 +14,6 @@ import { showToast } from '@src/utility/Utils'
 import { handleCRUDOfContacts } from '@src/views/billing/contact/util'
 import { get } from 'lodash'
 import { FormattedMessage } from 'react-intl'
-
 
 export const getAllRoofVendor = () => {
   return async (dispatch) => {
@@ -79,15 +77,15 @@ export const deleteBillingRoofRentalUnit = ({ id, callback }) => {
       .delete(`${API_DELETE_ROOF_VENDORS}/${id}`)
       .then((response) => {
         if (response.status === 200 && response.data?.data) {
-          showToast('success', <FormattedMessage id= 'Delete info success' />)
+          showToast('success', <FormattedMessage id="Delete info success" />)
 
           callback?.()
         } else {
-          throw new Error(response.data?.message)
+          showToast('error', response.data?.message)
         }
       })
       .catch(() => {
-        showToast('error', <FormattedMessage id= 'data delete failed, please try again' />)
+        showToast('error', <FormattedMessage id="data delete failed, please try again" />)
       })
   }
 }
@@ -136,19 +134,19 @@ export const postRoofVendors = ({ params, callback }) => {
           )
           Promise.all(addRoofVendorContact)
             .then(() => {
-              showToast('success', <FormattedMessage id= 'Create info success' />)
+              showToast('success', <FormattedMessage id="Create info success" />)
               callback?.(false)
             })
             .catch((err) => {
               console.log('err', err)
-              showToast('error', <FormattedMessage id= 'data create failed, please try again' />)
+              showToast('error', <FormattedMessage id="data create failed, please try again" />)
             })
         } else {
           throw new Error(response.data?.message)
         }
       })
       .catch(() => {
-        showToast('error', <FormattedMessage id= 'data create failed, please try again' />)
+        showToast('error', <FormattedMessage id="data create failed, please try again" />)
       })
   }
 }
@@ -163,42 +161,22 @@ export const putRoofVendors = ({ params, callback }) => {
           const contactsModifyRes = handleCRUDOfContacts({ contacts, roofVendorId: roofVendor.id })
           return Promise.all(contactsModifyRes)
             .then(() => {
-
-              showToast('success', <FormattedMessage id= 'Update info success' />)
+              showToast('success', <FormattedMessage id="Update info success" />)
               callback?.()
             })
             .catch(() => {
-              showToast('error', <FormattedMessage id= 'data update failed, please try again' />)
+              showToast('error', <FormattedMessage id="data update failed, please try again" />)
             })
         } else {
           throw new Error(response.data?.message)
         }
       })
       .catch(() => {
-        showToast('error', <FormattedMessage id= 'data update failed, please try again' />)
+        showToast('error', <FormattedMessage id="data update failed, please try again" />)
       })
   }
 }
-export const checkDuplicate = async ({ params, id, intl }) => {
-  return axios
-    .post(API_CHECK_CODE_ROOF_VENDORS, params)
-    .then((response) => {
-      if (response.status === 200) {
-        return response.data?.data
-      }
-    })
-    .catch((err) => {
-      console.log('err', err)
-      const alert = id ? 'Failed to update data. Please try again' : 'Failed to create data. Please try again'
-      showToast(
-        'error',
-        intl.formatMessage({
-          id: alert
-        })
-      )
-      return true
-    })
-}
+
 
 export const getRoofVendorWithContactsById = ({ id, isSavedToState, callback }) => {
   return async (dispatch) => {

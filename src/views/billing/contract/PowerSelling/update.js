@@ -81,7 +81,9 @@ export const Navbar = () => {
   const {
     layout: { skin },
     form: { isFormGlobalDirty },
-    projects: { selectedProject: selectedBillingProject }
+    projects: { selectedProject: selectedBillingProject },
+    projectContracts : {selectedContract : selectedContract}
+
   } = useSelector((state) => state)
   const intl = useIntl()
   const history = useHistory()
@@ -131,7 +133,7 @@ export const Navbar = () => {
         onClick: handleBreadCrumbsRedirct(`${ROUTER_URL.BILLING_PROJECT}/${selectedBillingProject?.id}`)
       }
     },
-    { name: intl.formatMessage({ id: 'Update selling power contract' }), link: '' }
+    { name: selectedContract?.code}
   ]
 
   return (

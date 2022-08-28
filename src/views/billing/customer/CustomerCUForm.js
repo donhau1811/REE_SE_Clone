@@ -18,6 +18,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { ReactComponent as CicleFailed } from '@src/assets/images/svg/circle-failed.svg'
 import axios from 'axios'
 import { isEqual } from 'lodash'
+import { handleCRUDOfContacts } from '../contact/util'
+import { getContactListByCustomerId } from '../contact/store/actions'
 
 const MySweetAlert = withReactContent(SweetAlert)
 
@@ -127,8 +129,34 @@ const OperationCUForm = ({
     }
   }, [contacts])
 
-  const handleSubmitContactForm = (values) => {
-    setValue('contacts', values)
+  const handleSubmitContactForm = async (changeContacts, changeId, callback) => {
+    const changeItem = changeContacts.filter((item) => item.id === changeId)
+    if (Number(initValues?.id) > 0) {
+      try {
+        Promise.all(handleCRUDOfContacts({ contacts: changeItem, customerId: initValues.id })).then(() => {
+          dispatch(
+            getContactListByCustomerId({
+              id: initValues?.id,
+              isSavedToState: true,
+              callback
+            })
+          )
+        })
+      } catch (error) {
+        if (changeId < 0) {
+          showToast('error', <FormattedMessage id="data create failed, please try again" />)
+        } else {
+          if (changeItem[0]?.isDelete) {
+            showToast('error', <FormattedMessage id="data delete failed, please try again" />)
+          }
+          if (changeItem[0]?.isUpdate) {
+            showToast('error', <FormattedMessage id="data update failed, please try again" />)
+          }
+        }
+      }
+    } else {
+      setValue('contacts', changeContacts)
+    }
   }
 
   const handleSubmitCustomerForm = async (values) => {
@@ -363,7 +391,12 @@ const OperationCUForm = ({
             {errors?.note && <FormFeedback>{errors?.note?.message}</FormFeedback>}
           </Col>
         </Row>
-        <Contact disabled={isViewed} onChange={handleSubmitContactForm} data={watch('contacts')} />
+        <Contact
+          disabled={isViewed}
+          onChange={handleSubmitContactForm}
+          data={watch('contacts')}
+          type={intl.formatMessage({ id: 'customers' })}
+        />
 
         <Row>
           <Col className="d-flex justify-content-end align-items-center mb-2">

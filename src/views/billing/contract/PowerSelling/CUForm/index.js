@@ -217,29 +217,24 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
     },
     {
       name: <FormattedMessage id="Fullname" />,
-      selector: 'fullName',
-      center: true
+      selector: 'fullName'
     },
     {
       name: <FormattedMessage id="Position" />,
-      selector: 'position',
-      center: true
+      selector: 'position'
     },
     {
       name: <FormattedMessage id="operation-unit-form-mobile" />,
-      selector: 'phone',
-      center: true
+      selector: 'phone'
     },
     {
       name: 'Email',
       selector: 'email',
-      center: true,
       cell: (row) => <span>{row.email}</span>
     },
     {
       name: <FormattedMessage id="note" />,
       selector: 'note',
-      center: true,
       cell: (row) => <span>{row.note}</span>
     }
   ]

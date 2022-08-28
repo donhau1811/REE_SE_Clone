@@ -94,32 +94,26 @@ const Clock = ({ data, onChange, disabled, intl, contractId }) => {
     },
     {
       name: <FormattedMessage id="Device name" />,
-      selector: 'name',
+      selector: 'name'
 
-      center: true
     },
     {
       name: <FormattedMessage id="Serial number of clock" />,
-      selector: 'seri',
+      selector: 'seri'
 
-      center: true
     },
     {
       name: <FormattedMessage id="Type of clock" />,
-      selector: 'type',
+      selector: 'type'
 
-      center: true
     },
     {
       name: <FormattedMessage id="Manufacturer" />,
-      selector: 'manufacturer',
-      center: true
+      selector: 'manufacturer'
     },
     {
       name: <FormattedMessage id="Inspection valid until" />,
       selector: 'inspectionDate',
-      center: true,
-
       cell: (row) => <span>{!!row.inspectionDate && moment(row.inspectionDate).format(DISPLAY_DATE_FORMAT)}</span>
     },
     {
@@ -199,6 +193,7 @@ const Clock = ({ data, onChange, disabled, intl, contractId }) => {
             color="primary"
             className="add-project add-contact-button"
             onClick={handleAddClock}
+            hidden={disabled}
           >
             <Plus className="mr-1" /> <FormattedMessage id="Add new clock" />
           </Button.Ripple>

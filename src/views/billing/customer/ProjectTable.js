@@ -30,7 +30,6 @@ const ProjectTable = ({ intl }) => {
         payload: tempPayload,
 
         callback: (res) => {
-          console.log('res', res)
           setProjects(res.data || [])
           setTotal(res?.count || 0)
           setPagination(tempPayload.pagination)
@@ -76,9 +75,9 @@ const ProjectTable = ({ intl }) => {
   const columns = [
     {
       name: intl.formatMessage({ id: 'No.' }),
-      sortable: true,
       cell: (row, index) => index + 1,
-      maxWidth: '40px'
+      maxWidth: '40px',
+      center: true
     },
     {
       name: intl.formatMessage({ id: 'projectCode' }),
@@ -115,11 +114,8 @@ const ProjectTable = ({ intl }) => {
     },
     {
       name: intl.formatMessage({ id: 'PatternBillElectricity' }),
-      selector: 'billElectric',
-      cell: (row) => {
-        const details = JSON.parse(row.contractDetails)
-        return <span>{details?.id || ''}</span>
-      }
+      selector: 'contractName',
+      sortable: true
     }
   ]
 
@@ -134,7 +130,9 @@ const ProjectTable = ({ intl }) => {
             onPageChange={handleChangePage}
             onPerPageChange={handlePerPageChange}
             onSort={handleSort}
-            defaultSortAsc={params.sortDirection === 'asc'}
+            defaultSortAsc={params?.sortDirection === 'asc'}
+            defaultSortField={params?.sortBy}
+            keyField="contractId"
             {...pagination}
           />
         </Col>

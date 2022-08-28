@@ -29,7 +29,7 @@ const OperationUnit = ({ intl }) => {
 
   const { data, params, total } = useSelector((state) => state.billingCustomer)
 
-  const { pagination = {}, searchValue } = params
+  const { pagination = {}, searchValue, filterValue = {} } = params
 
   const fetchListCustomers = (payload) => {
     dispatch(
@@ -203,7 +203,6 @@ const OperationUnit = ({ intl }) => {
       name: intl.formatMessage({ id: 'operation-unit-form-mobile' }),
       selector: 'phone',
       sortable: true,
-      center: true,
       minWidth: '150px'
     },
     {
@@ -267,6 +266,7 @@ const OperationUnit = ({ intl }) => {
             onPerPageChange={handlePerPageChange}
             onSort={handleSort}
             defaultSortAsc={false}
+            isSearching={searchValue?.trim() || filterValue !== {}}
             {...pagination}
           />
         </Col>
