@@ -47,7 +47,11 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
       .required(intl.formatMessage({ id: 'required-validate' }))
       .max(50, intl.formatMessage({ id: 'max-validate' })),
     effectiveDate: yup.string().required(intl.formatMessage({ id: 'required-validate' })),
-    expirationDate: yup.string().required(intl.formatMessage({ id: 'required-validate' }))
+    expirationDate: yup.string().required(intl.formatMessage({ id: 'required-validate' })),
+    contractType: yup.object().shape({
+      label: yup.string().required(intl.formatMessage({ id: 'required-validate' })),
+      value: yup.string().required(intl.formatMessage({ id: 'required-validate' }))
+    })
   }
 
   const dispatch = useDispatch()
@@ -94,29 +98,24 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
     },
     {
       name: <FormattedMessage id="represent" />,
-      selector: 'fullName',
-      center: true
+      selector: 'fullName'
     },
     {
       name: <FormattedMessage id="Position" />,
-      selector: 'position',
-      center: true
+      selector: 'position'
     },
     {
       name: <FormattedMessage id="operation-unit-form-mobile" />,
-      selector: 'phone',
-      center: true
+      selector: 'phone'
     },
     {
       name: 'Email',
       selector: 'email',
-      center: true,
       cell: (row) => <span>{row.email}</span>
     },
     {
       name: <FormattedMessage id="note" />,
       selector: 'note',
-      center: true,
       cell: (row) => <span>{row.note}</span>
     }
   ]
@@ -147,7 +146,6 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
   }, [isDirty])
 
   const typeContract = watch('contractType', valueSetting[0])
-
   const selectRoofVendor = watch(
     'roofVendorName',
     listOfRoofvendor.find((item) => item.value === initValues?.roofId)
@@ -234,7 +232,6 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
     }
     reset(contractValue)
   }, [initValues])
-
   const handleProcessFormData = async (value) => {
     const dataCheck = { code: value?.contractCode }
     if (initValues?.id) dataCheck.id = initValues?.id
@@ -469,6 +466,9 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
               invalid={!!errors.contractType}
               formatOptionLabel={(option) => <> {option.label}</>}
             />
+            {!!errors?.contractType && (
+              <FormFeedback className="d-block">{errors?.contractType?.value?.message}</FormFeedback>
+            )}
           </Col>
         </Row>
         {isCyclicalContract && <MonthlyRent isReadOnly={isReadOnly} typeContract={typeContract} />}
@@ -479,7 +479,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
               {intl.formatMessage({ id: isReadOnly ? 'Update' : 'Save' })}
             </Button>{' '}
             <Button color="secondary" onClick={handleCancelForm}>
-              {intl.formatMessage({ id: 'Cancel' })}
+              {intl.formatMessage({ id: isReadOnly ? 'Back' : 'Cancel' })}
             </Button>{' '}
           </Col>
         </Row>

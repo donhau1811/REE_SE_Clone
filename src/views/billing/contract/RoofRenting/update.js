@@ -46,14 +46,13 @@ const UpdateRoofVendorContract = ({ intl }) => {
     }
   }, [projectId])
   const { selectedContract } = useSelector((state) => state.projectContracts)
-
   useEffect(() => {
     setCleanData({
       contractCode: selectedContract.code,
       effectiveDate: moment(selectedContract.startDate).format(ISO_STANDARD_FORMAT),
       expirationDate: moment(selectedContract.endDate).format(ISO_STANDARD_FORMAT),
       roofId: selectedContract.roofVendorId,
-      typeContract: selectedContract.details?.id,
+      typeContract: Number(selectedContract.details?.id),
       percentTurnover: selectedContract.details?.percent,
       confirmationReminder: selectedContract.alerts?.confirmAlert,
       announcementDate: selectedContract.alerts?.billingAlert,
@@ -64,12 +63,9 @@ const UpdateRoofVendorContract = ({ intl }) => {
   }, [selectedContract])
 
   const handleCancel = () => {
-    history.push({
-      pathname: `${ROUTER_URL.BILLING_PROJECT}/${projectId}`,
-      state: {
-        allowUpdate: true
-      }
-    })
+    history.push(
+    `${ROUTER_URL.BILLING_PROJECT}/${projectId}`
+    )
   }
   const handleUpdateRoofVendorContract = (value) => {
     if (isReadOnly) {
@@ -83,12 +79,10 @@ const UpdateRoofVendorContract = ({ intl }) => {
           newvalue,
           intl,
           callback: () => {
-            history.push({
-              pathname: `${ROUTER_URL.BILLING_PROJECT}/${projectId}`,
-              state: {
-                allowUpdate: true
-              }
-            })
+            history.push(
+         `${ROUTER_URL.BILLING_PROJECT}/${projectId}`
+        
+            )
           }
         })
       )
