@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react'
 import { useForm, Controller, useFieldArray, FormProvider } from 'react-hook-form'
 import * as yup from 'yup'
@@ -31,7 +32,9 @@ import {
 } from '@src/utility/constants/billing'
 import { ContractForm2 } from './ContractForm2'
 import {
+  ContractForm1Schema,
   ContractForm2Schema,
+  ContractForm3Schema,
   ContractForm4Schema,
   ContractForm5Schema,
   ContractForm7Schema,
@@ -47,6 +50,10 @@ import { getSettingValuesByCode } from '@src/views/billing/settings/store/action
 import SweetAlert from 'sweetalert2'
 import '@src/@core/scss/billing-sweet-alert.scss'
 import withReactContent from 'sweetalert2-react-content'
+
+import { getAllClockByContractId } from '@src/views/billing/clock/store/actions'
+import { ContractForm1 } from './ContractForm1'
+import { handleCRUDOfClocks } from '../../util'
 const MySweetAlert = withReactContent(SweetAlert)
 
 function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel, onSubmit, cancelText }) {
@@ -66,7 +73,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
         month: MONTH_OPTIONS[0]
       }
     ],
-    formType: setting.Elec_Selling_Type?.[0],
+    formType: null,
     roundPrecision: 0,
     manualInputAlert: 0,
     confirmAlert: 0,
@@ -75,7 +82,9 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
     clocks: []
   }
 
-  const { projectId } = useParams()
+  const [initValuesState, setInitValuesState] = useState(formInitValues)
+
+  const { projectId, id } = useParams()
 
   const [customers, setCustomers] = useState([])
 
@@ -116,12 +125,18 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
       })
     )
   }, [])
-  const ValidateSchema = yup.object().shape(validateSchemaState)
 
   const methods = useForm({
     mode: 'onChange',
-    resolver: yupResolver(isReadOnly ? yup.object().shape({}) : ValidateSchema),
-    defaultValues: initValues || formInitValues
+    resolver: yupResolver(
+      isReadOnly
+        ? yup.object().shape({}, [])
+        : yup.object().shape(
+            validateSchemaState,
+            Object.keys(validateSchemaState).filter((item) => validateSchemaState[item])
+          )
+    ),
+    defaultValues: initValuesState || formInitValues
   })
 
   const {
@@ -134,7 +149,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
     watch,
     setError,
     reset,
-    formState: { isDirty: isDirtyForm }
+    formState: { isDirty: isDirtyForm, dirtyFields }
   } = methods
   const { fields, append, remove } = useFieldArray({
     control,
@@ -151,7 +166,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
   }, [isDirty])
 
   useEffect(async () => {
-    if (initValues?.id) {
+    if (Number(initValues?.id) === Number(id)) {
       const dataValues = {
         ...initValues,
         formType: (setting.Elec_Selling_Type || []).find((item) => item.value === initValues?.details?.id),
@@ -176,18 +191,25 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
         currencyLow: initValues?.details?.foreignUnitPrice?.low,
         clocks
       }
+
+      setInitValuesState(dataValues)
       for (const key in dataValues) {
-        if (Object.hasOwnProperty.call(dataValues, key)) {
+        if (Object.hasOwnProperty.call(dataValues, key) && validateSchemaState[key]) {
           const element = dataValues[key]
           setValue(key, element)
         }
       }
-    } else {
-      reset({
-        ...formInitValues
-      })
+    } else if (initValues?.id === -1) {
+      setInitValuesState({ ...formInitValues, formType: setting.Elec_Selling_Type?.[0] })
+      reset({ ...formInitValues, formType: setting.Elec_Selling_Type?.[0] })
     }
-  }, [initValues?.id, customers?.length, setting.Currency?.length, setting.Elec_Selling_Type?.length, clocks?.length])
+  }, [
+    initValues?.id,
+    customers?.length,
+    setting.Currency?.length,
+    setting.Elec_Selling_Type?.length,
+    clocks?.map((item) => item.id).join(',')
+  ])
 
   const contactColumns = [
     {
@@ -222,29 +244,37 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
 
   useEffect(() => {
     const typeOfContract = watch('formType')?.value
+
+    let validateObj = {}
     switch (typeOfContract) {
+      case 'Mẫu 1':
+        validateObj = { ...ValidateSchemaObj, ...ContractForm1Schema }
+        break
       case 'Mẫu 2':
-        setValidateSchemaState({ ...ValidateSchemaObj, ...ContractForm2Schema })
+        validateObj = { ...ValidateSchemaObj, ...ContractForm2Schema }
         break
       case 'Mẫu 3':
-        setValidateSchemaState({ ...ValidateSchemaObj, ...ContractForm2Schema, payoutRatio: null })
+        validateObj = { ...ValidateSchemaObj, ...ContractForm3Schema }
+
         break
       case 'Mẫu 4':
-        setValidateSchemaState({ ...ValidateSchemaObj, ...ContractForm4Schema, payoutRatio: null })
+        validateObj = { ...ValidateSchemaObj, ...ContractForm4Schema }
         break
       case 'Mẫu 5':
-        setValidateSchemaState({ ...ValidateSchemaObj, ...ContractForm5Schema, payoutRatio: null })
+        validateObj = { ...ValidateSchemaObj, ...ContractForm5Schema }
         break
-      case 'Mẫu 6':
-        setValidateSchemaState({ ...ValidateSchemaObj, payoutRatio: null })
-        break
+      // case 'Mẫu 6':
+      //   validateObj = { ...ValidateSchemaObj }
+      //   break
       case 'Mẫu 7':
-        setValidateSchemaState({ ...ValidateSchemaObj, ...ContractForm7Schema, payoutRatio: null })
+        validateObj = { ...ValidateSchemaObj, ...ContractForm7Schema }
         break
       default:
-        setValidateSchemaState(ValidateSchemaObj)
+        validateObj = ValidateSchemaObj
         break
     }
+
+    setValidateSchemaState(validateObj)
   }, [watch('formType')?.value])
 
   useEffect(() => {
@@ -271,8 +301,34 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
     register('clocks')
   }, [register])
 
-  const handleChangeClocks = (newClocks) => {
-    setValue('clocks', newClocks)
+  const handleChangeClocks = async (changeClocks, changeId, callback) => {
+    const changeItem = changeClocks.filter((item) => item.id === changeId)
+    if (Number(initValues?.id) > 0) {
+      Promise.all(handleCRUDOfClocks({ clocks: changeItem, contractId: initValues.id }))
+        .then(() => {
+          dispatch(
+            getAllClockByContractId({
+              id: initValues?.id,
+              isSavedToState: true,
+              callback
+            })
+          )
+        })
+        .catch(() => {
+          if (changeId < 0) {
+            showToast('error', <FormattedMessage id="data create failed, please try again" />)
+          } else {
+            if (changeItem[0]?.isDelete) {
+              showToast('error', <FormattedMessage id="data delete failed, please try again" />)
+            }
+            if (changeItem[0]?.isUpdate) {
+              showToast('error', <FormattedMessage id="data update failed, please try again" />)
+            }
+          }
+        })
+    } else {
+      setValue('clocks', changeClocks)
+    }
   }
 
   const handleRemoveFile = (file) => (event) => {
@@ -306,7 +362,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
     }
     // check trùng  mã khách hàng
     const dataCheck = { code: values.code }
-    if (initValues?.id) dataCheck.id = initValues?.id
+    if (initValues?.id > 0) dataCheck.id = initValues?.id
     try {
       const checkDupCodeRes = await axios.post(API_CHECK_CODE_CONTRACT, dataCheck)
 
@@ -319,15 +375,15 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
         return
       }
     } catch (err) {
-      const alert = initValues?.id
-        ? 'Failed to update data. Please try again'
-        : 'Failed to create data. Please try again'
+      const alert =
+        initValues?.id > 0 ? 'Failed to update data. Please try again' : 'Failed to create data. Please try again'
       showToast(
         'error',
         intl.formatMessage({
           id: alert
         })
       )
+      return
     }
     if (!(values.clocks || [])?.filter((item) => !item.isDelete).length > 0) {
       showToast('error', <FormattedMessage id="Need at least 1 clock to add contract. Please try again" />)
@@ -362,33 +418,67 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
         billingAlert: values.billingAlert
       }
     }
-    const contractDetail = {
+    let contractDetail = {
       id: values.formType?.value,
-      name: intl.formatMessage(
-        { id: 'Power billing form number' },
-        {
-          number: values.formType?.value
-        }
-      ),
+      name: values.formType?.value,
       roundPrecision: values.roundPrecision,
       vat: values.vat,
       unitPrice: {
         low: values.idlePrice,
         medium: values.midPointPrice,
         high: values.peakPrice
-      },
-      payoutRatio: values.payoutRatio,
-      lossRate: values.lossRate,
-      unitPriceRate: values.unitPriceRate,
-      currencyUnit: values.currency?.value,
-      foreignUnitPrice: {
-        low: values.currencyLow,
-        medium: values.currencyMedium,
-        high: values.currencyHigh
-      },
-      revenueShareRatio: values.revenueShareRatio,
-      chargeRate: values.chargeRate
+      }
     }
+
+    switch (values.formType?.value) {
+      case 'Mẫu 1':
+        contractDetail = {
+          ...contractDetail,
+          payoutRatio: values.payoutRatio
+        }
+        break
+      case 'Mẫu 2':
+        contractDetail = {
+          ...contractDetail,
+          payoutRatio: values.payoutRatio,
+          lossRate: values.lossRate
+        }
+        break
+      case 'Mẫu 3':
+        contractDetail = {
+          ...contractDetail,
+          lossRate: values.lossRate
+        }
+        break
+      case 'Mẫu 4':
+        contractDetail = {
+          ...contractDetail,
+          unitPriceRate: values.unitPriceRate,
+          currencyUnit: values.currency?.value,
+          foreignUnitPrice: {
+            low: values.currencyLow,
+            medium: values.currencyMedium,
+            high: values.currencyHigh
+          }
+        }
+        break
+      case 'Mẫu 5':
+        contractDetail = {
+          ...contractDetail,
+          revenueShareRatio: values.revenueShareRatio
+        }
+        break
+      case 'Mẫu 7':
+        contractDetail = {
+          ...contractDetail,
+          chargeRate: values.chargeRate
+        }
+        break
+
+      default:
+        break
+    }
+
     onSubmit?.({ ...payload, details: contractDetail, clocks: values.clocks })
   }
 
@@ -422,505 +512,481 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
   }
 
   return (
-    <>
-      <FormProvider {...methods}>
-        <Form className="billing-form" onSubmit={handleSubmit(handleSubmitForm)}>
-          <Row>
-            <Col className="mb-2" xs={6} lg={3}>
-              <Label className="general-label" for="code">
-                <FormattedMessage id="Contract number" />
-                <span className="text-danger">&nbsp;(*)</span>
-              </Label>
-              <Input
-                id="code"
-                name="code"
-                disabled={isReadOnly}
-                autoComplete="on"
-                invalid={!isReadOnly && !!errors.code}
-                valid={!isReadOnly && getValues('code')?.trim() && !errors.code}
-                innerRef={register()}
-                placeholder={intl.formatMessage({ id: 'Enter contract number' })}
-              />
-              {errors?.code && <FormFeedback>{errors?.code?.message}</FormFeedback>}
-            </Col>
-            <Col className="mb-2" xs={6} lg={2}>
-              <Label className="general-label" for="startDate">
-                <FormattedMessage id="Signed date" />
-                <span className="text-danger">&nbsp;(*)</span>
-              </Label>
-              <Input
-                className="custom-icon-input-date"
-                type="date"
-                name="startDate"
-                autoComplete="on"
-                disabled={isReadOnly}
-                innerRef={register()}
-                invalid={!isReadOnly && !!errors.startDate}
-                valid={!isReadOnly && getValues('startDate')?.trim() && !errors.startDate}
-              />
-              {errors?.startDate && <FormFeedback>{errors?.startDate?.message}</FormFeedback>}
-            </Col>
-            <Col className="mb-2" xs={6} lg={2}>
-              <Label className="general-label" for="endDate">
-                <FormattedMessage id="Expiration date" />
-                <span className="text-danger">&nbsp;(*)</span>
-              </Label>
-              <Input
-                className="custom-icon-input-date"
-                type="date"
-                name="endDate"
-                autoComplete="on"
-                disabled={isReadOnly}
-                innerRef={register()}
-                invalid={!isReadOnly && !!errors.endDate}
-                valid={!isReadOnly && getValues('endDate')?.trim() && !errors.endDate}
-              />
-              {errors?.endDate && <FormFeedback>{errors?.endDate?.message}</FormFeedback>}
-            </Col>
-            <Col xs={12} className=" mb-2 d-flex flex-column justify-content-end">
-              <div className="d-flex align-items-end">
-                <div className="mr-2">
-                  {watch('file')?.map((item) => (
-                    <a key={item.name} href="#" className="d-block">
-                      {item.name}
-                      <span className="ml-1" role="button" onClick={handleRemoveFile(item)}>
-                        <XCircle size={14} color="#838A9C" />
-                      </span>
-                    </a>
-                  ))}
-                </div>
-                <div className="d-flex align-items-center">
-                  <Label className="file-attachment-label" for="file" role="button">
-                    <span className="mr-1">
-                      <Attachment />
+    <FormProvider {...methods}>
+      <Form className="billing-form" onSubmit={handleSubmit(handleSubmitForm)}>
+        <Row>
+          <Col className="mb-2" xs={6} lg={3}>
+            <Label className="general-label" for="code">
+              <FormattedMessage id="Contract number" />
+              <span className="text-danger">&nbsp;(*)</span>
+            </Label>
+            <Input
+              id="code"
+              name="code"
+              disabled={isReadOnly}
+              autoComplete="on"
+              invalid={!isReadOnly && !!errors.code}
+              valid={!isReadOnly && getValues('code')?.trim() && !errors.code}
+              innerRef={register()}
+              placeholder={intl.formatMessage({ id: 'Enter contract number' })}
+            />
+            {errors?.code && <FormFeedback>{errors?.code?.message}</FormFeedback>}
+          </Col>
+          <Col className="mb-2" xs={6} lg={2}>
+            <Label className="general-label" for="startDate">
+              <FormattedMessage id="Signed date" />
+              <span className="text-danger">&nbsp;(*)</span>
+            </Label>
+            <Input
+              className="custom-icon-input-date"
+              type="date"
+              name="startDate"
+              autoComplete="on"
+              disabled={isReadOnly}
+              innerRef={register()}
+              invalid={!isReadOnly && !!errors.startDate}
+              valid={!isReadOnly && getValues('startDate')?.trim() && !errors.startDate}
+            />
+            {errors?.startDate && <FormFeedback>{errors?.startDate?.message}</FormFeedback>}
+          </Col>
+          <Col className="mb-2" xs={6} lg={2}>
+            <Label className="general-label" for="endDate">
+              <FormattedMessage id="Expiration date" />
+              <span className="text-danger">&nbsp;(*)</span>
+            </Label>
+            <Input
+              className="custom-icon-input-date"
+              type="date"
+              name="endDate"
+              autoComplete="on"
+              disabled={isReadOnly}
+              innerRef={register()}
+              invalid={!isReadOnly && !!errors.endDate}
+              valid={!isReadOnly && getValues('endDate')?.trim() && !errors.endDate}
+            />
+            {errors?.endDate && <FormFeedback>{errors?.endDate?.message}</FormFeedback>}
+          </Col>
+          <Col xs={12} className=" mb-2 d-flex flex-column justify-content-end">
+            <div className="d-flex align-items-end">
+              <div className="mr-2">
+                {watch('file')?.map((item) => (
+                  <a key={item.name} href="#" className="d-block">
+                    {item.name}
+                    <span className="ml-1" role="button" onClick={handleRemoveFile(item)}>
+                      <XCircle size={14} color="#838A9C" />
                     </span>
-                    <FormattedMessage id="Đính kèm file hợp đồng" />
-                  </Label>
-                  <Input
-                    type="file"
-                    autoComplete="on"
-                    disabled={isReadOnly}
-                    id="file"
-                    multiple
-                    onChange={handleChangeFiles}
-                    className="d-none"
-                  />
-                </div>
+                  </a>
+                ))}
               </div>
-              {errors?.file && <FormFeedback className="d-block">{errors?.file?.message}</FormFeedback>}
-            </Col>
-          </Row>
+              <div className="d-flex align-items-center">
+                <Label className="file-attachment-label" for="file" role="button">
+                  <span className="mr-1">
+                    <Attachment />
+                  </span>
+                  <FormattedMessage id="Đính kèm file hợp đồng" />
+                </Label>
+                <Input
+                  type="file"
+                  autoComplete="on"
+                  disabled={isReadOnly}
+                  id="file"
+                  multiple
+                  onChange={handleChangeFiles}
+                  className="d-none"
+                />
+              </div>
+            </div>
+            {errors?.file && <FormFeedback className="d-block">{errors?.file?.message}</FormFeedback>}
+          </Col>
+        </Row>
 
-          <Row>
-            <Col className="mb-2" xs={6} lg={3}>
-              <Label className="general-label" for="customerId">
-                <FormattedMessage id="Customer" />
-                <span className="text-danger">&nbsp;(*)</span>
-              </Label>
-              <Controller
-                as={Select}
-                control={control}
-                theme={selectThemeColors}
-                name="customerId"
-                id="customerId"
-                isDisabled={isReadOnly}
-                innerRef={register()}
-                options={customers}
-                className="react-select"
-                classNamePrefix="select"
-                placeholder={intl.formatMessage({ id: 'Select customer' })}
-                formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
-              />
-              {errors?.customerId && <FormFeedback className="d-block">{errors?.customerId?.message}</FormFeedback>}
-            </Col>
-            <Col className="mb-2" xs={6} lg={2}>
-              <Label className="general-label" for="taxCode">
-                <FormattedMessage id="operation-unit-form-taxCode" />
-              </Label>
-              <Input
-                id="taxCode"
-                name="taxCode"
-                autoComplete="on"
-                innerRef={register()}
-                disabled
-                invalid={!isReadOnly && !!errors.taxCode}
-                valid={!isReadOnly && getValues('taxCode')?.trim() && !errors.taxCode}
-                placeholder={intl.formatMessage({ id: 'operation-unit-form-taxCode-placeholder' })}
-              />
-              {errors?.taxCode && <FormFeedback>{errors?.taxCode?.message}</FormFeedback>}
-            </Col>
-            <Col className="mb-2" xs={6} lg={5}>
-              <Label className="general-label" for="address">
-                <FormattedMessage id="operation-unit-form-address" />
-              </Label>
-              <Input
-                id="address"
-                name="address"
-                autoComplete="on"
-                innerRef={register()}
-                disabled
-                invalid={!isReadOnly && !!errors.address}
-                valid={!isReadOnly && getValues('address')?.trim() && !errors.address}
-                placeholder={intl.formatMessage({ id: 'operation-unit-form-address-placeholder' })}
-              />
-              {errors?.address && <FormFeedback>{errors?.address?.message}</FormFeedback>}
-            </Col>
-          </Row>
-          <Row className="mb-2">
-            <Col>
-              <Label className="general-label" for="contacts">
-                <FormattedMessage id="Notification recievers" />
-              </Label>
-              <Table tableId="project" columns={contactColumns} data={watch('contacts')} pagination={null} />
-            </Col>
-          </Row>
-          <Row className="mb-2">
-            <Col>
-              <h4 className="typo-section mb-2">
-                <FormattedMessage id="Power billing cycle" />
-              </h4>
+        <Row>
+          <Col className="mb-2" xs={6} lg={3}>
+            <Label className="general-label" for="customerId">
+              <FormattedMessage id="Customer" />
+              <span className="text-danger">&nbsp;(*)</span>
+            </Label>
+            <Controller
+              as={Select}
+              control={control}
+              theme={selectThemeColors}
+              name="customerId"
+              id="customerId"
+              isDisabled={isReadOnly}
+              innerRef={register()}
+              options={customers}
+              className="react-select"
+              classNamePrefix="select"
+              placeholder={intl.formatMessage({ id: 'Select customer' })}
+              formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
+            />
+            {errors?.customerId && <FormFeedback className="d-block">{errors?.customerId?.message}</FormFeedback>}
+          </Col>
+          <Col className="mb-2" xs={6} lg={2}>
+            <Label className="general-label" for="taxCode">
+              <FormattedMessage id="operation-unit-form-taxCode" />
+            </Label>
+            <Input
+              id="taxCode"
+              name="taxCode"
+              autoComplete="on"
+              innerRef={register()}
+              disabled
+              invalid={!isReadOnly && !!errors.taxCode}
+              valid={!isReadOnly && getValues('taxCode')?.trim() && !errors.taxCode}
+              placeholder={intl.formatMessage({ id: 'operation-unit-form-taxCode-placeholder' })}
+            />
+            {errors?.taxCode && <FormFeedback>{errors?.taxCode?.message}</FormFeedback>}
+          </Col>
+          <Col className="mb-2" xs={6} lg={5}>
+            <Label className="general-label" for="address">
+              <FormattedMessage id="operation-unit-form-address" />
+            </Label>
+            <Input
+              id="address"
+              name="address"
+              autoComplete="on"
+              innerRef={register()}
+              disabled
+              invalid={!isReadOnly && !!errors.address}
+              valid={!isReadOnly && getValues('address')?.trim() && !errors.address}
+              placeholder={intl.formatMessage({ id: 'operation-unit-form-address-placeholder' })}
+            />
+            {errors?.address && <FormFeedback>{errors?.address?.message}</FormFeedback>}
+          </Col>
+        </Row>
+        <Row className="mb-2">
+          <Col>
+            <Label className="general-label" for="contacts">
+              <FormattedMessage id="Notification recievers" />
+            </Label>
+            <Table tableId="project" columns={contactColumns} data={watch('contacts')} pagination={null} />
+          </Col>
+        </Row>
+        <Row className="mb-2">
+          <Col>
+            <h4 className="typo-section mb-2">
+              <FormattedMessage id="Power billing cycle" />
+            </h4>
 
-              {fields.map((item, index) => {
-                const getValidStart = get(errors, `billingCycle[${index}].start`)
-                const getValidEnd = get(errors, `billingCycle[${index}].end`)
-                return (
-                  <div
-                    key={item.id}
-                    className={classNames('d-flex align-items-center ', index !== fields.length - 1 && 'my-2')}
-                  >
-                    <div className="cycle-item-wrapper">
-                      <Row>
+            {fields.map((item, index) => {
+              const getValidStart = get(errors, `billingCycle[${index}].start`)
+              const getValidEnd = get(errors, `billingCycle[${index}].end`)
+              return (
+                <div
+                  key={item.id}
+                  className={classNames('d-flex align-items-center ', index !== fields.length - 1 && 'my-2')}
+                >
+                  <div className="cycle-item-wrapper">
+                    <Row>
+                      <Col xs={12} lg="auto" className="d-flex align-items-center">
+                        <Label className="general-label mb-0">
+                          {`${intl.formatMessage({ id: 'Cycle' })} ${index + 1}`}
+                          <span className="text-danger">&nbsp;(*)</span>
+                        </Label>
+                      </Col>
+                      <Col xs={12} lg={3}>
+                        <Controller
+                          as={Select}
+                          control={control}
+                          theme={selectThemeColors}
+                          name={`billingCycle[${index}].start`}
+                          isDisabled={isReadOnly}
+                          innerRef={register()}
+                          options={DAYS_OF_MONTH_OPTIONS}
+                          className="react-select"
+                          classNamePrefix="select"
+                          formatOptionLabel={(option) => <>{option.label}</>}
+                          defaultValue={item.start}
+                        />
+                        {getValidStart && <FormFeedback>{getValidStart?.message}</FormFeedback>}
+                      </Col>
+                      <Col xs={12} lg={3}>
+                        <Controller
+                          as={Select}
+                          control={control}
+                          theme={selectThemeColors}
+                          name={`billingCycle[${index}].end`}
+                          isDisabled={isReadOnly}
+                          innerRef={register()}
+                          options={[...DAYS_OF_MONTH_OPTIONS, END_OF_MONTH_OPTION]}
+                          className="react-select"
+                          classNamePrefix="select"
+                          formatOptionLabel={(option) => <>{option.label}</>}
+                          defaultValue={item.end}
+                        />
+                        {getValidEnd && <FormFeedback>{getValidEnd?.message}</FormFeedback>}
+                      </Col>
+                      <Col xs={12} lg={3}>
+                        <Controller
+                          as={Select}
+                          control={control}
+                          theme={selectThemeColors}
+                          name={`billingCycle[${index}].month`}
+                          isDisabled={isReadOnly}
+                          innerRef={register()}
+                          options={MONTH_OPTIONS}
+                          className="react-select"
+                          classNamePrefix="select"
+                          formatOptionLabel={(option) => <>{option.label}</>}
+                          defaultValue={item.month}
+                        />
+                      </Col>
+                      {!isReadOnly && fields.length > 1 && (
                         <Col xs={12} lg="auto" className="d-flex align-items-center">
-                          <Label className="general-label mb-0">
-                            {`${intl.formatMessage({ id: 'Cycle' })} ${index + 1}`}
-                            <span className="text-danger">&nbsp;(*)</span>
-                          </Label>
+                          <span role="button" onClick={handleRemoveCycle(index)}>
+                            <Trash2 size={18} />
+                          </span>
                         </Col>
-                        <Col xs={12} lg={3}>
-                          <Controller
-                            as={Select}
-                            control={control}
-                            theme={selectThemeColors}
-                            name={`billingCycle[${index}].start`}
-                            isDisabled={isReadOnly}
-                            innerRef={register()}
-                            options={DAYS_OF_MONTH_OPTIONS}
-                            className="react-select"
-                            classNamePrefix="select"
-                            formatOptionLabel={(option) => <>{option.label}</>}
-                            defaultValue={item.start}
-                          />
-                          {getValidStart && <FormFeedback>{getValidStart?.message}</FormFeedback>}
-                        </Col>
-                        <Col xs={12} lg={3}>
-                          <Controller
-                            as={Select}
-                            control={control}
-                            theme={selectThemeColors}
-                            name={`billingCycle[${index}].end`}
-                            isDisabled={isReadOnly}
-                            innerRef={register()}
-                            options={[...DAYS_OF_MONTH_OPTIONS, END_OF_MONTH_OPTION]}
-                            className="react-select"
-                            classNamePrefix="select"
-                            formatOptionLabel={(option) => <>{option.label}</>}
-                            defaultValue={item.end}
-                          />
-                          {getValidEnd && <FormFeedback>{getValidEnd?.message}</FormFeedback>}
-                        </Col>
-                        <Col xs={12} lg={3}>
-                          <Controller
-                            as={Select}
-                            control={control}
-                            theme={selectThemeColors}
-                            name={`billingCycle[${index}].month`}
-                            isDisabled={isReadOnly}
-                            innerRef={register()}
-                            options={MONTH_OPTIONS}
-                            className="react-select"
-                            classNamePrefix="select"
-                            formatOptionLabel={(option) => <>{option.label}</>}
-                            defaultValue={item.month}
-                          />
-                        </Col>
-                        {!isReadOnly && fields.length > 1 && (
-                          <Col xs={12} lg="auto" className="d-flex align-items-center">
-                            <span role="button" onClick={handleRemoveCycle(index)}>
-                              <Trash2 size={18} />
-                            </span>
-                          </Col>
-                        )}
-                      </Row>
-                    </div>
-                    {!isReadOnly && index === fields.length - 1 && (
-                      <div className="ml-1" role="button" onClick={handleAppendCycle}>
-                        <PlusCircle color="#e9eef6" fill="#0394FF" />
-                      </div>
-                    )}
+                      )}
+                    </Row>
                   </div>
-                )
-              })}
-            </Col>
-          </Row>
+                  {!isReadOnly && index === fields.length - 1 && (
+                    <div className="ml-1" role="button" onClick={handleAppendCycle}>
+                      <PlusCircle color="#e9eef6" fill="#0394FF" />
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </Col>
+        </Row>
 
-          <div className="divider-dashed mb-2" />
-          <Row className="mb-2">
-            <Col xs={12} lg={5}>
-              <Row>
-                <Col className="mb-2" xs={6} lg={8}>
-                  <Label className="general-label" for="formType">
-                    <FormattedMessage id="Power billing form" />
-                    <span className="text-danger">&nbsp;(*)</span>
-                  </Label>
-                  <Controller
-                    as={Select}
-                    control={control}
-                    theme={selectThemeColors}
-                    name="formType"
-                    isDisabled={isReadOnly}
-                    innerRef={register()}
-                    options={setting.Elec_Selling_Type || []}
-                    className="react-select"
-                    classNamePrefix="select"
-                    formatOptionLabel={(option) => <>{option.label}</>}
-                  />
-                  {errors?.formType && <FormFeedback>{errors?.formType?.message}</FormFeedback>}
-                </Col>
-                <Col className="mb-2" xs={6} lg={4}>
-                  <Label className="general-label" for="vat">
-                    <FormattedMessage id="VAT (%)" />
-                    <span className="text-danger">&nbsp;(*)</span>
-                  </Label>
-                  <Input
-                    id="vat"
-                    name="vat"
-                    autoComplete="on"
-                    innerRef={register()}
-                    invalid={!isReadOnly && !!errors.vat}
-                    disabled={isReadOnly}
-                    valid={!isReadOnly && getValues('vat')?.trim() && !errors.vat}
-                    placeholder={intl.formatMessage({ id: 'Enter' })}
-                  />
-                  {errors?.vat && <FormFeedback>{errors?.vat?.message}</FormFeedback>}
-                </Col>
-              </Row>
-              <Row>
-                {['Mẫu 1', 'Mẫu 2'].includes(watch('formType')?.value) && (
-                  <Col className="mb-2" xs={6} lg={8}>
-                    <Label className="general-label" for="coefficient">
-                      <FormattedMessage id="Payout coefficient" />
-                      <span className="text-danger">&nbsp;(*)</span>
-                    </Label>
-                    <Input
-                      id="payoutRatio"
-                      name="payoutRatio"
-                      autoComplete="on"
-                      disabled={isReadOnly}
-                      innerRef={register()}
-                      invalid={!isReadOnly && !!errors.payoutRatio}
-                      valid={!isReadOnly && getValues('payoutRatio')?.trim() && !errors.payoutRatio}
-                      placeholder={intl.formatMessage({ id: 'Enter coefficient' })}
-                    />
-                    {errors?.payoutRatio && <FormFeedback>{errors?.payoutRatio?.message}</FormFeedback>}
-                  </Col>
-                )}
-                <Col className="mb-2" xs={6} lg={4}>
-                  <Label className="general-label" for="roundPrecision">
-                    <FormattedMessage id="Rounding" />
-                    <span className="text-danger">&nbsp;(*)</span>
-                  </Label>
-                  <Input
-                    id="roundPrecision"
-                    name="roundPrecision"
-                    autoComplete="on"
-                    innerRef={register()}
-                    disabled={isReadOnly}
-                    invalid={!isReadOnly && !!errors.roundPrecision}
-                    valid={!isReadOnly && getValues('roundPrecision')?.trim() && !errors.roundPrecision}
-                    placeholder={intl.formatMessage({ id: 'Enter' })}
-                  />
-                  {errors?.roundPrecision && <FormFeedback>{errors?.roundPrecision?.message}</FormFeedback>}
-                </Col>
-              </Row>
-            </Col>
-            <Col xs={0} lg={1} className="divider-vertical" />
+        <div className="divider-dashed mb-2" />
+        <Row className="mb-2">
+          <Col xs={12} lg={5}>
+            <Row>
+              <Col className="mb-2" xs={6} lg={8}>
+                <Label className="general-label" for="formType">
+                  <FormattedMessage id="Power billing form" />
+                  <span className="text-danger">&nbsp;(*)</span>
+                </Label>
+                <Controller
+                  as={Select}
+                  control={control}
+                  theme={selectThemeColors}
+                  name="formType"
+                  isDisabled={isReadOnly}
+                  innerRef={register()}
+                  options={setting.Elec_Selling_Type || []}
+                  className="react-select"
+                  classNamePrefix="select"
+                  formatOptionLabel={(option) => <>{option.label}</>}
+                />
+                {errors?.formType && <FormFeedback>{errors?.formType?.message}</FormFeedback>}
+              </Col>
+              <Col className="mb-2" xs={6} lg={4}>
+                <Label className="general-label" for="vat">
+                  <FormattedMessage id="VAT (%)" />
+                  <span className="text-danger">&nbsp;(*)</span>
+                </Label>
+                <Input
+                  id="vat"
+                  name="vat"
+                  autoComplete="on"
+                  innerRef={register()}
+                  invalid={!isReadOnly && !!errors.vat}
+                  disabled={isReadOnly}
+                  valid={!isReadOnly && getValues('vat')?.trim() && !errors.vat}
+                  placeholder={intl.formatMessage({ id: 'Enter' })}
+                />
+                {errors?.vat && <FormFeedback>{errors?.vat?.message}</FormFeedback>}
+              </Col>
+            </Row>
+            <Row>
+              {['Mẫu 1', 'Mẫu 2'].includes(watch('formType')?.value) && <ContractForm1 isReadOnly={isReadOnly} />}
+              <Col className="mb-2" xs={6} lg={4}>
+                <Label className="general-label" for="roundPrecision">
+                  <FormattedMessage id="Rounding" />
+                  <span className="text-danger">&nbsp;(*)</span>
+                </Label>
+                <Input
+                  id="roundPrecision"
+                  name="roundPrecision"
+                  autoComplete="on"
+                  innerRef={register()}
+                  disabled={isReadOnly}
+                  invalid={!isReadOnly && !!errors.roundPrecision}
+                  valid={!isReadOnly && getValues('roundPrecision')?.trim() && !errors.roundPrecision}
+                  placeholder={intl.formatMessage({ id: 'Enter' })}
+                />
+                {errors?.roundPrecision && <FormFeedback>{errors?.roundPrecision?.message}</FormFeedback>}
+              </Col>
+            </Row>
+          </Col>
+          <Col xs={0} lg={1} className="divider-vertical" />
 
-            <Col xs={12} lg={{ size: 5, offset: 1 }}>
-              <Row>
-                <Col className="mb-2 d-flex align-items-center" xs={6} lg={9}>
-                  <Label className="general-label mb-0" for="manualInputAlert">
-                    <FormattedMessage id="Remind to enter power index" />
-                    <span className="text-danger">&nbsp;(*)</span>
-                    <span className="font-weight-normal">
-                      {' '}
-                      (<FormattedMessage id="day" />){' '}
-                    </span>
-                    <span className="form-text-sub">
-                      {' '}
-                      (<FormattedMessage id="from the end of cycle" />){' '}
-                    </span>
-                  </Label>
-                </Col>
-                <Col className="mb-2" xs={6} lg={3}>
-                  <Input
-                    id="manualInputAlert"
-                    name="manualInputAlert"
-                    autoComplete="on"
-                    innerRef={register()}
-                    disabled={isReadOnly}
-                    invalid={!isReadOnly && !!errors.manualInputAlert}
-                    valid={!isReadOnly && getValues('manualInputAlert')?.trim() && !errors.manualInputAlert}
-                    placeholder={intl.formatMessage({ id: 'Enter' })}
-                  />
-                  {errors?.manualInputAlert && <FormFeedback>{errors?.manualInputAlert?.message}</FormFeedback>}
-                </Col>
-              </Row>
-              <Row>
-                <Col className="mb-2 d-flex align-items-center" xs={6} lg={9}>
-                  <Label className="general-label mb-0" for="confirmAlert">
-                    <FormattedMessage id="Remind customer to confirm" />
-                    <span className="text-danger">&nbsp;(*)</span>
-                    <span className="font-weight-normal">
-                      {' '}
-                      (<FormattedMessage id="day" />){' '}
-                    </span>
-                    <span className="form-text-sub">
-                      {' '}
-                      (<FormattedMessage id="from the end of cycle" />){' '}
-                    </span>
-                  </Label>
-                </Col>
-                <Col className="mb-2" xs={6} lg={3}>
-                  <Input
-                    id="confirmAlert"
-                    name="confirmAlert"
-                    autoComplete="on"
-                    disabled={isReadOnly}
-                    innerRef={register()}
-                    invalid={!isReadOnly && !!errors.confirmAlert}
-                    valid={!isReadOnly && getValues('confirmAlert')?.trim() && !errors.confirmAlert}
-                    placeholder={intl.formatMessage({ id: 'Enter' })}
-                  />
-                  {errors?.confirmAlert && <FormFeedback>{errors?.confirmAlert?.message}</FormFeedback>}
-                </Col>
-              </Row>{' '}
-              <Row>
-                <Col className="mb-2 d-flex align-items-center" xs={6} lg={9}>
-                  <Label className="general-label mb-0" for="billingAlert">
-                    <FormattedMessage id="Date of payment" />
-                    <span className="text-danger">&nbsp;(*)</span>
-                    <span className="font-weight-normal">
-                      {' '}
-                      (<FormattedMessage id="day" />){' '}
-                    </span>
-                    <span className="form-text-sub">
-                      {' '}
-                      (<FormattedMessage id="from the end of cycle" />){' '}
-                    </span>
-                  </Label>
-                </Col>
-                <Col className="mb-2" xs={6} lg={3}>
-                  <Input
-                    id="billingAlert"
-                    name="billingAlert"
-                    autoComplete="on"
-                    disabled={isReadOnly}
-                    innerRef={register()}
-                    invalid={!isReadOnly && !!errors.billingAlert}
-                    valid={!isReadOnly && getValues('billingAlert')?.trim() && !errors.billingAlert}
-                    placeholder={intl.formatMessage({ id: 'Enter' })}
-                  />
-                  {errors?.billingAlert && <FormFeedback>{errors?.billingAlert?.message}</FormFeedback>}
-                </Col>
-              </Row>
-            </Col>
-          </Row>
+          <Col xs={12} lg={{ size: 5, offset: 1 }}>
+            <Row>
+              <Col className="mb-2 d-flex align-items-center" xs={6} lg={9}>
+                <Label className="general-label mb-0" for="manualInputAlert">
+                  <FormattedMessage id="Remind to enter power index" />
+                  <span className="text-danger">&nbsp;(*)</span>
+                  <span className="font-weight-normal">
+                    {' '}
+                    (<FormattedMessage id="day" />){' '}
+                  </span>
+                  <span className="form-text-sub">
+                    {' '}
+                    (<FormattedMessage id="from the end of cycle" />){' '}
+                  </span>
+                </Label>
+              </Col>
+              <Col className="mb-2" xs={6} lg={3}>
+                <Input
+                  id="manualInputAlert"
+                  name="manualInputAlert"
+                  autoComplete="on"
+                  innerRef={register()}
+                  disabled={isReadOnly}
+                  invalid={!isReadOnly && !!errors.manualInputAlert}
+                  valid={!isReadOnly && getValues('manualInputAlert')?.trim() && !errors.manualInputAlert}
+                  placeholder={intl.formatMessage({ id: 'Enter' })}
+                />
+                {errors?.manualInputAlert && <FormFeedback>{errors?.manualInputAlert?.message}</FormFeedback>}
+              </Col>
+            </Row>
+            <Row>
+              <Col className="mb-2 d-flex align-items-center" xs={6} lg={9}>
+                <Label className="general-label mb-0" for="confirmAlert">
+                  <FormattedMessage id="Remind customer to confirm" />
+                  <span className="text-danger">&nbsp;(*)</span>
+                  <span className="font-weight-normal">
+                    {' '}
+                    (<FormattedMessage id="day" />){' '}
+                  </span>
+                  <span className="form-text-sub">
+                    {' '}
+                    (<FormattedMessage id="from the end of cycle" />){' '}
+                  </span>
+                </Label>
+              </Col>
+              <Col className="mb-2" xs={6} lg={3}>
+                <Input
+                  id="confirmAlert"
+                  name="confirmAlert"
+                  autoComplete="on"
+                  disabled={isReadOnly}
+                  innerRef={register()}
+                  invalid={!isReadOnly && !!errors.confirmAlert}
+                  valid={!isReadOnly && getValues('confirmAlert')?.trim() && !errors.confirmAlert}
+                  placeholder={intl.formatMessage({ id: 'Enter' })}
+                />
+                {errors?.confirmAlert && <FormFeedback>{errors?.confirmAlert?.message}</FormFeedback>}
+              </Col>
+            </Row>{' '}
+            <Row>
+              <Col className="mb-2 d-flex align-items-center" xs={6} lg={9}>
+                <Label className="general-label mb-0" for="billingAlert">
+                  <FormattedMessage id="Date of payment" />
+                  <span className="text-danger">&nbsp;(*)</span>
+                  <span className="font-weight-normal">
+                    {' '}
+                    (<FormattedMessage id="day" />){' '}
+                  </span>
+                  <span className="form-text-sub">
+                    {' '}
+                    (<FormattedMessage id="from the end of cycle" />){' '}
+                  </span>
+                </Label>
+              </Col>
+              <Col className="mb-2" xs={6} lg={3}>
+                <Input
+                  id="billingAlert"
+                  name="billingAlert"
+                  autoComplete="on"
+                  disabled={isReadOnly}
+                  innerRef={register()}
+                  invalid={!isReadOnly && !!errors.billingAlert}
+                  valid={!isReadOnly && getValues('billingAlert')?.trim() && !errors.billingAlert}
+                  placeholder={intl.formatMessage({ id: 'Enter' })}
+                />
+                {errors?.billingAlert && <FormFeedback>{errors?.billingAlert?.message}</FormFeedback>}
+              </Col>
+            </Row>
+          </Col>
+        </Row>
 
-          <div className="divider-dashed mb-2" />
-          <Row className="mb-2">
-            <Col>
-              <h4 className="typo-section mb-2">
-                <FormattedMessage id="Unit price of electricity (VND)" />
-              </h4>
-            </Col>
-          </Row>
-          <Row>
-            <Col className="mb-2" xs={12} lg={4}>
-              <Label className="general-label" for="peakPrice">
-                <FormattedMessage id="Peak" />
-                <span className="text-danger">&nbsp;(*)</span>
-              </Label>
-              <Input
-                id="peakPrice"
-                name="peakPrice"
-                autoComplete="on"
-                disabled={isReadOnly}
-                innerRef={register()}
-                invalid={!isReadOnly && !!errors.peakPrice}
-                valid={!isReadOnly && getValues('peakPrice')?.trim() && !errors.peakPrice}
-                placeholder={intl.formatMessage({ id: 'Enter price' })}
-              ></Input>
-              {errors?.peakPrice && <FormFeedback>{errors?.peakPrice?.message}</FormFeedback>}
-            </Col>
-            <Col className="mb-2" xs={12} lg={4}>
-              <Label className="general-label" for="midPointPrice">
-                <FormattedMessage id="Mid-point" />
-                <span className="text-danger">&nbsp;(*)</span>
-              </Label>
-              <Input
-                id="midPointPrice"
-                name="midPointPrice"
-                autoComplete="on"
-                innerRef={register()}
-                disabled={isReadOnly}
-                invalid={!isReadOnly && !!errors.midPointPrice}
-                valid={!isReadOnly && getValues('midPointPrice')?.trim() && !errors.midPointPrice}
-                placeholder={intl.formatMessage({ id: 'Enter price' })}
-              />
-              {errors?.midPointPrice && <FormFeedback>{errors?.midPointPrice?.message}</FormFeedback>}
-            </Col>
-            <Col className="mb-2" xs={12} lg={4}>
-              <Label className="general-label" for="idlePrice">
-                <FormattedMessage id="Idle" />
-                <span className="text-danger">&nbsp;(*)</span>
-              </Label>
-              <Input
-                id="idlePrice"
-                name="idlePrice"
-                autoComplete="on"
-                innerRef={register()}
-                invalid={!isReadOnly && !!errors.idlePrice}
-                disabled={isReadOnly}
-                valid={!isReadOnly && getValues('idlePrice')?.trim() && !errors.idlePrice}
-                placeholder={intl.formatMessage({ id: 'Enter price' })}
-              />
-              {errors?.idlePrice && <FormFeedback>{errors?.idlePrice?.message}</FormFeedback>}
-            </Col>
-          </Row>
-          {['Mẫu 2', 'Mẫu 3'].includes(watch('formType')?.value) && <ContractForm2 isReadOnly={isReadOnly} />}
-          {watch('formType')?.value === 'Mẫu 4' && <ContractForm4 isReadOnly={isReadOnly} />}
-          {watch('formType')?.value === 'Mẫu 5' && <ContractForm5 isReadOnly={isReadOnly} />}
-          {watch('formType')?.value === 'Mẫu 7' && <ContractForm7 isReadOnly={isReadOnly} />}
-          <div className="divider-dashed mb-2" />
-          <Clock
-            disabled={isReadOnly}
-            data={watch('clocks')}
-            onChange={handleChangeClocks}
-            contractId={initValues?.id}
-          />
-          <Row>
-            <Col className="d-flex justify-content-end align-items-center mb-2">
-              <Button type="submit" color="primary" className="mr-1 px-3">
-                {submitText || intl.formatMessage({ id: 'Save' })}
-              </Button>{' '}
-              <Button color="secondary" onClick={handleCancel}>
-                {cancelText || intl.formatMessage({ id: 'Cancel' })}
-              </Button>{' '}
-            </Col>
-          </Row>
-        </Form>
-      </FormProvider>
-    </>
+        <div className="divider-dashed mb-2" />
+        <Row className="mb-2">
+          <Col>
+            <h4 className="typo-section mb-2">
+              <FormattedMessage id="Unit price of electricity (VND)" />
+            </h4>
+          </Col>
+        </Row>
+        <Row>
+          <Col className="mb-2" xs={12} lg={4}>
+            <Label className="general-label" for="peakPrice">
+              <FormattedMessage id="Peak" />
+              <span className="text-danger">&nbsp;(*)</span>
+            </Label>
+            <Input
+              id="peakPrice"
+              name="peakPrice"
+              autoComplete="on"
+              disabled={isReadOnly}
+              innerRef={register()}
+              invalid={!isReadOnly && !!errors.peakPrice}
+              valid={!isReadOnly && getValues('peakPrice')?.trim() && !errors.peakPrice}
+              placeholder={intl.formatMessage({ id: 'Enter price' })}
+            ></Input>
+            {errors?.peakPrice && <FormFeedback>{errors?.peakPrice?.message}</FormFeedback>}
+          </Col>
+          <Col className="mb-2" xs={12} lg={4}>
+            <Label className="general-label" for="midPointPrice">
+              <FormattedMessage id="Mid-point" />
+              <span className="text-danger">&nbsp;(*)</span>
+            </Label>
+            <Input
+              id="midPointPrice"
+              name="midPointPrice"
+              autoComplete="on"
+              innerRef={register()}
+              disabled={isReadOnly}
+              invalid={!isReadOnly && !!errors.midPointPrice}
+              valid={!isReadOnly && getValues('midPointPrice')?.trim() && !errors.midPointPrice}
+              placeholder={intl.formatMessage({ id: 'Enter price' })}
+            />
+            {errors?.midPointPrice && <FormFeedback>{errors?.midPointPrice?.message}</FormFeedback>}
+          </Col>
+          <Col className="mb-2" xs={12} lg={4}>
+            <Label className="general-label" for="idlePrice">
+              <FormattedMessage id="Idle" />
+              <span className="text-danger">&nbsp;(*)</span>
+            </Label>
+            <Input
+              id="idlePrice"
+              name="idlePrice"
+              autoComplete="on"
+              innerRef={register()}
+              invalid={!isReadOnly && !!errors.idlePrice}
+              disabled={isReadOnly}
+              valid={!isReadOnly && getValues('idlePrice')?.trim() && !errors.idlePrice}
+              placeholder={intl.formatMessage({ id: 'Enter price' })}
+            />
+            {errors?.idlePrice && <FormFeedback>{errors?.idlePrice?.message}</FormFeedback>}
+          </Col>
+        </Row>
+        {['Mẫu 2', 'Mẫu 3'].includes(watch('formType')?.value) && <ContractForm2 isReadOnly={isReadOnly} />}
+        {watch('formType')?.value === 'Mẫu 4' && <ContractForm4 isReadOnly={isReadOnly} />}
+        {watch('formType')?.value === 'Mẫu 5' && <ContractForm5 isReadOnly={isReadOnly} />}
+        {watch('formType')?.value === 'Mẫu 7' && <ContractForm7 isReadOnly={isReadOnly} />}
+        <div className="divider-dashed mb-2" />
+        <Clock disabled={isReadOnly} data={watch('clocks')} onChange={handleChangeClocks} contractId={initValues?.id} />
+
+        <Row>
+          <Col className="d-flex justify-content-end align-items-center mb-2">
+            <Button type="submit" color="primary" className="mr-1 px-3">
+              {submitText || intl.formatMessage({ id: 'Save' })}
+            </Button>{' '}
+            <Button color="secondary" onClick={handleCancel}>
+              {cancelText || intl.formatMessage({ id: 'Cancel' })}
+            </Button>{' '}
+          </Col>
+        </Row>
+      </Form>
+    </FormProvider>
   )
 }
 
