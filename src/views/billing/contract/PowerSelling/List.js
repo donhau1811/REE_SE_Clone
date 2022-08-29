@@ -48,22 +48,18 @@ function PowerSelling({ disabled, intl, data, onDelete }) {
     {
       name: intl.formatMessage({ id: 'Signed date' }),
       selector: 'startDate',
-      cell: (row) => <span>{moment(row.startDate).format(DISPLAY_DATE_FORMAT)}</span>,
-
-      center: true
+      cell: (row) => <span>{moment(row.startDate).format(DISPLAY_DATE_FORMAT)}</span>
     },
     {
       name: intl.formatMessage({ id: 'Customer Code' }),
       selector: 'customerCode',
 
-      center: true,
       cell: (row) => <span>{row?.customer?.code}</span>
     },
     {
       name: intl.formatMessage({ id: 'Customer Company' }),
       selector: 'companyName',
 
-      center: true,
       minWidth: '300px',
       cell: (row) => <span>{row?.customer?.fullName}</span>
     },
@@ -71,14 +67,12 @@ function PowerSelling({ disabled, intl, data, onDelete }) {
       name: intl.formatMessage({ id: 'billing-customer-list-taxCode' }),
       selector: 'taxCode',
 
-      center: true,
       cell: (row) => <span>{row?.customer?.taxCode}</span>
     },
     {
       name: intl.formatMessage({ id: 'Address' }),
       selector: 'address',
 
-      center: true,
       minWidth: '350px',
       cell: (row) => {
         return (

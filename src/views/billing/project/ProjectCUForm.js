@@ -1,13 +1,12 @@
 import { bool, element, func, object, string } from 'prop-types'
-import React, { cloneElement, useEffect, useState } from 'react'
-import { useForm, Controller } from 'react-hook-form'
+import { cloneElement, useEffect, useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { Button, Col, Form, FormFeedback, Input, Label, Row } from 'reactstrap'
 import Select from 'react-select'
+import { Button, Col, Form, FormFeedback, Input, Label, Row } from 'reactstrap'
 
 import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup'
-import { selectThemeColors, showToast } from '@src/utility/Utils'
+import ValueContOfMultipleSelect from '@src/utility/components/ReactSelectCustomCOM/ValueContOfMultipleSelect'
 import {
   API_CHECK_PROJECT,
   API_GET_ALL_OPERATION_UNIT,
@@ -15,17 +14,13 @@ import {
   REAL_NUMBER,
   SET_FORM_DIRTY
 } from '@src/utility/constants'
-import axios from 'axios'
-import Contract from './contract'
-import ValueContOfMultipleSelect from '@src/utility/components/ReactSelectCustomCOM/ValueContOfMultipleSelect'
 import { GENERAL_STATUS_OPTS, mockUser } from '@src/utility/constants/billing'
+import { selectThemeColors, showToast } from '@src/utility/Utils'
+import axios from 'axios'
 import moment from 'moment'
-import classNames from 'classnames'
-import { useDispatch, useSelector } from 'react-redux'
-import withReactContent from 'sweetalert2-react-content'
-import SweetAlert from 'sweetalert2'
-
-const MySweetAlert = withReactContent(SweetAlert)
+import { useDispatch } from 'react-redux'
+import * as yup from 'yup'
+import Contract from './contract'
 
 const ProjectCUForm = ({
   intl,
@@ -40,9 +35,6 @@ const ProjectCUForm = ({
   const dispatch = useDispatch()
   const initState = { state: GENERAL_STATUS_OPTS[0] }
   const [companies, setCompanies] = useState([])
-  const {
-    layout: { skin }
-  } = useSelector((state) => state)
   useEffect(async () => {
     try {
       /*const initParam = {
@@ -181,33 +173,7 @@ const ProjectCUForm = ({
   }
 
   const handleCancel = () => {
-    if (isDirty) {
-      return MySweetAlert.fire({
-        title: intl.formatMessage({ id: 'Cancel confirmation' }),
-        text: intl.formatMessage({ id: 'Are you sure to cancel?' }),
-        showCancelButton: true,
-        confirmButtonText: intl.formatMessage({ id: 'Yes' }),
-        cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),
-        customClass: {
-          popup: classNames({
-            'sweet-alert-popup--dark': skin === 'dark',
-            'sweet-popup': true
-          }),
-          header: 'sweet-title',
-          confirmButton: 'btn btn-primary',
-          cancelButton: 'btn btn-secondary ml-1',
-          actions: 'sweet-actions',
-          content: 'sweet-content'
-        },
-        buttonsStyling: false
-      }).then(({ isConfirmed }) => {
-        if (isConfirmed) {
-          onCancel?.()
-        }
-      })
-    }
-
-    onCancel?.()
+    onCancel?.(isDirty)
   }
 
   const footerCOM = (

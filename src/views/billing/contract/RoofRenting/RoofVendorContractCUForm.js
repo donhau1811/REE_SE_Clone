@@ -271,7 +271,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
         billingAlert: value?.announcementDate
       },
       details: {
-        id: value?.contractType?.value,
+        id: value?.contractType?.label,
         rentalAmount: value?.rentalAmount,
         percent: value?.percentTurnover,
         startDate: value?.startDate
