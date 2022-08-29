@@ -14,6 +14,7 @@ const MonthlyRents = ({ typeContract, isReadOnly }) => {
           <div>
             <Label className="general-label">
               <FormattedMessage id="roof-rental-period" />
+              <span className="text-danger">&nbsp;(*)</span>
             </Label>
             &nbsp; (
             <FormattedMessage id="start-date" />)
@@ -40,6 +41,7 @@ const MonthlyRents = ({ typeContract, isReadOnly }) => {
           <div>
             <Label className="general-label">
               <FormattedMessage id="Notice-of-roof-rent" />
+              <span className="text-danger">&nbsp;(*)</span>
             </Label>
             &nbsp; (
             <FormattedMessage id="Date" />
@@ -66,6 +68,7 @@ const MonthlyRents = ({ typeContract, isReadOnly }) => {
           <div>
             <Label className="general-label">
               <FormattedMessage id="rental-amount" />
+              <span className="text-danger">&nbsp;(*)</span>
             </Label>
             &nbsp; (
             <FormattedMessage id={typeContract.value === 2 ? 'vnd-month' : 'vnd-quarter'} />)
@@ -84,12 +87,13 @@ const MonthlyRents = ({ typeContract, isReadOnly }) => {
           />
           {errors?.rentalAmount && <FormFeedback>{errors?.rentalAmount?.message}</FormFeedback>}
         </Col>
-        <Col xs={0} lg={1}  className="divider-vertical" />
+        <Col xs={0} lg={1} className="divider-vertical" />
 
         <Col className="mb-3 justify-content-start d-flex align-items-center" md={3}>
           <div>
             <Label className="general-label">
               <FormattedMessage id="confirmation-prompt" />
+              <span className="text-danger">&nbsp;(*)</span>
             </Label>
             &nbsp; (
             <FormattedMessage id="Date" />

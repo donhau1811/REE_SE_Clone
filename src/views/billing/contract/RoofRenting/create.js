@@ -41,23 +41,14 @@ const CreateRoofVendorContract = ({ intl }) => {
         newvalue,
         intl,
         callback: () => {
-          history.push({
-            pathname: `${ROUTER_URL.BILLING_PROJECT}/${projectId}`,
-            state: {
-              allowUpdate: true
-            }
-          })
+          history.push(`${ROUTER_URL.BILLING_PROJECT}/${projectId}`)
+
         }
       })
     )
   }
   const handleCancel = () => {
-    history.push({
-      pathname: `${ROUTER_URL.BILLING_PROJECT}/${projectId}`,
-      state: {
-        allowUpdate: true
-      }
-    })
+    history.push(`${ROUTER_URL.BILLING_PROJECT}/${projectId}`)
   }
   return (
     <>
