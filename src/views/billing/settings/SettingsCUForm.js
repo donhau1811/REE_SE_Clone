@@ -131,8 +131,8 @@ const SettingsCUForm = ({ isViewed, intl, onSubmit = () => {}, onCancel = () => 
           {/* <Button type="submit" color="primary" className="mr-1 px-3">
             {submitText || intl.formatMessage({ id: isViewed ? 'Update' : 'Save' })}
           </Button>{' '} */}
-          <Button color="secondary" onClick={onCancel}>
-            {intl.formatMessage({ id: 'Cancel' })}
+          <Button className="mr-1 px-3" color="secondary" onClick={onCancel}>
+            {intl.formatMessage({ id: 'Back' })}
           </Button>{' '}
         </Row>
       </Form>

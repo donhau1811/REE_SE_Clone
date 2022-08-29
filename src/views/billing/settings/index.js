@@ -98,6 +98,7 @@ const OperationUnit = ({ intl }) => {
     },
     {
       name: intl.formatMessage({ id: 'description' }),
+      sortable: true,
       selector: 'description'
     },
     {
@@ -156,7 +157,8 @@ const OperationUnit = ({ intl }) => {
             onPageChange={handleChangePage}
             onPerPageChange={handlePerPageChange}
             onSort={handleSort}
-            defaultSortAsc={params.sortDirection === 'asc'}
+            defaultSortAsc={params?.sortDirection === 'asc'}
+            isSearching={searchValue?.trim()}
             {...pagination}
           />
         </Col>

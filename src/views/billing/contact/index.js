@@ -3,7 +3,7 @@ import { FormattedMessage, useIntl } from 'react-intl'
 import { Badge, Button, Col, Row, UncontrolledTooltip } from 'reactstrap'
 import { Plus } from 'react-feather'
 import Table from '@src/views/common/table/CustomDataTable'
-import { array, bool, func } from 'prop-types'
+import { array, bool, func, string } from 'prop-types'
 import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit.svg'
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
 import ContactCUForm from './ContactCUForm'
@@ -14,10 +14,11 @@ import withReactContent from 'sweetalert2-react-content'
 import classnames from 'classnames'
 import { useSelector } from 'react-redux'
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
+import { ReactComponent as CicleFailed } from '@src/assets/images/svg/circle-failed.svg'
 
 const MySweetAlert = withReactContent(SweetAlert)
 
-const Contact = ({ data, onChange, disabled }) => {
+const Contact = ({ data, onChange, disabled, type }) => {
   const intl = useIntl()
   const [isReadOnly, setIsReadOnly] = useState(false)
   const [currContact, setCurrContact] = useState(null)
@@ -41,6 +42,36 @@ const Contact = ({ data, onChange, disabled }) => {
   }
 
   const handleDeleteContact = (contact) => () => {
+    const newData = data.reduce((array, item) => {
+      if (item.id !== contact.id) return [...array, item]
+
+      if (item.isCreate) return array
+
+      return [...array, { ...item, isDelete: true }]
+    }, [])
+    if (newData.filter((item) => !item.isDelete)?.length === 0) {
+      return MySweetAlert.fire({
+        // icon: 'success',
+        iconHtml: <CicleFailed />,
+        text: intl.formatMessage(
+          { id: 'need at least 1 contact. Please try again' },
+          {
+            name: type
+          }
+        ),
+        customClass: {
+          popup: classnames({
+            'sweet-alert-popup--dark': skin === 'dark'
+          }),
+          confirmButton: 'btn btn-primary mt-2',
+          icon: 'border-0'
+        },
+        width: 'max-content',
+        showCloseButton: true,
+        confirmButtonText: intl.formatMessage({ id: 'Try again' })
+      })
+    }
+
     return MySweetAlert.fire({
       title: intl.formatMessage({ id: 'Delete billing customer title' }),
       html: intl.formatMessage({ id: 'Delete billing information message' }),
@@ -62,16 +93,9 @@ const Contact = ({ data, onChange, disabled }) => {
       buttonsStyling: false
     }).then(({ isConfirmed }) => {
       if (isConfirmed) {
-        const newData = data.reduce((array, item) => {
-          if (item.id !== contact.id) return [...array, item]
-
-          if (item.isCreate) return array
-
-          return [...array, { ...item, isDelete: true }]
-        }, [])
-
-        showToast('success', <FormattedMessage id="delete contact success" />)
-        onChange?.(newData)
+        onChange?.(newData, contact.id, () => {
+          showToast('success', <FormattedMessage id="delete contact success" />)
+        })
       }
     })
   }
@@ -84,7 +108,7 @@ const Contact = ({ data, onChange, disabled }) => {
       maxWidth: '50px'
     },
     {
-      name: <FormattedMessage id="Contact Name" />,
+      name: <FormattedMessage id="represent" />,
       selector: 'fullName'
     },
     {
@@ -150,12 +174,11 @@ const Contact = ({ data, onChange, disabled }) => {
       setIsReadOnly(false)
     } else {
       let newData = cloneDeep(data) || []
-
+      let tempId = -Number(new Date().getTime())
       if (currContact?.id === '-1') {
-        newData.push({ ...values, id: -Number(new Date().getTime()) })
-        showToast('success', <FormattedMessage id="create contact success" />)
+        newData.push({ ...values, id: tempId })
       } else {
-        showToast('success', <FormattedMessage id="update contact success" />)
+        tempId = currContact?.id
 
         newData = newData.map((contact) => {
           if (contact.id === currContact?.id) return { ...contact, ...values }
@@ -163,7 +186,13 @@ const Contact = ({ data, onChange, disabled }) => {
         })
       }
       setCurrContact({})
-      onChange?.(newData)
+      onChange?.(newData, tempId, () => {
+        if (tempId < 0) {
+          showToast('success', <FormattedMessage id="create contact success" />)
+        } else {
+          showToast('success', <FormattedMessage id="update contact success" />)
+        }
+      })
     }
   }
 
@@ -209,7 +238,8 @@ const Contact = ({ data, onChange, disabled }) => {
 Contact.propTypes = {
   data: array,
   onChange: func,
-  disabled: bool
+  disabled: bool,
+  type: string
 }
 
 export default Contact
