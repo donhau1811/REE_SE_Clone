@@ -11,6 +11,8 @@ const ContractByPercentage = ({ isReadOnly }) => {
         <Col className="mb-3 d-flex align-items-center" md={2}>
           <Label className="general-label">
             <FormattedMessage id="turnover-rate" />
+            <span className="text-danger">&nbsp;(*)</span>
+
           </Label>
         </Col>
         <Col className="mb-3" md={2}>
@@ -31,6 +33,8 @@ const ContractByPercentage = ({ isReadOnly }) => {
           <div>
             <Label className="general-label">
               <FormattedMessage id="confirmation-prompt" />
+              <span className="text-danger">&nbsp;(*)</span>
+
             </Label>
             &nbsp; (
             <FormattedMessage id="Date" />
