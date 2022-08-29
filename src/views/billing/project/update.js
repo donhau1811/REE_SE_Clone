@@ -43,8 +43,8 @@ const UpdateOperationUnit = ({ intl }) => {
     )
   }, [id])
 
-  const handleCancel = () => {
-    if (!isReadOnly) {
+  const handleCancel = (isDirty) => {
+    if (isDirty) {
       return MySweetAlert.fire({
         title: intl.formatMessage({ id: 'Cancel' }),
         text: intl.formatMessage({ id: 'You want to cancel update' }),

@@ -13,6 +13,7 @@ import '@src/@core/scss/billing-sweet-alert.scss'
 import withReactContent from 'sweetalert2-react-content'
 import { getBillingProjectById } from '../../project/store/actions'
 import BreadCrumbs from '@src/views/common/breadcrumbs'
+import { VALUE_OF_ROOF_CONTRACT } from '@src/utility/constants/billing'
 
 const MySweetAlert = withReactContent(SweetAlert)
 const UpdateRoofVendorContract = ({ intl }) => {
@@ -52,7 +53,7 @@ const UpdateRoofVendorContract = ({ intl }) => {
       effectiveDate: moment(selectedContract.startDate).format(ISO_STANDARD_FORMAT),
       expirationDate: moment(selectedContract.endDate).format(ISO_STANDARD_FORMAT),
       roofId: selectedContract.roofVendorId,
-      typeContract: Number(selectedContract.details?.id),
+      typeContract: VALUE_OF_ROOF_CONTRACT[selectedContract.details?.id] || 0,
       percentTurnover: selectedContract.details?.percent,
       confirmationReminder: selectedContract.alerts?.confirmAlert,
       announcementDate: selectedContract.alerts?.billingAlert,
