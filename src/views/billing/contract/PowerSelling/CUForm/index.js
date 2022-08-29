@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react'
 import { useForm, Controller, useFieldArray, FormProvider } from 'react-hook-form'
 import * as yup from 'yup'
@@ -91,6 +90,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
   const [validateSchemaState, setValidateSchemaState] = useState(ValidateSchemaObj)
 
   const dispatch = useDispatch()
+  
 
   useEffect(() => {
     if (Number(projectId) !== Number(selectedBillingProject?.id)) {
@@ -149,7 +149,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
     watch,
     setError,
     reset,
-    formState: { isDirty: isDirtyForm, dirtyFields }
+    formState: { isDirty: isDirtyForm }
   } = methods
   const { fields, append, remove } = useFieldArray({
     control,
@@ -188,8 +188,8 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
         currency: (setting.Currency || []).find((item) => item.value === initValues.details?.currencyUnit),
         currencyHigh: initValues?.details?.foreignUnitPrice?.high,
         currencyMedium: initValues?.details?.foreignUnitPrice?.medium,
-        currencyLow: initValues?.details?.foreignUnitPrice?.low,
-        clocks
+        currencyLow: initValues?.details?.foreignUnitPrice?.low
+        // clocks
       }
 
       setInitValuesState(dataValues)
@@ -207,9 +207,13 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
     initValues?.id,
     customers?.length,
     setting.Currency?.length,
-    setting.Elec_Selling_Type?.length,
-    clocks?.map((item) => item.id).join(',')
+    setting.Elec_Selling_Type?.length
+    // clocks?.map((item) => item.id).join(',')
   ])
+
+  useEffect(() => {
+    setValue('clocks', clocks)
+  }, [clocks])
 
   const contactColumns = [
     {

@@ -18,9 +18,15 @@ import { GENERAL_STATUS_OPTS, mockUser } from '@src/utility/constants/billing'
 import { selectThemeColors, showToast } from '@src/utility/Utils'
 import axios from 'axios'
 import moment from 'moment'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import * as yup from 'yup'
 import Contract from './contract'
+import SweetAlert from 'sweetalert2'
+import classNames from 'classnames'
+import '@src/@core/scss/billing-sweet-alert.scss'
+import withReactContent from 'sweetalert2-react-content'
+
+const MySweetAlert = withReactContent(SweetAlert)
 
 const ProjectCUForm = ({
   intl,
@@ -35,6 +41,9 @@ const ProjectCUForm = ({
   const dispatch = useDispatch()
   const initState = { state: GENERAL_STATUS_OPTS[0] }
   const [companies, setCompanies] = useState([])
+  const {
+    layout: { skin }
+  } = useSelector((state) => state)
   useEffect(async () => {
     try {
       /*const initParam = {
@@ -173,7 +182,32 @@ const ProjectCUForm = ({
   }
 
   const handleCancel = () => {
-    onCancel?.(isDirty)
+    if (isDirty) {
+      return MySweetAlert.fire({
+        title: intl.formatMessage({ id: 'Cancel confirmation' }),
+        text: intl.formatMessage({ id: 'Are you sure to cancel?' }),
+        showCancelButton: true,
+        confirmButtonText: intl.formatMessage({ id: 'Yes' }),
+        cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),
+        customClass: {
+          popup: classNames({
+            'sweet-alert-popup--dark': skin === 'dark',
+            'sweet-popup': true
+          }),
+          header: 'sweet-title',
+          confirmButton: 'btn btn-primary',
+          cancelButton: 'btn btn-outline-secondary ml-1',
+          actions: 'sweet-actions',
+          content: 'sweet-content'
+        },
+        buttonsStyling: false
+      }).then(({ isConfirmed }) => {
+        if (isConfirmed) {
+          onCancel?.()
+        }
+      })
+    }
+    onCancel?.()
   }
 
   const footerCOM = (

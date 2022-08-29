@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { ISO_DISPLAY_DATE_TIME_FORMAT, ROUTER_URL } from '@src/utility/constants'
 import moment from 'moment'
 import { object } from 'prop-types'
@@ -24,8 +23,7 @@ const UpdateOperationUnit = ({ intl }) => {
   const location = useLocation()
 
   const {
-    projects: { selectedProject: selectedBillingProject },
-    layout: { skin }
+    projects: { selectedProject: selectedBillingProject }
   } = useSelector((state) => state)
 
   const { id } = useParams()
@@ -43,32 +41,7 @@ const UpdateOperationUnit = ({ intl }) => {
     )
   }, [id])
 
-  const handleCancel = (isDirty) => {
-    if (isDirty) {
-      return MySweetAlert.fire({
-        title: intl.formatMessage({ id: 'Cancel' }),
-        text: intl.formatMessage({ id: 'You want to cancel update' }),
-        showCancelButton: true,
-        confirmButtonText: intl.formatMessage({ id: 'Yes' }),
-        cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),
-        customClass: {
-          popup: classNames({
-            'sweet-alert-popup--dark': skin === 'dark',
-            'sweet-popup': true
-          }),
-          header: 'sweet-title',
-          confirmButton: 'btn btn-primary',
-          cancelButton: 'btn btn-outline-secondary ml-1',
-          actions: 'sweet-actions',
-          content: 'sweet-content'
-        },
-        buttonsStyling: false
-      }).then(({ isConfirmed }) => {
-        if (isConfirmed) {
-          history.push(ROUTER_URL.BILLING_PROJECT)
-        }
-      })
-    }
+  const handleCancel = () => {
     history.push(ROUTER_URL.BILLING_PROJECT)
   }
 

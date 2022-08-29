@@ -35,7 +35,7 @@ const CreateProject = ({ intl }) => {
       startDate: newProject.startDate ? moment(newProject.startDate).format(ISO_DISPLAY_DATE_TIME_FORMAT) : null,
       userIds: (newProject.accountantIds || []).map((item) => item.value),
       operationCompanyId: newProject.companyId?.value,
-      capacity: newProject.power || null,
+      capacity: Number(newProject.power) || null,
       state: 'ACTIVE'
     }
 
