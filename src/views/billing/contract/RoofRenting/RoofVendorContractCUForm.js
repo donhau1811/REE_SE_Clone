@@ -438,7 +438,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
             <Label className="general-label">
               <FormattedMessage id="notification-recipients" />
             </Label>
-            <Table columns={columns} pagination={null} data={contacts} />
+            <Table columns={columns} pagination={null} data={selectRoofVendor ? contacts : []} />
           </Col>
         </Row>
         <Row>
