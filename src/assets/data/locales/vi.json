@@ -1868,5 +1868,6 @@
   "Contract need at least 1 clock. Please try again":"Hợp đồng phải có ít nhất 1 thông tin đồng hồ. Vui lòng thử lại",
   "No roof vendor found, please try again":"không tìm thấy đơn vị cho thuê mái nào. Xin vui lòng thử lại !",
   "no configuration found please try again":"Không tìm thấy cấu hình nào. Xin vui lòng thử lại !",
-  "Roof vendor alert form":"Mẫu TB thuê mái"
+  "Roof vendor alert form":"Mẫu TB thuê mái",
+  "Start date must be the next day of the previous period's end date":"Ngày bắt đầu của kỳ sau là ngày liền sau của ngày cuối kỳ liền trước"
 }

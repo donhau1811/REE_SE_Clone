@@ -10,7 +10,8 @@ import {
   API_CHECK_CODE_CONTRACT,
   API_GET_ALL_CUSTOMER,
   ISO_STANDARD_FORMAT,
-  SET_FORM_DIRTY
+  SET_FORM_DIRTY,
+  SET_SELECTED_CONTRACT
 } from '@src/utility/constants'
 import Table from '@src/views/common/table/CustomDataTable'
 import Select from 'react-select'
@@ -90,7 +91,6 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
   const [validateSchemaState, setValidateSchemaState] = useState(ValidateSchemaObj)
 
   const dispatch = useDispatch()
-  
 
   useEffect(() => {
     if (Number(projectId) !== Number(selectedBillingProject?.id)) {
@@ -102,6 +102,15 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
       )
     }
   }, [projectId])
+
+  useEffect(() => {
+    return () => {
+      dispatch({
+        type: SET_SELECTED_CONTRACT,
+        payload: {}
+      })
+    }
+  }, [])
 
   useEffect(async () => {
     const allCustomersRes = await axios.get(API_GET_ALL_CUSTOMER)
@@ -193,8 +202,9 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
       }
 
       setInitValuesState(dataValues)
+
       for (const key in dataValues) {
-        if (Object.hasOwnProperty.call(dataValues, key) && validateSchemaState[key]) {
+        if (Object.hasOwnProperty.call(dataValues, key)) {
           const element = dataValues[key]
           setValue(key, element)
         }
@@ -703,7 +713,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                           formatOptionLabel={(option) => <>{option.label}</>}
                           defaultValue={item.start}
                         />
-                        {getValidStart && <FormFeedback>{getValidStart?.message}</FormFeedback>}
+                        {getValidStart && <FormFeedback className="d-block">{getValidStart?.message}</FormFeedback>}
                       </Col>
                       <Col xs={12} lg={3}>
                         <Controller
@@ -719,7 +729,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                           formatOptionLabel={(option) => <>{option.label}</>}
                           defaultValue={item.end}
                         />
-                        {getValidEnd && <FormFeedback>{getValidEnd?.message}</FormFeedback>}
+                        {getValidEnd && <FormFeedback className="d-block">{getValidEnd?.message}</FormFeedback>}
                       </Col>
                       <Col xs={12} lg={3}>
                         <Controller
