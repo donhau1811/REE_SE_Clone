@@ -9,6 +9,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import ValueContOfMultipleSelect from '@src/utility/components/ReactSelectCustomCOM/ValueContOfMultipleSelect'
 import {
   API_CHECK_PROJECT,
+  API_CHECK_PROJECT_NAME,
   API_GET_ALL_OPERATION_UNIT,
   ISO_STANDARD_FORMAT,
   REAL_NUMBER,
@@ -157,12 +158,23 @@ const ProjectCUForm = ({
       onSubmit?.(initValues)
       return
     }
+    let isDuplicate = false
     try {
-      const dataCheck = { code: values.code }
+      const dataCheck = { code: values.code, name: values.name }
       if (initValues?.id) dataCheck.id = initValues?.id
-      const checkDupCodeRes = await axios.post(API_CHECK_PROJECT, dataCheck)
+      const [checkDupCodeRes, checkDupNameRes] = await Promise.all([
+        axios.post(API_CHECK_PROJECT, dataCheck),
+        axios.post(API_CHECK_PROJECT_NAME, dataCheck)
+      ])
       if (checkDupCodeRes.status === 200 && checkDupCodeRes.data?.data) {
         setError('code', { type: 'custom', message: intl.formatMessage({ id: 'dubplicated-validate' }) })
+        isDuplicate = true
+      }
+      if (checkDupNameRes.status === 200 && checkDupNameRes.data?.data) {
+        setError('name', { type: 'custom', message: intl.formatMessage({ id: 'dubplicated-validate' }) })
+        isDuplicate = true
+      }
+      if (isDuplicate) {
         return
       }
     } catch (err) {

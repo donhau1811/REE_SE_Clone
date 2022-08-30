@@ -143,6 +143,8 @@ export const API_UPDATE_PROJECT = `${BASE_API_URL_V2}/project/update`
 export const API_GET_PROJECT_BY_ID = `${BASE_API_URL_V2}/project/id`
 export const API_DELETE_PROJECTS = `${BASE_API_URL_V2}/project/delete`
 export const API_CHECK_PROJECT = `${BASE_API_URL_V2}/project/check-code`
+export const API_CHECK_PROJECT_NAME = `${BASE_API_URL_V2}/project/check-name`
+
 export const API_GET_ALL_PROJECT = `${BASE_API_URL_V2}/project/all`
 export const API_GET_PROJECT_BY_CUSTOMER_ID = `${BASE_API_URL_V2}/project/customerId`
 export const API_GET_PROJECT_BY_ROOF_VENDOR_ID = `${BASE_API_URL_V2}/project/roofVendorId`
