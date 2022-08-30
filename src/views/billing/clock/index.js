@@ -224,7 +224,7 @@ const Clock = ({ data, onChange, disabled, intl, contractId }) => {
       </Row>
       <Row className="mb-2">
         <Col>
-          <Table columns={columns} pagination={null} data={data?.filter((item) => !item.isDelete) || []} />
+          <Table noDataTitle={<FormattedMessage id="no data clock"/>}  columns={columns} pagination={null} data={data?.filter((item) => !item.isDelete) || []} />
         </Col>
       </Row>
       <ClockCUForm clock={currClock} onSubmit={handleSubmitClockForm} onCancel={handleCancelClockForm} />
