@@ -1809,7 +1809,7 @@
   "Payout coefficient": "Hệ số thanh toán tiền điện",
   "Enter coefficient": "Nhập hệ số",
   "Rounding": "Làm tròn",
-  "Remind to enter power index": "Nhắc nhở nhập chỉ số ngoài",
+  "Remind to enter power index": "Nhắc nhở nhập chỉ số ",
   "from the end of cycle": "từ ngày cuối kỳ",
   "Remind customer to confirm": "Nhắc nhở khách hàng xác nhận",
   "Date of payment": "Thời hạn thanh toán",
@@ -1864,5 +1864,7 @@
   "need at least 1 contact. Please try again":"{name} phải có ít nhất 1 thông tin liên hệ. Vui lòng thử lại",
   "No roof vendor found, please try again":"không tìm thấy đơn vị cho thuê mái nào. Xin vui lòng thử lại !",
   "no configuration found please try again":"Không tìm thấy cấu hình nào. Xin vui lòng thử lại !",
-  "Roof vendor alert form":"Mẫu TB thuê mái"
+  "Roof vendor alert form":"Mẫu TB thuê mái",
+  "no data clock":"Thêm mới ít nhất 1 đồng hồ để hoàn tất việc khai báo hợp đồng bán điện"
+
 }

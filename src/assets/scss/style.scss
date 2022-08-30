@@ -1503,9 +1503,12 @@ footer.footer {
   background-image: url('@src/assets/images/svg/carlendar.svg');
   font-size: 20px;
 }
-.file-attachment-label {
+.file-attachment-label {  
   color: #026894;
   font-size: 14px;
+  cursor: default !important;  
+  opacity: 0.5;
+  pointer-events: none;
 }
 .divider-dashed {
   width: 100%;
