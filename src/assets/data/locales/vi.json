@@ -1850,6 +1850,9 @@
   "delete contact success": "Xóa liên hệ thành công",
   "update contact success": "Sửa liên hệ thành công",
   "create contact success": "Tạo liên hệ thành công",
+  "delete clock success": "Xóa đồng hồ thành công",
+  "update clock success": "Sửa đồng hồ thành công",
+  "create clock success": "Tạo đồng hồ thành công",
   "find by code name settings": "Tìm kiếm theo Mã cấu hình, Tên cấu hình",
   "find by code company, name company": "Tìm kiếm theo Tên, Mã công ty, Số điện thoại, Mã số thuế, Địa chỉ",
   "data create failed, please try again": "Thêm mới dữ liệu thất bại, vui lòng thử lại",
@@ -1862,9 +1865,10 @@
   "View info contact": "Xem chi tiết thông tin liên hệ",
   "Not found any result. Please try again":"Không tìm thấy kết quả nào. Xin vui lòng thử lại!",
   "need at least 1 contact. Please try again":"{name} phải có ít nhất 1 thông tin liên hệ. Vui lòng thử lại",
+  "Contract need at least 1 clock. Please try again":"Hợp đồng phải có ít nhất 1 thông tin đồng hồ. Vui lòng thử lại",
   "No roof vendor found, please try again":"không tìm thấy đơn vị cho thuê mái nào. Xin vui lòng thử lại !",
   "no configuration found please try again":"Không tìm thấy cấu hình nào. Xin vui lòng thử lại !",
   "Roof vendor alert form":"Mẫu TB thuê mái",
-  "no data clock":"Thêm mới ít nhất 1 đồng hồ để hoàn tất việc khai báo hợp đồng bán điện"
-
+  "no data clock":"Thêm mới ít nhất 1 đồng hồ để hoàn tất việc khai báo hợp đồng bán điện",
+  "Start date must be the next day of the previous period's end date":"Ngày bắt đầu của kỳ sau là ngày liền sau của ngày cuối kỳ liền trước"
 }
