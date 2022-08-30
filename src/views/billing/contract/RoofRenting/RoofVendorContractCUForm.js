@@ -152,7 +152,6 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
   )
   useEffect(() => {
     setValue('roofVendorName', selectRoofVendor)
-    console.log('selectRoofVendor', selectRoofVendor)
     setValue('taxCode', data.find((item) => item.id === selectRoofVendor?.value)?.taxCode)
     setValue('address', data.find((item) => item.id === selectRoofVendor?.value)?.address)
     if (selectRoofVendor) {
@@ -224,7 +223,6 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
   }, [typeContract])
 
   useEffect(() => {
-    console.log('address', data.find((item) => item.id === selectRoofVendor?.value)?.address)
     const contractValue = {
       ...initValues,
       roofVendorName: listOfRoofvendor.find((item) => item.value === initValues?.roofId),
