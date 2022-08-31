@@ -8,7 +8,7 @@ import moment from 'moment'
 import { ISO_STANDARD_FORMAT } from '@src/utility/constants'
 
 const intitValue = {
-  type: 'all',
+  type: 'all',    
   state: 'all',
   fromCreatedDate: moment().format(ISO_STANDARD_FORMAT),
   toCreatedDate: moment().format(ISO_STANDARD_FORMAT),

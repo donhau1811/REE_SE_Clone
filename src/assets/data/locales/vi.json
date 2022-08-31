@@ -1773,7 +1773,7 @@
   "Project is added successfully": "Thêm mới dự án thành công",
   "Delete project successfully": "Xóa dự án thành công",
   "Delete project failed": "Xóa dự án thất bại",
-  "project-list-search-input-placeholder": "Tìm theo tên, mã dự án, khách hàng",
+  "project-list-search-input-placeholder": "Tìm theo mã,tên dự án,khách hàng",
   "description": "Diễn giải",
   "create-project": "Thêm mới dự án",
   "Enter project name": "Nhập tên dự án",
@@ -1870,5 +1870,10 @@
   "no configuration found please try again":"Không tìm thấy cấu hình nào. Xin vui lòng thử lại !",
   "Roof vendor alert form":"Mẫu TB thuê mái",
   "no data clock":"Thêm mới ít nhất 1 đồng hồ để hoàn tất việc khai báo hợp đồng bán điện",
-  "Start date must be the next day of the previous period's end date":"Ngày bắt đầu của kỳ sau là ngày liền sau của ngày cuối kỳ liền trước"
+  "Start date must be the next day of the previous period's end date":"Ngày bắt đầu của kỳ sau là ngày liền sau của ngày cuối kỳ liền trước",
+  "last day of electricity bill":"Ngày cuối kỳ tính tiền điện",
+  "date of sending notice of electricity bill":"Ngày gửi thông báo tiền điện",
+  "date of sending notice of roof rent":"Ngày gửi thông báo tiền thuê mái",
+  "Filter project information":"Lọc thông tin dự án"
+
 }

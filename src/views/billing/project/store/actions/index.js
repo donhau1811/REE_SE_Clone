@@ -15,13 +15,20 @@ import { get } from 'lodash'
 
 export const getListProject = (params = {}) => {
   return async (dispatch) => {
-    const { pagination = {}, ...rest } = params
+    const { pagination = {}, searchValue, ...rest } = params
     const payload = {
       ...rest,
       limit: pagination.rowsPerPage,
       offset: pagination.rowsPerPage * (pagination.currentPage - 1)
     }
-
+    if (searchValue?.trim()) {
+      payload.searchValue = {
+        value: searchValue,
+        fields: ['name', 'code', 'companyName'],
+        type: 'contains'
+      }
+      console.log('payload', payload)
+    }
     await axios
       .post(API_GET_NEW_PROJECT, payload)
       .then((response) => {

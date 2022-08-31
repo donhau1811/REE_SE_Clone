@@ -233,7 +233,7 @@ const ProjectCUForm = ({
       ) : null}
       {typeof cancelButton === 'undefined' ? (
         <Button color="secondary" onClick={handleCancel}>
-          {intl.formatMessage({ id: 'Cancel' })}
+          {intl.formatMessage({ id: isReadOnly ? 'Back' : 'Cancel' })}
         </Button>
       ) : cancelButton ? (
         cloneElement(cancelButton, { onClick: handleCancel })

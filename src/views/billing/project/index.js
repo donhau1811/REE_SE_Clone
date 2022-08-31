@@ -91,7 +91,26 @@ const Project = ({ intl }) => {
       }
     })
   }
-
+  const handleSearch = (value) => {
+    fetchProject({
+      pagination: {
+        ...pagination,
+        currentPage: 1
+      },
+      searchValue: value
+    })
+  }
+  const handleFilter = (value) => {
+    console.log('filter', value)
+    fetchProject({
+      pagination: {
+        ...pagination,
+        currentPage: 1
+      },
+      searchValue: '',
+      filterValue: value
+    })
+  }
   const handleDeleteProject = (project) => () => {
     return MySweetAlert.fire({
       title: intl.formatMessage({ id: 'Delete operating customer title' }),
@@ -245,7 +264,7 @@ const Project = ({ intl }) => {
     <>
       <Row>
         <Col sm="12">
-          <PageHeader searchValue={searchValue} />
+          <PageHeader onFilter={handleFilter} searchValue={searchValue} onSearch={handleSearch}/>
           <Table
             tableId="project"
             columns={columns}

@@ -1755,5 +1755,10 @@
   "View info contact": "View details contact",
   "No roof vendor found, please try again":"No roof vendor found, please try again",
   "no configuration found please try again":"No configuration found please try again",
-  "no data clock":"Add at least one new meter to complete the electricity sale contract"
+  "no data clock":"Add at least one new meter to complete the electricity sale contract",
+  "last day of electricity bill":"last day of electricity bill",
+  "date of sending notice of electricity bill":"date of sending notice of electricity bill",
+  "date of sending notice of roof rent":"date of sending notice of roof rent",
+  "Filter project information":"Filter project information"
+
 }
