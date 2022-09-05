@@ -19,10 +19,6 @@ const CreateOperationUnit = ({ intl }) => {
       postOperationUnit({
         params: values,
         callback: () => {
-          dispatch({
-            type: SET_FORM_DIRTY,
-            payload: false
-          })
           history.push(ROUTER_URL.BILLING_OPERATION_UNIT)
         },
         skin,
