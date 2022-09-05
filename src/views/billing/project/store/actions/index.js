@@ -27,7 +27,7 @@ export const getListProject = (params = {}) => {
         fields: ['name', 'code', 'companyName'],
         type: 'contains'
       }
-      console.log('payload', payload)
+ 
     }
     await axios
       .post(API_GET_NEW_PROJECT, payload)
