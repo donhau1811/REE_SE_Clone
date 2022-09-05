@@ -19,11 +19,7 @@ import { XCircle } from 'react-feather'
 import { ReactComponent as Attachment } from '@src/assets/images/svg/attachment-file.svg'
 import { getSettingValuesByCode } from '@src/views/billing/settings/store/actions'
 import { GENERAL_STATUS, VALUE_OF_ROOF_CONTRACT } from '@src/utility/constants/billing'
-import SweetAlert from 'sweetalert2'
 import '@src/@core/scss/billing-sweet-alert.scss'
-import withReactContent from 'sweetalert2-react-content'
-import classNames from 'classnames'
-const MySweetAlert = withReactContent(SweetAlert)
 
 const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSubmit }) => {
   const [valueSetting, setValueSetting] = useState([])
@@ -32,10 +28,6 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
     contractType: valueSetting[0]
   }
   const { setting } = useSelector((state) => state.settings)
-
-  const {
-    layout: { skin }
-  } = useSelector((state) => state)
 
   const defaultValid = {
     roofVendorName: yup.object().shape({
@@ -278,31 +270,6 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
   }
 
   const handleCancelForm = () => {
-    if (isDirty) {
-      return MySweetAlert.fire({
-        title: intl.formatMessage({ id: 'Cancel confirmation' }),
-        text: intl.formatMessage({ id: 'Are you sure to cancel?' }),
-        showCancelButton: true,
-        confirmButtonText: intl.formatMessage({ id: 'Yes' }),
-        cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),
-        customClass: {
-          popup: classNames({
-            'sweet-alert-popup--dark': skin === 'dark',
-            'sweet-popup': true
-          }),
-          header: 'sweet-title',
-          confirmButton: 'btn btn-primary',
-          cancelButton: 'btn btn-secondary ml-1',
-          actions: 'sweet-actions',
-          content: 'sweet-content'
-        },
-        buttonsStyling: false
-      }).then(({ isConfirmed }) => {
-        if (isConfirmed) {
-          onCancel?.(isDirty)
-        }
-      })
-    }
     onCancel?.(isDirty)
   }
 
