@@ -47,20 +47,15 @@ import { useParams } from 'react-router-dom'
 import { getBillingProjectById } from '@src/views/billing/project/store/actions'
 import moment from 'moment'
 import { getSettingValuesByCode } from '@src/views/billing/settings/store/actions'
-import SweetAlert from 'sweetalert2'
-import '@src/@core/scss/billing-sweet-alert.scss'
-import withReactContent from 'sweetalert2-react-content'
 
 import { getAllClockByContractId } from '@src/views/billing/clock/store/actions'
 import { ContractForm1 } from './ContractForm1'
 import { handleCRUDOfClocks } from '../../util'
-const MySweetAlert = withReactContent(SweetAlert)
 
 function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel, onSubmit, cancelText }) {
   const {
     projects: { selectedProject: selectedBillingProject },
-    contractClock: { clocks },
-    layout: { skin }
+    contractClock: { clocks }
   } = useSelector((state) => state)
 
   const { setting } = useSelector((state) => state.settings)
@@ -497,31 +492,6 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
   }
 
   const handleCancel = () => {
-    if (isDirty) {
-      return MySweetAlert.fire({
-        title: intl.formatMessage({ id: 'Cancel confirmation' }),
-        text: intl.formatMessage({ id: 'Are you sure to cancel?' }),
-        showCancelButton: true,
-        confirmButtonText: intl.formatMessage({ id: 'Yes' }),
-        cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),
-        customClass: {
-          popup: classNames({
-            'sweet-alert-popup--dark': skin === 'dark',
-            'sweet-popup': true
-          }),
-          header: 'sweet-title',
-          confirmButton: 'btn btn-primary',
-          cancelButton: 'btn btn-secondary ml-1',
-          actions: 'sweet-actions',
-          content: 'sweet-content'
-        },
-        buttonsStyling: false
-      }).then(({ isConfirmed }) => {
-        if (isConfirmed) {
-          onCancel?.(isDirty)
-        }
-      })
-    }
     onCancel?.(isDirty)
   }
 

@@ -1,4 +1,4 @@
-import { ROUTER_URL } from '@src/utility/constants'
+import { ROUTER_URL, SET_FORM_DIRTY } from '@src/utility/constants'
 import BreadCrumbs from '@src/views/common/breadcrumbs'
 import { object } from 'prop-types'
 import { injectIntl, useIntl } from 'react-intl'
@@ -7,7 +7,6 @@ import { useHistory } from 'react-router-dom'
 
 import OperationCUForm from './OperationUnitCUForm'
 import { postOperationUnit } from './store/actions'
-
 
 const CreateOperationUnit = ({ intl }) => {
   const dispatch = useDispatch()
@@ -20,6 +19,10 @@ const CreateOperationUnit = ({ intl }) => {
       postOperationUnit({
         params: { ...values, state: values.state?.value },
         callback: () => {
+          dispatch({
+            type: SET_FORM_DIRTY,
+            payload: false
+          })
           history.push(ROUTER_URL.BILLING_OPERATION_UNIT)
         },
         skin,
