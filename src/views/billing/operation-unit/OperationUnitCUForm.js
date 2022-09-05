@@ -98,6 +98,10 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
       )
       return
     }
+    dispatch({
+      type: SET_FORM_DIRTY,
+      payload: false
+    })
     onSubmit?.(values)
   }
   const handleCancel = () => {

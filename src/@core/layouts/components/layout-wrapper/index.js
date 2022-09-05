@@ -11,8 +11,9 @@ import { handleContentWidth, handleMenuCollapsed, handleMenuHidden } from '@stor
 
 // ** Styles
 import 'animate.css/animate.css'
+import PreventLeavePageModal from '@src/views/common/modal/PreventLeavePageModal'
 
-const LayoutWrapper = props => {
+const LayoutWrapper = (props) => {
   // ** Props
   const { layout, children, appLayout, wrapperClass, transition, routeMeta } = props
 
@@ -21,7 +22,7 @@ const LayoutWrapper = props => {
   const {
     navbar: navbarStore,
     layout: { contentWidth }
-  } = useSelector(state => state)
+  } = useSelector((state) => state)
 
   //** Vars
   const Tag = layout === 'HorizontalLayout' && !appLayout ? 'div' : Fragment
@@ -55,7 +56,6 @@ const LayoutWrapper = props => {
       }
     }
 
-
     return () => {
       cleanUp()
     }
@@ -68,7 +68,8 @@ const LayoutWrapper = props => {
         'show-overlay': navbarStore.query.length
       })}
     >
-      <div className='content-overlay'/>
+      <PreventLeavePageModal />
+      <div className="content-overlay" />
       {/*<div className='header-navbar-shadow'/>*/}
       <div
         className={classnames({
@@ -81,8 +82,8 @@ const LayoutWrapper = props => {
         <Tag
           /*eslint-disable */
           {...(layout === 'HorizontalLayout' && !appLayout
-               ? { className: classnames({ 'content-body': !appLayout }) }
-               : {})}
+            ? { className: classnames({ 'content-body': !appLayout }) }
+            : {})}
           /*eslint-enable */
         >
           {children}

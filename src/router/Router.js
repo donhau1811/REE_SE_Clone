@@ -58,7 +58,7 @@ const Router = () => {
         }
       })
     }
-  
+
     return { LayoutRoutes, LayoutPaths }
   }
 
