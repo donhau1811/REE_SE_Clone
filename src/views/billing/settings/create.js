@@ -1,4 +1,4 @@
-import { ROUTER_URL, SET_FORM_DIRTY } from '@src/utility/constants'
+import { ROUTER_URL } from '@src/utility/constants'
 import { object } from 'prop-types'
 import React from 'react'
 import { injectIntl } from 'react-intl'
