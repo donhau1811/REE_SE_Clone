@@ -4,16 +4,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
 import { postContractRoofVendor } from '../store/actions'
 import RoofVendorContractCUForm from './RoofVendorContractCUForm'
-import { ROUTER_URL } from '@src/utility/constants'
-import SweetAlert from 'sweetalert2'
-import classNames from 'classnames'
+import { ROUTER_URL, SET_FORM_DIRTY } from '@src/utility/constants'
 import '@src/@core/scss/billing-sweet-alert.scss'
-import withReactContent from 'sweetalert2-react-content'
 import { getBillingProjectById } from '../../project/store/actions'
 import React, { useEffect } from 'react'
 import BreadCrumbs from '@src/views/common/breadcrumbs'
 
-const MySweetAlert = withReactContent(SweetAlert)
 const CreateRoofVendorContract = ({ intl }) => {
   const {
     projects: { selectedProject: selectedBillingProject }
@@ -41,8 +37,11 @@ const CreateRoofVendorContract = ({ intl }) => {
         newvalue,
         intl,
         callback: () => {
+          dispatch({
+            type: SET_FORM_DIRTY,
+            payload: false
+          })
           history.push(`${ROUTER_URL.BILLING_PROJECT}/${projectId}`)
-
         }
       })
     )
@@ -63,57 +62,20 @@ export default injectIntl(CreateRoofVendorContract)
 
 export const Navbar = () => {
   const {
-    layout: { skin },
-    form: { isFormGlobalDirty },
     projects: { selectedProject: selectedBillingProject }
   } = useSelector((state) => state)
   const intl = useIntl()
-  const history = useHistory()
-
-  const handleBreadCrumbsRedirct = (pathname) => (event) => {
-    event.preventDefault()
-    if (isFormGlobalDirty) {
-      return MySweetAlert.fire({
-        title: intl.formatMessage({ id: 'Cancel confirmation' }),
-        text: intl.formatMessage({ id: 'Are you sure to cancel?' }),
-        showCancelButton: true,
-        confirmButtonText: intl.formatMessage({ id: 'Yes' }),
-        cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),
-        customClass: {
-          popup: classNames({
-            'sweet-alert-popup--dark': skin === 'dark',
-            'sweet-popup': true
-          }),
-          header: 'sweet-title',
-          confirmButton: 'btn btn-primary',
-          cancelButton: 'btn btn-secondary ml-1',
-          actions: 'sweet-actions',
-          content: 'sweet-content'
-        },
-        buttonsStyling: false
-      }).then(({ isConfirmed }) => {
-        if (isConfirmed) {
-          history.push(pathname)
-        }
-      })
-    }
-    history.push(pathname)
-  }
 
   const tempItems = [
     { name: intl.formatMessage({ id: 'billing' }), link: '' },
     { name: intl.formatMessage({ id: 'project management' }), link: '' },
     {
       name: intl.formatMessage({ id: 'project' }),
-      innerProps: { tag: 'a', href: '#', onClick: handleBreadCrumbsRedirct(ROUTER_URL.BILLING_PROJECT) }
+      link: ROUTER_URL.BILLING_PROJECT
     },
     {
       name: selectedBillingProject?.name,
-      innerProps: {
-        tag: 'a',
-        href: '#',
-        onClick: handleBreadCrumbsRedirct(`${ROUTER_URL.BILLING_PROJECT}/${selectedBillingProject?.id}`)
-      }
+      link: `${ROUTER_URL.BILLING_PROJECT}/${selectedBillingProject?.id}`
     },
     { name: intl.formatMessage({ id: 'Add roof renting contract' }), link: '' }
   ]

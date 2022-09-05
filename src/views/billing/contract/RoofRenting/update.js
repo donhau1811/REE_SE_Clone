@@ -1,21 +1,17 @@
-import { ISO_STANDARD_FORMAT, ROUTER_URL } from '@src/utility/constants'
+import '@src/@core/scss/billing-sweet-alert.scss'
+import { ISO_STANDARD_FORMAT, ROUTER_URL, SET_FORM_DIRTY } from '@src/utility/constants'
+import { VALUE_OF_ROOF_CONTRACT } from '@src/utility/constants/billing'
+import BreadCrumbs from '@src/views/common/breadcrumbs'
 import moment from 'moment'
 import { object } from 'prop-types'
 import { useEffect, useState } from 'react'
 import { injectIntl, useIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useLocation, useParams } from 'react-router-dom'
+import { getBillingProjectById } from '../../project/store/actions'
 import { getContractById, putContractRoofVendor } from '../store/actions'
 import RoofVendorContractCUForm from './RoofVendorContractCUForm'
-import SweetAlert from 'sweetalert2'
-import classNames from 'classnames'
-import '@src/@core/scss/billing-sweet-alert.scss'
-import withReactContent from 'sweetalert2-react-content'
-import { getBillingProjectById } from '../../project/store/actions'
-import BreadCrumbs from '@src/views/common/breadcrumbs'
-import { VALUE_OF_ROOF_CONTRACT } from '@src/utility/constants/billing'
 
-const MySweetAlert = withReactContent(SweetAlert)
 const UpdateRoofVendorContract = ({ intl }) => {
   const {
     projects: { selectedProject: selectedBillingProject }
@@ -64,9 +60,7 @@ const UpdateRoofVendorContract = ({ intl }) => {
   }, [selectedContract])
 
   const handleCancel = () => {
-    history.push(
-    `${ROUTER_URL.BILLING_PROJECT}/${projectId}`
-    )
+    history.push(`${ROUTER_URL.BILLING_PROJECT}/${projectId}`)
   }
   const handleUpdateRoofVendorContract = (value) => {
     if (isReadOnly) {
@@ -80,10 +74,11 @@ const UpdateRoofVendorContract = ({ intl }) => {
           newvalue,
           intl,
           callback: () => {
-            history.push(
-         `${ROUTER_URL.BILLING_PROJECT}/${projectId}`
-        
-            )
+            dispatch({
+              type: SET_FORM_DIRTY,
+              payload: false
+            })
+            history.push(`${ROUTER_URL.BILLING_PROJECT}/${projectId}`)
           }
         })
       )
@@ -106,55 +101,21 @@ export default injectIntl(UpdateRoofVendorContract)
 
 export const Navbar = () => {
   const {
-    layout: { skin },
-    form: { isFormGlobalDirty },
     projects: { selectedProject: selectedBillingProject },
-    projectContracts : {selectedContract : selectedContract}
-
+    projectContracts: { selectedContract: selectedContract }
   } = useSelector((state) => state)
   const intl = useIntl()
-  const history = useHistory()
-
-  const handleBreadCrumbsRedirct = (pathname) => (event) => {
-    event.preventDefault()
-    if (isFormGlobalDirty) {
-      return MySweetAlert.fire({
-        title: intl.formatMessage({ id: 'Cancel confirmation' }),
-        text: intl.formatMessage({ id: 'Are you sure to cancel?' }),
-        showCancelButton: true,
-        confirmButtonText: intl.formatMessage({ id: 'Yes' }),
-        cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),
-        customClass: {
-          popup: classNames({
-            'sweet-alert-popup--dark': skin === 'dark',
-            'sweet-popup': true
-          }),
-          header: 'sweet-title',
-          confirmButton: 'btn btn-primary',
-          cancelButton: 'btn btn-secondary ml-1',
-          actions: 'sweet-actions',
-          content: 'sweet-content'
-        },
-        buttonsStyling: false
-      }).then(({ isConfirmed }) => {
-        if (isConfirmed) {
-          history.push(pathname)
-        }
-      })
-    }
-    history.push(pathname)
-  }
 
   const tempItems = [
     { name: intl.formatMessage({ id: 'billing' }), link: '' },
     { name: intl.formatMessage({ id: 'project management' }), link: '' },
     {
       name: intl.formatMessage({ id: 'project' }),
-      innerProps: { tag: 'a', href: '#', onClick: handleBreadCrumbsRedirct(ROUTER_URL.BILLING_PROJECT) }
+      link: ROUTER_URL.BILLING_PROJECT
     },
     {
       name: selectedBillingProject.name,
-      innerProps: { tag: 'a', href: '#', onClick: handleBreadCrumbsRedirct(`${ROUTER_URL.BILLING_PROJECT}/${selectedBillingProject?.id}`) }
+      link: `${ROUTER_URL.BILLING_PROJECT}/${selectedBillingProject?.id}`
     },
     {
       name: selectedContract?.code
