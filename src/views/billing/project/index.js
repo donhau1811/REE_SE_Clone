@@ -101,7 +101,6 @@ const Project = ({ intl }) => {
     })
   }
   const handleFilter = (value) => {
-    console.log('filter', value)
     fetchProject({
       pagination: {
         ...pagination,
