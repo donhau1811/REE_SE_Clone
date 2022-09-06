@@ -1870,5 +1870,17 @@
   "no configuration found please try again":"Không tìm thấy cấu hình nào. Xin vui lòng thử lại !",
   "Roof vendor alert form":"Mẫu TB thuê mái",
   "no data clock":"Thêm mới ít nhất 1 đồng hồ để hoàn tất việc khai báo hợp đồng bán điện",
-  "Start date must be the next day of the previous period's end date":"Ngày bắt đầu của kỳ sau là ngày liền sau của ngày cuối kỳ liền trước"
+  "Start date must be the next day of the previous period's end date":"Ngày bắt đầu của kỳ sau là ngày liền sau của ngày cuối kỳ liền trước",
+  "metricElectric":"Chỉ số điện",
+  "metricClock": "Chỉ số đồng hồ",
+  "CLock":"Đồng hồ",
+  "Coefficient":"Hệ số",
+  "Price list":"Biểu giá",
+  "Index p delivered":"Chỉ số P giao",
+  "P index received":"Chỉ số P nhận",
+  "Index q delivered":"Chỉ số Q giao",
+  "Q index received":"Chỉ số Q nhận",
+  "Time P max": "Thời gian P max",
+  "Filter data":"Lọc dữ liệu",
+  "Select clock":"Chọn đồng hồ"
 }

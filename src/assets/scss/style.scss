@@ -1553,3 +1553,8 @@ footer.footer {
 .custom-breadcrumb {
   cursor: default !important;
 }
+.input-date-range {
+  background-image: url('@src/assets/images/svg/carlendar.svg');
+  font-size: 1px !important;
+  z-index: -1 !important;
+}

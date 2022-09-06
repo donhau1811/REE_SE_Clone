@@ -145,6 +145,7 @@ export const API_DELETE_PROJECTS = `${BASE_API_URL_V2}/project/delete`
 export const API_CHECK_PROJECT = `${BASE_API_URL_V2}/project/check-code`
 export const API_CHECK_PROJECT_NAME = `${BASE_API_URL_V2}/project/check-name`
 
+
 export const API_GET_ALL_PROJECT = `${BASE_API_URL_V2}/project/all`
 export const API_GET_PROJECT_BY_CUSTOMER_ID = `${BASE_API_URL_V2}/project/customerId`
 export const API_GET_PROJECT_BY_ROOF_VENDOR_ID = `${BASE_API_URL_V2}/project/roofVendorId`
@@ -164,6 +165,7 @@ export const API_UPDATE_CONTACT = `${BASE_API_URL_V2}/contacts/update`
 export const API_DELETE_CONTACT = `${BASE_API_URL_V2}/contacts/delete`
 export const API_GET_CUSTOMER_BY_ID = `${BASE_API_URL_V2}/customer/id`
 export const API_GET_CONTACT_BY_CUSTOMER_ID = `${BASE_API_URL_V2}/contacts/customerId`
+export const API_GET_LIST_CUSTOMER_BY_PROJECT_ID = `${BASE_API_URL_V2}/customer/project-id`
 
 export const API_ROOF_RETAL_UNIT = `${BASE_API_URL}/api/v1/billing/roof`
 

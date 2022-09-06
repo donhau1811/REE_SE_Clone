@@ -5,6 +5,7 @@ import {
   API_GET_CONTACT_BY_CUSTOMER_ID,
   API_GET_CUSTOMER_BY_ID,
   API_GET_LIST_CUSTOMER,
+  API_GET_LIST_CUSTOMER_BY_PROJECT_ID,
   API_UPDATE_CUSTOMER_V2
 } from '@src/utility/constants'
 import { FETCH_CUSTOMERS_REQUEST } from '@src/utility/constants/actions'
@@ -161,6 +162,28 @@ export const getCustomerWithContactsById = ({ id, isSavedToState, callback }) =>
       .catch((err) => {
         console.log('err', err)
         callback?.()
+      })
+  }
+}
+
+export const getListCustomerByProjectId = ({id}) => {
+  return async (dispatch) => {
+    await axios
+      .get(`${API_GET_LIST_CUSTOMER_BY_PROJECT_ID}/${id}`)
+      .then((response) => {
+        if (response.status === 200 && response.data.data) {
+          dispatch({
+            type: FETCH_CUSTOMERS_REQUEST,
+            data: response.data.data,
+            total: response.data.count
+            
+          })
+        } else {
+          throw new Error(response.data.message)
+        }
+      })
+      .catch((err) => {
+        showToast('error', `${err.response ? err.response.data.message : err.message}`)
       })
   }
 }
