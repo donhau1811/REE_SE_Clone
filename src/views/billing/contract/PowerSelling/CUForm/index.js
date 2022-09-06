@@ -152,6 +152,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
     setValue,
     watch,
     setError,
+    clearErrors,
     reset,
     formState: { isDirty: isDirtyForm }
   } = methods
@@ -363,10 +364,41 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
   const handleAppendCycle = () => {
     append(formInitValues.billingCycle[0])
   }
+  const validateBillingCycle = (billingCycleArr) => {
+    const billingCycleErr = (billingCycleArr || []).reduce((array, cycle, index) => {
+      if (index === 0) return array
+      const preCycleEnd = billingCycleArr[index - 1]
+      if (
+        ((preCycleEnd.value === END_OF_MONTH_OPTION.value || preCycleEnd.value === 31) && cycle.start?.value !== 1) ||
+        preCycleEnd.value !== cycle.start?.value - 1
+      ) {
+        setError(`billingCycle[${index}].start`, {
+          type: 'custom',
+          message: <FormattedMessage id="Start date must be the next day of the previous period's end date" />,
+          shouldFocus: true
+        })
+        setError(`billingCycle[${index - 1}].end`, {
+          type: 'custom',
+          message: <FormattedMessage id="Start date must be the next day of the previous period's end date" />,
+          shouldFocus: true
+        })
+        return [...array, `billingCycle[${index}].start`]
+      } else {
+        clearErrors([`billingCycle[${index}].start`, `billingCycle[${index - 1}].end`])
+        return array.filter((item) => item !== `billingCycle[${index}].start`)
+      }
+    }, [])
+
+    return billingCycleErr.length > 0
+  }
 
   const handleSubmitForm = async (values) => {
     if (isReadOnly) {
       onSubmit?.(initValues)
+      return
+    }
+
+    if (validateBillingCycle()) {
       return
     }
     // check trùng  mã khách hàng
@@ -495,6 +527,45 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
     onCancel?.(isDirty)
   }
 
+  const handleChangeArrayField = (onChange, field, index) => (event) => {
+    const dataBillingCycle = watch('billingCycle')
+    if (field === 'start' && index !== 0) {
+      const prevEnd = dataBillingCycle[index - 1].end?.value
+      if (
+        ((prevEnd === END_OF_MONTH_OPTION.value || prevEnd === 31) && event.value !== 1) ||
+        prevEnd !== event.value - 1
+      ) {
+        setError(`billingCycle[${index - 1}].end`, {
+          type: 'custom',
+          message: <FormattedMessage id="Start date must be the next day of the previous period's end date" />
+        })
+      } else {
+        clearErrors([`billingCycle[${index}].start`, `billingCycle[${index - 1}].end`])
+      }
+    }
+    if (field === 'end' && index !== dataBillingCycle.length - 1) {
+      const nextStart = dataBillingCycle[index + 1].start?.value
+
+      if (
+        ((event.value === END_OF_MONTH_OPTION.value || event.value === 31) && nextStart !== 1) ||
+        event.value !== nextStart - 1
+      ) {
+        console.log(' fg')
+        setError(`billingCycle[${index + 1}].start`, {
+          type: 'custom',
+          message: <FormattedMessage id="Start date must be the next day of the previous period's end date" />
+        })
+      } else {
+        clearErrors([`billingCycle[${index}].end`, `billingCycle[${index + 1}].start`])
+      }
+    }
+    onChange?.(event)
+  }
+
+  const handleClickToFileInput = (e) => {
+    e.target.value = null
+  }
+
   return (
     <FormProvider {...methods}>
       <Form className="billing-form" onSubmit={handleSubmit(handleSubmitForm)}>
@@ -556,14 +627,20 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                 {watch('file')?.map((item) => (
                   <a key={item.name} href="#" className="d-block">
                     {item.name}
-                    <span className="ml-1" role="button" onClick={handleRemoveFile(item)}>
-                      <XCircle size={14} color="#838A9C" />
-                    </span>
+                    {!isReadOnly && (
+                      <span className="ml-1" role="button" onClick={handleRemoveFile(item)}>
+                        <XCircle size={14} color="#838A9C" />
+                      </span>
+                    )}
                   </a>
                 ))}
               </div>
               <div className="d-flex align-items-center">
-                <Label className="file-attachment-label" for="file" role="button">
+                <Label
+                  className={classNames('file-attachment-label', isReadOnly && 'file-attachment-label-disabled')}
+                  for="file"
+                  role="button"
+                >
                   <span className="mr-1">
                     <Attachment />
                   </span>
@@ -571,11 +648,11 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                 </Label>
                 <Input
                   type="file"
-                  autoComplete="on"
                   disabled={isReadOnly}
                   id="file"
                   multiple
                   onChange={handleChangeFiles}
+                  onClick={handleClickToFileInput}
                   className="d-none"
                 />
               </div>
@@ -656,6 +733,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
             {fields.map((item, index) => {
               const getValidStart = get(errors, `billingCycle[${index}].start`)
               const getValidEnd = get(errors, `billingCycle[${index}].end`)
+
               return (
                 <div
                   key={item.id}
@@ -671,51 +749,73 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                       </Col>
                       <Col xs={12} lg={3}>
                         <Controller
-                          as={Select}
+                          render={({ onChange, ...field }) => {
+                            return (
+                              <Select
+                                {...field}
+                                isDisabled={isReadOnly}
+                                theme={selectThemeColors}
+                                className="react-select"
+                                classNamePrefix="select"
+                                options={DAYS_OF_MONTH_OPTIONS}
+                                formatOptionLabel={(option) => <>{option.label}</>}
+                                onChange={handleChangeArrayField(onChange, 'start', index)}
+                              />
+                            )
+                          }}
                           control={control}
-                          theme={selectThemeColors}
                           name={`billingCycle[${index}].start`}
-                          isDisabled={isReadOnly}
                           innerRef={register()}
-                          options={DAYS_OF_MONTH_OPTIONS}
-                          className="react-select"
-                          classNamePrefix="select"
-                          formatOptionLabel={(option) => <>{option.label}</>}
                           defaultValue={item.start}
                         />
                         {getValidStart && <FormFeedback className="d-block">{getValidStart?.message}</FormFeedback>}
                       </Col>
                       <Col xs={12} lg={3}>
                         <Controller
-                          as={Select}
+                          render={({ onChange, ...field }) => {
+                            return (
+                              <Select
+                                {...field}
+                                isDisabled={isReadOnly}
+                                theme={selectThemeColors}
+                                className="react-select"
+                                classNamePrefix="select"
+                                options={[...DAYS_OF_MONTH_OPTIONS, END_OF_MONTH_OPTION]}
+                                formatOptionLabel={(option) => <>{option.label}</>}
+                                onChange={handleChangeArrayField(onChange, 'end', index)}
+                              />
+                            )
+                          }}
                           control={control}
-                          theme={selectThemeColors}
                           name={`billingCycle[${index}].end`}
-                          isDisabled={isReadOnly}
                           innerRef={register()}
-                          options={[...DAYS_OF_MONTH_OPTIONS, END_OF_MONTH_OPTION]}
-                          className="react-select"
-                          classNamePrefix="select"
-                          formatOptionLabel={(option) => <>{option.label}</>}
                           defaultValue={item.end}
                         />
                         {getValidEnd && <FormFeedback className="d-block">{getValidEnd?.message}</FormFeedback>}
                       </Col>
                       <Col xs={12} lg={3}>
                         <Controller
-                          as={Select}
+                          render={({ onChange, ...field }) => {
+                            return (
+                              <Select
+                                {...field}
+                                isDisabled={isReadOnly}
+                                theme={selectThemeColors}
+                                className="react-select"
+                                classNamePrefix="select"
+                                options={MONTH_OPTIONS}
+                                formatOptionLabel={(option) => <>{option.label}</>}
+                                onChange={handleChangeArrayField(onChange, 'month', index)}
+                              />
+                            )
+                          }}
                           control={control}
-                          theme={selectThemeColors}
                           name={`billingCycle[${index}].month`}
-                          isDisabled={isReadOnly}
                           innerRef={register()}
-                          options={MONTH_OPTIONS}
-                          className="react-select"
-                          classNamePrefix="select"
-                          formatOptionLabel={(option) => <>{option.label}</>}
                           defaultValue={item.month}
                         />
                       </Col>
+
                       {!isReadOnly && fields.length > 1 && (
                         <Col xs={12} lg="auto" className="d-flex align-items-center">
                           <span role="button" onClick={handleRemoveCycle(index)}>

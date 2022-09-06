@@ -20,6 +20,7 @@ import { ReactComponent as Attachment } from '@src/assets/images/svg/attachment-
 import { getSettingValuesByCode } from '@src/views/billing/settings/store/actions'
 import { GENERAL_STATUS, VALUE_OF_ROOF_CONTRACT } from '@src/utility/constants/billing'
 import '@src/@core/scss/billing-sweet-alert.scss'
+import classNames from 'classnames'
 
 const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSubmit }) => {
   const [valueSetting, setValueSetting] = useState([])
@@ -268,9 +269,30 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
     }
     onSubmit?.(newValue)
   }
-
+  useEffect(() => {
+    register('file')
+  }, [register])
   const handleCancelForm = () => {
     onCancel?.(isDirty)
+  }
+
+  const handleChangeFiles = (event) => {
+    const files = Array.from(event.target.files)
+    setValue('file', files, { shouldValidate: true })
+  }
+
+  const handleRemoveFile = (file) => (event) => {
+    event.stopPropagation()
+    const filesList = getValues('file')
+
+    setValue(
+      'file',
+      filesList.filter((item) => item.name !== file.name),
+      { shouldValidate: true }
+    )
+  }
+  const handleClickToFileInput = (e) => {
+    e.target.value = null
   }
 
   return (
@@ -339,20 +361,35 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
                 {watch('file')?.map((item) => (
                   <a key={item.name} href="#" className="d-block">
                     {item.name}
-                    <span className="ml-1" role="button">
-                      <XCircle size={14} color="#838A9C" />
-                    </span>
+                    {!isReadOnly && (
+                      <span className="ml-1" role="button" onClick={handleRemoveFile(item)}>
+                        <XCircle size={14} color="#838A9C" />
+                      </span>
+                    )}
                   </a>
                 ))}
               </div>
               <div className="d-flex align-items-center">
-                <Label className="file-attachment-label" for="file" role="button">
+                <Label
+                  className={classNames('file-attachment-label', isReadOnly && 'file-attachment-label-disabled')}
+                  for="file"
+                  role="button"
+                >
                   <span className="mr-1">
                     <Attachment />
                   </span>
                   <FormattedMessage id="Đính kèm file hợp đồng" />
                 </Label>
-                <Input type="file" autoComplete="on" disabled={isReadOnly} id="file" multiple className="d-none" />
+                <Input
+                  type="file"
+                  autoComplete="on"
+                  disabled={isReadOnly}
+                  id="file"
+                  onChange={handleChangeFiles}
+                  onClick={handleClickToFileInput}
+                  multiple
+                  className="d-none"
+                />
               </div>
             </div>
             {errors?.file && <FormFeedback className="d-block">{errors?.file?.message}</FormFeedback>}

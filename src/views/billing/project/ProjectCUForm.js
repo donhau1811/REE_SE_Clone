@@ -24,7 +24,6 @@ import * as yup from 'yup'
 import Contract from './contract'
 import '@src/@core/scss/billing-sweet-alert.scss'
 
-
 const ProjectCUForm = ({
   intl,
   onSubmit = () => {},
@@ -33,7 +32,8 @@ const ProjectCUForm = ({
   isReadOnly,
   submitText,
   submitButton,
-  cancelButton
+  cancelButton,
+  cancelText
 }) => {
   const dispatch = useDispatch()
   const initState = { state: GENERAL_STATUS_OPTS[0] }
@@ -200,7 +200,7 @@ const ProjectCUForm = ({
       ) : null}
       {typeof cancelButton === 'undefined' ? (
         <Button color="secondary" onClick={handleCancel}>
-          {intl.formatMessage({ id: 'Cancel' })}
+          {cancelText || intl.formatMessage({ id: 'Cancel' })}
         </Button>
       ) : cancelButton ? (
         cloneElement(cancelButton, { onClick: handleCancel })
@@ -409,7 +409,8 @@ ProjectCUForm.propTypes = {
   isReadOnly: bool,
   submitText: string,
   submitButton: element,
-  cancelButton: element
+  cancelButton: element,
+  cancelText: string
 }
 
 export default injectIntl(ProjectCUForm)

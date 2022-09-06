@@ -10,7 +10,6 @@ import { getBillingProjectById, putProject } from './store/actions'
 import '@src/@core/scss/billing-sweet-alert.scss'
 import BreadCrumbs from '@src/views/common/breadcrumbs'
 
-
 const UpdateOperationUnit = ({ intl }) => {
   const history = useHistory()
   const dispatch = useDispatch()
@@ -79,6 +78,9 @@ const UpdateOperationUnit = ({ intl }) => {
         isReadOnly={isReadOnly}
         submitText={intl.formatMessage({
           id: location.state?.isFromCreateStep ? 'Finish' : isReadOnly ? 'Update' : 'Save'
+        })}
+        cancelText={intl.formatMessage({
+          id: isReadOnly ? 'Back' : 'Cancel'
         })}
         cancelButton={location.state?.isFromCreateStep && null}
       />
