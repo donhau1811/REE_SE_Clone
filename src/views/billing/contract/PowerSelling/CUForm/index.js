@@ -152,7 +152,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
     setValue,
     watch,
     setError,
-    clearErrors,
+    // clearErrors,
     reset,
     formState: { isDirty: isDirtyForm }
   } = methods
@@ -362,35 +362,45 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
   }
 
   const handleAppendCycle = () => {
-    append(formInitValues.billingCycle[0])
-  }
-  const validateBillingCycle = (billingCycleArr) => {
-    const billingCycleErr = (billingCycleArr || []).reduce((array, cycle, index) => {
-      if (index === 0) return array
-      const preCycleEnd = billingCycleArr[index - 1]
-      if (
-        ((preCycleEnd.value === END_OF_MONTH_OPTION.value || preCycleEnd.value === 31) && cycle.start?.value !== 1) ||
-        preCycleEnd.value !== cycle.start?.value - 1
-      ) {
-        setError(`billingCycle[${index}].start`, {
-          type: 'custom',
-          message: <FormattedMessage id="Start date must be the next day of the previous period's end date" />,
-          shouldFocus: true
-        })
-        setError(`billingCycle[${index - 1}].end`, {
-          type: 'custom',
-          message: <FormattedMessage id="Start date must be the next day of the previous period's end date" />,
-          shouldFocus: true
-        })
-        return [...array, `billingCycle[${index}].start`]
-      } else {
-        clearErrors([`billingCycle[${index}].start`, `billingCycle[${index - 1}].end`])
-        return array.filter((item) => item !== `billingCycle[${index}].start`)
-      }
-    }, [])
+    let newStartDate = {}
+    const billingCycleWatch = watch('billingCycle')
+    const lastCycleEndDate = billingCycleWatch[billingCycleWatch.length - 1].end
 
-    return billingCycleErr.length > 0
+    if (lastCycleEndDate.value === END_OF_MONTH_OPTION.value || lastCycleEndDate.value === 31) {
+      newStartDate = DAYS_OF_MONTH_OPTIONS[0]
+    } else {
+      newStartDate = DAYS_OF_MONTH_OPTIONS.find((item) => item.value === lastCycleEndDate.value + 1)
+    }
+
+    append({ ...formInitValues.billingCycle[0], start: newStartDate })
   }
+  // const validateBillingCycle = (billingCycleArr) => {
+  //   const billingCycleErr = (billingCycleArr || []).reduce((array, cycle, index) => {
+  //     if (index === 0) return array
+  //     const preCycleEnd = billingCycleArr[index - 1]
+  //     if (
+  //       ((preCycleEnd.value === END_OF_MONTH_OPTION.value || preCycleEnd.value === 31) && cycle.start?.value !== 1) ||
+  //       preCycleEnd.value !== cycle.start?.value - 1
+  //     ) {
+  //       setError(`billingCycle[${index}].start`, {
+  //         type: 'custom',
+  //         message: <FormattedMessage id="Start date must be the next day of the previous period's end date" />,
+  //         shouldFocus: true
+  //       })
+  //       setError(`billingCycle[${index - 1}].end`, {
+  //         type: 'custom',
+  //         message: <FormattedMessage id="Start date must be the next day of the previous period's end date" />,
+  //         shouldFocus: true
+  //       })
+  //       return [...array, `billingCycle[${index}].start`]
+  //     } else {
+  //       clearErrors([`billingCycle[${index}].start`, `billingCycle[${index - 1}].end`])
+  //       return array.filter((item) => item !== `billingCycle[${index}].start`)
+  //     }
+  //   }, [])
+
+  //   return billingCycleErr.length > 0
+  // }
 
   const handleSubmitForm = async (values) => {
     if (isReadOnly) {
@@ -398,9 +408,9 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
       return
     }
 
-    if (validateBillingCycle()) {
-      return
-    }
+    // if (validateBillingCycle()) {
+    //   return
+    // }
     // check trùng  mã khách hàng
     const dataCheck = { code: values.code }
     if (initValues?.id > 0) dataCheck.id = initValues?.id
@@ -527,40 +537,39 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
     onCancel?.(isDirty)
   }
 
-  const handleChangeArrayField = (onChange, field, index) => (event) => {
-    const dataBillingCycle = watch('billingCycle')
-    if (field === 'start' && index !== 0) {
-      const prevEnd = dataBillingCycle[index - 1].end?.value
-      if (
-        ((prevEnd === END_OF_MONTH_OPTION.value || prevEnd === 31) && event.value !== 1) ||
-        prevEnd !== event.value - 1
-      ) {
-        setError(`billingCycle[${index - 1}].end`, {
-          type: 'custom',
-          message: <FormattedMessage id="Start date must be the next day of the previous period's end date" />
-        })
-      } else {
-        clearErrors([`billingCycle[${index}].start`, `billingCycle[${index - 1}].end`])
-      }
-    }
-    if (field === 'end' && index !== dataBillingCycle.length - 1) {
-      const nextStart = dataBillingCycle[index + 1].start?.value
+  // const handleChangeArrayField = (onChange, field, index) => (event) => {
+  //   const dataBillingCycle = watch('billingCycle')
+  //   if (field === 'start' && index !== 0) {
+  //     const prevEnd = dataBillingCycle[index - 1].end?.value
+  //     if (
+  //       ((prevEnd === END_OF_MONTH_OPTION.value || prevEnd === 31) && event.value !== 1) ||
+  //       prevEnd !== event.value - 1
+  //     ) {
+  //       setError(`billingCycle[${index - 1}].end`, {
+  //         type: 'custom',
+  //         message: <FormattedMessage id="Start date must be the next day of the previous period's end date" />
+  //       })
+  //     } else {
+  //       clearErrors([`billingCycle[${index}].start`, `billingCycle[${index - 1}].end`])
+  //     }
+  //   }
+  //   if (field === 'end' && index !== dataBillingCycle.length - 1) {
+  //     const nextStart = dataBillingCycle[index + 1].start?.value
 
-      if (
-        ((event.value === END_OF_MONTH_OPTION.value || event.value === 31) && nextStart !== 1) ||
-        event.value !== nextStart - 1
-      ) {
-        console.log(' fg')
-        setError(`billingCycle[${index + 1}].start`, {
-          type: 'custom',
-          message: <FormattedMessage id="Start date must be the next day of the previous period's end date" />
-        })
-      } else {
-        clearErrors([`billingCycle[${index}].end`, `billingCycle[${index + 1}].start`])
-      }
-    }
-    onChange?.(event)
-  }
+  //     if (
+  //       ((event.value === END_OF_MONTH_OPTION.value || event.value === 31) && nextStart !== 1) ||
+  //       event.value !== nextStart - 1
+  //     ) {
+  //       setError(`billingCycle[${index + 1}].start`, {
+  //         type: 'custom',
+  //         message: <FormattedMessage id="Start date must be the next day of the previous period's end date" />
+  //       })
+  //     } else {
+  //       clearErrors([`billingCycle[${index}].end`, `billingCycle[${index + 1}].start`])
+  //     }
+  //   }
+  //   onChange?.(event)
+  // }
 
   const handleClickToFileInput = (e) => {
     e.target.value = null
@@ -749,7 +758,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                       </Col>
                       <Col xs={12} lg={3}>
                         <Controller
-                          render={({ onChange, ...field }) => {
+                          render={(field) => {
                             return (
                               <Select
                                 {...field}
@@ -759,7 +768,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                                 classNamePrefix="select"
                                 options={DAYS_OF_MONTH_OPTIONS}
                                 formatOptionLabel={(option) => <>{option.label}</>}
-                                onChange={handleChangeArrayField(onChange, 'start', index)}
+                                // onChange={handleChangeArrayField(onChange, 'start', index)}
                               />
                             )
                           }}
@@ -772,7 +781,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                       </Col>
                       <Col xs={12} lg={3}>
                         <Controller
-                          render={({ onChange, ...field }) => {
+                          render={(field) => {
                             return (
                               <Select
                                 {...field}
@@ -782,7 +791,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                                 classNamePrefix="select"
                                 options={[...DAYS_OF_MONTH_OPTIONS, END_OF_MONTH_OPTION]}
                                 formatOptionLabel={(option) => <>{option.label}</>}
-                                onChange={handleChangeArrayField(onChange, 'end', index)}
+                                // onChange={handleChangeArrayField(onChange, 'end', index)}
                               />
                             )
                           }}
@@ -795,7 +804,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                       </Col>
                       <Col xs={12} lg={3}>
                         <Controller
-                          render={({ onChange, ...field }) => {
+                          render={(field) => {
                             return (
                               <Select
                                 {...field}
@@ -805,7 +814,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                                 classNamePrefix="select"
                                 options={MONTH_OPTIONS}
                                 formatOptionLabel={(option) => <>{option.label}</>}
-                                onChange={handleChangeArrayField(onChange, 'month', index)}
+                                // onChange={handleChangeArrayField(onChange, 'month', index)}
                               />
                             )
                           }}

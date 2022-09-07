@@ -89,7 +89,6 @@ const VerticalNavMenuGroup = ({
 
   // ** On Group Item Click
   const onCollapseClick = (e, item) => {
-    console.log('e', e.target)
     if ((groupActive && groupActive.includes(item.id)) || isNavGroupActive(item.children, currentURL, routerProps)) {
       toggleActiveGroup(item.id)
     } else {
@@ -111,7 +110,6 @@ const VerticalNavMenuGroup = ({
       return null
     }
   }
-
   return (
     <li
       className={classnames('nav-item has-sub', {

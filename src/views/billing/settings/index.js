@@ -22,12 +22,11 @@ const OperationUnit = ({ intl }) => {
   const { pagination = {}, searchValue } = params
 
   const fetchBillingSetting = (payload) => {
-    dispatch(
-      getListBillingSetting({
-        ...params,
-        ...payload
-      })
-    )
+    const tmpPayload = {
+      ...params,
+      ...payload
+    }
+    dispatch(getListBillingSetting(tmpPayload))
   }
 
   useEffect(() => {

@@ -17,55 +17,55 @@ export const ValidateSchemaObj = {
     yup.object().shape({
       start: yup
         .object()
-        .required(<FormattedMessage id="required-validate" />)
-        .test(
-          'test-start-date',
-          <FormattedMessage id="Start date must be the next day of the previous period's end date" />,
-          (value, context) => {
-            const { options } = context
+        .required(<FormattedMessage id="required-validate" />),
+        // .test(
+        //   'test-start-date',
+        //   <FormattedMessage id="Start date must be the next day of the previous period's end date" />,
+        //   (value, context) => {
+        //     const { options } = context
 
-            if (options.index === 0) return true
+        //     if (options.index === 0) return true
 
-            const curIndex = options.index
-            // get end value of previous index
-            const billingCycleValue = options.from?.length
-              ? options.from[options.from.length - 1]?.value?.billingCycle
-              : {}
+        //     const curIndex = options.index
+        //     // get end value of previous index
+        //     const billingCycleValue = options.from?.length
+        //       ? options.from[options.from.length - 1]?.value?.billingCycle
+        //       : {}
 
-            if (
-              billingCycleValue[curIndex - 1].end?.value === END_OF_MONTH_OPTION.value ||
-              billingCycleValue[curIndex - 1].end?.value === 31
-            ) {
-              return value.value === 1
-            } else {
-              return value.value === billingCycleValue[curIndex - 1].end?.value + 1
-            }
-          }
-        ),
+        //     if (
+        //       billingCycleValue[curIndex - 1].end?.value === END_OF_MONTH_OPTION.value ||
+        //       billingCycleValue[curIndex - 1].end?.value === 31
+        //     ) {
+        //       return value.value === 1
+        //     } else {
+        //       return value.value === billingCycleValue[curIndex - 1].end?.value + 1
+        //     }
+        //   }
+        // ),
       end: yup
         .object()
         .required(<FormattedMessage id="required-validate" />)
-        .test(
-          'test-end-date',
-          <FormattedMessage id="Start date must be the next day of the previous period's end date" />,
-          (value, context) => {
-            const { options } = context
-            const billingCycleValue = options.from?.length
-              ? options.from[options.from.length - 1]?.value?.billingCycle
-              : []
+        // .test(
+        //   'test-end-date',
+        //   <FormattedMessage id="Start date must be the next day of the previous period's end date" />,
+        //   (value, context) => {
+        //     const { options } = context
+        //     const billingCycleValue = options.from?.length
+        //       ? options.from[options.from.length - 1]?.value?.billingCycle
+        //       : []
 
-            if (options.index === billingCycleValue.length - 1) return true
+        //     if (options.index === billingCycleValue.length - 1) return true
 
-            const curIndex = options.index
-            // get end value of n index
+        //     const curIndex = options.index
+        //     // get end value of n index
 
-            if (value.value === END_OF_MONTH_OPTION.value || value.value === 31) {
-              return billingCycleValue[curIndex + 1].start.value === 1
-            } else {
-              return value.value === billingCycleValue[curIndex + 1].start?.value - 1
-            }
-          }
-        )
+        //     if (value.value === END_OF_MONTH_OPTION.value || value.value === 31) {
+        //       return billingCycleValue[curIndex + 1].start.value === 1
+        //     } else {
+        //       return value.value === billingCycleValue[curIndex + 1].start?.value - 1
+        //     }
+        //   }
+        // )
     })
   ),
   manualInputAlert: yup

@@ -137,8 +137,8 @@ export const BillingRoutes = [
     exact: true,
     meta: {
       action: 'manage',
-      resource: ROUTER_URL.BILLING_PROJECT_CREATE_ROOF_VENDOR,
-      navLink: ROUTER_URL.BILLING_PROJECT_CREATE_ROOF_VENDOR
+      resource: ROUTER_URL.BILLING_PROJECT,
+      navLink: ROUTER_URL.BILLING_PROJECT
     }
   },
   {
@@ -149,8 +149,8 @@ export const BillingRoutes = [
     exact: true,
     meta: {
       action: 'manage',
-      resource: ROUTER_URL.BILLING_PROJECT_UPDATE_ROOF_VENDOR,
-      navLink: ROUTER_URL.BILLING_PROJECT_UPDATE_ROOF_VENDOR
+      resource: ROUTER_URL.BILLING_PROJECT,
+      navLink: ROUTER_URL.BILLING_PROJECT
     }
   },
   {
