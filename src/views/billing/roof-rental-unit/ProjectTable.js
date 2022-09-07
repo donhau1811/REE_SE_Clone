@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { getListProjectByRoofVendorId } from '../project/store/actions'
 import { ROWS_PER_PAGE_DEFAULT } from '@src/utility/constants'
+import { isEqual } from 'lodash'
 
 const ProjectTable = ({ intl }) => {
   const { id } = useParams()
@@ -17,7 +18,7 @@ const ProjectTable = ({ intl }) => {
 
   const [total, setTotal] = useState(0)
 
-  const fetchListProject = (payload = {}) => {
+  const fetchListProject = (payload = {}, isSort) => {
     const tempPayload = {
       roofVendorId: id,
       pagination,
@@ -29,6 +30,16 @@ const ProjectTable = ({ intl }) => {
       getListProjectByRoofVendorId({
         payload: tempPayload,
         callback: (res) => {
+          if (isSort && isEqual(res.data, projects)) {
+            fetchListProject({
+              ...tempPayload,
+              params: {
+                ...tempPayload.params,
+                sortDirection: tempPayload.params?.sortDirection === 'asc' ? 'desc' : 'asc'
+              }
+            })
+            return
+          }
           setProjects(res.data || [])
           setTotal(res?.count || 0)
           setPagination(tempPayload.pagination)
@@ -64,12 +75,15 @@ const ProjectTable = ({ intl }) => {
   }
 
   const handleSort = (column, direction) => {
-    fetchListProject({
-      params: {
-        sortBy: column.selector,
-        sortDirection: direction
-      }
-    })
+    fetchListProject(
+      {
+        params: {
+          sortBy: column.selector,
+          sortDirection: direction
+        }
+      },
+      true
+    )
   }
   const columns = [
     {
@@ -115,7 +129,6 @@ const ProjectTable = ({ intl }) => {
       name: intl.formatMessage({ id: 'Roof vendor alert form' }),
       selector: 'contractName',
       sortable: true
-
     }
   ]
 
