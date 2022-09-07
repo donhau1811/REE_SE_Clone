@@ -193,3 +193,6 @@ export const API_DELETE_CLOCK = `${BASE_API_URL_V2}/clock/delete`
 export const API_ADD_CLOCK = `${BASE_API_URL_V2}/clock/create`
 export const API_UPDATE_CLOCK = `${BASE_API_URL_V2}/clock/update`
 export const API_GET_ALL_CLOCK_BY_CONTRACT_ID = `${BASE_API_URL_V2}/clock/contractId`
+//meter
+export const API_FILLTER_METERS = `${BASE_API_URL_V2}/meter/meter-filter`
+export const API_FILLTER_METERS_METRIC = `${BASE_API_URL_V2}/meter/meter-metrics`

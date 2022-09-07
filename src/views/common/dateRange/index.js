@@ -1,33 +1,47 @@
 import { ReactComponent as IconCalendar } from '@src/assets/images/svg/carlendar.svg'
-import { InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap'
-import DateRangePicker from 'react-bootstrap-daterangepicker'
 import 'bootstrap-daterangepicker/daterangepicker.css'
+import moment from 'moment'
+import { bool, func, string } from 'prop-types'
+import { useState } from 'react'
+import DateRangePicker from 'react-bootstrap-daterangepicker'
 import { injectIntl } from 'react-intl'
-import { func } from 'prop-types'
+import { Input, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap'
 
 // eslint-disable-next-line no-unused-vars
-const CustomDateRangePicker = ({ onChange = () => {} }) => {
-  const change = (item) => {
-    console.log('item', item)
-    console.log('go he')
+const CustomDateRangePicker = ({ onChange = () => {}, disable, initValue }) => {
+  const [dateValue, setDateValue] = useState(
+    initValue || `${moment().format('DD/MM/YYYY')} - ${moment().format('DD/MM/YYYY')}`
+  )
+  const handleCallback = (start, end) => {
+    setDateValue(`${start.format('DD/MM/YYYY')} - ${end.format('DD/MM/YYYY')}`)
+    onChange(`${start.format('DD/MM/YYYY')} - ${end.format('DD/MM/YYYY')}`)
   }
   return (
     <>
       <InputGroup className="input-group-merge">
-        <DateRangePicker  initialSettings={{ startDate: '01/01/2020', endDate: '01/15/2020' }}>
-          <input  onChange={change} id="Meters" name="Meters" type="text" className="form-control" />
-        </DateRangePicker>
-        <InputGroupAddon addonType="append">
-          <InputGroupText>
-            <IconCalendar />
-          </InputGroupText>
-        </InputGroupAddon>
+        <Input value={dateValue} id="Meters" name="Meters" type="text" />
+        {!disable && (
+          <InputGroupAddon addonType="append" className="">
+            <DateRangePicker
+              onCallback={handleCallback}
+              initialSettings={{ startDate: '01/01/2020', endDate: '01/15/2020' }}
+            >
+              <div className="borderCustom">
+                <InputGroupText className="no-boder">
+                  <IconCalendar />
+                </InputGroupText>
+              </div>
+            </DateRangePicker>
+          </InputGroupAddon>
+        )}
       </InputGroup>
     </>
   )
 }
 
 CustomDateRangePicker.propTypes = {
-  onChange: func
+  onChange: func,
+  disable: bool,
+  initValue: string
 }
 export default injectIntl(CustomDateRangePicker)

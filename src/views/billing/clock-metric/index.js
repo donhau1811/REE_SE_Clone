@@ -8,8 +8,8 @@ import {  injectIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import {  Col, Row } from 'reactstrap'
 import PageHeader from './PageHeader'
-import { getListOperationUnit } from './store/actions/index'
 import Table from '@src/views/common/table/CustomDataTable'
+import { getListOperationUnit } from '../operation-unit/store/actions'
 
 const OperationUnit = ({ intl }) => {
   const dispatch = useDispatch()

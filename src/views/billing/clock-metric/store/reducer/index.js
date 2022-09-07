@@ -1,11 +1,11 @@
 import { ROWS_PER_PAGE_DEFAULT } from '@constants/index'
-import { FETCH_COMPANY_REQUEST, SET_OPERATION_UNIT_PARAMS, SET_SELECTED_OPERATION_UNIT } from '@constants/actions'
+import { FETCH_METER_METRIC_REQUEST, FETCH_METER_REQUEST } from '@constants/actions'
 
 // ** Initial State
 const initialState = {
   data: [],
+  meterMetric:[],
   total: 0,
-  selectedCompany: {},
   params: {
     pagination: {
       rowsPerPage: ROWS_PER_PAGE_DEFAULT,
@@ -15,24 +15,20 @@ const initialState = {
 }
 
 const reducer = (state = initialState, action) => {
+
   switch (action.type) {
-    case FETCH_COMPANY_REQUEST:
+    case FETCH_METER_REQUEST:
       return {
         ...state,
-        data: action?.data ? action.data : state.data,
-        params: action.params,
-        total: action.total
+        data: action?.payload?.data ? action.payload.data : state.data
       }
-    case SET_SELECTED_OPERATION_UNIT:
-      return {
-        ...state,
-        selectedCompany: action.payload
-      }
-    case SET_OPERATION_UNIT_PARAMS:
-      return {
-        ...state,
-        params: action.payload
-      }
+    case FETCH_METER_METRIC_REQUEST: 
+    return {
+      ...state,
+      meterMetric: action?.payload?.data ? action.payload.data : state.data,
+      params: action?.payload.params,
+      total : action?.payload?.total
+    }
     default:
       return state
   }
