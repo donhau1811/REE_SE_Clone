@@ -6,11 +6,13 @@ import PageHeader from './PageHeader'
 import Table from '@src/views/common/table/CustomDataTable'
 import { getClockMetricBySeri } from './store/actions'
 import moment from 'moment'
+import { numberWithCommas } from '@src/utility/Utils'
+import { useState } from 'react'
 
 const ClockMetric = ({ intl }) => {
   const dispatch = useDispatch()
   const { meterMetric, params, total } = useSelector((state) => state.billingMeter)
-
+  const [isSearching, setIsSearching] = useState(false)
   const { pagination = {}, filterValue = {} } = params
   const fetchClockMetrics = (payload) => {
     dispatch(
@@ -46,6 +48,7 @@ const ClockMetric = ({ intl }) => {
     })
   }
   const handleFilter = (value) => {
+    setIsSearching(true)
     fetchClockMetrics({
       pagination: {
         ...pagination,
@@ -57,8 +60,10 @@ const ClockMetric = ({ intl }) => {
   const columns = [
     {
       name: intl.formatMessage({ id: 'Time' }),
-      // eslint-disable-next-line no-mixed-operators
-      cell: (row) => moment(row.createDate).format('DD/MM/YYYY')
+      cell: (row) => moment(row.createDate).format('DD/MM/YYYY H:mm:ss'),
+      minWidth: '200px',
+      sortable: true,
+      selector: 'createDate'
     },
     {
       name: intl.formatMessage({ id: 'meters' }),
@@ -73,8 +78,7 @@ const ClockMetric = ({ intl }) => {
     {
       name: intl.formatMessage({ id: 'Coefficient' }),
       sortable: true,
-      center: true,
-      cell : (row) => row.totalActiveEnergy.value
+      center: true
     },
     {
       name: intl.formatMessage({ id: 'Price list' }),
@@ -84,32 +88,39 @@ const ClockMetric = ({ intl }) => {
     },
     {
       name: intl.formatMessage({ id: 'Index p delivered' }),
-      selector: 'address',
+      selector: 'totalActiveEnergy',
       sortable: true,
-      center: true
+      center: true,
+      cell: (row) => numberWithCommas(row.totalActiveEnergy.value / 100)
     },
     {
       name: intl.formatMessage({ id: 'P index received' }),
-      selector: 'address',
       sortable: true,
-      center: true
+      center: true,
+      selector: 'totalActiveEnergySub',
+
+      cell: (row) => numberWithCommas(row.totalActiveEnergySub.value / 100)
     },
     {
       name: intl.formatMessage({ id: 'Index q delivered' }),
-      selector: 'address',
+      cell: (row) => numberWithCommas(row.totalReactiveEnergyPlusLag.value / 100),
       sortable: true,
-      center: true
+      center: true,
+      selector: 'totalReactiveEnergyPlusLag'
     },
     {
       name: intl.formatMessage({ id: 'Q index received' }),
-      selector: 'address',
+      cell: (row) => numberWithCommas(row.totalReactiveEnergySubLead.value / 100),
       sortable: true,
-      center: true
+      center: true,
+      selector: 'totalReactiveEnergySubLead'
     },
     {
       name: intl.formatMessage({ id: 'P max' }),
-      selector: 'phone',
-      sortable: true
+      selector: 'totalActiveMdPlus',
+      sortable: true,
+
+      cell: (row) => numberWithCommas(row.totalActiveMdPlus.value / 100)
     },
     {
       name: intl.formatMessage({ id: 'Time P max' }),
@@ -133,7 +144,7 @@ const ClockMetric = ({ intl }) => {
             onSort={handleSort}
             isSearching={filterValue !== {}}
             {...pagination}
-            noDataTitle={<FormattedMessage id="No data metric" />}
+            noDataTitle={<FormattedMessage id={!isSearching ? 'No data metric' : 'Not found any result. Please try again'} />}
           />
         </Col>
       </Row>

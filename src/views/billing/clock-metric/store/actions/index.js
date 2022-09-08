@@ -23,7 +23,6 @@ export const getClockByCustomerAndProjectId = (params = {}) => {
     await axios
       .post(API_FILLTER_METERS, payload)
       .then((response) => {
-        console.log('reponse', response)
         if (response.status === 200 && response.data.data) {
           const payload = get(response, 'data.data', {})
           console.log(payload)
@@ -53,7 +52,7 @@ export const getClockMetricBySeri = (params = {}) => {
       ...rest,
       filterValue,
       rowsPerPage: pagination?.rowsPerPage,
-      page: pagination?.rowsPerPage * (pagination?.currentPage - 1),
+      page: pagination?.currentPage,
       sortBy: 'serialNumber',
       sortDirection: 'asc'
     }

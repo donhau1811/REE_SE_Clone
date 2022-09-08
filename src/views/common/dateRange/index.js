@@ -23,7 +23,7 @@ const CustomDateRangePicker = ({ onChange = () => {}, disable, initValue }) => {
           <InputGroupAddon addonType="append" className="">
             <DateRangePicker
               onCallback={handleCallback}
-              initialSettings={{ startDate: '01/01/2020', endDate: '01/15/2020' }}
+              initialSettings={{ startDate: moment().format('DD/MM/YYYY'), endDate: moment().format('DD/MM/YYYY')}}
             >
               <div className="borderCustom">
                 <InputGroupText className="no-boder">

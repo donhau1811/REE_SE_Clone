@@ -61,8 +61,8 @@ const PageHeader = ({ onFilter, filterValue }) => {
   const handleFilter = (value) => {
     const newData = {
       serialNumber: value?.clock?.value,
-      fromDate: value?.dateRange?.split('-')[0],
-      toDate: value?.dateRange?.split('-')[1]
+      fromDate: moment(value?.dateRange?.split('-')[0]).format('YYYY-MM-DD'),
+      toDate: moment(value?.dateRange?.split('-')[1]).format('YYYY-MM-DD')
     }
     onFilter(newData)
   }
