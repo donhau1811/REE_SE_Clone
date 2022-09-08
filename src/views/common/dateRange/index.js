@@ -7,7 +7,6 @@ import DateRangePicker from 'react-bootstrap-daterangepicker'
 import { injectIntl } from 'react-intl'
 import { Input, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap'
 
-// eslint-disable-next-line no-unused-vars
 const CustomDateRangePicker = ({ onChange = () => {}, disable, initValue }) => {
   const [dateValue, setDateValue] = useState(
     initValue || `${moment().format('DD/MM/YYYY')} - ${moment().format('DD/MM/YYYY')}`

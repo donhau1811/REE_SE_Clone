@@ -1882,5 +1882,6 @@
   "Q index received":"Chỉ số Q nhận",
   "Time P max": "Thời gian P max",
   "Filter data":"Lọc dữ liệu",
-  "Select clock":"Chọn đồng hồ"
+  "Select clock":"Chọn đồng hồ",
+  "No data metric":"Lọc dữ liệu để xem thông tin các kỳ dữ liệu của dự án"
 }

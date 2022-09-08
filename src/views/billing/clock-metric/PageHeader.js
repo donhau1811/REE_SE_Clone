@@ -1,4 +1,4 @@
-import { func, object, string } from 'prop-types'
+import { func, object } from 'prop-types'
 import React, { useEffect } from 'react'
 import { FormattedMessage, injectIntl, useIntl } from 'react-intl'
 import { Button, Col, Label, Row } from 'reactstrap'
@@ -12,10 +12,12 @@ import { GENERAL_STATUS } from '@src/utility/constants/billing'
 import { getListCustomerByProjectId } from '../customer/store/actions'
 import CustomDateRangePicker from '@src/views/common/dateRange'
 import { getClockByCustomerAndProjectId } from './store/actions'
-const PageHeader = () => {
+import moment from 'moment'
+// eslint-disable-next-line no-unused-vars
+const PageHeader = ({ onFilter, filterValue }) => {
   const intl = useIntl()
   const dispatch = useDispatch()
-  const { control, register, watch, handleSubmit } = useForm()
+  const { control, register, watch, handleSubmit, setValue } = useForm()
 
   useEffect(() => {
     dispatch(getProjects())
@@ -38,7 +40,6 @@ const PageHeader = () => {
     return { value: item.seri, label: item.name }
   })
 
-
   useEffect(() => {
     if (watch('project')?.value) dispatch(getListCustomerByProjectId({ id: watch('project')?.value }))
   }, [watch('project')])
@@ -51,7 +52,20 @@ const PageHeader = () => {
     }
   }, [watch('customer'), watch('project')])
 
-  
+  useEffect(() => {
+      setValue('clock', labelClock[0])
+    
+    
+  }, [watch('customer'), clock])
+
+  const handleFilter = (value) => {
+    const newData = {
+      serialNumber: value?.clock?.value,
+      fromDate: value?.dateRange?.split('-')[0],
+      toDate: value?.dateRange?.split('-')[1]
+    }
+    onFilter(newData)
+  }
   return (
     <>
       <Form className="billing-form">
@@ -101,17 +115,13 @@ const PageHeader = () => {
             <Controller
               as={CustomDateRangePicker}
               control={control}
+              defaultValue={`${moment().format('DD/MM/YYYY')} - ${moment().format('DD/MM/YYYY')}`}
               theme={selectThemeColors}
               name="dateRange"
               id="dateRange"
-              render={({ field: { onChange, onBlur, value, ref } }) => (
-                <CustomDateRangePicker
-                  onBlur={onBlur} // notify when input is touched
-                  onChange={onChange} // send value to hook form
-                  checked={value}
-                  inputRef={ref}
-                />
-              )}
+              innerRef={register()}
+              className="react-select"
+              classNamePrefix="select"
             />
           </Col>
           <Col md="4">
@@ -134,11 +144,7 @@ const PageHeader = () => {
           </Col>
 
           <Col lg={{ size: 3 }} md={3} className="d-flex align-items-center mt-2">
-            <Button.Ripple
-              color="primary"
-              className="add-project"
-              onClick={handleSubmit((value) => console.log(value))}
-            >
+            <Button.Ripple color="primary" className="add-project" onClick={handleSubmit(handleFilter)}>
               <FormattedMessage id="Filter data" />
             </Button.Ripple>
           </Col>
@@ -152,7 +158,7 @@ PageHeader.propTypes = {
   intl: object.isRequired,
   onSearch: func,
   onFilter: func,
-  searchValue: string
+  filterValue: object
 }
 
 export default injectIntl(PageHeader)

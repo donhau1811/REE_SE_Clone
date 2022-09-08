@@ -23,11 +23,12 @@ const reducer = (state = initialState, action) => {
         data: action?.payload?.data ? action.payload.data : state.data
       }
     case FETCH_METER_METRIC_REQUEST: 
+    console.log('go her', action)
     return {
       ...state,
-      meterMetric: action?.payload?.data ? action.payload.data : state.data,
-      params: action?.payload.params,
-      total : action?.payload?.total
+      meterMetric: action?.data ? action?.data : state.data,
+      params: action?.payload,
+      total : action?.totalRow
     }
     default:
       return state
