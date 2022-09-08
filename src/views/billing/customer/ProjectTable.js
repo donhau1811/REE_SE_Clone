@@ -8,6 +8,7 @@ import { ROWS_PER_PAGE_DEFAULT } from '@src/utility/constants'
 import { useDispatch } from 'react-redux'
 import { getListProjectByCustomerId } from '../project/store/actions'
 import { useParams } from 'react-router-dom'
+import { isEqual } from 'lodash'
 
 const ProjectTable = ({ intl }) => {
   const [pagination, setPagination] = useState()
@@ -18,7 +19,7 @@ const ProjectTable = ({ intl }) => {
   const [projects, setProjects] = useState([])
   const dispatch = useDispatch()
 
-  const fetchListProject = (payload = {}) => {
+  const fetchListProject = (payload = {}, isSort) => {
     const tempPayload = {
       customerId: id,
       pagination,
@@ -30,6 +31,17 @@ const ProjectTable = ({ intl }) => {
         payload: tempPayload,
 
         callback: (res) => {
+          if (isSort && isEqual(res.data, projects)) {
+            fetchListProject({
+              ...tempPayload,
+              params: {
+                ...tempPayload.params,
+                sortDirection: tempPayload.params?.sortDirection === 'asc' ? 'desc' : 'asc'
+              }
+            })
+            return
+          }
+
           setProjects(res.data || [])
           setTotal(res?.count || 0)
           setPagination(tempPayload.pagination)
@@ -65,12 +77,15 @@ const ProjectTable = ({ intl }) => {
   }
 
   const handleSort = (column, direction) => {
-    fetchListProject({
-      params: {
-        sortBy: column.selector,
-        sortDirection: direction
-      }
-    })
+    fetchListProject(
+      {
+        params: {
+          sortBy: column.selector,
+          sortDirection: direction
+        }
+      },
+      true
+    )
   }
   const columns = [
     {

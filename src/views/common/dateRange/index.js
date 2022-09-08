@@ -1,4 +1,5 @@
 import { ReactComponent as IconCalendar } from '@src/assets/images/svg/carlendar.svg'
+import { DISPLAY_DATE_FORMAT } from '@src/utility/constants'
 import 'bootstrap-daterangepicker/daterangepicker.css'
 import moment from 'moment'
 import { bool, func, string } from 'prop-types'
@@ -9,11 +10,11 @@ import { Input, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap'
 
 const CustomDateRangePicker = ({ onChange = () => {}, disable, initValue }) => {
   const [dateValue, setDateValue] = useState(
-    initValue || `${moment().format('DD/MM/YYYY')} - ${moment().format('DD/MM/YYYY')}`
+    initValue || `${moment().format(DISPLAY_DATE_FORMAT)} - ${moment().format(DISPLAY_DATE_FORMAT)}`
   )
   const handleCallback = (start, end) => {
-    setDateValue(`${start.format('DD/MM/YYYY')} - ${end.format('DD/MM/YYYY')}`)
-    onChange(`${start.format('DD/MM/YYYY')} - ${end.format('DD/MM/YYYY')}`)
+    setDateValue(`${start.format(DISPLAY_DATE_FORMAT)} - ${end.format(DISPLAY_DATE_FORMAT)}`)
+    onChange(`${start.format(DISPLAY_DATE_FORMAT)} - ${end.format(DISPLAY_DATE_FORMAT)}`)
   }
   return (
     <>
@@ -23,7 +24,7 @@ const CustomDateRangePicker = ({ onChange = () => {}, disable, initValue }) => {
           <InputGroupAddon addonType="append" className="">
             <DateRangePicker
               onCallback={handleCallback}
-              initialSettings={{ startDate: moment().format('DD/MM/YYYY'), endDate: moment().format('DD/MM/YYYY')}}
+              initialSettings={{ startDate: moment().format(DISPLAY_DATE_FORMAT), endDate: moment().format(DISPLAY_DATE_FORMAT)}}
             >
               <div className="borderCustom">
                 <InputGroupText className="no-boder">

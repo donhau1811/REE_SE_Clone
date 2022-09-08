@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { ISO_DISPLAY_DATE_TIME_FORMAT, ROUTER_URL } from '@src/utility/constants'
+import { ISO_DISPLAY_DATE_TIME_FORMAT, ROUTER_URL, SET_FORM_DIRTY } from '@src/utility/constants'
 import moment from 'moment'
 import { object } from 'prop-types'
 import React from 'react'
@@ -43,6 +43,10 @@ const CreateProject = ({ intl }) => {
       postProject({
         params,
         callback: (res) => {
+          dispatch({
+            type: SET_FORM_DIRTY,
+            payload: false
+          })
           history.push({
             pathname: `${ROUTER_URL.BILLING_PROJECT}/${res.id}`,
             state: { isFromCreateStep: true, allowUpdate: true }
@@ -61,49 +65,14 @@ CreateProject.propTypes = {
 export default injectIntl(CreateProject)
 
 export const Navbar = () => {
-  const {
-    layout: { skin },
-    form: { isFormGlobalDirty }
-  } = useSelector((state) => state)
   const intl = useIntl()
-  const history = useHistory()
-
-  const handleBreadCrumbsRedirct = (event) => {
-    event.preventDefault()
-    if (isFormGlobalDirty) {
-      return MySweetAlert.fire({
-        title: intl.formatMessage({ id: 'Cancel confirmation' }),
-        text: intl.formatMessage({ id: 'Are you sure to cancel?' }),
-        showCancelButton: true,
-        confirmButtonText: intl.formatMessage({ id: 'Yes' }),
-        cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),
-        customClass: {
-          popup: classNames({
-            'sweet-alert-popup--dark': skin === 'dark',
-            'sweet-popup': true
-          }),
-          header: 'sweet-title',
-          confirmButton: 'btn btn-primary',
-          cancelButton: 'btn btn-secondary ml-1',
-          actions: 'sweet-actions',
-          content: 'sweet-content'
-        },
-        buttonsStyling: false
-      }).then(({ isConfirmed }) => {
-        if (isConfirmed) {
-          history.push(ROUTER_URL.BILLING_PROJECT)
-        }
-      })
-    }
-    history.push(ROUTER_URL.BILLING_PROJECT)
-  }
 
   const tempItems = [
     { name: intl.formatMessage({ id: 'billing' }), link: '' },
     { name: intl.formatMessage({ id: 'project management' }) },
     {
       name: intl.formatMessage({ id: 'project' }),
-      innerProps: { tag: 'a', href: '#', onClick: handleBreadCrumbsRedirct }
+      link: ROUTER_URL.BILLING_PROJECT
     },
     { name: intl.formatMessage({ id: 'create-project' }) }
   ]

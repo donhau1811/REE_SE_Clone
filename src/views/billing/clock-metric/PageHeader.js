@@ -13,6 +13,7 @@ import { getListCustomerByProjectId } from '../customer/store/actions'
 import CustomDateRangePicker from '@src/views/common/dateRange'
 import { getClockByCustomerAndProjectId } from './store/actions'
 import moment from 'moment'
+import { DISPLAY_DATE_FORMAT, ISO_STANDARD_FORMAT } from '@src/utility/constants'
 // eslint-disable-next-line no-unused-vars
 const PageHeader = ({ onFilter, filterValue }) => {
   const intl = useIntl()
@@ -61,8 +62,8 @@ const PageHeader = ({ onFilter, filterValue }) => {
   const handleFilter = (value) => {
     const newData = {
       serialNumber: value?.clock?.value,
-      fromDate: moment(value?.dateRange?.split('-')[0]).format('YYYY-MM-DD'),
-      toDate: moment(value?.dateRange?.split('-')[1]).format('YYYY-MM-DD')
+      fromDate: moment(value?.dateRange?.split('-')[0]).format(ISO_STANDARD_FORMAT),
+      toDate: moment(value?.dateRange?.split('-')[1]).format(ISO_STANDARD_FORMAT)
     }
     onFilter(newData)
   }
@@ -115,7 +116,7 @@ const PageHeader = ({ onFilter, filterValue }) => {
             <Controller
               as={CustomDateRangePicker}
               control={control}
-              defaultValue={`${moment().format('DD/MM/YYYY')} - ${moment().format('DD/MM/YYYY')}`}
+              defaultValue={`${moment().format(DISPLAY_DATE_FORMAT)} - ${moment().format(DISPLAY_DATE_FORMAT)}`}
               theme={selectThemeColors}
               name="dateRange"
               id="dateRange"

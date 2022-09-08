@@ -95,7 +95,6 @@ function ValueCUForm({ value, intl, onSubmit = () => {}, onCancel, isReadOnly })
   const handleSubmitForm = (values) => {
     onSubmit?.(values)
   }
-  console.log('grdyh', value, value?.id === '-1')
 
   return (
     <>
