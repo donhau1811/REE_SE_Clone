@@ -26,7 +26,6 @@ export const getClockByCustomerAndProjectId = (params = {}) => {
       .then((response) => {
         if (response.status === 200 && response.data.data) {
           const payload = get(response, 'data.data', {})
-          console.log(payload)
           dispatch({
             type: FETCH_METER_REQUEST,
             payload
@@ -89,10 +88,8 @@ export const getAllClock = () => {
     await axios
       .get(GET_ALL_CLOCK)
       .then((response) => {
-        console.log('rp', response)
         if (response.status === 200 && response.data.data) {
           const payload = get(response, 'data', {})
-          console.log(payload)
           dispatch({
             type: FETCH_METER_REQUEST,
             payload

@@ -67,12 +67,9 @@ const PageHeader = ({ onFilter, filterValue, setSelectedClock }) => {
     onFilter(newData)
   }
   const handleChange = (value) => {
-    console.log('cl', value)
     if (value) {
       setPicker(value)
-    } else {
-      setPicker([new Date(), new Date()])
-    }
+    } 
   }
   return (
     <>
