@@ -266,7 +266,7 @@ const OperationUnit = ({ intl }) => {
             onPerPageChange={handlePerPageChange}
             onSort={handleSort}
             defaultSortAsc={false}
-            isSearching={searchValue?.trim() || filterValue !== {}}
+            isSearching={searchValue?.trim() || JSON.stringify(filterValue) !== "{}"}
             {...pagination}
           />
         </Col>
