@@ -9,6 +9,11 @@ export const GENERAL_STATUS_OPTS = [
   { value: GENERAL_STATUS.ACTIVE, label: 'Active' },
   { value: GENERAL_STATUS.INACTIVE, label: 'Inactive' }
 ]
+export const GENERAL_STATUS_OPTIS = [
+  { value: 'ALL_STATUS', label: 'AllStatus' },
+  { value: GENERAL_STATUS.ACTIVE, label: 'Active' },
+  { value: GENERAL_STATUS.INACTIVE, label: 'Inactive' }
+]
 
 export const ENTERPRISE = 'ENTERPRISE'
 export const EVN = 'EVN'

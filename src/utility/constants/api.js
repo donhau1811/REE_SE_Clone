@@ -164,6 +164,7 @@ export const API_UPDATE_CONTACT = `${BASE_API_URL_V2}/contacts/update`
 export const API_DELETE_CONTACT = `${BASE_API_URL_V2}/contacts/delete`
 export const API_GET_CUSTOMER_BY_ID = `${BASE_API_URL_V2}/customer/id`
 export const API_GET_CONTACT_BY_CUSTOMER_ID = `${BASE_API_URL_V2}/contacts/customerId`
+export const API_GET_ALL_CUSTOMERS = `${BASE_API_URL_V2}/customer/all`
 export const API_GET_LIST_CUSTOMER_BY_PROJECT_ID = `${BASE_API_URL_V2}/customer/project-id`
 
 export const API_ROOF_RETAL_UNIT = `${BASE_API_URL}/api/v1/billing/roof`

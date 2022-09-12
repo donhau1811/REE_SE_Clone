@@ -2,7 +2,8 @@ import {
   API_ADD_CONTACT,
   API_ADD_CUSTOMER_V2,
   API_DELETE_CUSTOMER_V2,
-  API_GET_ALL_CUSTOMER,
+  API_GET_ALL_CUSTOMERS,
+  //API_GET_ALL_CUSTOMER,
   API_GET_CONTACT_BY_CUSTOMER_ID,
   API_GET_CUSTOMER_BY_ID,
   API_GET_LIST_CUSTOMER,
@@ -167,7 +168,7 @@ export const getCustomerWithContactsById = ({ id, isSavedToState, callback }) =>
   }
 }
 
-export const getListCustomerByProjectId = ({id}) => {
+export const getListCustomerByProjectId = ({ id }) => {
   return async (dispatch) => {
     await axios
       .get(`${API_GET_LIST_CUSTOMER_BY_PROJECT_ID}/${id}`)
@@ -177,7 +178,6 @@ export const getListCustomerByProjectId = ({id}) => {
             type: FETCH_CUSTOMERS_REQUEST,
             data: response.data.data,
             total: response.data.count
-            
           })
         } else {
           throw new Error(response.data.message)
@@ -192,14 +192,14 @@ export const getListCustomerByProjectId = ({id}) => {
 export const getAllCustomer = () => {
   return async (dispatch) => {
     await axios
-      .get(`${API_GET_ALL_CUSTOMER}`)
+      .get(API_GET_ALL_CUSTOMERS)
+
       .then((response) => {
         if (response.status === 200 && response.data.data) {
           dispatch({
             type: FETCH_CUSTOMERS_REQUEST,
             data: response.data.data,
             total: response.data.count
-            
           })
         } else {
           throw new Error(response.data.message)

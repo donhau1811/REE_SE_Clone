@@ -32,8 +32,7 @@ const ProjectCUForm = ({
   isReadOnly,
   submitText,
   submitButton,
-  cancelButton,
-  cancelText
+  cancelButton
 }) => {
   const dispatch = useDispatch()
   const initState = { state: GENERAL_STATUS_OPTS[0] }
@@ -200,7 +199,7 @@ const ProjectCUForm = ({
       ) : null}
       {typeof cancelButton === 'undefined' ? (
         <Button color="secondary" onClick={handleCancel}>
-          {cancelText || intl.formatMessage({ id: 'Cancel' })}
+          {intl.formatMessage({ id: isReadOnly ? 'Back' : 'Cancel' })}
         </Button>
       ) : cancelButton ? (
         cloneElement(cancelButton, { onClick: handleCancel })
