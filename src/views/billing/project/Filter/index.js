@@ -42,7 +42,8 @@ const Filter = ({ intl, children, onSubmit = () => {} }) => {
 
   const { handleSubmit, control, register, errors, getValues } = useForm({
     mode: 'onChange',
-    resolver: yupResolver(ValidateSchema)
+    resolver: yupResolver(ValidateSchema),
+    shouldUnregister: false
   })
   const dispatch = useDispatch()
   useEffect(() => {
@@ -67,14 +68,18 @@ const Filter = ({ intl, children, onSubmit = () => {} }) => {
     if (value.state?.value !== 'ALL_STATUS') {
       payload.state = value.state?.value
     }
-    payload.customerId = value.customer?.value
-    payload.roofVendorId = value.roofVendor?.value
-    payload.userId = value.Assigned?.value
-    payload.startDate = {
-      start: value.start,
-      end: value.end
-    }
+    payload.customerId = value.customer?.value || null
+    payload.roofVendorId = value.roofVendor?.value || null
+    payload.userId = value.Assigned?.value || null
+    payload.startDate =
+      value.start && value.end
+        ? {
+            start: value.start,
+            end: value.end
+          }
+        : null
     payload.capacity = value.capacity
+    console.log('payload', payload)
     onSubmit?.(payload)
     toggle()
   }
