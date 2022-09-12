@@ -1,39 +1,28 @@
 import { func, object, string } from 'prop-types'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Button, Col, Row } from 'reactstrap'
 import { ReactComponent as IconFilter } from '@src/assets/images/svg/table/ic-filter.svg'
 import { useHistory } from 'react-router-dom'
 import { ROUTER_URL } from '@src/utility/constants'
 import Filter from './Filter'
-import SearchBar from '@src/views/common/SearchBar/index'
 
-const PageHeader = ({ onSearch = () => {}, onFilter, searchValue, filterValue }) => {
+const PageHeader = ({ onFilter, filterValue }) => {
   const history = useHistory()
-  const [value, setValue] = useState('')
-
-  useEffect(() => {
-    if (searchValue !== value) setValue(searchValue)
-  }, [searchValue])
 
   const handleRedirectToAddNewPage = () => {
-    history.push(ROUTER_URL.BILLING_OPERATION_UNIT_CREATE)
+    history.push(ROUTER_URL.BILLING_MANUAL_INPUT_METRIC_CLOCK_CREATE)
   }
 
   return (
     <>
       <Row className="mb-2">
-        <Col lg="4" md="8" className="my-lg-0 mb-1 d-flex justify-content-end align-items-center">
+        <Col lg="4" md="8" className="my-lg-0 mb-1 ">
           <Filter onSubmit={onFilter} filterValue={filterValue}>
             <span className="mr-2 " role="button">
               <IconFilter />
             </span>
           </Filter>
-          <SearchBar
-            onSearch={onSearch}
-            searchValue={searchValue}
-            placeholder={'operation-unit-list-search-input-placeholder'}
-          />
         </Col>
 
         <Col lg={{ offset: 4, size: 4 }} md={4} className="d-flex justify-content-end align-items-center">

@@ -180,7 +180,7 @@ const ClockMetric = ({ intl }) => {
             onPageChange={handleChangePage}
             onPerPageChange={handlePerPageChange}
             onSort={handleSort}
-            isSearching={filterValue !== {}}
+            isSearching={JSON.stringify({}) !== "{}"}
             {...pagination}
             noDataTitle={
               <FormattedMessage id={!isSearching ? 'No data metric' : 'Not found any result. Please try again'} />
