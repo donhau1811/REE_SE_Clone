@@ -3,6 +3,7 @@ import {
   API_FILLTER_METERS_METRIC,
   FETCH_METER_METRIC_REQUEST,
   FETCH_METER_REQUEST,
+  GET_ALL_CLOCK,
   ROWS_PER_PAGE_DEFAULT
 } from '@src/utility/constants'
 import axios from 'axios'
@@ -46,15 +47,14 @@ export const getClockMetricBySeri = (params = {}) => {
       rowsPerPage: ROWS_PER_PAGE_DEFAULT,
       currentPage: 1
     }
-    const { filterValue, ...rest } = params
+    const { filterValue, isFilter, ...rest } = params
 
     const payload = {
       ...rest,
       filterValue,
       rowsPerPage: pagination?.rowsPerPage,
       page: pagination?.currentPage,
-      sortBy: 'serialNumber',
-      sortDirection: 'asc'
+      order: isFilter ? 'createDate desc' : rest.order
     }
 
     await axios
@@ -62,13 +62,40 @@ export const getClockMetricBySeri = (params = {}) => {
       .then((response) => {
         if (response.status === 200 && response.data.data) {
           const data = get(response, 'data.data', [])
-          const totalRow = get(response, 'data.totalRow', 0)      
+          const totalRow = get(response, 'data.totalRow', 0)
           dispatch({
             type: FETCH_METER_METRIC_REQUEST,
             data,
             payload,
             totalRow
-          
+          })
+        } else {
+          throw new Error(response.data?.message)
+        }
+      })
+      .catch((err) => {
+        dispatch({
+          type: FETCH_METER_METRIC_REQUEST,
+          data: [],
+          payload
+        })
+        console.log('err', err)
+      })
+  }
+}
+
+export const getAllClock = () => {
+  return async (dispatch) => {
+    await axios
+      .get(GET_ALL_CLOCK)
+      .then((response) => {
+        console.log('rp', response)
+        if (response.status === 200 && response.data.data) {
+          const payload = get(response, 'data', {})
+          console.log(payload)
+          dispatch({
+            type: FETCH_METER_REQUEST,
+            payload
           })
         } else {
           throw new Error(response.data?.message)
