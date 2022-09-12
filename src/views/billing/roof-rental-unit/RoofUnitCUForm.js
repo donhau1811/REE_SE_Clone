@@ -338,6 +338,7 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
               classNamePrefix="select"
               placeholder={intl.formatMessage({ id: 'Select a status' })}
               formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
+              noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
             />
           </Col>
           <Col className="mb-2" md="8">

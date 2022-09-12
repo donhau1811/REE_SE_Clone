@@ -270,6 +270,7 @@ const ProjectCUForm = ({
               classNamePrefix="select"
               placeholder={intl.formatMessage({ id: 'Choose operation unit' })}
               formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
+              noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
             />
 
             {errors?.companyId && <FormFeedback className="d-block">{errors?.companyId?.message}</FormFeedback>}
@@ -296,6 +297,7 @@ const ProjectCUForm = ({
               classNamePrefix="select"
               placeholder={intl.formatMessage({ id: 'Choose assigned accountant' })}
               formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
+              noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
               components={{
                 ValueContainer: ValueContOfMultipleSelect
               }}
@@ -378,6 +380,7 @@ const ProjectCUForm = ({
                 classNamePrefix="select"
                 placeholder={intl.formatMessage({ id: 'Select a status' })}
                 formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
+                noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
               />
             </Col>
           )}

@@ -30,7 +30,7 @@ const OperationUnit = ({ intl }) => {
   const dispatch = useDispatch()
   const { data, params, total } = useSelector((state) => state.company)
 
-  const { pagination = {}, searchValue, filterValue = {} } = params
+  const { pagination = {}, searchValue, filterValue = {} } = params || {}
 
   const {
     layout: { skin }
@@ -278,7 +278,7 @@ const OperationUnit = ({ intl }) => {
             onPageChange={handleChangePage}
             onPerPageChange={handlePerPageChange}
             onSort={handleSort}
-            isSearching={searchValue?.trim() || filterValue !== {}}
+            isSearching={searchValue?.trim() || JSON.stringify(filterValue) !== '{}'}
             {...pagination}
           />
         </Col>

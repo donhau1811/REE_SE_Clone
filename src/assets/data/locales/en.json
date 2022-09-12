@@ -1753,7 +1753,10 @@
   "View Project": "View",
   "Update Project": "Update",
   "View info contact": "View details contact",
-  "No roof vendor found, please try again":"No roof vendor found, please try again",
-  "no configuration found please try again":"No configuration found please try again",
-  "no data clock":"Add at least one new meter to complete the electricity sale contract"
+  "No roof vendor found, please try again": "No roof vendor found, please try again",
+  "no configuration found please try again": "No configuration found please try again",
+  "no data clock": "Add at least one new meter to complete the electricity sale contract",
+  "electricity-index": "Electricity Index",
+  "clock-index": "Metric Clock",
+  "manual-input-index": "Additional index"
 }

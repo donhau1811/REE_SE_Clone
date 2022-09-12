@@ -61,6 +61,7 @@ const ContractForm4COM = ({ intl, isReadOnly }) => {
             classNamePrefix="select"
             placeholder={intl.formatMessage({ id: 'Choose currency' })}
             formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
+            noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
           />
           {errors?.currency && <FormFeedback className="d-block">{errors?.currency?.message}</FormFeedback>}
         </Col>

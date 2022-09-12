@@ -689,6 +689,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
               classNamePrefix="select"
               placeholder={intl.formatMessage({ id: 'Select customer' })}
               formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
+              noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
             />
             {errors?.customerId && <FormFeedback className="d-block">{errors?.customerId?.message}</FormFeedback>}
           </Col>
@@ -735,7 +736,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
         </Row>
         <Row className="mb-2">
           <Col>
-            <h4 className="typo-section mb-2">
+            <h4 className="typo-section mb-2 text-uppercase">
               <FormattedMessage id="Power billing cycle" />
             </h4>
 
@@ -865,6 +866,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                   className="react-select"
                   classNamePrefix="select"
                   formatOptionLabel={(option) => <>{option.label}</>}
+                  noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
                 />
                 {errors?.formType && <FormFeedback>{errors?.formType?.message}</FormFeedback>}
               </Col>
