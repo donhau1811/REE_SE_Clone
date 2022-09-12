@@ -9,9 +9,8 @@ import Select from 'react-select'
 import { selectThemeColors, showToast } from '@src/utility/Utils'
 import { Controller, useForm } from 'react-hook-form'
 import axios from 'axios'
-import Flatpickr from 'react-flatpickr'
-import monthSelect from 'flatpickr/dist/plugins/monthSelect'
 import 'flatpickr/dist/plugins/monthSelect/style.css'
+import MonthPicker from '@src/views/common/MonthPicker'
 
 const ALL_CUSTOMERS_OPTION = {
   value: 'all',
@@ -25,11 +24,11 @@ const ALL_PROJECTS_OPTION = {
 const intitValue = {
   projectId: ALL_PROJECTS_OPTION,
   customerId: ALL_CUSTOMERS_OPTION,
-  month: [new Date()]
+  month: moment()
 }
 
 const Filter = ({ intl, children, onSubmit = () => {} }) => {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(true)
   const [projects, setProjects] = useState([])
   const [allCustomers, setAllCustomers] = useState([])
   const [customers, setCustomers] = useState([])
@@ -117,14 +116,13 @@ const Filter = ({ intl, children, onSubmit = () => {} }) => {
       }
     }
 
-    if (month?.length) {
-      const [monthValue] = month
+    if (month) {
       payload.month = {
-        value: Number(moment(monthValue).format('MM')),
+        value: Number(moment(month).format('MM')),
         type: 'exact'
       }
       payload.year = {
-        value: Number(moment(monthValue).format('YYYY')),
+        value: Number(moment(month).format('YYYY')),
         type: 'exact'
       }
     }
@@ -195,31 +193,14 @@ const Filter = ({ intl, children, onSubmit = () => {} }) => {
                 <Label className="general-label" for="month">
                   {intl.formatMessage({ id: 'Month' })}
                 </Label>
+
                 <Controller
                   control={control}
                   name="month"
                   id="month"
                   innerRef={register()}
                   render={(fields) => {
-                    return (
-                      <Flatpickr
-                        {...fields}
-                        className="form-control custom-input-flatpickr"
-                        name="month"
-                        placeholder={intl.formatMessage({ id: 'Choose month' })}
-                        options={{
-                          mode: 'single',
-
-                          plugins: [
-                            new monthSelect({
-                              shorthand: true, //defaults to false
-                              dateFormat: 'm/Y', //defaults to "F Y"
-                              altFormat: 'F Y' //defaults to "F Y",
-                            })
-                          ]
-                        }}
-                      />
-                    )
+                    return <MonthPicker {...fields} />
                   }}
                 />
               </Col>
