@@ -74,5 +74,8 @@ export const ROUTER_URL = {
   BILLING_PROJECT_CREATE: '/billing/project/create-project',
   BILLING_PROJECT_CREATE_CONTRACT_POWER_SELLING: '/billing/project/:projectId/power-selling-contract',
   BILLING_PROJECT_UPDATE_CONTRACT_POWER_SELLING: '/billing/project/:projectId/power-selling-contract/:id',
-  BILLING_METRIC_CLOCK: '/billing/metricElectric/metricClock'
+  BILLING_METRIC_CLOCK: '/billing/electricity-index/clock-index',
+  BILLING_MANUAL_INPUT_METRIC_CLOCK: '/billing/electricity-index/manual-input-index',
+  BILLING_MANUAL_INPUT_METRIC_CLOCK_CREATE: '/billing/electricity-index/manual-input-index/create',
+  BILLING_MANUAL_INPUT_METRIC_CLOCK_UPDATE: '/billing/electricity-index/manual-input-index/:id'
 }

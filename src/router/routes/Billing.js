@@ -215,12 +215,43 @@ export const BillingRoutes = [
     path: ROUTER_URL.BILLING_METRIC_CLOCK,
     component: lazy(() => import('../../views/billing/clock-metric/index')),
     navbar: require('../../views/billing/clock-metric/index')?.Navbar,
-
     exact: true,
     meta: {
       action: 'manage',
       resource: ROUTER_URL.BILLING_METRIC_CLOCK,
       navLink: ROUTER_URL.BILLING_METRIC_CLOCK
+    }
+  },
+  {
+    path: ROUTER_URL.BILLING_MANUAL_INPUT_METRIC_CLOCK,
+    component: lazy(() => import('../../views/billing/input-clock-index')),
+    exact: true,
+    meta: {
+      action: 'manage',
+      resource: ROUTER_URL.BILLING_MANUAL_INPUT_METRIC_CLOCK,
+      navLink: ROUTER_URL.BILLING_MANUAL_INPUT_METRIC_CLOCK
+    }
+  },
+  {
+    path: ROUTER_URL.BILLING_MANUAL_INPUT_METRIC_CLOCK_CREATE,
+    component: lazy(() => import('../../views/billing/input-clock-index/create')),
+    navbar: require('../../views/billing/input-clock-index/create')?.Navbar,
+    exact: true,
+    meta: {
+      action: 'manage',
+      resource: ROUTER_URL.BILLING_MANUAL_INPUT_METRIC_CLOCK,
+      navLink: ROUTER_URL.BILLING_MANUAL_INPUT_METRIC_CLOCK
+    }
+  },
+  {
+    path: ROUTER_URL.BILLING_MANUAL_INPUT_METRIC_CLOCK_UPDATE,
+    component: lazy(() => import('../../views/billing/input-clock-index/update')),
+    navbar: require('../../views/billing/input-clock-index/update')?.Navbar,
+    exact: true,
+    meta: {
+      action: 'manage',
+      resource: ROUTER_URL.BILLING_MANUAL_INPUT_METRIC_CLOCK,
+      navLink: ROUTER_URL.BILLING_MANUAL_INPUT_METRIC_CLOCK
     }
   }
 ]

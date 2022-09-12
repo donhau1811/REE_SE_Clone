@@ -4,16 +4,23 @@ import React from 'react'
 
 export default [
   {
-    id: 'metricElectric',
-    title: 'metricElectric',
+    id: 'electricity-index',
+    title: 'electricity-index',
     icon: <img src={electric} alt='electric'/>,
     children: [
       {
-        id: 'metricClock',
-        title: 'metricClock',
+        id: 'clock-index',
+        title: 'clock-index',
         action: 'manage',
         resource: ROUTER_URL.BILLING_METRIC_CLOCK,
         navLink: ROUTER_URL.BILLING_METRIC_CLOCK
+      },
+      {
+        id: 'manual-input-index',
+        title: 'manual-input-index',
+        action: 'manage',
+        resource: ROUTER_URL.BILLING_MANUAL_INPUT_METRIC_CLOCK,
+        navLink: ROUTER_URL.BILLING_MANUAL_INPUT_METRIC_CLOCK
       }
     ]
   }

@@ -736,7 +736,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
         </Row>
         <Row className="mb-2">
           <Col>
-            <h4 className="typo-section mb-2">
+            <h4 className="typo-section mb-2 text-uppercase">
               <FormattedMessage id="Power billing cycle" />
             </h4>
 
