@@ -91,6 +91,7 @@ const PageHeader = ({ onFilter, filterValue, setSelectedClock }) => {
               classNamePrefix="select"
               placeholder={intl.formatMessage({ id: 'Select projects' })}
               formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
+              noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
             />
           </Col>
           <Col md="4">
@@ -109,6 +110,7 @@ const PageHeader = ({ onFilter, filterValue, setSelectedClock }) => {
               classNamePrefix="select"
               placeholder={intl.formatMessage({ id: 'Select customer' })}
               formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
+              noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
             />
           </Col>
         </Row>
@@ -146,6 +148,7 @@ const PageHeader = ({ onFilter, filterValue, setSelectedClock }) => {
               classNamePrefix="select"
               placeholder={intl.formatMessage({ id: 'Select clock' })}
               formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
+              noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
             />
           </Col>
 

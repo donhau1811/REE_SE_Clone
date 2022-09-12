@@ -25,7 +25,7 @@ const RoofVendor = ({ intl }) => {
   const dispatch = useDispatch()
   const { data, params, total } = useSelector((state) => state.roofUnit)
 
-  const { pagination = {}, searchValue } = params
+  const { pagination = {}, searchValue } = params || {}
   const {
     layout: { skin }
   } = useSelector((state) => state)

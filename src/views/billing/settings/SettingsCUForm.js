@@ -104,6 +104,7 @@ const SettingsCUForm = ({ isViewed, intl, onSubmit = () => {}, onCancel = () => 
               classNamePrefix="select"
               placeholder={intl.formatMessage({ id: 'Select a status' })}
               formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
+              noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
             />
           </Col>
         </Row>
