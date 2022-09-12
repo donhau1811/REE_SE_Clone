@@ -29,7 +29,7 @@ const OperationUnit = ({ intl }) => {
 
   const { data, params, total } = useSelector((state) => state.billingCustomer)
 
-  const { pagination = {}, searchValue, filterValue = {} } = params
+  const { pagination = {}, searchValue, filterValue = {} } = params || {}
 
   const fetchListCustomers = (payload) => {
     dispatch(

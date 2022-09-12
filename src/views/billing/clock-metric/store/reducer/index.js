@@ -18,12 +18,12 @@ const reducer = (state = initialState, action) => {
 
   switch (action.type) {
     case FETCH_METER_REQUEST:
+
       return {
         ...state,
         data: action?.payload?.data ? action.payload.data : state.data
       }
     case FETCH_METER_METRIC_REQUEST: 
-    console.log('go her', action)
     return {
       ...state,
       meterMetric: action?.data ? action?.data : state.data,

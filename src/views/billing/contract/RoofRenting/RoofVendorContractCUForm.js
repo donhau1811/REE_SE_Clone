@@ -417,6 +417,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
               invalid={!!errors.roofVendorName}
               placeholder={intl.formatMessage({ id: 'Select roof rental vendor' })}
               formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
+              noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
             />
             {!!errors?.roofVendorName && (
               <FormFeedback className="d-block">{errors?.roofVendorName?.value?.message}</FormFeedback>
@@ -469,6 +470,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
               valid={!!getValues('contractType')?.value}
               invalid={!!errors.contractType}
               formatOptionLabel={(option) => <> {option.label}</>}
+              noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
             />
             {!!errors?.contractType && (
               <FormFeedback className="d-block">{errors?.contractType?.value?.message}</FormFeedback>

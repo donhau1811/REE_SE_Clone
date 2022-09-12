@@ -7,13 +7,25 @@ import Table from '@src/views/common/table/CustomDataTable'
 import { getClockMetricBySeri } from './store/actions'
 import moment from 'moment'
 import { numberWithCommas } from '@src/utility/Utils'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { getAllContract, getContractById } from '../contract/store/actions'
 
 const ClockMetric = ({ intl }) => {
   const dispatch = useDispatch()
   const { meterMetric, params, total } = useSelector((state) => state.billingMeter)
   const [isSearching, setIsSearching] = useState(false)
   const { pagination = {}, filterValue = {} } = params
+  const [selectedClock, setSelectedClock] = useState(-1)
+  const {
+    projectContracts: { selectedContract: selectedContract }
+  } = useSelector((state) => state)
+  useEffect(() => {
+    if (selectedClock !== -1 && selectedClock) dispatch(getContractById({ id: selectedClock }))
+  }, [meterMetric])
+
+  useEffect(() => {
+    dispatch(getAllContract())
+  }, [])
   const fetchClockMetrics = (payload) => {
     dispatch(
       getClockMetricBySeri({
@@ -44,7 +56,8 @@ const ClockMetric = ({ intl }) => {
   const handleSort = (column, direction) => {
     fetchClockMetrics({
       sortBy: column.selector,
-      sortDirection: direction
+      sortDirection: direction,
+      order: `${column.selector} ${direction}`
     })
   }
   const handleFilter = (value) => {
@@ -54,9 +67,34 @@ const ClockMetric = ({ intl }) => {
         ...pagination,
         currentPage: 1
       },
-      filterValue: value
+      filterValue: value,
+      isFilter:true
+      
     })
   }
+  const returnRushTime = (row) => {
+    const newTime = moment(row.createDate)
+    if (
+      (newTime.diff(moment('09:30:00', 'HH:mm:ss'), 'second') > 0 &&
+        newTime.diff(moment('11:30:00', 'HH:mm:ss'), 'second') < 0) ||
+      (newTime.diff(moment('17:00:00', 'HH:mm:ss'), 'second') > 0 &&
+        newTime.diff(moment('20:00:00', 'HH:mm:ss'), 'second') < 0)
+    ) {
+      return selectedContract.details?.unitPrice?.high
+    } else if (
+      (newTime.diff(moment('04:30:00', 'HH:mm:ss'), 'second') > 0 &&
+        newTime.diff(moment('9:30:00', 'HH:mm:ss'), 'second') < 0) ||
+      (newTime.diff(moment('11:00:00', 'HH:mm:ss'), 'second') > 0 &&
+        newTime.diff(moment('17:00:00', 'HH:mm:ss'), 'second') < 0) ||
+      (newTime.diff(moment('20:00:00', 'HH:mm:ss'), 'second') > 0 &&
+        newTime.diff(moment('22:00:00', 'HH:mm:ss'), 'second') < 0)
+    ) {
+      return selectedContract?.details?.unitPrice?.medium
+    } else {
+      return selectedContract?.details?.unitPrice?.low
+    }
+  }
+
   const columns = [
     {
       name: intl.formatMessage({ id: 'Time' }),
@@ -77,14 +115,14 @@ const ClockMetric = ({ intl }) => {
     },
     {
       name: intl.formatMessage({ id: 'Coefficient' }),
-      sortable: true,
-      center: true
+      center: true,
+      cell: () => selectedContract.chargeRate
     },
     {
       name: intl.formatMessage({ id: 'Price list' }),
-      selector: 'address',
-      sortable: true,
-      center: true
+      selector: '',
+      center: true,
+      cell: (row) => returnRushTime(row)
     },
     {
       name: intl.formatMessage({ id: 'Index p delivered' }),
@@ -119,12 +157,12 @@ const ClockMetric = ({ intl }) => {
       name: intl.formatMessage({ id: 'P max' }),
       selector: 'totalActiveMdPlus',
       sortable: true,
-
+      center: true,
       cell: (row) => numberWithCommas(row.totalActiveMdPlus.value / 100)
     },
     {
       name: intl.formatMessage({ id: 'Time P max' }),
-      selector: 'phone',
+      selector: '',
       sortable: true
     }
   ]
@@ -132,7 +170,7 @@ const ClockMetric = ({ intl }) => {
     <>
       <Row>
         <Col sm="12">
-          <PageHeader onFilter={handleFilter} filterValue={filterValue} />
+          <PageHeader onFilter={handleFilter} filterValue={filterValue} setSelectedClock={setSelectedClock} />
 
           <Table
             tableId="operation-unit"
@@ -144,7 +182,9 @@ const ClockMetric = ({ intl }) => {
             onSort={handleSort}
             isSearching={JSON.stringify({}) !== "{}"}
             {...pagination}
-            noDataTitle={<FormattedMessage id={!isSearching ? 'No data metric' : 'Not found any result. Please try again'} />}
+            noDataTitle={
+              <FormattedMessage id={!isSearching ? 'No data metric' : 'Not found any result. Please try again'} />
+            }
           />
         </Col>
       </Row>
