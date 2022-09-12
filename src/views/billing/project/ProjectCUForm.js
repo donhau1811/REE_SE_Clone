@@ -19,15 +19,10 @@ import { GENERAL_STATUS_OPTS, mockUser } from '@src/utility/constants/billing'
 import { selectThemeColors, showToast } from '@src/utility/Utils'
 import axios from 'axios'
 import moment from 'moment'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import * as yup from 'yup'
 import Contract from './contract'
-import SweetAlert from 'sweetalert2'
-import classNames from 'classnames'
 import '@src/@core/scss/billing-sweet-alert.scss'
-import withReactContent from 'sweetalert2-react-content'
-
-const MySweetAlert = withReactContent(SweetAlert)
 
 const ProjectCUForm = ({
   intl,
@@ -37,14 +32,12 @@ const ProjectCUForm = ({
   isReadOnly,
   submitText,
   submitButton,
-  cancelButton
+  cancelButton,
+  cancelText
 }) => {
   const dispatch = useDispatch()
   const initState = { state: GENERAL_STATUS_OPTS[0] }
   const [companies, setCompanies] = useState([])
-  const {
-    layout: { skin }
-  } = useSelector((state) => state)
   useEffect(async () => {
     try {
       /*const initParam = {
@@ -189,36 +182,10 @@ const ProjectCUForm = ({
       )
       return
     }
-
     onSubmit?.(values)
   }
 
   const handleCancel = () => {
-    if (isDirty) {
-      return MySweetAlert.fire({
-        title: intl.formatMessage({ id: 'Cancel confirmation' }),
-        text: intl.formatMessage({ id: 'Are you sure to cancel?' }),
-        showCancelButton: true,
-        confirmButtonText: intl.formatMessage({ id: 'Yes' }),
-        cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),
-        customClass: {
-          popup: classNames({
-            'sweet-alert-popup--dark': skin === 'dark',
-            'sweet-popup': true
-          }),
-          header: 'sweet-title',
-          confirmButton: 'btn btn-primary',
-          cancelButton: 'btn btn-outline-secondary ml-1',
-          actions: 'sweet-actions',
-          content: 'sweet-content'
-        },
-        buttonsStyling: false
-      }).then(({ isConfirmed }) => {
-        if (isConfirmed) {
-          onCancel?.()
-        }
-      })
-    }
     onCancel?.()
   }
 
@@ -234,6 +201,7 @@ const ProjectCUForm = ({
       {typeof cancelButton === 'undefined' ? (
         <Button color="secondary" onClick={handleCancel}>
           {intl.formatMessage({ id: isReadOnly ? 'Back' : 'Cancel' })}
+          {cancelText || intl.formatMessage({ id: 'Cancel' })}
         </Button>
       ) : cancelButton ? (
         cloneElement(cancelButton, { onClick: handleCancel })
@@ -303,6 +271,7 @@ const ProjectCUForm = ({
               classNamePrefix="select"
               placeholder={intl.formatMessage({ id: 'Choose operation unit' })}
               formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
+              noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
             />
 
             {errors?.companyId && <FormFeedback className="d-block">{errors?.companyId?.message}</FormFeedback>}
@@ -329,6 +298,7 @@ const ProjectCUForm = ({
               classNamePrefix="select"
               placeholder={intl.formatMessage({ id: 'Choose assigned accountant' })}
               formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
+              noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
               components={{
                 ValueContainer: ValueContOfMultipleSelect
               }}
@@ -411,6 +381,7 @@ const ProjectCUForm = ({
                 classNamePrefix="select"
                 placeholder={intl.formatMessage({ id: 'Select a status' })}
                 formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
+                noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
               />
             </Col>
           )}
@@ -442,7 +413,8 @@ ProjectCUForm.propTypes = {
   isReadOnly: bool,
   submitText: string,
   submitButton: element,
-  cancelButton: element
+  cancelButton: element,
+  cancelText: string
 }
 
 export default injectIntl(ProjectCUForm)

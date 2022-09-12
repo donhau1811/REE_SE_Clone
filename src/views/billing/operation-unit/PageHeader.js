@@ -6,9 +6,9 @@ import { ReactComponent as IconFilter } from '@src/assets/images/svg/table/ic-fi
 import { useHistory } from 'react-router-dom'
 import { ROUTER_URL } from '@src/utility/constants'
 import Filter from './Filter'
-import  SearchBar  from '@src/views/common/SearchBar/index'
+import SearchBar from '@src/views/common/SearchBar/index'
 
-const PageHeader = ({  onSearch = () => {}, onFilter, searchValue }) => {
+const PageHeader = ({ onSearch = () => {}, onFilter, searchValue, filterValue }) => {
   const history = useHistory()
   const [value, setValue] = useState('')
 
@@ -24,12 +24,16 @@ const PageHeader = ({  onSearch = () => {}, onFilter, searchValue }) => {
     <>
       <Row className="mb-2">
         <Col lg="4" md="8" className="my-lg-0 mb-1 d-flex justify-content-end align-items-center">
-          <Filter onSubmit={onFilter}>
+          <Filter onSubmit={onFilter} filterValue={filterValue}>
             <span className="mr-2 " role="button">
               <IconFilter />
             </span>
           </Filter>
-          <SearchBar onSearch={onSearch} searchValue={searchValue} placeholder={'operation-unit-list-search-input-placeholder'}/>
+          <SearchBar
+            onSearch={onSearch}
+            searchValue={searchValue}
+            placeholder={'operation-unit-list-search-input-placeholder'}
+          />
         </Col>
 
         <Col lg={{ offset: 4, size: 4 }} md={4} className="d-flex justify-content-end align-items-center">
@@ -46,7 +50,8 @@ PageHeader.propTypes = {
   intl: object.isRequired,
   onSearch: func,
   onFilter: func,
-  searchValue: string
+  searchValue: string,
+  filterValue: object
 }
 
 export default injectIntl(PageHeader)

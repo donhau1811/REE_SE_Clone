@@ -41,6 +41,7 @@ function PowerSelling({ disabled, intl, data, onDelete }) {
     {
       name: intl.formatMessage({ id: 'Contract number' }),
       selector: 'code',
+
       minWidth: '200px'
     },
     {

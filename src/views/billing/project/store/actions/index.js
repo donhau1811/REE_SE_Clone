@@ -1,6 +1,7 @@
 import {
   API_CREATE_PROJECT,
   API_DELETE_PROJECTS,
+  API_GET_ALL_PROJECT,
   API_GET_NEW_PROJECT,
   API_GET_PROJECT_BY_CUSTOMER_ID,
   API_GET_PROJECT_BY_ID,
@@ -174,6 +175,28 @@ export const getListProjectByRoofVendorId = ({ payload, callback }) => {
       })
       .catch((err) => {
         showToast('error', `${err.response ? err.response.data.message : err.message}`)
+      })
+  }
+}
+export const getProjects = () => {
+  return async (dispatch) => {
+
+
+    await axios
+      .get(API_GET_ALL_PROJECT)
+      .then((response) => {
+        if (response.status === 200 && response.data.data) {
+          dispatch({
+            type: FETCH_PROJECT_REQUEST,
+            data: response.data.data,
+            total: response.data.count
+          })
+        } else {
+          throw new Error(response.data.message)
+        }
+      })
+      .catch((err) => {
+        console.log('err', err)
       })
   }
 }

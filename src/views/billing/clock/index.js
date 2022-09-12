@@ -155,8 +155,8 @@ const Clock = ({ data, onChange, disabled, intl, contractId }) => {
   const handleCancelClockForm = (isDirty) => {
     if (isDirty) {
       return MySweetAlert.fire({
-        title: intl.formatMessage({ id: 'Cancel' }),
-        text: intl.formatMessage({ id: 'You want to cancel create/update' }),
+        title: intl.formatMessage({ id: 'Cancel confirmation' }),
+        text: intl.formatMessage({ id: 'Are you sure to cancel?' }),
         showCancelButton: true,
         confirmButtonText: intl.formatMessage({ id: 'Yes' }),
         cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),

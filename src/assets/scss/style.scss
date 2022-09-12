@@ -1503,12 +1503,15 @@ footer.footer {
   background-image: url('@src/assets/images/svg/carlendar.svg');
   font-size: 20px;
 }
-.file-attachment-label {  
+.file-attachment-label {
   color: #026894;
   font-size: 14px;
-  cursor: default !important;  
+  // cursor: default !important;
+}
+.file-attachment-label-disabled {
   opacity: 0.5;
   pointer-events: none;
+  cursor: default !important;
 }
 .divider-dashed {
   width: 100%;
@@ -1545,6 +1548,9 @@ footer.footer {
       color: #7897b4 !important;
     }
   }
+  .custom-input-flatpickr[readonly] {
+    color: #292d39 !important;
+  }
 }
 
 .custom-bagde {
@@ -1552,4 +1558,39 @@ footer.footer {
 }
 .custom-breadcrumb {
   cursor: default !important;
+}
+.input-date-range {
+  background-image: url('@src/assets/images/svg/carlendar.svg');
+  font-size: 1px !important;
+  z-index: -1 !important;
+}
+.no-boder {
+  border: none !important;
+}
+
+.borderCustom {
+  height: 40px;
+  border: 1px solid #98aabb;
+  border-left: none;
+  border-radius: 0 5px 5px 0;
+}
+
+.input-group-merge {
+  &:focus-within .borderCustom {
+    border-color: #0394ff;
+  }
+  &:hover {
+    box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.25);
+  }
+}
+.el-date-editor {
+  &.el-date-editor--daterange {
+    &.el-input {
+      width: 100%;
+      background-color: 'transparent';
+    }
+  }
+}
+.el-input__inner {
+  background-color: transparent !important;
 }

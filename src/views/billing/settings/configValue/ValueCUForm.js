@@ -95,7 +95,6 @@ function ValueCUForm({ value, intl, onSubmit = () => {}, onCancel, isReadOnly })
   const handleSubmitForm = (values) => {
     onSubmit?.(values)
   }
-  console.log('grdyh', value, value?.id === '-1')
 
   return (
     <>
@@ -156,6 +155,7 @@ function ValueCUForm({ value, intl, onSubmit = () => {}, onCancel, isReadOnly })
                   className="react-select"
                   classNamePrefix="select"
                   formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
+                  noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
                 />
                 {errors?.state && <FormFeedback>{errors?.state?.message}</FormFeedback>}
               </Col>

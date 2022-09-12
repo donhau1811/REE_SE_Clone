@@ -1,6 +1,7 @@
 import {
   API_ADD_CONTRACT,
   API_DELETE_CONTRACT,
+  API_GET_ALL_CONTRACT,
   API_GET_ALL_CONTRACT_PROJECT_ID,
   API_GET_CONTRACT_BY_ID,
   API_UPDATE_CONTRACT
@@ -42,7 +43,7 @@ export const deleteContractById = ({ id, callback }) => {
       .delete(`${API_DELETE_CONTRACT}/${id}`)
       .then((response) => {
         if (response.status === 200 && response.data?.data) {
-          showToast('success', <FormattedMessage id= 'Delete info success' />)
+          showToast('success', <FormattedMessage id="Delete info success" />)
 
           callback?.()
         } else {
@@ -50,7 +51,7 @@ export const deleteContractById = ({ id, callback }) => {
         }
       })
       .catch(() => {
-        showToast('error', <FormattedMessage id= 'data delete failed, please try again' />)
+        showToast('error', <FormattedMessage id="data delete failed, please try again" />)
       })
   }
 }
@@ -134,7 +135,7 @@ export const postContractRoofVendor = ({ newvalue, callback }) => {
       .post(`${API_ADD_CONTRACT}`, newvalue)
       .then((response) => {
         if (response.status === 200 && response.data?.data) {
-          showToast('success', <FormattedMessage id= 'Create info success' />)
+          showToast('success', <FormattedMessage id="Create info success" />)
           callback?.()
         } else {
           console.log('err')
@@ -143,7 +144,7 @@ export const postContractRoofVendor = ({ newvalue, callback }) => {
       })
       .catch((err) => {
         console.log('err', err)
-        showToast('error', <FormattedMessage id= 'data create failed, please try again' />)
+        showToast('error', <FormattedMessage id="data create failed, please try again" />)
       })
   }
 }
@@ -153,7 +154,7 @@ export const putContractRoofVendor = ({ newvalue, callback }) => {
       .put(`${API_UPDATE_CONTRACT}`, newvalue)
       .then((response) => {
         if (response.status === 200 && response.data?.data) {
-          showToast('success', <FormattedMessage id='Update info success' />)
+          showToast('success', <FormattedMessage id="Update info success" />)
           callback?.()
         } else {
           console.log('err')
@@ -162,7 +163,28 @@ export const putContractRoofVendor = ({ newvalue, callback }) => {
       })
       .catch((err) => {
         console.log('err', err)
-        showToast('error', <FormattedMessage id='data update failed, please try again' />)
+        showToast('error', <FormattedMessage id="data update failed, please try again" />)
+      })
+  }
+}
+
+export const getAllContract = () => {
+  return async (dispatch) => {
+    await axios
+      .get(`${API_GET_ALL_CONTRACT}`)
+      .then((response) => {
+        if (response.status === 200 && response.data.data) {
+          const payload = get(response, 'data.data', {})
+          dispatch({
+            type: SET_CONTRACT_OF_BILLING_PROJECT,
+            payload
+          })
+        } else {
+          throw new Error(response.data?.message)
+        }
+      })
+      .catch((err) => {
+        showToast('error', err.toString())
       })
   }
 }

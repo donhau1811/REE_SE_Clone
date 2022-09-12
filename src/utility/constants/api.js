@@ -165,6 +165,7 @@ export const API_DELETE_CONTACT = `${BASE_API_URL_V2}/contacts/delete`
 export const API_GET_CUSTOMER_BY_ID = `${BASE_API_URL_V2}/customer/id`
 export const API_GET_CONTACT_BY_CUSTOMER_ID = `${BASE_API_URL_V2}/contacts/customerId`
 export const API_GET_ALL_CUSTOMERS = `${BASE_API_URL_V2}/customer/all`
+export const API_GET_LIST_CUSTOMER_BY_PROJECT_ID = `${BASE_API_URL_V2}/customer/project-id`
 
 export const API_ROOF_RETAL_UNIT = `${BASE_API_URL}/api/v1/billing/roof`
 
@@ -187,8 +188,19 @@ export const API_ADD_CONTRACT = `${BASE_API_URL_V2}/contract/create`
 export const API_UPDATE_CONTRACT = `${BASE_API_URL_V2}/contract/update`
 export const API_CHECK_CODE_CONTRACT = `${BASE_API_URL_V2}/contract/check-code`
 export const API_GET_CONTRACT_BY_ID = `${BASE_API_URL_V2}/contract/id`
+export const API_GET_CONTRACT_BY_CUSTOMER_ID = `${BASE_API_URL_V2}/contract/customerId`
+export const API_GET_ALL_CONTRACT = `${BASE_API_URL_V2}/contract/all`
 
-export const API_DELETE_CLOCK = `${BASE_API_URL_V2}/clock/delete`
-export const API_ADD_CLOCK = `${BASE_API_URL_V2}/clock/create`
-export const API_UPDATE_CLOCK = `${BASE_API_URL_V2}/clock/update`
-export const API_GET_ALL_CLOCK_BY_CONTRACT_ID = `${BASE_API_URL_V2}/clock/contractId`
+//meter
+export const API_FILLTER_METERS = `${BASE_API_URL_V2}/meter/meter-filter`
+export const API_FILLTER_METERS_METRIC = `${BASE_API_URL_V2}/meter/meter-metrics`
+export const API_DELETE_CLOCK = `${BASE_API_URL_V2}/meter/delete`
+export const API_ADD_CLOCK = `${BASE_API_URL_V2}/meter/create`
+export const API_UPDATE_CLOCK = `${BASE_API_URL_V2}/meter/update`
+export const API_GET_ALL_CLOCK_BY_CONTRACT_ID = `${BASE_API_URL_V2}/meter/contractId`
+
+// input clock index
+export const API_GET_INPUT_CLOCK_INDEX = `${BASE_API_URL_V2}/billing-data/search`
+export const API_DELETE_INPUT_CLOCK_INDEX = `${BASE_API_URL_V2}/billing-data/delete`
+
+export const GET_ALL_CLOCK = `${BASE_API_URL_V2}/meter/all`

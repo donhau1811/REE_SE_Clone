@@ -19,11 +19,8 @@ import { XCircle } from 'react-feather'
 import { ReactComponent as Attachment } from '@src/assets/images/svg/attachment-file.svg'
 import { getSettingValuesByCode } from '@src/views/billing/settings/store/actions'
 import { GENERAL_STATUS, VALUE_OF_ROOF_CONTRACT } from '@src/utility/constants/billing'
-import SweetAlert from 'sweetalert2'
 import '@src/@core/scss/billing-sweet-alert.scss'
-import withReactContent from 'sweetalert2-react-content'
 import classNames from 'classnames'
-const MySweetAlert = withReactContent(SweetAlert)
 
 const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSubmit }) => {
   const [valueSetting, setValueSetting] = useState([])
@@ -32,10 +29,6 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
     contractType: valueSetting[0]
   }
   const { setting } = useSelector((state) => state.settings)
-
-  const {
-    layout: { skin }
-  } = useSelector((state) => state)
 
   const defaultValid = {
     roofVendorName: yup.object().shape({
@@ -276,34 +269,30 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
     }
     onSubmit?.(newValue)
   }
-
+  useEffect(() => {
+    register('file')
+  }, [register])
   const handleCancelForm = () => {
-    if (isDirty) {
-      return MySweetAlert.fire({
-        title: intl.formatMessage({ id: 'Cancel confirmation' }),
-        text: intl.formatMessage({ id: 'Are you sure to cancel?' }),
-        showCancelButton: true,
-        confirmButtonText: intl.formatMessage({ id: 'Yes' }),
-        cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),
-        customClass: {
-          popup: classNames({
-            'sweet-alert-popup--dark': skin === 'dark',
-            'sweet-popup': true
-          }),
-          header: 'sweet-title',
-          confirmButton: 'btn btn-primary',
-          cancelButton: 'btn btn-secondary ml-1',
-          actions: 'sweet-actions',
-          content: 'sweet-content'
-        },
-        buttonsStyling: false
-      }).then(({ isConfirmed }) => {
-        if (isConfirmed) {
-          onCancel?.(isDirty)
-        }
-      })
-    }
     onCancel?.(isDirty)
+  }
+
+  const handleChangeFiles = (event) => {
+    const files = Array.from(event.target.files)
+    setValue('file', files, { shouldValidate: true })
+  }
+
+  const handleRemoveFile = (file) => (event) => {
+    event.stopPropagation()
+    const filesList = getValues('file')
+
+    setValue(
+      'file',
+      filesList.filter((item) => item.name !== file.name),
+      { shouldValidate: true }
+    )
+  }
+  const handleClickToFileInput = (e) => {
+    e.target.value = null
   }
 
   return (
@@ -372,20 +361,35 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
                 {watch('file')?.map((item) => (
                   <a key={item.name} href="#" className="d-block">
                     {item.name}
-                    <span className="ml-1" role="button">
-                      <XCircle size={14} color="#838A9C" />
-                    </span>
+                    {!isReadOnly && (
+                      <span className="ml-1" role="button" onClick={handleRemoveFile(item)}>
+                        <XCircle size={14} color="#838A9C" />
+                      </span>
+                    )}
                   </a>
                 ))}
               </div>
               <div className="d-flex align-items-center">
-                <Label className="file-attachment-label" for="file" role="button">
+                <Label
+                  className={classNames('file-attachment-label', isReadOnly && 'file-attachment-label-disabled')}
+                  for="file"
+                  role="button"
+                >
                   <span className="mr-1">
                     <Attachment />
                   </span>
                   <FormattedMessage id="Đính kèm file hợp đồng" />
                 </Label>
-                <Input type="file" autoComplete="on" disabled={isReadOnly} id="file" multiple className="d-none" />
+                <Input
+                  type="file"
+                  autoComplete="on"
+                  disabled={isReadOnly}
+                  id="file"
+                  onChange={handleChangeFiles}
+                  onClick={handleClickToFileInput}
+                  multiple
+                  className="d-none"
+                />
               </div>
             </div>
             {errors?.file && <FormFeedback className="d-block">{errors?.file?.message}</FormFeedback>}
@@ -413,6 +417,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
               invalid={!!errors.roofVendorName}
               placeholder={intl.formatMessage({ id: 'Select roof rental vendor' })}
               formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
+              noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
             />
             {!!errors?.roofVendorName && (
               <FormFeedback className="d-block">{errors?.roofVendorName?.value?.message}</FormFeedback>
@@ -465,6 +470,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
               valid={!!getValues('contractType')?.value}
               invalid={!!errors.contractType}
               formatOptionLabel={(option) => <> {option.label}</>}
+              noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
             />
             {!!errors?.contractType && (
               <FormFeedback className="d-block">{errors?.contractType?.value?.message}</FormFeedback>

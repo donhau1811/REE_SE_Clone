@@ -98,6 +98,10 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
       )
       return
     }
+    dispatch({
+      type: SET_FORM_DIRTY,
+      payload: false
+    })
     onSubmit?.(values)
   }
   const handleCancel = () => {
@@ -211,6 +215,7 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
               className="react-select"
               classNamePrefix="select"
               placeholder={intl.formatMessage({ id: 'Select a status' })}
+              noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
               formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
             />
           </Col>

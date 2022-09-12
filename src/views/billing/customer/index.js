@@ -29,7 +29,7 @@ const OperationUnit = ({ intl }) => {
 
   const { data, params, total } = useSelector((state) => state.billingCustomer)
 
-  const { pagination = {}, searchValue, filterValue = {} } = params
+  const { pagination = {}, searchValue, filterValue = {} } = params || {}
 
   const fetchListCustomers = (payload) => {
     dispatch(
@@ -266,7 +266,7 @@ const OperationUnit = ({ intl }) => {
             onPerPageChange={handlePerPageChange}
             onSort={handleSort}
             defaultSortAsc={false}
-            isSearching={searchValue?.trim() || filterValue !== {}}
+            isSearching={searchValue?.trim() || JSON.stringify(filterValue) !== "{}"}
             {...pagination}
           />
         </Col>

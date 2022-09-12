@@ -28,7 +28,7 @@ const Project = ({ intl }) => {
   const dispatch = useDispatch()
   const { data, params, total } = useSelector((state) => state.projects)
 
-  const { pagination = {}, searchValue } = params
+  const { pagination = {}, searchValue } = params || {}
 
   const fetchProject = (payload) => {
     dispatch(
@@ -272,7 +272,7 @@ const Project = ({ intl }) => {
             onPageChange={handleChangePage}
             onPerPageChange={handleNumberPerPageChange}
             onSort={handleSort}
-            defaultSortAsc={params.sortDirection === 'asc'}
+            defaultSortAsc={params?.sortDirection === 'asc'}
             {...pagination}
           />
         </Col>

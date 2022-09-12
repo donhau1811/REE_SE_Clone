@@ -113,3 +113,12 @@ export const VALUE_OF_ROOF_CONTRACT = {
   'Tiền thuê cố định theo quý': 3,
   'Tiền thuê theo phần trăm doanh thu': 4
 }
+
+export const NOTIFICATIONL_STATUS = {
+  PENDING_NEW: <FormattedMessage id='Pending new'/> 
+}
+
+export const NOTIFICATIONL_STATUS_OPTS = Object.keys(NOTIFICATIONL_STATUS).map((item) => ({
+  value: item,
+  label: NOTIFICATIONL_STATUS[item]
+}))
