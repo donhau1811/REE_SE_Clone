@@ -28,7 +28,6 @@ import { REAL_NUMBER } from '@src/utility/constants'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 
-// eslint-disable-next-line no-unused-vars
 const Filter = ({ intl, children, onSubmit = () => {} }) => {
   const [isOpen, setIsOpen] = useState(false)
   const ValidateSchema = yup.object().shape({
