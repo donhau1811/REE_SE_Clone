@@ -450,7 +450,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
       roofVendorId: null,
       startDate: values.startDate ? moment.utc(values.startDate) : null,
       endDate: values.endDate ? moment.utc(values.endDate) : null,
-      url: 'link contract pdf',
+      files:[],
       billingPeriods: (values.billingCycle || []).map((item, index) => {
         const returnedCycle = {
           id: index + 1,

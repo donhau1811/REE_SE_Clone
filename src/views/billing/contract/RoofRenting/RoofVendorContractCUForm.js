@@ -255,7 +255,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
       roofVendorId: Number(value?.roofVendorName?.value),
       startDate: value?.effectiveDate,
       endDate: value?.expirationDate,
-      url: 'link contract pdf',
+      files:[],
       alerts: {
         confirmAlert: value?.confirmationReminder,
         billingAlert: value?.announcementDate
