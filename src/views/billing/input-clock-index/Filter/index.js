@@ -28,7 +28,7 @@ const intitValue = {
 }
 
 const Filter = ({ intl, children, onSubmit = () => {} }) => {
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen, setIsOpen] = useState(false)
   const [projects, setProjects] = useState([])
   const [allCustomers, setAllCustomers] = useState([])
   const [customers, setCustomers] = useState([])
