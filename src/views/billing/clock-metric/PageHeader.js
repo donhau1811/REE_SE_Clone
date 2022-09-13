@@ -35,7 +35,7 @@ const PageHeader = ({ onFilter, filterValue, setSelectedClock }) => {
       return { value: item.id, label: item.name }
     })
   const labelCustomer = custommer.map((item) => {
-    return { value: item.customerId, label: item.fullName }
+    return { value: item.customerId ? item.customerId : item.id, label: item.fullName }
   })
   const labelClock = clock.map((item) => {
     return { value: item.seri, label: item.name, contractId: item.contractId }
