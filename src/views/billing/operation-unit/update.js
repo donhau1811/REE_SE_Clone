@@ -8,8 +8,11 @@ import { useLocation } from 'react-router-dom/cjs/react-router-dom.min'
 import OperationCUForm from './OperationUnitCUForm'
 import { getOperationUnitById, putOperationUnit } from './store/actions'
 import BreadCrumbs from '@src/views/common/breadcrumbs'
+import ProjectTable from './ProjectTable'
+import { Tab, Tabs } from '@mui/material'
 
 const UpdateOperationUnit = ({ intl }) => {
+  const [activeTab, setActiveTab] = useState(1)
   const history = useHistory()
   const dispatch = useDispatch()
   const [isReadOnly, setIsReadOnly] = useState(true)
@@ -42,7 +45,9 @@ const UpdateOperationUnit = ({ intl }) => {
       }
     })
   }
-
+  const handleChangeTab = (event, newValue) => {
+    setActiveTab(newValue)
+  }
   const handleUpdateOperationUnit = (values) => {
     if (isReadOnly) {
       setIsReadOnly(false)
@@ -65,12 +70,28 @@ const UpdateOperationUnit = ({ intl }) => {
   }
   return (
     <>
-      <OperationCUForm
-        onSubmit={handleUpdateOperationUnit}
-        onCancel={handleCancel}
-        initValues={selectedCompany}
-        isReadOnly={isReadOnly}
-      />
+      {' '}
+      <Tabs
+        value={activeTab}
+        indicatorColor="primary"
+        textColor="primary"
+        onChange={handleChangeTab}
+        classes={{
+          root: 'mb-2 tabs-border-bottom'
+        }}
+      >
+        <Tab classes={{ root: 'general-tab' }} label={intl.formatMessage({ id: 'Operation unit info' })} value={1} />
+        <Tab classes={{ root: 'general-tab' }} label={intl.formatMessage({ id: 'projects' })} value={2} />
+      </Tabs>
+      {activeTab === 1 && (
+        <OperationCUForm
+          onSubmit={handleUpdateOperationUnit}
+          onCancel={handleCancel}
+          initValues={selectedCompany}
+          isReadOnly={isReadOnly}
+        />
+      )}
+      {activeTab === 2 && <ProjectTable />}
     </>
   )
 }

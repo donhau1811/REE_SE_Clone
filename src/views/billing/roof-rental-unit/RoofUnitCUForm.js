@@ -43,10 +43,6 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
     layout: { skin }
   } = useSelector((state) => state)
 
-  // const handleContactformSubmit = (value) => {
-  //   setContactsRoofVendor(value)
-  // }
-
   const handleContactformSubmit = async (changeContacts, changeId, callback) => {
     const changeItem = changeContacts.filter((item) => item.id === changeId)
     if (Number(initValues?.id) > 0) {
@@ -113,7 +109,13 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
           message: intl.formatMessage({ id: 'invalid-character-validate' }),
           excludeEmptyString: true
         }),
-      note: yup.string().max(255, intl.formatMessage({ id: 'max-validate' }))
+      note: yup.string().max(255, intl.formatMessage({ id: 'max-validate' })),
+      bankName: yup
+        .string()
+        .max(200, intl.formatMessage({ id: 'max-validate' })),
+        bankAccountNumber: yup
+        .string()
+        .max(50, intl.formatMessage({ id: 'max-validate' }))
     },
     ['name', 'code', 'taxCode', 'address', 'phone', 'email', 'note', 'state']
   )
@@ -151,25 +153,25 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
       return
     }
     const dataCheck = { code: values.code }
-      if (initValues?.id) dataCheck.id = initValues?.id
-      try {
-        const checkDupCodeRes = await axios.post(API_CHECK_CODE_ROOF_VENDORS, dataCheck)
-        if (checkDupCodeRes.status === 200 && checkDupCodeRes.data?.data) {
-          setError('code', { type: 'custom', message: intl.formatMessage({ id: 'dubplicated-validate' }) })
-          return
-        }
-      } catch (err) {
-        const alert = initValues?.id
-          ? 'Failed to update data. Please try again'
-          : 'Failed to create data. Please try again'
-        showToast(
-          'error',
-          intl.formatMessage({
-            id: alert
-          })
-        )
+    if (initValues?.id) dataCheck.id = initValues?.id
+    try {
+      const checkDupCodeRes = await axios.post(API_CHECK_CODE_ROOF_VENDORS, dataCheck)
+      if (checkDupCodeRes.status === 200 && checkDupCodeRes.data?.data) {
+        setError('code', { type: 'custom', message: intl.formatMessage({ id: 'dubplicated-validate' }) })
         return
       }
+    } catch (err) {
+      const alert = initValues?.id
+        ? 'Failed to update data. Please try again'
+        : 'Failed to create data. Please try again'
+      showToast(
+        'error',
+        intl.formatMessage({
+          id: alert
+        })
+      )
+      return
+    }
     if (!contactsRoofVendor?.filter((item) => !item.isDelete).length > 0) {
       return MySweetAlert.fire({
         // icon: 'success',
@@ -358,7 +360,41 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
             {errors?.note && <FormFeedback>{errors?.note?.message}</FormFeedback>}
           </Col>
         </Row>
-
+        <Row>
+        <Col className="mb-2" md={4}>
+            <Label className="general-label" for="bankName">
+              <FormattedMessage id="bankName" />
+            </Label>
+            <Input
+              id="bankName"
+              name="bankName"
+              autoComplete="on"
+              innerRef={register()}
+              disabled={isReadOnly}
+              invalid={!isReadOnly && !!errors.bankName}
+              valid={!isReadOnly && getValues('bankName')?.trim() && !errors.bankName}
+              placeholder={intl.formatMessage({ id: 'Enter bank name' })}
+            />
+            {errors?.bankName && <FormFeedback>{errors?.bankName?.message}</FormFeedback>}
+          </Col>
+        <Col className="mb-2" md={4}>
+            <Label className="general-label" for="accountNumber">
+              <FormattedMessage id="account Number" />
+            </Label>
+            <Input
+              id="bankAccountNumber"
+              name="bankAccountNumber"
+              autoComplete="on"
+              innerRef={register()}
+              disabled={isReadOnly}
+              invalid={!isReadOnly && !!errors.bankAccountNumber}
+              valid={!isReadOnly && getValues('bankAccountNumber')?.trim() && !errors.bankAccountNumber}
+              placeholder={intl.formatMessage({ id: 'Enter account Number' })}
+            />
+            {errors?.bankAccountNumber && <FormFeedback>{errors?.bankAccountNumber?.message}</FormFeedback>}
+          </Col>
+       
+          </Row>
         <Input id="contacts" name="contacts" autoComplete="on" innerRef={register()} type="hidden" />
         <Contact
           disabled={isReadOnly}

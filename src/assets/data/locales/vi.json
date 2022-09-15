@@ -1897,5 +1897,12 @@
   "Filter electricity index": "Lọc chỉ số điện",
   "All projects": "Tất cả dự án",
   "Apply": "Áp dụng",
-  "Choose month": "Chọn tháng"
+  "Choose month": "Chọn tháng",
+  "symbol":"Ký hiệu",
+  "bankName":"Tên ngân hàng",
+  "account Number":"Số tài khoản ngân hàng",
+  "Enter symbol":"Nhập ký hiệu",
+  "Enter account Number":"Nhập số tài khoản",
+  "Enter bank name" : "Nhập tên ngân hàng",
+  "Operation unit info":"Thông tin công ty vận hành"
 }

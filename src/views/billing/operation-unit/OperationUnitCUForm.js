@@ -8,7 +8,7 @@ import { GENERAL_STATUS_OPTS } from '@src/utility/constants/billing'
 import { selectThemeColors, showToast } from '@src/utility/Utils'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { CHECK_DUPLICATE_OPRERATION_UNIT_CODE, NUMBER_REGEX, SET_FORM_DIRTY } from '@src/utility/constants'
+import { CHECK_DUPLICATE_OPRERATION_UNIT_CODE, CHECK_DUPLICATE_OPRERATION_UNIT_SIGN, NUMBER_REGEX, SET_FORM_DIRTY } from '@src/utility/constants'
 import axios from 'axios'
 import { useDispatch } from 'react-redux'
 
@@ -44,7 +44,19 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
           message: intl.formatMessage({ id: 'invalid-character-validate' }),
           excludeEmptyString: true
         })
-        .max(15, intl.formatMessage({ id: 'max-validate' }))
+        .max(15, intl.formatMessage({ id: 'max-validate' })),
+      sign: yup
+        .string()
+        .required(intl.formatMessage({ id: 'required-validate' }))
+        .max(20, intl.formatMessage({ id: 'max-validate' })),
+      bankName: yup
+        .string()
+        .required(intl.formatMessage({ id: 'required-validate' }))
+        .max(200, intl.formatMessage({ id: 'max-validate' })),
+      bankAccountNumber: yup
+        .string()
+        .required(intl.formatMessage({ id: 'required-validate' }))
+        .max(50, intl.formatMessage({ id: 'max-validate' }))
     },
     ['name', 'code', 'taxCode', 'address', 'phone']
   )
@@ -78,12 +90,26 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
       onSubmit?.(initValues)
       return
     }
+    let isDuplicate = false
+
     try {
-      const dataCheck = { code: values.code }
+      const dataCheck = { code: values.code, sign: values.sign }
       if (initValues?.id) dataCheck.id = initValues?.id
-      const checkDupCodeRes = await axios.post(CHECK_DUPLICATE_OPRERATION_UNIT_CODE, dataCheck)
+      const [checkDupCodeRes, checkDupSignRes] = await Promise.all([
+        axios.post(CHECK_DUPLICATE_OPRERATION_UNIT_CODE, dataCheck),
+        axios.post(CHECK_DUPLICATE_OPRERATION_UNIT_SIGN, dataCheck)
+      ])
       if (checkDupCodeRes.status === 200 && checkDupCodeRes.data?.data) {
         setError('code', { type: 'custom', message: intl.formatMessage({ id: 'dubplicated-validate' }) })
+        isDuplicate = true
+
+      }
+      if (checkDupSignRes.status === 200 && checkDupSignRes.data?.data) {
+        setError('sign', { type: 'custom', message: intl.formatMessage({ id: 'dubplicated-validate' }) })
+        isDuplicate = true
+
+      }
+      if (isDuplicate) {
         return
       }
     } catch (err) {
@@ -145,6 +171,25 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
             />
             {errors?.code && <FormFeedback>{errors?.code?.message}</FormFeedback>}
           </Col>
+          <Col className="mb-2" md={4}>
+            <Label className="general-label" for="sign">
+              <FormattedMessage id="symbol" />
+              <span className="text-danger">&nbsp;(*)</span>
+            </Label>
+            <Input
+              id="sign"
+              name="sign"
+              autoComplete="on"
+              innerRef={register()}
+              disabled={isReadOnly}
+              invalid={!isReadOnly && !!errors.sign}
+              valid={!isReadOnly && getValues('sign')?.trim() && !errors.sign}
+              placeholder={intl.formatMessage({ id: 'Enter symbol' })}
+            />
+            {errors?.sign && <FormFeedback>{errors?.sign?.message}</FormFeedback>}
+          </Col>
+        </Row>
+        <Row>
           <Col md={4}>
             <Label className="general-label" for="taxCode">
               <FormattedMessage id="operation-unit-form-taxCode" />
@@ -162,9 +207,7 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
             />
             {errors?.taxCode && <FormFeedback>{errors?.taxCode?.message}</FormFeedback>}
           </Col>
-        </Row>
-        <Row>
-          <Col className="mb-2" md={8}>
+          <Col className="mb-2" md={4}>
             <Label className="general-label" for="address">
               <FormattedMessage id="operation-unit-form-address" />
               <span className="text-danger">&nbsp;(*)</span>
@@ -199,6 +242,40 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
           </Col>
         </Row>
         <Row>
+          <Col className="mb-2" md={4}>
+            <Label className="general-label" for="bankAccountNumber">
+              <FormattedMessage id="account Number" />
+              <span className="text-danger">&nbsp;(*)</span>
+            </Label>
+            <Input
+              id="bankAccountNumber"
+              name="bankAccountNumber"
+              autoComplete="on"
+              innerRef={register()}
+              disabled={isReadOnly}
+              invalid={!isReadOnly && !!errors.bankAccountNumber}
+              valid={!isReadOnly && getValues('bankAccountNumber')?.trim() && !errors.bankAccountNumber}
+              placeholder={intl.formatMessage({ id: 'Enter account Number' })}
+            />
+            {errors?.bankAccountNumber && <FormFeedback>{errors?.bankAccountNumber?.message}</FormFeedback>}
+          </Col>
+          <Col className="mb-2" md={4}>
+            <Label className="general-label" for="bankName">
+              <FormattedMessage id="bankName" />
+              <span className="text-danger">&nbsp;(*)</span>
+            </Label>
+            <Input
+              id="bankName"
+              name="bankName"
+              autoComplete="on"
+              innerRef={register()}
+              disabled={isReadOnly}
+              invalid={!isReadOnly && !!errors.bankName}
+              valid={!isReadOnly && getValues('bankName')?.trim() && !errors.bankName}
+              placeholder={intl.formatMessage({ id: 'Enter bank name' })}
+            />
+            {errors?.bankName && <FormFeedback>{errors?.bankName?.message}</FormFeedback>}
+          </Col>
           <Col className="mb-2" md={4}>
             <Label className="general-label" for="status">
               <FormattedMessage id="Status" />

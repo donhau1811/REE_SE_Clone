@@ -5,7 +5,7 @@ import { object } from 'prop-types'
 import Table from '@src/views/common/table/CustomDataTable'
 import { useParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { getListProjectByRoofVendorId } from '../project/store/actions'
+import { getListProjectByCompanyUnitId } from '../project/store/actions'
 import { ROWS_PER_PAGE_DEFAULT } from '@src/utility/constants'
 import { isEqual } from 'lodash'
 
@@ -20,14 +20,14 @@ const ProjectTable = ({ intl }) => {
 
   const fetchListProject = (payload = {}, isSort) => {
     const tempPayload = {
-      roofVendorId: id,
+      operationUnitId: id,
       pagination,
       params,
       ...payload
     }
 
     dispatch(
-      getListProjectByRoofVendorId({
+      getListProjectByCompanyUnitId({
         payload: tempPayload,
         callback: (res) => {
           if (isSort && isEqual(res.data, projects)) {
@@ -126,11 +126,10 @@ const ProjectTable = ({ intl }) => {
       }
     },
     {
-      name: intl.formatMessage({ id: 'Roof vendor alert form' }),
+      name: intl.formatMessage({ id: 'PatternBillElectricity' }),
       cell: (row) => row.contractName?.replaceAll(',', ',  ')?.replaceAll('"', ''),
       sortable: true
     },
-
     {
       name: intl.formatMessage({ id: 'operation-units' }),
       selector: 'operationCompanyName',

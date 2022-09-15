@@ -143,7 +143,6 @@ const CUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, is
     onCancel?.(isDirty)
   }
 
-  console.log('currContract', currContract)
   return (
     <>
       <Form className="billing-form" onSubmit={handleSubmit(handleSubmitOperationUnitForm)}>

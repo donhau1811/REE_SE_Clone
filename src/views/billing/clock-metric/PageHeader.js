@@ -42,6 +42,8 @@ const PageHeader = ({ onFilter, filterValue, setSelectedClock }) => {
   })
 
   useEffect(() => {
+    setValue('customer', null)
+
     if (watch('project')?.value) dispatch(getListCustomerByProjectId({ id: watch('project')?.value }))
   }, [watch('project')])
 
@@ -53,7 +55,7 @@ const PageHeader = ({ onFilter, filterValue, setSelectedClock }) => {
 
   useEffect(() => {
     setValue('clock', labelClock[0])
-  }, [watch('customer'), clock])
+  }, [watch('customer'), clock, watch('project')])
   useEffect(() => {
     setSelectedClock(getValues('clock')?.contractId)
   }, [watch('clock')])
@@ -69,7 +71,7 @@ const PageHeader = ({ onFilter, filterValue, setSelectedClock }) => {
   const handleChange = (value) => {
     if (value) {
       setPicker(value)
-    } 
+    }
   }
   return (
     <>

@@ -180,7 +180,7 @@ const OperationUnit = ({ intl }) => {
       sortable: true
     },
     {
-      name: intl.formatMessage({ id: 'operation-unit-form-address' }),
+      name: intl.formatMessage({ id: 'Industrial area' }),
       selector: 'address',
       sortable: true,
       cell: (row) => {

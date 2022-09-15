@@ -298,7 +298,7 @@ const OperationCUForm = ({
           </Col>
           <Col className="mb-2" md={4}>
             <Label className="general-label" for="address">
-              <FormattedMessage id="operation-unit-form-address" />
+              <FormattedMessage id="Industrial area" />
               <span className="text-danger">&nbsp;(*)</span>
             </Label>
             <Input

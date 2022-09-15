@@ -94,11 +94,12 @@ export const getContractById = ({ id }) => {
             payload: response.data?.data
           })
         } else {
-          throw new Error(response.data?.message)
+          throw new Error(response?.message)
         }
       })
       .catch((err) => {
-        showToast('error', err.toString())
+        console.log('err', err)
+        //showToast('error', err.toString())
       })
   }
 }

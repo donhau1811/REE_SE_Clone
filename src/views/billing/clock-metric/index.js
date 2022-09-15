@@ -82,9 +82,9 @@ const ClockMetric = ({ intl }) => {
     ) {
       return selectedContract.details?.unitPrice?.high
     } else if (
-      (newTime.diff(moment('04:30:00', 'HH:mm:ss'), 'second') > 0 &&
+      (newTime.diff(moment('04:00:00', 'HH:mm:ss'), 'second') > 0 &&
         newTime.diff(moment('9:30:00', 'HH:mm:ss'), 'second') < 0) ||
-      (newTime.diff(moment('11:00:00', 'HH:mm:ss'), 'second') > 0 &&
+      (newTime.diff(moment('11:30:00', 'HH:mm:ss'), 'second') > 0 &&
         newTime.diff(moment('17:00:00', 'HH:mm:ss'), 'second') < 0) ||
       (newTime.diff(moment('20:00:00', 'HH:mm:ss'), 'second') > 0 &&
         newTime.diff(moment('22:00:00', 'HH:mm:ss'), 'second') < 0)

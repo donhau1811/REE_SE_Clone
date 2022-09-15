@@ -7,7 +7,7 @@ import { array, bool, func, object, string } from 'prop-types'
 import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit.svg'
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
 import ValueCUForm from './ValueCUForm'
-import { GENERAL_STATUS, GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
+import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
 import withReactContent from 'sweetalert2-react-content'
 import classnames from 'classnames'
 import SweetAlert from 'sweetalert2'
@@ -22,9 +22,16 @@ import './styles.scss'
 
 const MySweetAlert = withReactContent(SweetAlert)
 
-const ValueTable = ({ configId, disabled, intl }) => {
-  const [isReadOnly, setIsReadOnly] = useState(true)
-  const [currValue, setCurrentValue] = useState(null)
+const ValueTable = ({
+  onCancel = () => {},
+  configId,
+  disabled,
+  intl,
+  handleSetIsReadOnly = () => {},
+  isReadOnly,
+  currValue,
+  handldeSetCurrentValue = () => {}
+}) => {
   const [configValues, setConfigValues] = useState([])
   const dispatch = useDispatch()
   const {
@@ -45,22 +52,14 @@ const ValueTable = ({ configId, disabled, intl }) => {
   useEffect(() => {
     fetchConfigValue()
   }, [configId])
-  const handleAddValue = () => {
-    setIsReadOnly(false)
-    setCurrentValue({
-      id: '-1',
-      name: selectedSetting?.name,
-      state: GENERAL_STATUS.ACTIVE
-    })
-  }
 
   const handleEditValue = (changeValue, _isReadOnly) => () => {
-    setIsReadOnly(_isReadOnly)
-    setCurrentValue({ ...changeValue, name: selectedSetting?.name })
+    handleSetIsReadOnly(_isReadOnly)
+    handldeSetCurrentValue({ ...changeValue, name: selectedSetting?.name })
   }
 
   const handleCancelValueForm = () => {
-    setCurrentValue({})
+    handldeSetCurrentValue({})
   }
 
   const handleCallbackForm = () => {
@@ -121,14 +120,13 @@ const ValueTable = ({ configId, disabled, intl }) => {
     {
       name: <FormattedMessage id="explain" />,
       selector: 'description',
-      maxWidth:'200px'
+      maxWidth: '200px'
     },
     {
       name: <FormattedMessage id="Status" />,
       center: true,
       selector: 'status',
-      maxWidth:'200px',
-
+      maxWidth: '200px',
 
       cell: (row) => {
         return row.state === OPERATION_UNIT_STATUS.ACTIVE ? (
@@ -172,10 +170,9 @@ const ValueTable = ({ configId, disabled, intl }) => {
       )
     }
   ]
-
   const handleSubmitValueForm = (values) => {
     if (isReadOnly) {
-      setIsReadOnly(false)
+      handleSetIsReadOnly(false)
       return
     }
     const payload = {
@@ -209,23 +206,17 @@ const ValueTable = ({ configId, disabled, intl }) => {
   return (
     <>
       <Row className="mb-2">
-        <Col className=" d-flex justify-content-between align-items-center">
-          <h4 className="typo-section"></h4>
-
-          <Button.Ripple
-            disabled={disabled}
-            color="primary"
-            className="add-project add-Value-button"
-            onClick={handleAddValue}
-          >
-            <FormattedMessage id="Add new" />
-          </Button.Ripple>
-        </Col>
-      </Row>
-      <Row className="mb-2">
         <Col>
           <Table columns={columns} pagination={null} data={configValues} />
         </Col>
+      </Row>
+      <Row className="d-flex justify-content-end align-items-center">
+        {/* <Button type="submit" color="primary" className="mr-1 px-3">
+            {submitText || intl.formatMessage({ id: isViewed ? 'Update' : 'Save' })}
+          </Button>{' '} */}
+        <Button className="mr-1 px-3" color="secondary" onClick={onCancel}>
+          {intl.formatMessage({ id: 'Back' })}
+        </Button>{' '}
       </Row>
       <ValueCUForm
         isReadOnly={isReadOnly}
@@ -241,7 +232,12 @@ ValueTable.propTypes = {
   onChange: func,
   disabled: bool,
   intl: object.isRequired,
-  configId: string.isRequired
+  configId: string.isRequired,
+  isReadOnly: bool,
+  handleSetIsReadOnly: func,
+  currValue: object,
+  handldeSetCurrentValue: func,
+  onCancel: func
 }
 
 export default injectIntl(ValueTable)

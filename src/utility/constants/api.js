@@ -121,6 +121,7 @@ export const API_GET_PANEL_TYPES = `${BASE_API_URL}/glf_panel_type`
 export const API_GET_OPERATION_UNIT = `${BASE_API_URL_V2}/operation-company/search`
 export const API_GET_ALL_OPERATION_UNIT = `${BASE_API_URL_V2}/operation-company/all`
 
+export const CHECK_DUPLICATE_OPRERATION_UNIT_SIGN = `${BASE_API_URL_V2}/operation-company/check-sign`
 export const CHECK_DUPLICATE_OPRERATION_UNIT_CODE = `${BASE_API_URL_V2}/operation-company/check-code`
 export const API_CREATE_OPERATION_UNIT = `${BASE_API_URL_V2}/operation-company/create`
 export const API_UPDATE_OPERATION_UNIT = `${BASE_API_URL_V2}/operation-company/update`
@@ -148,6 +149,8 @@ export const API_CHECK_PROJECT_NAME = `${BASE_API_URL_V2}/project/check-name`
 export const API_GET_ALL_PROJECT = `${BASE_API_URL_V2}/project/all`
 export const API_GET_PROJECT_BY_CUSTOMER_ID = `${BASE_API_URL_V2}/project/customerId`
 export const API_GET_PROJECT_BY_ROOF_VENDOR_ID = `${BASE_API_URL_V2}/project/roofVendorId`
+export const API_GET_PROJECT_BY_UNIT_COMPANY_ID = `${BASE_API_URL_V2}/project/operationCompanyId`
+
 //end project
 
 export const API_CUSTOMER_V2 = `${BASE_API_URL_V2}/customer/create`
