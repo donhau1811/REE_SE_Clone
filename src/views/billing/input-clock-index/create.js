@@ -1,34 +1,37 @@
-/* eslint-disable no-unused-vars */
-
 import { ROUTER_URL, SET_FORM_DIRTY } from '@src/utility/constants'
 import BreadCrumbs from '@src/views/common/breadcrumbs'
 import { object } from 'prop-types'
 import { injectIntl, useIntl } from 'react-intl'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
 import CUForm from './CUForm'
+import { addManualInputIndex } from './store/actions'
 
-const CreateInputClockIndex = ({ intl }) => {
+const CreateInputClockIndex = () => {
   const dispatch = useDispatch()
   const history = useHistory()
-  const {
-    layout: { skin }
-  } = useSelector((state) => state)
-  const handleAddOperationUnit = (values) => {
-    console.log('values', values)
+
+  const handleSubmitManualInputIndex = (payload) => {
+    dispatch(
+      addManualInputIndex({
+        payload,
+        callback: () => {
+          dispatch({
+            type: SET_FORM_DIRTY,
+            payload: false
+          })
+          history.push(`${ROUTER_URL.BILLING_MANUAL_INPUT_METRIC_CLOCK}`)
+        }
+      })
+    )
   }
 
   const handleCancel = () => {
-    history.push({
-      pathname: `${ROUTER_URL.BILLING_MANUAL_INPUT_METRIC_CLOCK}`,
-      state: {
-        allowUpdate: true
-      }
-    })
+    history.push(`${ROUTER_URL.BILLING_MANUAL_INPUT_METRIC_CLOCK}`)
   }
 
-  return <CUForm onSubmit={handleAddOperationUnit} onCancel={handleCancel} />
+  return <CUForm onSubmit={handleSubmitManualInputIndex} onCancel={handleCancel} />
 }
 
 CreateInputClockIndex.propTypes = {
