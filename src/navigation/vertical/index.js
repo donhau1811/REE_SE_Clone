@@ -14,10 +14,11 @@ import metricElectric from './metricElectric'
 
 //system
 import rightsGroup from './rightsGroup'
+import decentralization from './decentralization'
 
 const solarMonitoringItems = [...dashboards, ...monitoring, ...report, ...settings]
 const billingInvoicesItems = [...configuration, ...operatingUnit,  ...customer, ...roofRentalUnit, ...project, ...metricElectric]
-const systemItems = [...rightsGroup]
+const systemItems = [...rightsGroup, ...decentralization]
 const solarMonitoring = [
     {
         id: 'solarMonitoring',

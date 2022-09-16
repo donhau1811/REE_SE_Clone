@@ -79,6 +79,8 @@ export const ROUTER_URL = {
   BILLING_MANUAL_INPUT_METRIC_CLOCK_CREATE: '/billing/electricity-index/manual-input-index/create',
   BILLING_MANUAL_INPUT_METRIC_CLOCK_UPDATE: '/billing/electricity-index/manual-input-index/:id',
   SYSTEM_RIGHTS_GROUP:'/system/rights-group',
-  SYSTEM_RIGHTS_GROUP_UPDATE:'/system/rights-group/:id'
+  SYSTEM_RIGHTS_GROUP_UPDATE:'/system/rights-group/:id',
+  SYSTEM_DECENTRALIZATION:'/system/decentralization'
+
 
 }

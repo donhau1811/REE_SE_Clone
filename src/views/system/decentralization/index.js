@@ -1,6 +1,6 @@
-import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
 import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit.svg'
 import Table from '@src/views/common/table/CustomDataTable'
+import { object } from 'prop-types'
 import { useEffect } from 'react'
 import { FormattedMessage, injectIntl, useIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
@@ -10,6 +10,7 @@ import PageHeader from './PageHeader'
 import './styles.scss'
 import { ROUTER_URL, ROWS_PER_PAGE_DEFAULT, SET_ROOF_RENTAL_UNIT_PARAMS } from '@src/utility/constants'
 import { Link } from 'react-router-dom/cjs/react-router-dom.min'
+import EditUserRoleModal from './EditUserRoleModal'
 
 const RoofVendor = () => {
   const history = useHistory()
@@ -18,9 +19,10 @@ const RoofVendor = () => {
   const { data, params, total } = useSelector((state) => state.roofUnit)
 
   const { pagination = {}, searchValue } = params || {}
+  const intl = useIntl()
 
   const fetchRole = () => {}
-  const intl = useIntl()
+
   useEffect(() => {
     const initParams = {
       pagination: {
@@ -83,12 +85,6 @@ const RoofVendor = () => {
     }
   }
 
-  const handleRedirectToViewPage = (id) => () => {
-    if (id) {
-      history.push(`${ROUTER_URL.BILLING_ROOF_RENTAL_UNIT}/${id}`)
-    }
-  }
-
   const columns = [
     {
       name: intl.formatMessage({ id: 'No.' }),
@@ -97,35 +93,22 @@ const RoofVendor = () => {
       maxWidth: '50px'
     },
     {
-      name: intl.formatMessage({ id: 'Rights group code' }),
+      name: intl.formatMessage({ id: 'Username' }),
       selector: 'code',
       sortable: true,
       maxWidth: '180px'
     },
     {
-      name: intl.formatMessage({ id: 'Rights group name' }),
+      name: intl.formatMessage({ id: 'Full name' }),
       selector: 'name',
       sortable: true,
       cell: (row) => <Link to={`${ROUTER_URL.BILLING_ROOF_RENTAL_UNIT}/${row.id}`}>{row?.name}</Link>
     },
     {
-      name: intl.formatMessage({ id: 'Created by' }),
+      name: intl.formatMessage({ id: 'rights-group' }),
       selector: 'taxCode',
       sortable: true,
       maxWidth: '200px'
-    },
-
-    {
-      name: intl.formatMessage({ id: 'CreatedDate' }),
-      selector: 'address',
-      sortable: true,
-      maxWidth: '200px'
-    },
-
-    {
-      name: intl.formatMessage({ id: 'Role' }),
-      selector: 'phone',
-      sortable: true
     },
 
     {
@@ -134,14 +117,10 @@ const RoofVendor = () => {
       cell: (row) => (
         <>
           {' '}
-          <Badge onClick={handleRedirectToViewPage(row.id)}>
-            <IconView id={`editBtn_${row.id}`} />
-          </Badge>
-          <UncontrolledTooltip placement="auto" target={`editBtn_${row.id}`}>
-            <FormattedMessage id="View Project" />
-          </UncontrolledTooltip>
           <Badge onClick={handleRedirectToUpdatePage(row.id)}>
-            <IconEdit id={`updateBtn_${row.id}`} />
+            <EditUserRoleModal>
+              <IconEdit id={`updateBtn_${row.id}`} />
+            </EditUserRoleModal>
           </Badge>
           <UncontrolledTooltip placement="auto" target={`updateBtn_${row.id}`}>
             <FormattedMessage id="Update Project" />
@@ -159,7 +138,7 @@ const RoofVendor = () => {
           <PageHeader onSearch={handleSearch} searchValue={searchValue} />
           <Table
             columns={columns}
-            data={{}}
+            data={[{}, {}]}
             total={total}
             onPageChange={handleChangePage}
             onPerPageChange={handlePerPageChange}
@@ -176,6 +155,7 @@ const RoofVendor = () => {
 }
 
 RoofVendor.propTypes = {
+  intl: object.isRequired
 }
 
 export default injectIntl(RoofVendor)
