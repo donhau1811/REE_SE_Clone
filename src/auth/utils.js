@@ -128,6 +128,8 @@ export const getUserAbility = (userRole) => {
         { action: 'manage', subject: ROUTER_URL.BILLING_PROJECT_UPDATE_ROOF_VENDOR },
         { action: 'manage', subject: ROUTER_URL.BILLING_METRIC_CLOCK },
         { action: 'manage', subject: ROUTER_URL.BILLING_MANUAL_INPUT_METRIC_CLOCK },
+        { action: 'manage', subject: ROUTER_URL.SYSTEM_RIGHTS_GROUP },
+        { action: 'manage', subject: ROUTER_URL.SYSTEM_RIGHTS_GROUP_UPDATE },
         { action: 'manage', subject: USER_ABILITY.CAN_VIEW_USER_ACTIVITIES_REPORT }
       ]
     }
