@@ -19,8 +19,7 @@ import SweetAlert from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import classNames from 'classnames'
 import { useHistory } from 'react-router-dom'
-import { showToast } from '@src/utility/Utils'
-import { NOTIFICATIONL_STATUS } from '@src/utility/constants/billing'
+// import { showToast } from '@src/utility/Utils'
 import PageHeader from './PageHeader'
 
 const MySweetAlert = withReactContent(SweetAlert)
@@ -87,10 +86,10 @@ const ClockMetric = ({ intl }) => {
   }
 
   const handleDeleteItem = (row) => () => {
-    if (row.state !== 'PENDING_NEW') {
-      showToast('error', <FormattedMessage id="Cannot delete index that not in new state" />)
-      return
-    }
+    // if (row.state !== 'PENDING_NEW') {
+    //   showToast('error', <FormattedMessage id="Cannot delete index that not in new state" />)
+    //   return
+    // }
     return MySweetAlert.fire({
       title: intl.formatMessage({ id: 'Delete operating customer title' }),
       text: intl.formatMessage({ id: 'Are you sure to delete this manual input index?' }),
@@ -123,13 +122,13 @@ const ClockMetric = ({ intl }) => {
     })
   }
   const handleRedirectToViewPage = (id) => () => {
-    if (id) history.push(`${ROUTER_URL.BILLING_OPERATION_UNIT}/${id}`)
+    if (id) history.push(`${ROUTER_URL.BILLING_MANUAL_INPUT_METRIC_CLOCK}/${id}`)
   }
 
   const handleRedirectToUpdatePage = (id) => () => {
     if (id) {
       history.push({
-        pathname: `${ROUTER_URL.BILLING_OPERATION_UNIT}/${id}`,
+        pathname: `${ROUTER_URL.BILLING_MANUAL_INPUT_METRIC_CLOCK}/${id}`,
         state: {
           allowUpdate: true
         }
@@ -160,7 +159,7 @@ const ClockMetric = ({ intl }) => {
     {
       name: intl.formatMessage({ id: 'Alert status' }),
       selector: 'state',
-      cell: (row) => NOTIFICATIONL_STATUS[row.state] || row.state
+      cell: () => <FormattedMessage id="Pending new" />
     },
     {
       name: intl.formatMessage({ id: 'Actions' }),
