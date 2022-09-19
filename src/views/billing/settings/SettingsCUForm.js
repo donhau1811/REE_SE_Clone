@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
+import { GENERAL_STATUS, GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
 import { selectThemeColors } from '@src/utility/Utils'
 import { bool, func, object, string } from 'prop-types'
 import { useEffect } from 'react'
@@ -9,7 +9,16 @@ import Select from 'react-select'
 import { Button, Col, Form, FormFeedback, Input, Label, Row } from 'reactstrap'
 import * as yup from 'yup'
 
-const SettingsCUForm = ({ isViewed, intl, onSubmit = () => {}, onCancel = () => {}, initValues }) => {
+const SettingsCUForm = ({
+  isViewed,
+  intl,
+  onSubmit = () => {},
+  initValues,
+  disabled,
+  selectedSetting,
+  handldeSetCurrentValue = () => {},
+  handleSetIsReadOnly = () => {}
+}) => {
   const SETTING_STATUS_OPTS = [
     { value: OPERATION_UNIT_STATUS.ACTIVE, label: intl.formatMessage({ id: 'Active' }) },
     { value: OPERATION_UNIT_STATUS.INACTIVE, label: intl.formatMessage({ id: 'Inactive' }) }
@@ -49,9 +58,32 @@ const SettingsCUForm = ({ isViewed, intl, onSubmit = () => {}, onCancel = () => 
       state: SETTING_STATUS_OPTS.find((item) => item.value === initValues?.state)
     })
   }, [initValues])
+
+  const handleAddValue = () => {
+    handleSetIsReadOnly(false)
+    handldeSetCurrentValue({
+      id: '-1',
+      name: selectedSetting?.name,
+      state: GENERAL_STATUS.ACTIVE
+    })
+  }
   return (
     <>
-      <Form className='billing-form' key="customer-form" onSubmit={handleSubmit(onSubmit)}>
+      <Form className="billing-form" key="customer-form" onSubmit={handleSubmit(onSubmit)}>
+        <Row className="mb-2">
+          <Col className=" d-flex justify-content-between align-items-center">
+            <h4 className="typo-section"></h4>
+
+            <Button.Ripple
+              disabled={disabled}
+              color="primary"
+              className="add-project add-Value-button"
+              onClick={handleAddValue}
+            >
+              <FormattedMessage id="Add new" />
+            </Button.Ripple>
+          </Col>
+        </Row>
         <Row>
           <Col className="mb-2" md={4}>
             <Label className="general-label" for="code">
@@ -128,14 +160,6 @@ const SettingsCUForm = ({ isViewed, intl, onSubmit = () => {}, onCancel = () => 
           </Col>
         </Row>
         <Row></Row>
-        <Row className="d-flex justify-content-end align-items-center">
-          {/* <Button type="submit" color="primary" className="mr-1 px-3">
-            {submitText || intl.formatMessage({ id: isViewed ? 'Update' : 'Save' })}
-          </Button>{' '} */}
-          <Button className="mr-1 px-3" color="secondary" onClick={onCancel}>
-            {intl.formatMessage({ id: 'Back' })}
-          </Button>{' '}
-        </Row>
       </Form>
     </>
   )
@@ -144,10 +168,14 @@ const SettingsCUForm = ({ isViewed, intl, onSubmit = () => {}, onCancel = () => 
 SettingsCUForm.propTypes = {
   intl: object.isRequired,
   onSubmit: func,
-  onCancel: func,
   initValues: object,
   isViewed: bool,
-  submitText: string
+  submitText: string,
+  disabled: bool,
+  selectedSetting: object,
+  currValue: object,
+  handldeSetCurrentValue: func,
+  handleSetIsReadOnly: func
 }
 
 export default injectIntl(SettingsCUForm)

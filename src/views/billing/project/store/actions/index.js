@@ -6,6 +6,7 @@ import {
   API_GET_PROJECT_BY_CUSTOMER_ID,
   API_GET_PROJECT_BY_ID,
   API_GET_PROJECT_BY_ROOF_VENDOR_ID,
+  API_GET_PROJECT_BY_UNIT_COMPANY_ID,
   API_UPDATE_PROJECT
 } from '@src/utility/constants'
 import axios from 'axios'
@@ -178,6 +179,31 @@ export const getListProjectByRoofVendorId = ({ payload, callback }) => {
       })
   }
 }
+
+export const getListProjectByCompanyUnitId = ({ payload, callback }) => {
+  return async () => {
+    const { operationUnitId, pagination, params } = payload
+    const URLParamsObject = {
+      ...params,
+      limit: pagination.rowsPerPage,
+      offset: pagination.rowsPerPage * (pagination.currentPage - 1)
+    }
+
+    await axios
+      .get(`${API_GET_PROJECT_BY_UNIT_COMPANY_ID}/${operationUnitId}`, { params: URLParamsObject })
+      .then((response) => {
+        if (response.status === 200 && response.data.data) {
+          callback?.(response.data)
+        } else {
+          throw new Error(response.data.message)
+        }
+      })
+      .catch((err) => {
+        showToast('error', `${err.response ? err.response.data.message : err.message}`)
+      })
+  }
+}
+
 export const getProjects = () => {
   return async (dispatch) => {
 

@@ -4,7 +4,7 @@ import React from 'react'
 
 export default [
   {
-    id: 'project',
+    id: 'projectsManagement',
     title: 'project management',
     icon: <img src={project} alt='project'/>,
     children: [
