@@ -68,7 +68,7 @@ const ProjectCUForm = ({
         )
       }*/
     } catch (error) {
-      showToast('error', intlNew.formatMessage({id: error.toString()}))
+      showToast('error',  intlNew.formatMessage({id: error.toString()}))
     }
   }, [])
 
