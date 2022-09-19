@@ -68,7 +68,6 @@ const ProjectCUForm = ({
         )
       }*/
     } catch (error) {
-      console.log('errr', error.toString() === "Error: Network Error")
       showToast('error', intlNew.formatMessage({id: error.toString()}))
     }
   }, [])
