@@ -2,7 +2,7 @@ import '@src/@core/scss/billing-sweet-alert.scss'
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
 import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit.svg'
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
-import { ROUTER_URL, ROWS_PER_PAGE_DEFAULT } from '@src/utility/constants'
+import { ROUTER_URL, ROWS_PER_PAGE_DEFAULT, SET_PROJECT_PARAMS } from '@src/utility/constants'
 import { GENERAL_STATUS as PROJECT_STATUS, mockUser } from '@src/utility/constants/billing'
 import Table from '@src/views/common/table/CustomDataTable'
 import classNames from 'classnames'
@@ -28,7 +28,7 @@ const Project = ({ intl }) => {
   const dispatch = useDispatch()
   const { data, params, total } = useSelector((state) => state.projects)
 
-  const { pagination = {}, searchValue } = params || {}
+  const { pagination = {}, searchValue, filterValue } = params || {}
 
   const fetchProject = (payload) => {
     dispatch(
@@ -54,14 +54,21 @@ const Project = ({ intl }) => {
   }, [data])
 
   useEffect(() => {
-    fetchProject({
+    const initParamsToFetch = {
       pagination: {
         rowsPerPage: ROWS_PER_PAGE_DEFAULT,
         currentPage: 1
       },
       sortBy: 'code',
       sortDirection: 'asc'
-    })
+    }
+    fetchProject(initParamsToFetch)
+    return () => {
+      dispatch({
+        type: SET_PROJECT_PARAMS,
+        payload: initParamsToFetch
+      })
+    }
   }, [])
 
   const handleRedirectToUpdatePage = (id) => () => {
@@ -263,7 +270,7 @@ const Project = ({ intl }) => {
     <>
       <Row>
         <Col sm="12">
-          <PageHeader onFilter={handleFilter} searchValue={searchValue} onSearch={handleSearch}/>
+          <PageHeader onFilter={handleFilter} searchValue={searchValue} onSearch={handleSearch} />
           <Table
             tableId="project"
             columns={columns}
@@ -273,6 +280,7 @@ const Project = ({ intl }) => {
             onPerPageChange={handleNumberPerPageChange}
             onSort={handleSort}
             defaultSortAsc={params?.sortDirection === 'asc'}
+            isSearching={searchValue?.trim() || JSON.stringify(filterValue) !== '{}'}
             {...pagination}
           />
         </Col>

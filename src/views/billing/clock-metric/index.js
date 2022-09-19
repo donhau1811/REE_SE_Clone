@@ -9,6 +9,7 @@ import moment from 'moment'
 import { numberWithCommas } from '@src/utility/Utils'
 import { useState, useEffect } from 'react'
 import { getAllContract, getContractById } from '../contract/store/actions'
+import { RESET_DATA_METER_METRIC_REQUEST, ROWS_PER_PAGE_DEFAULT } from '@src/utility/constants'
 
 const ClockMetric = ({ intl }) => {
   const dispatch = useDispatch()
@@ -24,7 +25,22 @@ const ClockMetric = ({ intl }) => {
   }, [meterMetric])
 
   useEffect(() => {
+    const initParamsToFetch = {
+      pagination: {
+        rowsPerPage: ROWS_PER_PAGE_DEFAULT,
+        currentPage: 1
+      },
+      sortBy: 'code',
+      sortDirection: 'asc'
+    }
     dispatch(getAllContract())
+    return () => {
+      dispatch({
+        type: RESET_DATA_METER_METRIC_REQUEST,
+        payload: initParamsToFetch
+
+      })
+    }
   }, [])
   const fetchClockMetrics = (payload) => {
     dispatch(
@@ -68,8 +84,7 @@ const ClockMetric = ({ intl }) => {
         currentPage: 1
       },
       filterValue: value,
-      isFilter:true
-      
+      isFilter: true
     })
   }
   const returnRushTime = (row) => {
@@ -82,9 +97,9 @@ const ClockMetric = ({ intl }) => {
     ) {
       return selectedContract.details?.unitPrice?.high
     } else if (
-      (newTime.diff(moment('04:30:00', 'HH:mm:ss'), 'second') > 0 &&
+      (newTime.diff(moment('04:00:00', 'HH:mm:ss'), 'second') > 0 &&
         newTime.diff(moment('9:30:00', 'HH:mm:ss'), 'second') < 0) ||
-      (newTime.diff(moment('11:00:00', 'HH:mm:ss'), 'second') > 0 &&
+      (newTime.diff(moment('11:30:00', 'HH:mm:ss'), 'second') > 0 &&
         newTime.diff(moment('17:00:00', 'HH:mm:ss'), 'second') < 0) ||
       (newTime.diff(moment('20:00:00', 'HH:mm:ss'), 'second') > 0 &&
         newTime.diff(moment('22:00:00', 'HH:mm:ss'), 'second') < 0)
@@ -180,7 +195,7 @@ const ClockMetric = ({ intl }) => {
             onPageChange={handleChangePage}
             onPerPageChange={handlePerPageChange}
             onSort={handleSort}
-            isSearching={JSON.stringify({}) !== "{}"}
+            isSearching={JSON.stringify({}) !== '{}'}
             {...pagination}
             noDataTitle={
               <FormattedMessage id={!isSearching ? 'No data metric' : 'Not found any result. Please try again'} />

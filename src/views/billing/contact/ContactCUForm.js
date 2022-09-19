@@ -10,9 +10,10 @@ import Select from 'react-select'
 import { selectThemeColors } from '@src/utility/Utils'
 import { POSITION_OPTIONS } from '@src/utility/constants/billing'
 import classNames from 'classnames'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import withReactContent from 'sweetalert2-react-content'
 import SweetAlert from 'sweetalert2'
+import { getSettingValuesByCode } from '../settings/store/actions'
 
 const MySweetAlert = withReactContent(SweetAlert)
 
@@ -20,7 +21,21 @@ function ContactCUForm({ contact, intl, onSubmit = () => {}, onCancel, isReadOnl
   const {
     layout: { skin }
   } = useSelector((state) => state)
+
+  const { setting } = useSelector((state) => state.settings)
+
   const [isOpen, setIsOpen] = useState(false)
+
+  const dispatch = useDispatch()
+  useEffect(async () => {
+    dispatch(
+      getSettingValuesByCode({
+        isSavedToState: true,
+        code: 'Contact_Pos'
+      })
+    )
+  }, [])
+
   const validateSchema = yup.object().shape(
     {
       fullName: yup
@@ -142,7 +157,7 @@ function ContactCUForm({ contact, intl, onSubmit = () => {}, onCancel, isReadOnl
                   name="position"
                   id="position"
                   innerRef={register()}
-                  options={POSITION_OPTIONS}
+                  options={setting?.Contact_Pos}
                   className="react-select"
                   classNamePrefix="select"
                   placeholder={intl.formatMessage({ id: 'Choose position' })}
