@@ -1,7 +1,7 @@
 import { bool, element, func, object, string } from 'prop-types'
 import { cloneElement, useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { FormattedMessage, injectIntl, useIntl } from 'react-intl'
 import Select from 'react-select'
 import { Button, Col, Form, FormFeedback, Input, Label, Row } from 'reactstrap'
 
@@ -37,6 +37,7 @@ const ProjectCUForm = ({
   const dispatch = useDispatch()
   const initState = { state: GENERAL_STATUS_OPTS[0] }
   const [companies, setCompanies] = useState([])
+  const intlNew = useIntl()
   useEffect(async () => {
     try {
       /*const initParam = {
@@ -67,7 +68,8 @@ const ProjectCUForm = ({
         )
       }*/
     } catch (error) {
-      showToast('error', error.toString())
+      console.log('errr', error.toString() === "Error: Network Error")
+      showToast('error', intlNew.formatMessage({id: error.toString()}))
     }
   }, [])
 

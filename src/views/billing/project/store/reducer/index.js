@@ -1,5 +1,5 @@
 import { ROWS_PER_PAGE_DEFAULT } from '@constants/index'
-import { FETCH_PROJECT_REQUEST, SET_SELECTED_BILLING_PROJECT } from '@constants/actions'
+import { FETCH_PROJECT_REQUEST, SET_PROJECT_PARAMS, SET_SELECTED_BILLING_PROJECT } from '@constants/actions'
 
 // ** Initial State
 const initialState = {
@@ -27,6 +27,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         selectedProject: action.payload
+      }
+    case SET_PROJECT_PARAMS:
+      return {
+        ...state,
+        params: action.payload
       }
     default:
       return state

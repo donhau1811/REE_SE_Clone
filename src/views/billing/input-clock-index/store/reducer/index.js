@@ -1,5 +1,9 @@
 import { ROWS_PER_PAGE_DEFAULT } from '@constants/index'
-import { FETCH_INPUT_CLOCK_INDEX, SET_INPUT_CLOCK_INDEX_PARAMS } from '@constants/actions'
+import {
+  FETCH_INPUT_CLOCK_INDEX,
+  SET_INPUT_CLOCK_INDEX_PARAMS,
+  SET_SELECTED_INPUT_CLOCK_INDEX
+} from '@constants/actions'
 
 // ** Initial State
 const initialState = {
@@ -10,7 +14,8 @@ const initialState = {
       rowsPerPage: ROWS_PER_PAGE_DEFAULT,
       currentPage: 1
     }
-  }
+  },
+  selectedInputClockIndex: {}
 }
 
 const reducer = (state = initialState, action) => {
@@ -26,6 +31,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         params: action.payload
+      }
+    case SET_SELECTED_INPUT_CLOCK_INDEX:
+      return {
+        ...state,
+        selectedInputClockIndex: action.payload
       }
     default:
       return state

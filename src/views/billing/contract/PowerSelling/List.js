@@ -77,7 +77,7 @@ function PowerSelling({ disabled, intl, data, onDelete }) {
         return (
           <>
             <div id={`view_name${row.id}`}>
-              {row?.customer?.address?.length > 150 ? `${row.customer.address.slice(0, 150)}...` : row.customer.address}
+              {row?.customer?.address?.length > 150 ? `${row?.customer?.address?.slice(0, 150)}...` : row?.customer?.address}
             </div>
             {row?.customer?.address?.length > 150 && (
               <UncontrolledTooltip placement="auto" target={`view_name${row.id}`}>

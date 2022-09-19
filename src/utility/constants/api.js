@@ -192,6 +192,7 @@ export const API_UPDATE_CONTRACT = `${BASE_API_URL_V2}/contract/update`
 export const API_CHECK_CODE_CONTRACT = `${BASE_API_URL_V2}/contract/check-code`
 export const API_GET_CONTRACT_BY_ID = `${BASE_API_URL_V2}/contract/id`
 export const API_GET_CONTRACT_BY_CUSTOMER_ID = `${BASE_API_URL_V2}/contract/customerId`
+export const API_FETCH_CONTRACT_BY_QUERY = `${BASE_API_URL_V2}/contract/fetch`
 export const API_GET_ALL_CONTRACT = `${BASE_API_URL_V2}/contract/all`
 
 //meter
@@ -204,6 +205,9 @@ export const API_GET_ALL_CLOCK_BY_CONTRACT_ID = `${BASE_API_URL_V2}/meter/contra
 
 // input clock index
 export const API_GET_INPUT_CLOCK_INDEX = `${BASE_API_URL_V2}/billing-data/search`
+export const API_GET_BLLING_DATA_BY_CONTRACT_ID = `${BASE_API_URL_V2}/billing-data/contractId`
+export const API_GET_BLLING_DATA_BY_ID = `${BASE_API_URL_V2}/billing-data/id`
 export const API_DELETE_INPUT_CLOCK_INDEX = `${BASE_API_URL_V2}/billing-data/delete`
+export const API_UPDATE_INPUT_CLOCK_INDEX = `${BASE_API_URL_V2}/billing-data/update`
 
 export const GET_ALL_CLOCK = `${BASE_API_URL_V2}/meter/all`

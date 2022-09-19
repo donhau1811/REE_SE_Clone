@@ -98,8 +98,8 @@ export const getContractById = ({ id }) => {
         }
       })
       .catch((err) => {
-        console.log('err', err)
-        //showToast('error', err.toString())
+       // showToast('error', err.toString())
+       console.log('err', err)
       })
   }
 }
