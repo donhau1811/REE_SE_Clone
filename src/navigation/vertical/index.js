@@ -12,13 +12,9 @@ import roofRentalUnit from './roofRentalUnit'
 import project  from './project'
 import metricElectric from './metricElectric'
 
-//system
-import rightsGroup from './rightsGroup'
-import decentralization from './decentralization'
-
 const solarMonitoringItems = [...dashboards, ...monitoring, ...report, ...settings]
 const billingInvoicesItems = [...configuration, ...operatingUnit,  ...customer, ...roofRentalUnit, ...project, ...metricElectric]
-const systemItems = [...rightsGroup, ...decentralization]
+
 const solarMonitoring = [
     {
         id: 'solarMonitoring',
@@ -34,12 +30,5 @@ const billing = [
         children: [...billingInvoicesItems]
     }
 ]
-const system = [
-    {
-        id: 'system',
-        title: 'system',
-        children: [...systemItems]
-    }
-]
 // ** Merge & Export
-export default [...solarMonitoring, ...billing, ...system]
+export default [...solarMonitoring, ...billing]
