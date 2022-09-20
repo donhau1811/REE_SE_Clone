@@ -1,4 +1,4 @@
-import { func, object } from 'prop-types'
+import { func } from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { FormattedMessage, injectIntl, useIntl } from 'react-intl'
 import { Button, Col, Label, Row } from 'reactstrap'
@@ -12,11 +12,15 @@ import { GENERAL_STATUS } from '@src/utility/constants/billing'
 import { getAllCustomer, getListCustomerByProjectId } from '../customer/store/actions'
 import { getClockByCustomerAndProjectId } from './store/actions'
 import moment from 'moment'
-import { DISPLAY_DATE_FORMAT_CALENDAR, ISO_STANDARD_FORMAT, RESET_DATA_METER_METRIC_REQUEST, ROWS_PER_PAGE_DEFAULT } from '@src/utility/constants'
+import {
+  DISPLAY_DATE_FORMAT_CALENDAR,
+  ISO_STANDARD_FORMAT,
+  RESET_DATA_METER_METRIC_REQUEST,
+  ROWS_PER_PAGE_DEFAULT
+} from '@src/utility/constants'
 import { DateRangePicker } from 'element-react/next'
 
-// eslint-disable-next-line no-unused-vars, react/prop-types
-const PageHeader = ({ onFilter, filterValue, setSelectedClock }) => {
+const PageHeader = ({ onFilter, setSelectedClock }) => {
   const intl = useIntl()
   const dispatch = useDispatch()
   const { control, register, watch, handleSubmit, setValue, getValues } = useForm()
@@ -51,11 +55,10 @@ const PageHeader = ({ onFilter, filterValue, setSelectedClock }) => {
       getClockByCustomerAndProjectId({ projectIds: watch('project')?.value, customerIds: watch('customer')?.value })
     )
   }, [watch('customer'), watch('project')])
-
-  useEffect(() => {
+  const resetDataMeterMetric = () => {
     dispatch({
       type: RESET_DATA_METER_METRIC_REQUEST,
-      payload:  {
+      payload: {
         pagination: {
           rowsPerPage: ROWS_PER_PAGE_DEFAULT,
           currentPage: 1
@@ -63,15 +66,18 @@ const PageHeader = ({ onFilter, filterValue, setSelectedClock }) => {
         sortBy: 'code',
         sortDirection: 'asc'
       }
-
     })
-    setValue('clock', { value: clock[0]?.seri, label: clock[0]?.name, contractId: clock[0]?.contractId })
+  }
+  useEffect(() => {
+    resetDataMeterMetric()
+    if (clock[0]) setValue('clock', { value: clock[0]?.seri, label: clock[0]?.name, contractId: clock[0]?.contractId })
+    else setValue('clock', null)
   }, [watch('customer'), clock, watch('project')])
 
   useEffect(() => {
+    resetDataMeterMetric()
     setSelectedClock(getValues('clock')?.contractId)
   }, [watch('clock')])
-
 
   const handleFilter = (value) => {
     const newData = {
@@ -162,7 +168,7 @@ const PageHeader = ({ onFilter, filterValue, setSelectedClock }) => {
               className="react-select"
               classNamePrefix="select"
               placeholder={intl.formatMessage({ id: 'Select clock' })}
-              formatOptionLabel={(option) => <>{option.label && intl.formatMessage({ id: option.label  })}</>}
+              formatOptionLabel={(option) => <>{option.label && intl.formatMessage({ id: option.label })}</>}
               noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
             />
           </Col>
@@ -179,10 +185,8 @@ const PageHeader = ({ onFilter, filterValue, setSelectedClock }) => {
 }
 
 PageHeader.propTypes = {
-  intl: object.isRequired,
   onSearch: func,
   onFilter: func,
-  filterValue: object,
   setSelectedClock: func
 }
 

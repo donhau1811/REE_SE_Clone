@@ -52,9 +52,8 @@ const VerticalNavMenuGroup = ({
       allParents = getAllParents(parentItem, 'id')
       allParents.pop()
     }
-
     // ** If user clicked on menu group inside already opened group i.g. when user click on blog group inside pages group
-    if (groupOpen && allParents && groupOpen[0] === allParents[0]) {
+    if (groupOpen && allParents && groupOpen.includes(allParents[0])) {
       groupOpen.includes(item) ? openArr.splice(openArr.indexOf(item), 1) : openArr.push(item)
     } else {
       openArr = []
