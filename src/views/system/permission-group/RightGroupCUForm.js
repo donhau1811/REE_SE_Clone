@@ -28,7 +28,6 @@ const RightGroupCUForm = ({ intl, isReadOnly, onSubmit = () => {}, onCancel = ()
   // eslint-disable-next-line no-unused-vars
   const { data, params } = useSelector((state) => state.roofUnit)
   const { id } = useParams()
-
   const {
     handleSubmit,
     formState: { isDirty }

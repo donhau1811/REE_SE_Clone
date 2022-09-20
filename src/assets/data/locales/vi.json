@@ -1941,5 +1941,6 @@
   "Select billing cycle": "Chọn kỳ tính tiền điện",
   "Enter exchange rate": "Nhập tỷ giá",
   "Detail of billing data":"Chi tiết chỉ số bổ sung",
-  "Error: Network Error":"Đã xảy ra sự cố  với mạng"
+  "Error: Network Error":"Đã xảy ra sự cố  với mạng",
+  "Application features":"Tính năng áp dụng"
 }

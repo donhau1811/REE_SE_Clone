@@ -215,3 +215,4 @@ export const GET_ALL_CLOCK = `${BASE_API_URL_V2}/meter/all`
 
 //role 
 export const GET_ROLE_PERMISION_BY_ROLE_ID = `${BASE_API_URL_V2}/role-permission/role`
+export const GET_ROLES = `${BASE_API_URL_V2}/role/all`
