@@ -92,9 +92,9 @@ const RoofVendor = () => {
 
     {
       name: intl.formatMessage({ id: 'Application features' }),
-      cell: (row) => (row.featuresApply?.length > 100
-          ? row.featuresApply
-          : `${row.featuresApply?.substring(1, 100)}...`)
+      cell: (row) => (
+        row.featuresApply?.length > 100 ? `${row.featuresApply?.substring(0, 100)}...` : row.featuresApply
+      )
     },
 
     {
