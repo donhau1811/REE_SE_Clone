@@ -7,6 +7,7 @@ const initialState = {
   data: [],
   total: 0,
   selectedRole: {},
+  roles:[],
   params: {
     pagination: {
       rowsPerPage: ROWS_PER_PAGE_DEFAULT,
@@ -20,7 +21,7 @@ const reducer = (state = initialState, action) => {
     case FETCH_ROLE_REQUEST:
       return {
         ...state,
-        data: action?.data ? action.data : state.data,
+        roles: action?.data ? action.data : state.data,
         total: action?.total ? action?.total : state.total,
         params: action.params ? { ...state.params, ...action.params } : state.params
       }

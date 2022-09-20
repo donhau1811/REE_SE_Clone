@@ -12,16 +12,14 @@ import BreadCrumbs from '@src/views/common/breadcrumbs'
 const UpdateRightsGroup = ({ intl }) => {
   const dispatch = useDispatch()
   const history = useHistory()
-  const [isReadOnly, setIsReadOnly] = useState(false)
+  const [isReadOnly, setIsReadOnly] = useState(true)
   const location = useLocation()
   useEffect(() => {
     if (location.state?.allowUpdate) setIsReadOnly(false)
   }, [location.state?.allowUpdate])
-
   const {
     billingContacts: { contacts }
   } = useSelector((state) => state)
-
   const { id } = useParams()
   useEffect(() => {
    
@@ -39,7 +37,7 @@ const UpdateRightsGroup = ({ intl }) => {
   }
   const handleCancel = () => {
     history.push({
-      pathname: `${ROUTER_URL.BILLING_ROOF_RENTAL_UNIT}`,
+      pathname: `${ROUTER_URL.SYSTEM_PERMISSION_GROUP}`,
       state: {
         allowUpdate: true
       }
