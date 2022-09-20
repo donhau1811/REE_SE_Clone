@@ -22,6 +22,7 @@ const Form4COM = ({ intl, isReadOnly }) => {
         invalid={!isReadOnly && !!errors.sellingExchangeRate}
         valid={!isReadOnly && getValues('sellingExchangeRate')?.trim() && !errors.sellingExchangeRate}
         placeholder={intl.formatMessage({ id: 'Enter exchange rate' })}
+        defaultValue={0}
       />
       {errors?.sellingExchangeRate && <FormFeedback className="d-block">{errors?.sellingExchangeRate?.message}</FormFeedback>}
     </Col>

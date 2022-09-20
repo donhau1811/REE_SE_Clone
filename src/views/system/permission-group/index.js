@@ -12,12 +12,12 @@ import { DISPLAY_DATE_FORMAT, ROUTER_URL } from '@src/utility/constants'
 import { getRoles } from './store/actions'
 import moment from 'moment'
 
-const RoofVendor = () => {
+const PermissionGroup = () => {
   const [dataSearch, setDataSearch] = useState([])
   const [searchValue, setSearchValue] = useState('')
   const history = useHistory()
   const dispatch = useDispatch()
-  const { roles, params, total } = useSelector((state) => state.systemRole)
+  const { roles, params, total } = useSelector((state) => state.permissionGroup)
 
   useEffect(() => {
     setDataSearch(roles)
@@ -145,6 +145,6 @@ const RoofVendor = () => {
   )
 }
 
-RoofVendor.propTypes = {}
+PermissionGroup.propTypes = {}
 
-export default injectIntl(RoofVendor)
+export default injectIntl(PermissionGroup)

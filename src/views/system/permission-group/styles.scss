@@ -1,4 +1,3 @@
-
 @import '@src/@core/scss/base/bootstrap-extended/_variables.scss';
 @import '@src/@core/scss/billing-sweet-alert.scss';
 .add-contact-button {
@@ -22,8 +21,6 @@
   height: 50px;
 }
 
-
-
 .filter-input {
   height: 50px;
 }
@@ -39,13 +36,12 @@
   align-items: center;
   text-align: center;
   text-transform: uppercase;
-  color: #042B52;
+  color: #042b52;
   height: 69px;
   display: flex;
   justify-content: center;
-  border-bottom: 1px solid #DBDBDB;
+  border-bottom: 1px solid #dbdbdb;
 }
-
 
 .sweet-popup {
   padding: 0;
@@ -62,7 +58,7 @@
   margin-top: 30px;
   font-family: 'Inter';
   font-style: normal;
- 
+
   font-size: 18;
   display: flex;
   align-items: center;
@@ -84,7 +80,7 @@
   display: flex;
   align-items: center;
   margin-top: 20px;
- margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 .button-style {
   font-family: 'Inter';
@@ -94,7 +90,7 @@
   line-height: 19px;
   display: flex;
   align-items: center;
-  color: #FFFFFF;
+  color: #ffffff;
   position: absolute;
   width: 245px;
   height: 45.18px;
@@ -107,37 +103,38 @@
   font-style: normal;
   font-weight: 600;
   font-size: 18;
-color:#F47F20;
+  color: #f47f20;
 }
-
-
-
 
 .table-height {
-  max-height:580px;
+  max-height: 580px;
 }
 .icon-insert {
-  border: 2px solid #FFFFFF;
+  border: 2px solid #ffffff;
   height: 16.36px;
   width: 16.36px;
 }
-.btn-choose{
+.btn-choose {
   background-color: #026894 !important;
 }
-.badges{
-  background-color: #7897B4 !important;
+.badges {
+  background-color: #7897b4 !important;
   width: 120px;
-height: 35px;
-border-radius: 4px !important;
-color: #FFFFFF;
-font-family: 'Inter';
-font-style: normal;
-font-weight: 400;
-font-size: 16px;
-line-height: 19px;
-&icon-x{
-  font-size: 18px !important;
-  width: 18px;
-  height: 18px;
+  height: 35px;
+  border-radius: 4px !important;
+  color: #ffffff;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  &icon-x {
+    font-size: 18px !important;
+    width: 18px;
+    height: 18px;
+  }
 }
+
+.feature-label {
+  color: #026894;
 }

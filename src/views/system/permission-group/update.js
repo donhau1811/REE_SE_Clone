@@ -21,18 +21,13 @@ const UpdateRightsGroup = ({ intl }) => {
     billingContacts: { contacts }
   } = useSelector((state) => state)
   const { id } = useParams()
-  useEffect(() => {
-   
-  }, [id])
-
+  useEffect(() => {}, [id])
 
   const handleUpdateRightsGroup = () => {
     if (isReadOnly) {
       setIsReadOnly(false)
     } else {
-      dispatch(
-
-      )
+      dispatch()
     }
   }
   const handleCancel = () => {
@@ -62,7 +57,6 @@ UpdateRightsGroup.propTypes = {
 export default injectIntl(UpdateRightsGroup)
 
 export const Navbar = () => {
-
   const intl = useIntl()
 
   const tempItems = [

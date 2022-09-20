@@ -1,3 +1,4 @@
+/* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable react/jsx-key */
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
 import Table from '@src/views/common/table/CustomDataTable'
@@ -96,14 +97,14 @@ const RightGroupCUForm = ({ intl, isReadOnly, onSubmit = () => {}, onCancel = ()
     {
       name: intl.formatMessage({ id: 'Feature' }),
       cell: (row) => row.name,
-      center: true,
       minWidth: '150px'
     },
     {
       name: intl.formatMessage({ id: 'Role' }),
       sortable: true,
       minWidth: '900px',
-      cell: (row) => row.Role.map((item) => (
+      cell: (row) =>
+        row.Role.map((item) => (
           <Badge pill className="mr-2 badges ">
             {item}
             {!isReadOnly && <IconX className="ml-2 icon-x" id={`rmBtn_${row.id}`} />}
@@ -159,13 +160,20 @@ const RightGroupCUForm = ({ intl, isReadOnly, onSubmit = () => {}, onCancel = ()
           <Label className="general-label" for="exampleSelect">
             {intl.formatMessage({ id: 'CreatedDate' })}
           </Label>
-          <Input disabled defaultValue={moment().format(DISPLAY_DATE_FORMAT)} className="input" id="name" name="name" autoComplete="on" />
+          <Input
+            disabled
+            defaultValue={moment().format(DISPLAY_DATE_FORMAT)}
+            className="input"
+            id="name"
+            name="name"
+            autoComplete="on"
+          />
         </Col>
         <Col className="mb-2" md="3">
           <Label className="general-label" for="exampleSelect">
             {intl.formatMessage({ id: 'Created by' })}
           </Label>
-          <Input disabled defaultValue={"System"} className="input" id="name" name="name" autoComplete="on" />
+          <Input disabled defaultValue={'System'} className="input" id="name" name="name" autoComplete="on" />
         </Col>
       </Row>
       <Row className="d-flex justify-content-end">
