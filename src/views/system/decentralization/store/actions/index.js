@@ -85,7 +85,7 @@ export const getPermisionRoleByRoleId = ({ id, isSavedToState, callback }) => {
     await axios
       .get(`${GET_ROLE_PERMISION_BY_ROLE_ID}/${id}`)
       .then((response) => {
-        console.log('response', response)
+     
         if (response.status === 200 && response.data.data) {
           const payload = get(response, 'data.data', {})
           if (isSavedToState) {

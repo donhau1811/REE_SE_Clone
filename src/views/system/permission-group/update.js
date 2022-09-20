@@ -17,29 +17,22 @@ const UpdateRightsGroup = ({ intl }) => {
   useEffect(() => {
     if (location.state?.allowUpdate) setIsReadOnly(false)
   }, [location.state?.allowUpdate])
-
   const {
     billingContacts: { contacts }
   } = useSelector((state) => state)
-
   const { id } = useParams()
-  useEffect(() => {
-   
-  }, [id])
-
+  useEffect(() => {}, [id])
 
   const handleUpdateRightsGroup = () => {
     if (isReadOnly) {
       setIsReadOnly(false)
     } else {
-      dispatch(
-
-      )
+      dispatch()
     }
   }
   const handleCancel = () => {
     history.push({
-      pathname: `${ROUTER_URL.BILLING_ROOF_RENTAL_UNIT}`,
+      pathname: `${ROUTER_URL.SYSTEM_PERMISSION_GROUP}`,
       state: {
         allowUpdate: true
       }
@@ -64,14 +57,13 @@ UpdateRightsGroup.propTypes = {
 export default injectIntl(UpdateRightsGroup)
 
 export const Navbar = () => {
-
   const intl = useIntl()
 
   const tempItems = [
     { name: intl.formatMessage({ id: 'billing' }), link: '' },
     {
-      name: intl.formatMessage({ id: 'rights-group' }),
-      link: ROUTER_URL.SYSTEM_RIGHTS_GROUP
+      name: intl.formatMessage({ id: 'permission-group' }),
+      link: ROUTER_URL.SYSTEM_PERMISSION_GROUP
     },
     { name: '?', link: '' }
   ]

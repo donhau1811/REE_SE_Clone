@@ -1,14 +1,14 @@
 import { ROUTER_URL } from '@constants/router'
-import rightsGroup from '@src/assets/images/svg/sidebar/rightsGroup.svg'
+import role from '@src/assets/images/svg/role.svg'
 import React from 'react'
 
 export default [
   {
-    id: 'rights-group',
-    title: 'rights-group',
-    icon: <img src={rightsGroup} alt='rightsGroup'/>,
+    id: 'permission-group',
+    title: 'permission-group',
+    icon: <img src={role} alt='rightsGroup'/>,
     action: 'manage',
-    resource: ROUTER_URL.SYSTEM_RIGHTS_GROUP,
-    navLink:ROUTER_URL.SYSTEM_RIGHTS_GROUP
+    resource: ROUTER_URL.SYSTEM_PERMISSION_GROUP,
+    navLink:ROUTER_URL.SYSTEM_PERMISSION_GROUP
   }
 ]

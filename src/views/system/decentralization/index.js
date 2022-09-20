@@ -105,7 +105,7 @@ const RoofVendor = () => {
       cell: (row) => <Link to={`${ROUTER_URL.BILLING_ROOF_RENTAL_UNIT}/${row.id}`}>{row?.name}</Link>
     },
     {
-      name: intl.formatMessage({ id: 'rights-group' }),
+      name: intl.formatMessage({ id: 'permission-group' }),
       selector: 'taxCode',
       sortable: true,
       maxWidth: '200px'

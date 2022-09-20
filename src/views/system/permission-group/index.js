@@ -1,81 +1,49 @@
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
 import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit.svg'
 import Table from '@src/views/common/table/CustomDataTable'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { FormattedMessage, injectIntl, useIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { Badge, Col, Row, UncontrolledTooltip } from 'reactstrap'
 import PageHeader from './PageHeader'
 import './styles.scss'
-import { ROUTER_URL, ROWS_PER_PAGE_DEFAULT, SET_ROOF_RENTAL_UNIT_PARAMS } from '@src/utility/constants'
-import { Link } from 'react-router-dom/cjs/react-router-dom.min'
+import { DISPLAY_DATE_FORMAT, ROUTER_URL } from '@src/utility/constants'
+import { getRoles } from './store/actions'
+import moment from 'moment'
 
-const RoofVendor = () => {
+const PermissionGroup = () => {
+  const [dataSearch, setDataSearch] = useState([])
+  const [searchValue, setSearchValue] = useState('')
   const history = useHistory()
   const dispatch = useDispatch()
-  // eslint-disable-next-line no-unused-vars
-  const { data, params, total } = useSelector((state) => state.roofUnit)
+  const { roles, params, total } = useSelector((state) => state.permissionGroup)
 
-  const { pagination = {}, searchValue } = params || {}
+  useEffect(() => {
+    setDataSearch(roles)
+  }, [roles])
 
-  const fetchRole = () => {}
+  const fetchRole = (initParams) => {
+    dispatch(getRoles(initParams))
+  }
   const intl = useIntl()
   useEffect(() => {
-    const initParams = {
-      pagination: {
-        rowsPerPage: ROWS_PER_PAGE_DEFAULT,
-        currentPage: 1
-      },
-      sortBy: 'code',
-      sortDirection: 'asc'
-    }
-    fetchRole(initParams)
-    return () => {
-      // hainm check
-      dispatch({
-        type: SET_ROOF_RENTAL_UNIT_PARAMS,
-        payload: initParams
-      })
-    }
+    fetchRole()
   }, [])
-  const handleChangePage = (e) => {
-    fetchRole({
-      pagination: {
-        ...pagination,
-        currentPage: e.selected + 1
-      }
-    })
-  }
-
-  const handlePerPageChange = (e) => {
-    fetchRole({
-      pagination: {
-        rowsPerPage: e.value,
-        currentPage: 1
-      }
-    })
-  }
 
   const handleSearch = (value) => {
-    fetchRole({
-      pagination: {
-        ...pagination,
-        currentPage: 1
-      },
-      searchValue: value
-    })
+    const dataAfterFilter = roles.filter(
+      (item) => item?.name?.toUpperCase()?.includes(value.toUpperCase()) ||
+        item?.code?.toUpperCase()?.includes(value.toUpperCase())
+    )
+    setDataSearch(dataAfterFilter)
+    setSearchValue(value)
   }
-  const handleSort = (column, direction) => {
-    fetchRole({
-      sortBy: column.selector,
-      sortDirection: direction
-    })
-  }
+
   const handleRedirectToUpdatePage = (id) => () => {
     if (id) {
       history.push({
-        pathname: `${ROUTER_URL.BILLING_ROOF_RENTAL_UNIT}/${id}`,
+        pathname: `${ROUTER_URL.SYSTEM_PERMISSION_GROUP}/${id}`,
         state: {
           allowUpdate: true
         }
@@ -85,8 +53,11 @@ const RoofVendor = () => {
 
   const handleRedirectToViewPage = (id) => () => {
     if (id) {
-      history.push(`${ROUTER_URL.BILLING_ROOF_RENTAL_UNIT}/${id}`)
+      history.push(`${ROUTER_URL.SYSTEM_PERMISSION_GROUP}/${id}`)
     }
+  }
+  const handleChangeValueSearch = (value) => {
+    setSearchValue(value)
   }
 
   const columns = [
@@ -99,33 +70,31 @@ const RoofVendor = () => {
     {
       name: intl.formatMessage({ id: 'Rights group code' }),
       selector: 'code',
-      sortable: true,
       maxWidth: '180px'
     },
     {
       name: intl.formatMessage({ id: 'Rights group name' }),
-      selector: 'name',
-      sortable: true,
-      cell: (row) => <Link to={`${ROUTER_URL.BILLING_ROOF_RENTAL_UNIT}/${row.id}`}>{row?.name}</Link>
+      selector: 'name'
     },
     {
       name: intl.formatMessage({ id: 'Created by' }),
-      selector: 'taxCode',
-      sortable: true,
-      maxWidth: '200px'
+      selector: '',
+      maxWidth: '200px',
+      cell: () => 'System'
     },
 
     {
       name: intl.formatMessage({ id: 'CreatedDate' }),
-      selector: 'address',
-      sortable: true,
-      maxWidth: '200px'
+      selector: 'createDate',
+      maxWidth: '200px',
+      cell: (row) => moment(row.createDate).format(DISPLAY_DATE_FORMAT)
     },
 
     {
-      name: intl.formatMessage({ id: 'Role' }),
-      selector: 'phone',
-      sortable: true
+      name: intl.formatMessage({ id: 'Application features' }),
+      cell: (row) => (row.featuresApply?.length > 100
+          ? row.featuresApply
+          : `${row.featuresApply?.substring(1, 100)}...`)
     },
 
     {
@@ -156,17 +125,18 @@ const RoofVendor = () => {
     <>
       <Row>
         <Col sm="12">
-          <PageHeader onSearch={handleSearch} searchValue={searchValue} />
+          <PageHeader
+            handleChangeValueSearch={handleChangeValueSearch}
+            onSearch={handleSearch}
+            searchValue={searchValue}
+          />
           <Table
+            pagination={false}
             columns={columns}
-            data={{}}
+            data={dataSearch}
             total={total}
-            onPageChange={handleChangePage}
-            onPerPageChange={handlePerPageChange}
-            onSort={handleSort}
             defaultSortAsc={params?.sortDirection === 'asc'}
             isSearching={searchValue?.trim()}
-            {...pagination}
             noDataTitle={intl.formatMessage({ id: 'There are no records to display' })}
           />
         </Col>
@@ -175,7 +145,6 @@ const RoofVendor = () => {
   )
 }
 
-RoofVendor.propTypes = {
-}
+PermissionGroup.propTypes = {}
 
-export default injectIntl(RoofVendor)
+export default injectIntl(PermissionGroup)

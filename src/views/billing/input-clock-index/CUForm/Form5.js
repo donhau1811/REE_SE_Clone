@@ -22,6 +22,7 @@ const Form5COM = ({ intl, isReadOnly }) => {
         invalid={!isReadOnly && !!errors.sellingRevenue}
         valid={!isReadOnly && getValues('sellingRevenue')?.trim() && !errors.sellingRevenue}
         placeholder={intl.formatMessage({ id: 'Enter revenue' })}
+        defaultValue={0}
       />
       {errors?.sellingRevenue && <FormFeedback className="d-block">{errors?.sellingRevenue?.message}</FormFeedback>}
     </Col>

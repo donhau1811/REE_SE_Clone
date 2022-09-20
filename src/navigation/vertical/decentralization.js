@@ -1,12 +1,12 @@
 import { ROUTER_URL } from '@constants/router'
-import rightsGroup from '@src/assets/images/svg/sidebar/rightsGroup.svg'
+import permision from '@src/assets/images/svg/permision.svg'
 import React from 'react'
 
 export default [
   {
     id: 'decentralization',
     title: 'decentralization',
-    icon: <img src={rightsGroup} alt='rightsGroup'/>,
+    icon: <img src={permision} alt='rightsGroup'/>,
     action: 'manage',
     resource: ROUTER_URL.SYSTEM_DECENTRALIZATION,
     navLink:ROUTER_URL.SYSTEM_DECENTRALIZATION
