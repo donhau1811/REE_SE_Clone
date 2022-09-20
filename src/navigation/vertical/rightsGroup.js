@@ -4,11 +4,11 @@ import React from 'react'
 
 export default [
   {
-    id: 'rights-group',
-    title: 'rights-group',
+    id: 'permission-group',
+    title: 'permission-group',
     icon: <img src={rightsGroup} alt='rightsGroup'/>,
     action: 'manage',
-    resource: ROUTER_URL.SYSTEM_RIGHTS_GROUP,
-    navLink:ROUTER_URL.SYSTEM_RIGHTS_GROUP
+    resource: ROUTER_URL.SYSTEM_PERMISSION_GROUP,
+    navLink:ROUTER_URL.SYSTEM_PERMISSION_GROUP
   }
 ]

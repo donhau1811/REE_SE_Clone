@@ -7,7 +7,7 @@ import { Controller, useForm } from 'react-hook-form'
 import Select from 'react-select'
 
 const EditRoleModal = ({ intl, children, onSubmit = () => {} }) => {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(true)
   const { control } = useForm({
     mode: 'onChange'
   })

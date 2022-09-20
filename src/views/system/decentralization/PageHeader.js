@@ -31,7 +31,7 @@ const PageHeader = ({ onSearch = () => {}, searchValue }) => {
             innerRef={register()}
             className="react-select"
             classNamePrefix="select"
-            placeholder={intl.formatMessage({ id: 'rights-group' })}
+            placeholder={intl.formatMessage({ id: 'permission-group' })}
             formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
             noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
           />

@@ -12,7 +12,7 @@ import BreadCrumbs from '@src/views/common/breadcrumbs'
 const UpdateRightsGroup = ({ intl }) => {
   const dispatch = useDispatch()
   const history = useHistory()
-  const [isReadOnly, setIsReadOnly] = useState(true)
+  const [isReadOnly, setIsReadOnly] = useState(false)
   const location = useLocation()
   useEffect(() => {
     if (location.state?.allowUpdate) setIsReadOnly(false)
@@ -70,8 +70,8 @@ export const Navbar = () => {
   const tempItems = [
     { name: intl.formatMessage({ id: 'billing' }), link: '' },
     {
-      name: intl.formatMessage({ id: 'rights-group' }),
-      link: ROUTER_URL.SYSTEM_RIGHTS_GROUP
+      name: intl.formatMessage({ id: 'permission-group' }),
+      link: ROUTER_URL.SYSTEM_PERMISSION_GROUP
     },
     { name: '?', link: '' }
   ]
