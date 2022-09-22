@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   API_GET_ALL_PERMISSION,
   SET_ALL_PERMISSION,
@@ -12,7 +11,9 @@ import {
   SET_SELECTED_ROOF_VENDOR,
   API_GET_ROLE_BY_ROLE_ID,
   SET_SELECTED_ROLE,
-  API_UPDATE_ROLE_BY_ROLE_ID
+  API_UPDATE_ROLE_BY_ROLE_ID,
+  API_DELETE_ROLE_PERMISSION_BY_ROLE_ID,
+  API_ADD_ROLE_PERMISSION_BY_ROLE_ID
 } from '@src/utility/constants'
 import { showToast } from '@src/utility/Utils'
 import axios from 'axios'
@@ -156,8 +157,7 @@ export const putRoleGroup = ({ payload, callback }) => {
     const {
       permissionGroup: { selectedRole }
     } = state
-    console.log('payload', payload)
-    console.log('state', selectedRole)
+
     const { permissions } = payload
     const requests = []
     if (payload.name !== selectedRole.name) {
@@ -165,20 +165,37 @@ export const putRoleGroup = ({ payload, callback }) => {
         axios.put(API_UPDATE_ROLE_BY_ROLE_ID, {
           id: payload.id,
           name: payload.name,
-          state: 'ACTIVE'
+          code: selectedRole.code,
+          state: selectedRole.state
         })
       )
     }
-    const deletePayload = permissions.filter((item) => item.isDelete)
+    const oldPermission = selectedRole.permissions || []
+    const deletePers = oldPermission.filter((item) => !permissions.find((per) => per.id === item.id))
 
-    console.log(
-      'permissions',
-      permissions.filter((item) => item.isDelete || item.isCreate)
-    )
+    if (deletePers?.length > 0) {
+      requests.push(
+        axios.delete(`${API_DELETE_ROLE_PERMISSION_BY_ROLE_ID}/${payload.id}`, {
+          data: {
+            permissionIds: deletePers.map((item) => item.id)
+          }
+        })
+      )
+    }
+    const createPers = permissions.filter((item) => !oldPermission.find((per) => per.id === item.id))
+    if (createPers?.length > 0) {
+      requests.push(
+        axios.post(API_ADD_ROLE_PERMISSION_BY_ROLE_ID, {
+          roleId: payload.id,
+          permissionIds: createPers.map((item) => item.id)
+        })
+      )
+    }
 
     await Promise.all(requests)
       .then((res) => {
         console.log('res', res)
+        callback?.()
       })
       .catch((err) => {
         console.log('err', err)

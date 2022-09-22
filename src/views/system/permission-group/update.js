@@ -1,7 +1,6 @@
-/* eslint-disable no-unused-vars */
-import { ROUTER_URL, SET_FORM_DIRTY } from '@src/utility/constants'
+import { ROUTER_URL, SET_FORM_DIRTY, SET_SELECTED_ROLE } from '@src/utility/constants'
 import { object } from 'prop-types'
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect } from 'react'
 import { injectIntl, useIntl } from 'react-intl'
 import { useHistory, useParams } from 'react-router-dom'
 import RoleGroupCUForm from './RoleGroupCUForm'
@@ -13,7 +12,7 @@ import { getRoleByRoleId, putRoleGroup } from './store/actions'
 const UpdateRightsGroup = () => {
   const dispatch = useDispatch()
   const history = useHistory()
-  const [isReadOnly, setIsReadOnly] = useState(false)
+  const [isReadOnly, setIsReadOnly] = useState(true)
   const location = useLocation()
   const {
     permissionGroup: { selectedRole }
@@ -24,6 +23,14 @@ const UpdateRightsGroup = () => {
   }, [location.state?.allowUpdate])
 
   const { id } = useParams()
+  useEffect(() => {
+    return () => {
+      dispatch({
+        type: SET_SELECTED_ROLE,
+        payload: {}
+      })
+    }
+  }, [])
   useEffect(() => {
     dispatch(
       getRoleByRoleId({
@@ -52,12 +59,7 @@ const UpdateRightsGroup = () => {
     }
   }
   const handleCancel = () => {
-    history.push({
-      pathname: `${ROUTER_URL.SYSTEM_PERMISSION_GROUP}`,
-      state: {
-        allowUpdate: true
-      }
-    })
+    history.push(`${ROUTER_URL.SYSTEM_PERMISSION_GROUP}`)
   }
   return (
     <>
@@ -79,6 +81,9 @@ export default injectIntl(UpdateRightsGroup)
 
 export const Navbar = () => {
   const intl = useIntl()
+  const {
+    permissionGroup: { selectedRole }
+  } = useSelector((state) => state)
 
   const tempItems = [
     { name: intl.formatMessage({ id: 'billing' }), link: '' },
@@ -86,7 +91,7 @@ export const Navbar = () => {
       name: intl.formatMessage({ id: 'permission-group' }),
       link: ROUTER_URL.SYSTEM_PERMISSION_GROUP
     },
-    { name: '?', link: '' }
+    { name: selectedRole?.name, link: '' }
   ]
   return (
     <>

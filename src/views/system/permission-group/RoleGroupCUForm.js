@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
 import Table from '@src/views/common/table/CustomDataTable'
 import { object, bool, func } from 'prop-types'
@@ -8,7 +7,7 @@ import { Badge, Button, Col, Form, Input, Label, Row } from 'reactstrap'
 import './styles.scss'
 import * as yup from 'yup'
 
-import { ISO_STANDARD_FORMAT } from '@src/utility/constants'
+import { ISO_STANDARD_FORMAT, SET_FORM_DIRTY } from '@src/utility/constants'
 import { ReactComponent as IconX } from '@src/assets/images/svg/table/X.svg'
 import EditRoleModal from './EditRoleModal'
 import classnames from 'classnames'
@@ -18,12 +17,14 @@ import moment from 'moment'
 import { useEffect } from 'react'
 import { getAllUserFeature } from './store/actions'
 import { Controller, useForm } from 'react-hook-form'
-import { cloneDeep } from 'lodash'
+
 import { yupResolver } from '@hookform/resolvers/yup'
+import { isEqual } from 'lodash'
 import { showToast } from '@src/utility/Utils'
+
 const MySweetAlert = withReactContent(SweetAlert)
 
-const RoleGroupCUForm = ({ intl, isReadOnly, initValues, onSubmit }) => {
+const RoleGroupCUForm = ({ intl, isReadOnly, initValues, onSubmit, onCancel }) => {
   const initState = {
     code: '',
     name: '',
@@ -44,30 +45,31 @@ const RoleGroupCUForm = ({ intl, isReadOnly, initValues, onSubmit }) => {
     reset,
     setValue,
     watch,
-    formState: { isDirty }
+    formState: { isDirty: isDirtyForm }
   } = useForm({
     mode: 'onChange',
     resolver: yupResolver(yup.object().shape({})),
     defaultValues: initValues || initState
   })
-  useEffect(() => {
-    register('permissionsByFeature')
-  }, [register])
+
   const dispatch = useDispatch()
   const {
     layout: { skin }
   } = useSelector((state) => state)
   const handleDeletePermissionOfFeature = (onChange, per) => () => {
     const permissionsData = watch('permissions')
-    let newPermissionsData = []
-    if (per.isCreate) {
-      newPermissionsData = permissionsData.filter((item) => item.id !== per.id)
-    } else {
-      newPermissionsData = permissionsData.map((item) => (item.id === per.id ? { ...item, isDelete: true } : item))
-    }
+    const newPermissionsData = permissionsData.filter((item) => item.id !== per.id)
 
     onChange(newPermissionsData)
   }
+  const isDirty = isDirtyForm || !isEqual(watch('permissions'), initValues.permissions)
+
+  useEffect(() => {
+    dispatch({
+      type: SET_FORM_DIRTY,
+      payload: isDirty
+    })
+  }, [isDirty])
 
   const handleDeleteFeature = (onChange, code) => () => {
     const permissionsData = watch('permissions')
@@ -93,13 +95,8 @@ const RoleGroupCUForm = ({ intl, isReadOnly, initValues, onSubmit }) => {
       buttonsStyling: false
     }).then(({ isConfirmed }) => {
       if (isConfirmed) {
-        const newPermissionsData = permissionsData.reduce((perArr, permission) => {
-          if (permission.feature !== code) {
-            return [...perArr, permission]
-          }
-          if (permission.isCreate) return perArr
-          return [...perArr, { ...permission, isDelete: true }]
-        }, [])
+        const newPermissionsData = permissionsData.filter((item) => item.feature !== code)
+
         onChange?.(newPermissionsData)
       }
     })
@@ -175,24 +172,30 @@ const RoleGroupCUForm = ({ intl, isReadOnly, initValues, onSubmit }) => {
   }
 
   const handleSubmitRoleGroupForm = (values) => {
+    if (!values.permissions?.length > 0) {
+      showToast('error', <FormattedMessage id="Need at least 1 feature" />)
+      return
+    }
     onSubmit?.(values)
   }
 
   const groupPermissionByFeature = (_permissions) => {
-    return (_permissions || []).reduce((featureArray, permission) => {
-      if (!featureArray.find((ft) => ft.code === permission.feature)) {
-        return [
-          ...featureArray,
-          {
-            code: permission.feature,
-            permissions: [permission]
-          }
-        ]
-      }
-      return featureArray.map((ft) => {
-        return ft?.code === permission.feature ? { ...ft, permissions: [...ft.permissions, permission] } : ft
-      })
-    }, [])
+    return (_permissions || [])
+      .sort((a, b) => a.id - b.id)
+      .reduce((featureArray, permission) => {
+        if (!featureArray.find((ft) => ft.code === permission.feature)) {
+          return [
+            ...featureArray,
+            {
+              code: permission.feature,
+              permissions: [permission]
+            }
+          ]
+        }
+        return featureArray.map((ft) => {
+          return ft?.code === permission.feature ? { ...ft, permissions: [...ft.permissions, permission] } : ft
+        })
+      }, [])
   }
 
   return (
@@ -202,15 +205,7 @@ const RoleGroupCUForm = ({ intl, isReadOnly, initValues, onSubmit }) => {
           <Label className="general-label" for="exampleSelect">
             {intl.formatMessage({ id: 'Rights group code' })}
           </Label>
-          <Input
-            disabled
-            autoComplete="on"
-            id="code"
-            name="code"
-            innerRef={register()}
-            invalid={!isReadOnly && !!errors.code}
-            valid={!isReadOnly && getValues('code')?.trim() && !errors.code}
-          />
+          <Input disabled autoComplete="on" id="code" name="code" innerRef={register()} />
         </Col>
         <Col className="mb-2" md="3">
           <Label className="general-label" for="exampleSelect">
@@ -238,23 +233,13 @@ const RoleGroupCUForm = ({ intl, isReadOnly, initValues, onSubmit }) => {
             name="createDate"
             type="date"
             innerRef={register()}
-            invalid={!isReadOnly && !!errors.createDate}
-            valid={!isReadOnly && getValues('createDate')?.trim() && !errors.createDate}
           />
         </Col>
         <Col className="mb-2" md="3">
           <Label className="general-label" for="exampleSelect">
             {intl.formatMessage({ id: 'Created by' })}
           </Label>
-          <Input
-            disabled
-            defaultValue={'System'}
-            id="createBy"
-            name="createBy"
-            innerRef={register()}
-            invalid={!isReadOnly && !!errors.createBy}
-            valid={!isReadOnly && getValues('createBy')?.trim() && !errors.createBy}
-          />
+          <Input disabled defaultValue={'System'} id="createBy" name="createBy" innerRef={register()} />
         </Col>
       </Row>
       <Row className="d-flex justify-content-end">
@@ -276,12 +261,11 @@ const RoleGroupCUForm = ({ intl, isReadOnly, initValues, onSubmit }) => {
             id="permissions"
             innerRef={register()}
             render={(fields) => {
-              const displayValue = (fields.value || []).filter((item) => !item.isDelete)
               return (
                 <Table
                   pagination={false}
                   columns={columns(fields.onChange)}
-                  data={groupPermissionByFeature(displayValue)}
+                  data={groupPermissionByFeature(fields.value)}
                   keyField="code"
                 />
               )
@@ -294,7 +278,9 @@ const RoleGroupCUForm = ({ intl, isReadOnly, initValues, onSubmit }) => {
           <Button type="submit" color="primary" className="mr-1 px-3">
             {intl.formatMessage({ id: isReadOnly ? 'Update' : 'Save' })}
           </Button>
-          <Button color="secondary">{intl.formatMessage({ id: isReadOnly ? 'Back' : 'Cancel' })}</Button>
+          <Button color="secondary" onClick={onCancel}>
+            {intl.formatMessage({ id: isReadOnly ? 'Back' : 'Cancel' })}
+          </Button>
         </Col>
       </Row>
     </Form>

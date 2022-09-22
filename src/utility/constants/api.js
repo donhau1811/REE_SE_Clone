@@ -212,12 +212,13 @@ export const API_UPDATE_INPUT_CLOCK_INDEX = `${BASE_API_URL_V2}/billing-data/upd
 
 export const GET_ALL_CLOCK = `${BASE_API_URL_V2}/meter/all`
 
-
-//role 
+//role
 export const GET_ROLE_PERMISION_BY_ROLE_ID = `${BASE_API_URL_V2}/role-permission/role`
 export const GET_ROLES = `${BASE_API_URL_V2}/role/all`
 export const API_GET_ROLE_BY_ROLE_ID = `${BASE_API_URL_V2}/role/id`
 export const API_UPDATE_ROLE_BY_ROLE_ID = `${BASE_API_URL_V2}/role/update`
+export const API_DELETE_ROLE_PERMISSION_BY_ROLE_ID = `${BASE_API_URL_V2}/role-permission/delete/roleId`
+export const API_ADD_ROLE_PERMISSION_BY_ROLE_ID = `${BASE_API_URL_V2}/role-permission/create`
 
 // permission
 export const API_GET_ALL_PERMISSION = `${BASE_API_URL_V2}/permission/all`
@@ -225,6 +226,4 @@ export const API_GET_ALL_PERMISSION = `${BASE_API_URL_V2}/permission/all`
 // user-feature
 export const API_GET_ALL_USER_FEATURE = `${BASE_API_URL_V2}/user-feature/all`
 
-
 export const API_GET_ALL_USER_ACTION = `${BASE_API_URL_V2}/user-action/all`
-
