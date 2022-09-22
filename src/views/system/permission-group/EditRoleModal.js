@@ -1,22 +1,33 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, cloneElement, useEffect } from 'react'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Col, Row, Label, Input } from 'reactstrap'
-import { selectThemeColors } from '@src/utility/Utils'
-import { object, func } from 'prop-types'
+import { convertPermissionCodeToLabel, selectThemeColors } from '@src/utility/Utils'
+import { object, func, array } from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Select from 'react-select'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllPermission, getAllUserAction, getAllUserFeature } from './store/actions'
 
-const EditRoleModal = ({ intl, children, onSubmit = () => {} }) => {
+const EditRoleModal = ({ intl, children, onSubmit = () => {}, permissions }) => {
   const [isOpen, setIsOpen] = useState(false)
   const dispatch = useDispatch()
   const [featureValue, setFeatureValue] = useState(null)
   const [searchValue, setSearchValue] = useState(null)
+  const [values, setValues] = useState([])
+
   const { allPermission, allUserFeature, allUserAction } = useSelector((state) => state.permissionGroup)
 
   const toggle = () => {
     setIsOpen(!isOpen)
   }
+
+  useEffect(() => {
+    if (isOpen) {
+      setValues(permissions)
+    } else {
+      setValues([])
+    }
+  }, [isOpen])
 
   useEffect(() => {
     Promise.all([dispatch(getAllUserFeature()), dispatch(getAllPermission()), dispatch(getAllUserAction())])
@@ -29,9 +40,7 @@ const EditRoleModal = ({ intl, children, onSubmit = () => {} }) => {
   }, [featureValue?.value])
 
   const handleSubmitFilterForm = () => {
-    const payload = {}
-
-    onSubmit?.(payload)
+    onSubmit?.(values)
     toggle()
   }
 
@@ -44,6 +53,45 @@ const EditRoleModal = ({ intl, children, onSubmit = () => {} }) => {
   }
   const handleFilterFeature = () => {
     setSearchValue(featureValue)
+  }
+  const handleDeleteOrCreatePermission = (per, tValues, checked) => {
+    let newValues = tValues
+    // check xem co ton tai tog
+    const isExistInValues = tValues.find((item) => item.id === per.id)
+    if (checked) {
+      // them 1 action cua 1 feature
+      if (isExistInValues) {
+        if (isExistInValues.isDelete) {
+          delete isExistInValues.isDelete
+          newValues = tValues.map((item) => (item.id === per.id ? isExistInValues : item))
+        }
+      } else {
+        newValues = [...tValues, { ...per, isCreate: true }]
+      }
+    } else {
+      // xoa action cua 1 feature
+      if (isExistInValues.isCreate) {
+        newValues = tValues.filter((item) => item.id !== per.id)
+      } else {
+        newValues = tValues.map((item) => (item.id === per.id ? { ...item, isDelete: true } : item))
+      }
+    }
+    return newValues
+  }
+  const handleChangeFeatureGroup = (featureCode) => (event) => {
+    let newValues = []
+    const changePerItem = allPermission.filter((item) => item.feature === featureCode)
+
+    newValues = changePerItem.reduce((array, value) => {
+      return handleDeleteOrCreatePermission(value, array, event.target.checked)
+    }, values)
+
+    setValues(newValues)
+  }
+
+  const handleChangeFeaturePermission = (_per) => (event) => {
+    const newValues = handleDeleteOrCreatePermission(_per, values, event.target.checked)
+    setValues(newValues)
   }
 
   return (
@@ -84,29 +132,43 @@ const EditRoleModal = ({ intl, children, onSubmit = () => {} }) => {
           </Row>
           <Row>
             <Col md={12}>
-              {(renderListFeature || []).map((feature, fIndex) => (
-                <>
-                  <div key={feature.id}>
-                    <Input type="checkbox" className="custom-checked-input" />
-                    <Label className="general-label feature-label" for="name">
-                      {feature.name}
-                    </Label>
-                  </div>
-                  <p>
-                    {(allPermission || [])
-                      .filter((item) => item.feature === feature.code)
-                      .map((per) => (
-                        <span key={per.id} className="mr-2 text-nowrap">
-                          <Input type="checkbox" className="custom-checked-input" />
-                          <Label className="general-label font-weight-normal" for="name">
-                            {allUserAction.find((action) => action.code === per.action)?.name}
-                          </Label>
-                        </span>
-                      ))}
-                  </p>
-                  {fIndex !== renderListFeature?.length - 1 && <div className="divider-dashed mt-2 mb-2" />}
-                </>
-              ))}
+              {(renderListFeature || []).map((feature, fIndex) => {
+                return (
+                  <>
+                    <div key={feature.id}>
+                      <Input
+                        type="checkbox"
+                        className="custom-checked-input"
+                        checked={Boolean(values.find((item) => item.feature === feature.code && !item.isDelete))}
+                        onChange={handleChangeFeatureGroup(feature.code)}
+                      />
+                      <Label className="general-label feature-label" for="name">
+                        {feature.name}
+                      </Label>
+                    </div>
+                    <Row>
+                      {(allPermission || [])
+                        .filter((item) => item.feature === feature.code)
+                        .map((per) => {
+                          return (
+                            <Col md={2} key={per.id}>
+                              <Input
+                                type="checkbox"
+                                className="custom-checked-input"
+                                checked={Boolean(values.find((item) => item.id === per.id && !item.isDelete))}
+                                onChange={handleChangeFeaturePermission(per)}
+                              />
+                              <Label className="general-label font-weight-normal" for="name">
+                                {convertPermissionCodeToLabel(per.action)}
+                              </Label>
+                            </Col>
+                          )
+                        })}
+                    </Row>
+                    {fIndex !== renderListFeature?.length - 1 && <div className="divider-dashed mt-2 mb-2" />}
+                  </>
+                )
+              })}
             </Col>
           </Row>
         </ModalBody>
@@ -127,7 +189,8 @@ const EditRoleModal = ({ intl, children, onSubmit = () => {} }) => {
 EditRoleModal.propTypes = {
   children: object,
   onSubmit: func,
-  intl: object.isRequired
+  intl: object.isRequired,
+  permissions: array
 }
 
 export default injectIntl(EditRoleModal)

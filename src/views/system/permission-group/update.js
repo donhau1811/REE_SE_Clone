@@ -1,33 +1,54 @@
 /* eslint-disable no-unused-vars */
 import { ROUTER_URL, SET_FORM_DIRTY } from '@src/utility/constants'
 import { object } from 'prop-types'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { injectIntl, useIntl } from 'react-intl'
 import { useHistory, useParams } from 'react-router-dom'
-import RightGroupCUForm from './RightGroupCUForm'
+import RoleGroupCUForm from './RoleGroupCUForm'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom/cjs/react-router-dom.min'
 import BreadCrumbs from '@src/views/common/breadcrumbs'
+import { getRoleByRoleId, putRoleGroup } from './store/actions'
 
-const UpdateRightsGroup = ({ intl }) => {
+const UpdateRightsGroup = () => {
   const dispatch = useDispatch()
   const history = useHistory()
-  const [isReadOnly, setIsReadOnly] = useState(true)
+  const [isReadOnly, setIsReadOnly] = useState(false)
   const location = useLocation()
+  const {
+    permissionGroup: { selectedRole }
+  } = useSelector((state) => state)
+
   useEffect(() => {
     if (location.state?.allowUpdate) setIsReadOnly(false)
   }, [location.state?.allowUpdate])
-  const {
-    billingContacts: { contacts }
-  } = useSelector((state) => state)
-  const { id } = useParams()
-  useEffect(() => {}, [id])
 
-  const handleUpdateRightsGroup = () => {
+  const { id } = useParams()
+  useEffect(() => {
+    dispatch(
+      getRoleByRoleId({
+        id,
+        isSavedToState: true
+      })
+    )
+  }, [id])
+
+  const handleUpdateRightsGroup = (values) => {
     if (isReadOnly) {
       setIsReadOnly(false)
     } else {
-      dispatch()
+      dispatch(
+        putRoleGroup({
+          payload: { ...values, id: selectedRole.id },
+          callback: () => {
+            dispatch({
+              type: SET_FORM_DIRTY,
+              payload: false
+            })
+            history.push(ROUTER_URL.SYSTEM_PERMISSION_GROUP)
+          }
+        })
+      )
     }
   }
   const handleCancel = () => {
@@ -40,11 +61,11 @@ const UpdateRightsGroup = ({ intl }) => {
   }
   return (
     <>
-      <RightGroupCUForm
+      <RoleGroupCUForm
         isReadOnly={isReadOnly}
         onSubmit={handleUpdateRightsGroup}
         onCancel={handleCancel}
-        contacts={contacts}
+        initValues={selectedRole}
       />
     </>
   )
