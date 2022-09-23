@@ -12,7 +12,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 
 const EditUserRoleModal = ({ initValue, handldeOpenModal = () => {}, isOpen }) => {
   const dispatch = useDispatch()
-  const { selectedRole } = useSelector((state) => state.decentralization)
+  const { selectedRole } = useSelector((state) => state.userRole)
   const intl = useIntl()
 
   const ValidateSchema = yup.object().shape(

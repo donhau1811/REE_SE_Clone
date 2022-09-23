@@ -80,7 +80,7 @@ export const ROUTER_URL = {
   BILLING_MANUAL_INPUT_METRIC_CLOCK_UPDATE: '/billing/electricity-index/manual-input-index/:id',
   SYSTEM_PERMISSION_GROUP:'/system/permission-group',
   SYSTEM_PERMISSION_GROUP_UPDATE:'/system/permission-group/:id',
-  SYSTEM_DECENTRALIZATION:'/system/decentralization'
+  SYSTEM_DECENTRALIZATION:'/system/user-role'
 
 
 }

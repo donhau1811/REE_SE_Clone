@@ -32,7 +32,7 @@ import contractClock from '@src/views/billing/clock/store/reducer'
 import billingMeter from '@src/views/billing/clock-metric/store/reducer'
 import billingInputClockIndex from '@src/views/billing/input-clock-index/store/reducer'
 import permissionGroup from '@src/views/system/permission-group/store/reducer'
-import decentralization from '@src/views/system/decentralization/store/reducer'
+import userRole from '@src/views/system/user-role/store/reducer'
 
 
 const rootReducer = combineReducers({
@@ -66,7 +66,7 @@ const rootReducer = combineReducers({
   billingMeter,
   billingInputClockIndex,
   permissionGroup,
-  decentralization
+  userRole
 })
 
 export default rootReducer

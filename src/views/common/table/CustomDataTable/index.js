@@ -39,7 +39,7 @@ const Table = ({
         noHeader
         pagination
         paginationServer
-        className={classNames(`hide-scroll-bar react-dataTable react-dataTable--projects hover react-dataTable-version-2`, {
+        className={classNames(`react-dataTable react-dataTable--projects hover react-dataTable-version-2`, {
           'overflow-hidden': data?.length <= 0
         })}
         // fixedHeader

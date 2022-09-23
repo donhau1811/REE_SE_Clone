@@ -14,8 +14,8 @@ import { getListUserRole } from './store/actions'
 const RoofVendor = () => {
   const [isOpen, setIsOpen] = useState(false)
   const dispatch = useDispatch()
-  const { data, params, total } = useSelector((state) => state.decentralization)
-  const [selectUser, setselectUser] = useState()
+  const { data, params, total } = useSelector((state) => state.userRole)
+  const [selectUser, setSelectUser] = useState()
   const { pagination = {}, searchValue } = params || {}
   const intl = useIntl()
   const fetchRole = (param) => {
@@ -39,12 +39,7 @@ const RoofVendor = () => {
     }
   }, [])
   const handleChangePage = (e) => {
-    console.log('currentPage', {
-      pagination: {
-        ...pagination,
-        currentPage: e.selected + 1
-      }
-    })
+
     fetchRole({
       pagination: {
         ...pagination,
@@ -78,7 +73,7 @@ const RoofVendor = () => {
     })
   }
   const handldeClickIconEdit = (row) => () => {
-    setselectUser(row)
+    setSelectUser(row)
     setIsOpen(true)
   }
   const columns = [

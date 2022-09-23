@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Input, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap'
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
@@ -14,14 +14,16 @@ export default function MonthPicker({ value, onChange }) {
   const intlContext = useContext(IntlContext)
   const [anchorEl, setAnchorEl] = useState(null)
   const [valueState, setValueState] = useState(value)
-  const [isOpen, setIsOpen] = useState(true)
+
+  useEffect(() => {
+    if (value !== valueState) setValueState(value)
+  }, [value])
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
   }
 
   const handleClose = () => {
-    setAnchorEl(null)
     onChange?.(valueState)
 
   }
@@ -38,11 +40,9 @@ export default function MonthPicker({ value, onChange }) {
     onChange?.(value)
 
     setValueState(value)
-    setIsOpen(false)
+    setAnchorEl(null)
   }
-  const handleOpenPopover = () => {
-    setIsOpen(true)
-  }
+ 
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale={intlContext.locale}>
@@ -55,18 +55,17 @@ export default function MonthPicker({ value, onChange }) {
             onKeyDown={handleKeyPress}
             value={moment(valueState).format('MM/YYYY')}
             onChange={handleYearChange}
-            onClick={handleOpenPopover}
           />
           <InputGroupAddon addonType="append">
             <InputGroupText>
-              <IconCalendar onClick={handleOpenPopover} />
+              <IconCalendar  />
             </InputGroupText>
           </InputGroupAddon>
         </InputGroup>
 
         <Popover
           id={id}
-          open={open && isOpen}
+          open={open }
           anchorEl={anchorEl}
           onClose={handleClose}
           anchorOrigin={{

@@ -28,7 +28,7 @@ export const SystemRoutes = [
   {
     path: ROUTER_URL.SYSTEM_DECENTRALIZATION,
     exact: true,
-    component: lazy(() => import('../../views/system/decentralization/index')),
+    component: lazy(() => import('../../views/system/user-role/index')),
     meta: {
       action: 'manage',
       resource: ROUTER_URL.SYSTEM_DECENTRALIZATION,
