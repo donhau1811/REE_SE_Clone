@@ -6,10 +6,18 @@ import Select from 'react-select'
 import SearchBar from '@src/views/common/SearchBar'
 import { Controller, useForm } from 'react-hook-form'
 import { selectThemeColors } from '@src/utility/Utils'
+import { getRoles } from '../permission-group/store/actions'
+import { useDispatch, useSelector } from 'react-redux'
 
 const PageHeader = ({ onSearch = () => {}, searchValue }) => {
   const [value, setValue] = useState('')
+  const { roles } = useSelector((state) => state.permissionGroup)
+  const dispatch = useDispatch()
 
+  const labelRoles = roles.map((item) => ({ value: item.id, label: item.name }))
+  useEffect(() => {
+    dispatch(getRoles())
+  }, [])
   useEffect(() => {
     if (searchValue !== value) setValue(searchValue)
   }, [searchValue])
@@ -24,6 +32,7 @@ const PageHeader = ({ onSearch = () => {}, searchValue }) => {
         <Col lg="3" md="6" className="">
           <Controller
             as={Select}
+            options={labelRoles}
             control={control}
             theme={selectThemeColors}
             name="state"
@@ -37,11 +46,7 @@ const PageHeader = ({ onSearch = () => {}, searchValue }) => {
           />
         </Col>
         <Col lg="4" md="8" className="my-lg-0 mb-1 d-flex justify-content-end align-items-center">
-          <SearchBar
-            onSearch={onSearch}
-            searchValue={searchValue}
-            placeholder={'Find by user'}
-          />
+          <SearchBar onSearch={onSearch} searchValue={searchValue} placeholder={'Find by user'} />
         </Col>
       </Row>
     </>
