@@ -90,7 +90,8 @@ const ProjectTable = ({ intl }) => {
   const columns = [
     {
       name: intl.formatMessage({ id: 'No.' }),
-      cell: (row, index) => index + 1,
+      // eslint-disable-next-line no-mixed-operators
+      cell: (row, index) => index + (pagination?.currentPage - 1) * pagination.rowsPerPage + 1,
       maxWidth: '40px',
       center: true
     },

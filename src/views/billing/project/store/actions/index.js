@@ -65,7 +65,7 @@ export const postProject = ({ params, callback }) => {
       })
       .catch((err) => {
         console.log('err', err)
-        showToast('error', <FormattedMessage id="Failed to update data. Please try again" />)
+        showToast('error', <FormattedMessage id="Failed to create data. Please try again" />)
       })
   }
 }

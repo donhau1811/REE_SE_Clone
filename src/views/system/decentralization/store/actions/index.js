@@ -1,91 +1,20 @@
 import {
- GET_ROLE_PERMISION_BY_ROLE_ID
+  API_GET_ROLE_BY_USER_ID,
+  API_GET_USER_ROLE,
+  API_POST_USER_ROLE,
+  GET_ROLE_PERMISION_BY_ROLE_ID
 } from '@src/utility/constants'
-import { SET_SELECTED_ROOF_VENDOR } from '@src/utility/constants/actions'
+import { FETCH_USER_ROLE_REQUEST, SELECTED_ROLE, SET_SELECTED_ROOF_VENDOR } from '@src/utility/constants/actions'
+import { showToast } from '@src/utility/Utils'
 import axios from 'axios'
 import { get } from 'lodash'
-
-// export const getAllRoofVendor = () => {
-//   return async (dispatch) => {
-//     await axios
-//       .get(API_GET_ALL_ROOF_VENDOR)
-//       .then((response) => {
-//         if (response?.status === 200 && response?.data?.data) {
-//           dispatch({
-//             type: FETCH_ROOF_RENTAL_UNIT_REQUEST,
-//             data: response.data.data,
-//             total: response.data.count
-//           })
-//         } else {
-//           throw new Error(response.data.message)
-//         }
-//       })
-//       .catch((err) => {
-//         console.log('err', err)
-//       })
-//   }
-// }
-
-// export const getRoofVendor = (params) => {
-//   return async (dispatch) => {
-//     const { pagination = {}, searchValue, ...rest } = params
-//     const payload = {
-//       ...rest,
-//       limit: pagination.rowsPerPage,
-//       offset: pagination.rowsPerPage * (pagination.currentPage - 1)
-//     }
-//     if (searchValue?.trim()) {
-//       payload.searchValue = {
-//         value: searchValue,
-//         fields: ['name', 'code', 'phone', 'taxCode', 'address', 'phone'],
-//         type: 'contains'
-//       }
-//     }
-//     await axios
-//       .post(API_GET_ROOF_VENDOR, payload)
-//       .then((response) => {
-//         if (response?.status === 200 && response?.data?.data) {
-//           dispatch({
-//             type: FETCH_ROOF_RENTAL_UNIT_REQUEST,
-//             data: response.data.data,
-//             total: response.data.count,
-//             params
-//           })
-//         } else {
-//           throw new Error(response.data.message)
-//         }
-//       })
-//       .catch((err) => {
-//         console.log('err', err)
-//       })
-//   }
-// }
-
-// export const deleteBillingRoofRentalUnit = ({ id, callback }) => {
-//   return async () => {
-//     await axios
-//       .delete(`${API_DELETE_ROOF_VENDORS}/${id}`)
-//       .then((response) => {
-//         if (response.status === 200 && response.data?.data) {
-//           showToast('success', <FormattedMessage id="Delete info success" />)
-
-//           callback?.()
-//         } else {
-//           showToast('error', response.data?.message)
-//         }
-//       })
-//       .catch(() => {
-//         showToast('error', <FormattedMessage id="data delete failed, please try again" />)
-//       })
-//   }
-// }
+import { FormattedMessage } from 'react-intl'
 
 export const getPermisionRoleByRoleId = ({ id, isSavedToState, callback }) => {
   return async (dispatch) => {
     await axios
       .get(`${GET_ROLE_PERMISION_BY_ROLE_ID}/${id}`)
       .then((response) => {
-     
         if (response.status === 200 && response.data.data) {
           const payload = get(response, 'data.data', {})
           if (isSavedToState) {
@@ -104,196 +33,31 @@ export const getPermisionRoleByRoleId = ({ id, isSavedToState, callback }) => {
       })
   }
 }
-/*
-export const postRoofVendors = ({ params, callback }) => {
-  return async () => {
-    const { contacts, ...roofVendor } = params
-    await axios
-      .post(API_CREATE_ROOF_VENDOR, roofVendor)
-      .then((response) => {
-        if (response.status === 200 && response.data?.data) {
-          const roofVendorId = response.data?.data?.id
-          // eslint-disable-next-line no-unused-vars
-          const addRoofVendorContact = contacts.map(({ id, ...contact }) =>
-            // eslint-disable-next-line implicit-arrow-linebreak
-            axios.post(API_ADD_CONTACT, {
-              ...contact,
-              position: contact.position || '',
-              roofVendorId,
-              state: 'ACTIVE'
-            })
-          )
-          Promise.all(addRoofVendorContact)
-            .then(() => {
-              showToast('success', <FormattedMessage id="Create info success" />)
-              callback?.(false)
-            })
-            .catch((err) => {
-              console.log('err', err)
-              showToast('error', <FormattedMessage id="data create failed, please try again" />)
-            })
-        } else {
-          throw new Error(response.data?.message)
-        }
-      })
-      .catch(() => {
-        showToast('error', <FormattedMessage id="data create failed, please try again" />)
-      })
-  }
-}
-export const putRoofVendors = ({ params, callback }) => {
-  return async () => {
-    const { contacts, ...roofVendor } = params
 
-    await axios
-      .put(API_UPDATE_ROOF_VENDOR, params)
-      .then((response) => {
-        if (response.status === 200 && response.data?.data) {
-          const contactsModifyRes = handleCRUDOfContacts({ contacts, roofVendorId: roofVendor.id })
-          return Promise.all(contactsModifyRes)
-            .then(() => {
-              showToast('success', <FormattedMessage id="Update info success" />)
-              callback?.()
-            })
-            .catch(() => {
-              showToast('error', <FormattedMessage id="data update failed, please try again" />)
-            })
-        } else {
-          throw new Error(response.data?.message)
-        }
-      })
-      .catch(() => {
-        showToast('error', <FormattedMessage id="data update failed, please try again" />)
-      })
-  }
-}
-
-
-export const getRoofVendorWithContactsById = ({ id, isSavedToState, callback }) => {
+export const getListUserRole = (params = {}) => {
   return async (dispatch) => {
-    const getRoofVendorByIdReq = axios.get(`${API_GET_ROOF_VENDOR_BY_ID}/${id}`)
-    const getContactsByCusIdReq = axios.get(`${API_GET_CONTACT_BY_ROOF_VENDOR_ID}/${id}`)
-    Promise.all([getRoofVendorByIdReq, getContactsByCusIdReq])
-      .then(([RoofVendorRes, contactRes]) => {
-        if (
-          RoofVendorRes.status === 200 &&
-          RoofVendorRes.data?.data &&
-          contactRes.status === 200 &&
-          contactRes.data?.data
-        ) {
-          const payload = {
-            ...RoofVendorRes.data?.data,
-            contacts: contactRes.data?.data
-          }
-          if (isSavedToState) {
-            dispatch({
-              type: SET_SELECTED_ROOF_VENDOR,
-              payload: RoofVendorRes.data?.data
-            })
-            dispatch({
-              type: SET_CONTACT,
-              payload: contactRes.data?.data
-            })
-          }
-          callback?.(payload)
-        } else {
-          throw new Error('Something went wrong')
-        }
-      })
-      .catch((err) => {
-        console.log('err', err)export const postRoofVendors = ({ params, callback }) => {
-  return async () => {
-    const { contacts, ...roofVendor } = params
+    const { pagination = {}, searchValue, ...rest } = params
+    const payload = {
+      ...rest,
+      rowsPerPage: pagination.rowsPerPage,
+      page: pagination.currentPage,
+      sortBy: rest?.sortBy ? rest?.sortBy : "createDate",
+      sortDirection: rest?.sortDirection ? rest?.sortDirection : "DESC"
+    }
+    payload.filterValue = {name:searchValue}
+    console.log('payload', payload)
     await axios
-      .post(API_CREATE_ROOF_VENDOR, roofVendor)
+      .post(API_GET_USER_ROLE, payload)
       .then((response) => {
-        if (response.status === 200 && response.data?.data) {
-          const roofVendorId = response.data?.data?.id
-          // eslint-disable-next-line no-unused-vars
-          const addRoofVendorContact = contacts.map(({ id, ...contact }) =>
-            // eslint-disable-next-line implicit-arrow-linebreak
-            axios.post(API_ADD_CONTACT, {
-              ...contact,
-              position: contact.position || '',
-              roofVendorId,
-              state: 'ACTIVE'
-            })
-          )
-          Promise.all(addRoofVendorContact)
-            .then(() => {
-              showToast('success', <FormattedMessage id="Create info success" />)
-              callback?.(false)
-            })
-            .catch((err) => {
-              console.log('err', err)
-              showToast('error', <FormattedMessage id="data create failed, please try again" />)
-            })
+        if (response.status === 200 && response.data.data) {
+          dispatch({
+            type: FETCH_USER_ROLE_REQUEST,
+            data: response?.data?.data,
+            total: response?.data?.totalRow,
+            params
+          })
         } else {
-          throw new Error(response.data?.message)
-        }
-      })
-      .catch(() => {
-        showToast('error', <FormattedMessage id="data create failed, please try again" />)
-      })
-  }
-}
-export const putRoofVendors = ({ params, callback }) => {
-  return async () => {
-    const { contacts, ...roofVendor } = params
-
-    await axios
-      .put(API_UPDATE_ROOF_VENDOR, params)
-      .then((response) => {
-        if (response.status === 200 && response.data?.data) {
-          const contactsModifyRes = handleCRUDOfContacts({ contacts, roofVendorId: roofVendor.id })
-          return Promise.all(contactsModifyRes)
-            .then(() => {
-              showToast('success', <FormattedMessage id="Update info success" />)
-              callback?.()
-            })
-            .catch(() => {
-              showToast('error', <FormattedMessage id="data update failed, please try again" />)
-            })
-        } else {
-          throw new Error(response.data?.message)
-        }
-      })
-      .catch(() => {
-        showToast('error', <FormattedMessage id="data update failed, please try again" />)
-      })
-  }
-}
-
-
-export const getRoofVendorWithContactsById = ({ id, isSavedToState, callback }) => {
-  return async (dispatch) => {
-    const getRoofVendorByIdReq = axios.get(`${API_GET_ROOF_VENDOR_BY_ID}/${id}`)
-    const getContactsByCusIdReq = axios.get(`${API_GET_CONTACT_BY_ROOF_VENDOR_ID}/${id}`)
-    Promise.all([getRoofVendorByIdReq, getContactsByCusIdReq])
-      .then(([RoofVendorRes, contactRes]) => {
-        if (
-          RoofVendorRes.status === 200 &&
-          RoofVendorRes.data?.data &&
-          contactRes.status === 200 &&
-          contactRes.data?.data
-        ) {
-          const payload = {
-            ...RoofVendorRes.data?.data,
-            contacts: contactRes.data?.data
-          }
-          if (isSavedToState) {
-            dispatch({
-              type: SET_SELECTED_ROOF_VENDOR,
-              payload: RoofVendorRes.data?.data
-            })
-            dispatch({
-              type: SET_CONTACT,
-              payload: contactRes.data?.data
-            })
-          }
-          callback?.(payload)
-        } else {
-          throw new Error('Something went wrong')
+          throw new Error(response.data.message)
         }
       })
       .catch((err) => {
@@ -302,6 +66,41 @@ export const getRoofVendorWithContactsById = ({ id, isSavedToState, callback }) 
   }
 }
 
+export const postUserRole = (payload) => {
+  return async () => {
+    await axios
+      .post(`${API_POST_USER_ROLE}`, payload)
+      .then((response) => {
+        if (response.status === 200 && response.data.data) {
+          showToast('success', <FormattedMessage id="Data is updated successfully" />)
+        } else {
+          throw new Error(response.data?.message)
+        }
+      })
+      .catch((err) => {
+        console.log('err', err)
+        showToast('error', <FormattedMessage id="Failed to update data. Please try again" />)
+      })
   }
 }
-*/
+
+export const getRoleByUserId = ({ id }) => {
+  return async (dispatch) => {
+    await axios
+      .get(`${API_GET_ROLE_BY_USER_ID}/${id}`)
+      .then((response) => {
+        if (response.status === 200 && response.data.data) {
+          const payload = get(response, 'data.data', {})
+          dispatch({
+            type: SELECTED_ROLE,
+            payload
+          })
+        } else {
+          throw new Error(response.data?.message)
+        }
+      })
+      .catch((err) => {
+        console.log('err', err)
+      })
+  }
+}
