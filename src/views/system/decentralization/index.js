@@ -19,8 +19,7 @@ const RoofVendor = () => {
   const { pagination = {}, searchValue } = params || {}
   const intl = useIntl()
   const fetchRole = (param) => {
-    console.log('1', param)
-    console.log('2', params)
+
     dispatch(getListUserRole({ ...params, ...param }))
   }
 
@@ -129,7 +128,6 @@ const RoofVendor = () => {
     fetchRole(params)
     setIsOpen(value)
   }
-  console.log('data', data)
   return (
     <>
       <EditUserRoleModal initValue={selectUser} handldeOpenModal={handldeOpenModal} isOpen={isOpen} />
