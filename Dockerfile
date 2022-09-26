@@ -1,4 +1,4 @@
-FROM node:14 AS build-stage
+FROM node:16 AS build-stage
 WORKDIR /temp
 
 COPY . .
@@ -6,7 +6,7 @@ RUN npm rebuild node-sass
 RUN yarn
 RUN yarn build
 
-FROM node:14
+FROM node:16
 
 RUN yarn add serve --global
 WORKDIR /app
