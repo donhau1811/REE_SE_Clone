@@ -23,18 +23,9 @@ const PageHeader = ({ onSearch = () => {}, searchValue }) => {
   }, [searchValue])
   const intl = useIntl()
 
-  const { control, register, watch } = useForm({
+  const { control, register } = useForm({
     mode: 'onChange'
   })
-
-  const onSearchs = (value) => {
-    onSearch({ name: value })
-  }
-  useEffect(() => {
-    console.log(watch('roles'))
-    onSearch({ roleId: watch('roles')?.value })
-
-  }, [watch('roles')])
   return (
     <>
       <Row className="mb-2">
@@ -44,8 +35,8 @@ const PageHeader = ({ onSearch = () => {}, searchValue }) => {
             options={labelRoles}
             control={control}
             theme={selectThemeColors}
-            name="roles"
-            id="roles"
+            name="state"
+            id="state"
             innerRef={register()}
             className="react-select"
             classNamePrefix="select"
@@ -55,7 +46,7 @@ const PageHeader = ({ onSearch = () => {}, searchValue }) => {
           />
         </Col>
         <Col lg="4" md="8" className="my-lg-0 mb-1 d-flex justify-content-end align-items-center">
-          <SearchBar onSearch={onSearchs} searchValue={searchValue} placeholder={'Find by user'} />
+          <SearchBar onSearch={onSearch} searchValue={searchValue} placeholder={'Find by user'} />
         </Col>
       </Row>
     </>

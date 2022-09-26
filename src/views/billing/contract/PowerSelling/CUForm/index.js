@@ -1,4 +1,3 @@
-/* eslint-disable no-unreachable */
 import React, { useEffect, useState } from 'react'
 import { useForm, Controller, useFieldArray, FormProvider } from 'react-hook-form'
 import * as yup from 'yup'
@@ -9,9 +8,7 @@ import { bool, func, object, string } from 'prop-types'
 import { Button, Col, Form, FormFeedback, Input, Label, Row } from 'reactstrap'
 import {
   API_CHECK_CODE_CONTRACT,
-  API_FILES_GET_SINGED_URL,
   API_GET_ALL_CUSTOMER,
-  API_POST_FILES,
   ISO_STANDARD_FORMAT,
   SET_FORM_DIRTY,
   SET_SELECTED_CONTRACT
@@ -60,6 +57,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
     projects: { selectedProject: selectedBillingProject },
     contractClock: { clocks }
   } = useSelector((state) => state)
+
   const { setting } = useSelector((state) => state.settings)
 
   const formInitValues = {
@@ -308,7 +306,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
   }, [watch('customerId')])
 
   useEffect(() => {
-    register('files')
+    register('file')
     register('contacts')
     register('clocks')
   }, [register])
@@ -342,24 +340,21 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
       setValue('clocks', changeClocks)
     }
   }
-  const handleRemoveFile = (files) => (event) => {
+
+  const handleRemoveFile = (file) => (event) => {
     event.stopPropagation()
-    const filesList = getValues('files')
+    const filesList = getValues('file')
+
     setValue(
-      'files',
-      filesList.filter((item) => item.fileName !== files.fileName || item.name !== files.name),
+      'file',
+      filesList.filter((item) => item.name !== file.name),
       { shouldValidate: true }
     )
   }
 
   const handleChangeFiles = (event) => {
-    const filesNameCurent = watch('files')?.map((item) => item.fileName?.split(/\//)[2] || item.name)
-    console.log('filesNameCurent', filesNameCurent)
-    console.log(' Array.from(event.target.files)', Array.from(event.target.files))
-
-    let files = Array.from(event.target.files).filter((item) => !filesNameCurent?.includes(item.name))
-    files = files.concat(watch('files') || [])
-    setValue('files', files, { shouldValidate: true })
+    const files = Array.from(event.target.files)
+    setValue('file', files, { shouldValidate: true })
   }
 
   const handleRemoveCycle = (index) => () => {
@@ -412,7 +407,6 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
       onSubmit?.(initValues)
       return
     }
-    let listNamePostFile = []
 
     // if (validateBillingCycle()) {
     //   return
@@ -431,31 +425,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
         })
         return
       }
-
-      // handle on change file  ( --except remove file)
-
-      const formData = new FormData()
-      const curentListFileName = watch('files')?.map((item) => item.name || item.fileName)
-      const listNewFiles = watch('files')?.filter((item) => !initValues.files?.includes(item)) || []
-      if (listNewFiles?.length > 0) {
-        for (const file of listNewFiles) {
-          formData.append('files', file)
-        }
-        const dataReponse = await axios.post(API_POST_FILES, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        })
-        listNamePostFile = dataReponse?.data?.data
-      }
-
-      listNamePostFile = listNamePostFile.concat(
-        initValues.files?.filter((item) => curentListFileName?.includes(item.name || item.fileName)) || []
-      )
-      console.log('listNamePostFile', listNamePostFile)
-      //end
     } catch (err) {
-      console.log('err', err)
       const alert =
         initValues?.id > 0 ? 'Failed to update data. Please try again' : 'Failed to create data. Please try again'
       showToast(
@@ -470,6 +440,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
       showToast('error', <FormattedMessage id="Need at least 1 clock to add contract. Please try again" />)
       return
     }
+
     const payload = {
       state: GENERAL_STATUS.ACTIVE,
       code: values.code,
@@ -479,7 +450,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
       roofVendorId: null,
       startDate: values.startDate ? moment.utc(values.startDate) : null,
       endDate: values.endDate ? moment.utc(values.endDate) : null,
-      files: listNamePostFile,
+      files:[],
       billingPeriods: (values.billingCycle || []).map((item, index) => {
         const returnedCycle = {
           id: index + 1,
@@ -603,20 +574,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
   const handleClickToFileInput = (e) => {
     e.target.value = null
   }
-  const handleCLickFileName = (item) => async (e) => {
-    e.preventDefault()
 
-    const fileLink = await axios.get(`${API_FILES_GET_SINGED_URL}?fileName=${item?.fileName}`)
-
-    if (fileLink.status === 200 && fileLink.data?.data) {
-      if (item.url) {
-        const aTag = document.createElement('a')
-        aTag.setAttribute('href', fileLink?.data?.data?.signedUrl)
-        aTag.setAttribute('target', '_blank')
-        aTag.click()
-      }
-    }
-  }
   return (
     <FormProvider {...methods}>
       <Form className="billing-form" onSubmit={handleSubmit(handleSubmitForm)}>
@@ -675,26 +633,20 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
           <Col xs={12} className=" mb-2 d-flex flex-column justify-content-end">
             <div className="d-flex align-items-end">
               <div className="mr-2">
-                {watch('files')?.map((item) => (
-                  <Row key={item?.fileName || item?.name}>
-                    <a onClick={handleCLickFileName(item)} href={'#'} className="d-block">
-                      <Col xs={8} className="justify-content-end">
-                        {(item?.fileName && `${item?.fileName?.split(/\//)[2]}`) || item?.name}
-                      </Col>
-                      <Col xs={1} className="justify-content-end">
-                        {!isReadOnly && (
-                          <span className="ml-1" role="button" onClick={handleRemoveFile(item)}>
-                            <XCircle size={14} color="#838A9C" />
-                          </span>
-                        )}
-                      </Col>
-                    </a>
-                  </Row>
+                {watch('file')?.map((item) => (
+                  <a key={item.name} href="#" className="d-block">
+                    {item.name}
+                    {!isReadOnly && (
+                      <span className="ml-1" role="button" onClick={handleRemoveFile(item)}>
+                        <XCircle size={14} color="#838A9C" />
+                      </span>
+                    )}
+                  </a>
                 ))}
               </div>
               <div className="d-flex align-items-center">
                 <Label
-                  className={classNames('files-attachment-label', isReadOnly && 'files-attachment-label-disabled')}
+                  className={classNames('file-attachment-label', isReadOnly && 'file-attachment-label-disabled')}
                   for="file"
                   role="button"
                 >
@@ -714,7 +666,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                 />
               </div>
             </div>
-            {errors?.files && <FormFeedback className="d-block">{errors?.files?.message}</FormFeedback>}
+            {errors?.file && <FormFeedback className="d-block">{errors?.file?.message}</FormFeedback>}
           </Col>
         </Row>
 

@@ -16,11 +16,13 @@ const RoofVendor = () => {
   const dispatch = useDispatch()
   const { data, params, total } = useSelector((state) => state.userRole)
   const [selectUser, setSelectUser] = useState()
-  const { pagination = {}, searchValue, filterValue } = params || {}
+  const { pagination = {}, searchValue } = params || {}
   const intl = useIntl()
   const fetchRole = (param) => {
+
     dispatch(getListUserRole({ ...params, ...param }))
   }
+
   useEffect(() => {
     const initParams = {
       pagination: {
@@ -37,6 +39,7 @@ const RoofVendor = () => {
     }
   }, [])
   const handleChangePage = (e) => {
+
     fetchRole({
       pagination: {
         ...pagination,
@@ -54,14 +57,13 @@ const RoofVendor = () => {
     })
   }
 
-  const handleSearch = ({ name, roleId }) => {
+  const handleSearch = (value) => {
     fetchRole({
       pagination: {
         ...pagination,
         currentPage: 1
       },
-      searchValue: name || '',
-      filterValue: roleId || filterValue
+      searchValue: value
     })
   }
   const handleSort = (column, direction) => {
@@ -118,19 +120,12 @@ const RoofVendor = () => {
     }
   ]
   const handldeOpenModal = (value) => {
-    setIsOpen(value)
-  }
-  const handleFetchRole = () => {
     fetchRole(params)
+    setIsOpen(value)
   }
   return (
     <>
-      <EditUserRoleModal
-        handleFetchRoles={handleFetchRole}
-        initValue={selectUser}
-        handldeOpenModal={handldeOpenModal}
-        isOpen={isOpen}
-      />
+      <EditUserRoleModal initValue={selectUser} handldeOpenModal={handldeOpenModal} isOpen={isOpen} />
 
       <Row>
         <Col sm="12">
