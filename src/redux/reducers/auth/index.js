@@ -1,6 +1,12 @@
 import {
-  GET_ACCOUNT_INFO, GET_GROUP, SET_TOKEN_TIME_OUT, UPDATE_ACCOUNT_AVATAR,
-  UPDATE_ACCOUNT_INFO, UPDATE_ACCOUNT_INFO_FROM_SETTING, UPDATE_GENERAL_SETTING
+  GET_ACCOUNT_INFO,
+  GET_GROUP,
+  SET_TOKEN_TIME_OUT,
+  SET_USER_PERMISSIONS,
+  UPDATE_ACCOUNT_AVATAR,
+  UPDATE_ACCOUNT_INFO,
+  UPDATE_ACCOUNT_INFO_FROM_SETTING,
+  UPDATE_GENERAL_SETTING
 } from '@constants/actions'
 import { CO2_REDUCTION_RATE, SESSION_TIMEOUT, STANDARD_COAL_RATE, TREES_SAVED_RATE } from '@constants/common'
 
@@ -19,7 +25,8 @@ const initialState = {
     standardCoalRate: STANDARD_COAL_RATE,
     sessionTimeout: SESSION_TIMEOUT
   },
-  isTokenTimeOut: false
+  isTokenTimeOut: false,
+  permissions: []
 }
 
 const authReducer = (state = initialState, action) => {
@@ -96,6 +103,8 @@ const authReducer = (state = initialState, action) => {
       }
     case SET_TOKEN_TIME_OUT:
       return { ...state, isTokenTimeOut: action.value }
+    case SET_USER_PERMISSIONS:
+      return { ...state, permissions: action.payload }
     default:
       return state
   }

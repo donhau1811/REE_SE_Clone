@@ -7,7 +7,7 @@ import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
 import Table from '@src/views/common/table/CustomDataTable'
 import { deleteManualInputIndex, getInputClockIndex } from './store/actions'
-import { useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import {
   DISPLAY_DATE_FORMAT,
   ROUTER_URL,
@@ -21,10 +21,14 @@ import classNames from 'classnames'
 import { useHistory } from 'react-router-dom'
 // import { showToast } from '@src/utility/Utils'
 import PageHeader from './PageHeader'
+import { AbilityContext } from '@src/utility/context/Can'
+import { USER_ACTION, USER_FEATURE } from '@src/utility/constants/permissions'
 
 const MySweetAlert = withReactContent(SweetAlert)
 
 const ClockMetric = ({ intl }) => {
+  const ability = useContext(AbilityContext)
+
   const dispatch = useDispatch()
   const { data, params, total } = useSelector((state) => state.billingInputClockIndex)
 
@@ -167,25 +171,36 @@ const ClockMetric = ({ intl }) => {
 
       cell: (row) => (
         <>
-          {' '}
-          <Badge onClick={handleRedirectToViewPage(row.id)}>
-            <IconView id={`editBtn_${row.id}`} />
-          </Badge>
-          <UncontrolledTooltip placement="auto" target={`editBtn_${row.id}`}>
-            <FormattedMessage id="View Project" />
-          </UncontrolledTooltip>
-          <Badge onClick={handleRedirectToUpdatePage(row.id)}>
-            <IconEdit id={`updateBtn_${row.id}`} />
-          </Badge>
-          <UncontrolledTooltip placement="auto" target={`updateBtn_${row.id}`}>
-            <FormattedMessage id="Update Project" />
-          </UncontrolledTooltip>
-          <Badge>
-            <IconDelete onClick={handleDeleteItem(row)} id={`deleteBtn_${row.id}`} />
-          </Badge>
-          <UncontrolledTooltip placement="auto" target={`deleteBtn_${row.id}`}>
-            <FormattedMessage id="Delete Project" />
-          </UncontrolledTooltip>
+          {ability.can(USER_ACTION.DETAIL, USER_FEATURE.BILL_PARAMS) && (
+            <>
+              <Badge onClick={handleRedirectToViewPage(row.id)}>
+                <IconView id={`editBtn_${row.id}`} />
+              </Badge>
+              <UncontrolledTooltip placement="auto" target={`editBtn_${row.id}`}>
+                <FormattedMessage id="View Project" />
+              </UncontrolledTooltip>
+            </>
+          )}
+          {ability.can(USER_ACTION.EDIT, USER_FEATURE.BILL_PARAMS) && (
+            <>
+              <Badge onClick={handleRedirectToUpdatePage(row.id)}>
+                <IconEdit id={`updateBtn_${row.id}`} />
+              </Badge>
+              <UncontrolledTooltip placement="auto" target={`updateBtn_${row.id}`}>
+                <FormattedMessage id="Update Project" />
+              </UncontrolledTooltip>
+            </>
+          )}
+          {ability.can(USER_ACTION.DELETE, USER_FEATURE.BILL_PARAMS) && (
+            <>
+              <Badge>
+                <IconDelete onClick={handleDeleteItem(row)} id={`deleteBtn_${row.id}`} />
+              </Badge>
+              <UncontrolledTooltip placement="auto" target={`deleteBtn_${row.id}`}>
+                <FormattedMessage id="Delete Project" />
+              </UncontrolledTooltip>
+            </>
+          )}
         </>
       ),
       center: true

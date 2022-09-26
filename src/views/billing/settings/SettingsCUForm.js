@@ -1,8 +1,10 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { GENERAL_STATUS, GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
+import { USER_ACTION, USER_FEATURE } from '@src/utility/constants/permissions'
+import { AbilityContext } from '@src/utility/context/Can'
 import { selectThemeColors } from '@src/utility/Utils'
 import { bool, func, object, string } from 'prop-types'
-import { useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Select from 'react-select'
@@ -19,6 +21,7 @@ const SettingsCUForm = ({
   handldeSetCurrentValue = () => {},
   handleSetIsReadOnly = () => {}
 }) => {
+  const ability = useContext(AbilityContext)
   const SETTING_STATUS_OPTS = [
     { value: OPERATION_UNIT_STATUS.ACTIVE, label: intl.formatMessage({ id: 'Active' }) },
     { value: OPERATION_UNIT_STATUS.INACTIVE, label: intl.formatMessage({ id: 'Inactive' }) }
@@ -70,20 +73,22 @@ const SettingsCUForm = ({
   return (
     <>
       <Form className="billing-form" key="customer-form" onSubmit={handleSubmit(onSubmit)}>
-        <Row className="mb-2">
-          <Col className=" d-flex justify-content-between align-items-center">
-            <h4 className="typo-section"></h4>
+        {ability.can(USER_ACTION.EDIT, USER_FEATURE.CONFIG) && (
+          <Row className="mb-2">
+            <Col className=" d-flex justify-content-between align-items-center">
+              <h4 className="typo-section"></h4>
 
-            <Button.Ripple
-              disabled={disabled}
-              color="primary"
-              className="add-project add-Value-button"
-              onClick={handleAddValue}
-            >
-              <FormattedMessage id="Add new" />
-            </Button.Ripple>
-          </Col>
-        </Row>
+              <Button.Ripple
+                disabled={disabled}
+                color="primary"
+                className="add-project add-Value-button"
+                onClick={handleAddValue}
+              >
+                <FormattedMessage id="Add new" />
+              </Button.Ripple>
+            </Col>
+          </Row>
+        )}
         <Row>
           <Col className="mb-2" md={4}>
             <Label className="general-label" for="code">

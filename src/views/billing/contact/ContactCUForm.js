@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { EMAIL_REGEX, NUMBER_REGEX } from '@src/utility/constants'
-import { func, object, bool } from 'prop-types'
+import { func, object, bool, string } from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -17,7 +17,7 @@ import { getSettingValuesByCode } from '../settings/store/actions'
 
 const MySweetAlert = withReactContent(SweetAlert)
 
-function ContactCUForm({ contact, intl, onSubmit = () => {}, onCancel, isReadOnly }) {
+function ContactCUForm({ contact, intl, onSubmit = () => {}, onCancel, isReadOnly, submitClassname }) {
   const {
     layout: { skin }
   } = useSelector((state) => state)
@@ -221,7 +221,11 @@ function ContactCUForm({ contact, intl, onSubmit = () => {}, onCancel, isReadOnl
             </Row>
             <Row>
               <Col className="d-flex justify-content-center align-items-center">
-                <Button onClick={handleSubmit(handleSubmitContact)} color="primary" className="mr-1 px-3">
+                <Button
+                  onClick={handleSubmit(handleSubmitContact)}
+                  color="primary"
+                  className={classNames('mr-1 px-3', submitClassname)}
+                >
                   {intl.formatMessage({ id: isReadOnly ? 'Update' : 'Finish' })}
                 </Button>{' '}
                 <Button color="secondary" onClick={handleCancel}>
@@ -241,7 +245,8 @@ ContactCUForm.propTypes = {
   intl: object,
   onSubmit: func,
   onCancel: func,
-  isReadOnly: bool
+  isReadOnly: bool,
+  submitClassname: string
 }
 
 export default injectIntl(ContactCUForm)

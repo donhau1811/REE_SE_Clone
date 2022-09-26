@@ -22,7 +22,7 @@ import { GENERAL_STATUS, VALUE_OF_ROOF_CONTRACT } from '@src/utility/constants/b
 import '@src/@core/scss/billing-sweet-alert.scss'
 import classNames from 'classnames'
 
-const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSubmit }) => {
+const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSubmit, submitClassname }) => {
   const [valueSetting, setValueSetting] = useState([])
 
   const defaultValues = {
@@ -255,7 +255,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
       roofVendorId: Number(value?.roofVendorName?.value),
       startDate: value?.effectiveDate,
       endDate: value?.expirationDate,
-      files:[],
+      files: [],
       alerts: {
         confirmAlert: value?.confirmationReminder,
         billingAlert: value?.announcementDate
@@ -481,7 +481,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
         {typeContract?.value === 4 && <ContractByPercentage isReadOnly={isReadOnly} />}
         <Row>
           <Col className="d-flex justify-content-end align-items-center mb-2">
-            <Button type="submit" color="primary" className="mr-1 px-3 ">
+            <Button type="submit" color="primary" className={classNames('mr-1 px-3 ', submitClassname)}>
               {intl.formatMessage({ id: isReadOnly ? 'Update' : 'Save' })}
             </Button>{' '}
             <Button color="secondary" onClick={handleCancelForm}>
@@ -500,7 +500,8 @@ RoofVendorContractCUForm.propTypes = {
   onCancel: func,
   initValues: object,
   submitText: string,
-  isReadOnly: bool
+  isReadOnly: bool,
+  submitClassname: string
 }
 
 export default injectIntl(RoofVendorContractCUForm)

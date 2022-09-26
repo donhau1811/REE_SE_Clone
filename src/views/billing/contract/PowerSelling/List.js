@@ -1,5 +1,5 @@
 import { array, bool, func, object, string } from 'prop-types'
-import React from 'react'
+import React, { useContext } from 'react'
 import { Plus } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Table from '@src/views/common/table/CustomDataTable'
@@ -10,9 +10,13 @@ import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-de
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
 import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit.svg'
 import { useHistory, useParams } from 'react-router-dom'
+import { AbilityContext } from '@src/utility/context/Can'
+import { USER_ACTION, USER_FEATURE } from '@src/utility/constants/permissions'
 
 function PowerSelling({ disabled, intl, data, onDelete }) {
   const { id } = useParams()
+  const ability = useContext(AbilityContext)
+
   const history = useHistory()
 
   const handleDeleteContract = (contractItem) => () => {
@@ -77,7 +81,9 @@ function PowerSelling({ disabled, intl, data, onDelete }) {
         return (
           <>
             <div id={`view_name${row.id}`}>
-              {row?.customer?.address?.length > 150 ? `${row?.customer?.address?.slice(0, 150)}...` : row?.customer?.address}
+              {row?.customer?.address?.length > 150
+                ? `${row?.customer?.address?.slice(0, 150)}...`
+                : row?.customer?.address}
             </div>
             {row?.customer?.address?.length > 150 && (
               <UncontrolledTooltip placement="auto" target={`view_name${row.id}`}>
@@ -96,10 +102,12 @@ function PowerSelling({ disabled, intl, data, onDelete }) {
       cell: (row) => (
         <>
           {' '}
-          <Badge>
-            <IconView id={`viewBtn_${row.id}`} onClick={handleRedirectToUpdateContract(row)} />
-          </Badge>
-          {!disabled && (
+          {ability.can(USER_ACTION.DETAIL, USER_FEATURE.PROJECT) && (
+            <Badge>
+              <IconView id={`viewBtn_${row.id}`} onClick={handleRedirectToUpdateContract(row)} />
+            </Badge>
+          )}
+          {!disabled && [USER_ACTION.EDIT, USER_ACTION.CREATE].some((item) => ability.can(item, USER_FEATURE.PROJECT)) && (
             <>
               <Badge>
                 <IconEdit id={`editBtn_${row.id}`} onClick={handleRedirectToUpdateContract(row, true)} />
@@ -126,14 +134,16 @@ function PowerSelling({ disabled, intl, data, onDelete }) {
             <FormattedMessage id="Power Selling Agreement" />
           </h4>
 
-          <Button.Ripple
-            color="primary"
-            className="add-project add-contact-button"
-            onClick={handleRedirectToCreateContract}
-            hidden={disabled}
-          >
-            <Plus className="mr-1" /> <FormattedMessage id="Add power selling contract" />
-          </Button.Ripple>
+          {[USER_ACTION.EDIT, USER_ACTION.CREATE].some((item) => ability.can(item, USER_FEATURE.PROJECT)) && (
+            <Button.Ripple
+              color="primary"
+              className="add-project add-contact-button"
+              onClick={handleRedirectToCreateContract}
+              hidden={disabled}
+            >
+              <Plus className="mr-1" /> <FormattedMessage id="Add power selling contract" />
+            </Button.Ripple>
+          )}
         </Col>
         <Col xs={12}>
           <Table tableId="project" columns={columns} data={data} pagination={null} />

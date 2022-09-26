@@ -1,3 +1,4 @@
+/* eslint-disable implicit-arrow-linebreak */
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
 import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit.svg'
@@ -5,7 +6,7 @@ import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/
 import Table from '@src/views/common/table/CustomDataTable'
 import classnames from 'classnames'
 import { object } from 'prop-types'
-import { useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -17,10 +18,14 @@ import { deleteBillingRoofRentalUnit, getRoofVendor } from './store/actions'
 import './styles.scss'
 import { ROUTER_URL, ROWS_PER_PAGE_DEFAULT, SET_ROOF_RENTAL_UNIT_PARAMS } from '@src/utility/constants'
 import { Link } from 'react-router-dom/cjs/react-router-dom.min'
+import { AbilityContext } from '@src/utility/context/Can'
+import { USER_ACTION, USER_FEATURE } from '@src/utility/constants/permissions'
 
 const MySweetAlert = withReactContent(SweetAlert)
 
 const RoofVendor = ({ intl }) => {
+  const ability = useContext(AbilityContext)
+
   const history = useHistory()
   const dispatch = useDispatch()
   const { data, params, total } = useSelector((state) => state.roofUnit)
@@ -159,7 +164,14 @@ const RoofVendor = ({ intl }) => {
       name: intl.formatMessage({ id: 'Roof rental unit name' }),
       selector: 'name',
       sortable: true,
-      cell: (row) => <Link to={`${ROUTER_URL.BILLING_ROOF_RENTAL_UNIT}/${row.id}`}>{row?.name}</Link>,
+      // eslint-disable-next-line no-confusing-arrow
+      cell: (row) =>
+        ability.can(USER_ACTION.DETAIL, USER_FEATURE.RENTAL_COMPANY) ? (
+          <Link to={`${ROUTER_URL.BILLING_ROOF_RENTAL_UNIT}/${row.id}`}>{row?.name}</Link>
+        ) : (
+          row?.name
+        ),
+
       minWidth: '200px'
     },
     {
@@ -222,22 +234,33 @@ const RoofVendor = ({ intl }) => {
       selector: '#',
       cell: (row) => (
         <>
-          {' '}
-          <Badge onClick={handleRedirectToViewPage(row.id)}>
-            <IconView id={`editBtn_${row.id}`} />
-          </Badge>
-          <UncontrolledTooltip placement="auto" target={`editBtn_${row.id}`}>
-            <FormattedMessage id="View Project" />
-          </UncontrolledTooltip>
-          <Badge onClick={handleRedirectToUpdatePage(row.id)}>
-            <IconEdit id={`updateBtn_${row.id}`} />
-          </Badge>
-          <UncontrolledTooltip placement="auto" target={`updateBtn_${row.id}`}>
-            <FormattedMessage id="Update Project" />
-          </UncontrolledTooltip>
-          <Badge onClick={handleDeleteRoofRentalUnit(row.id)}>
-            <IconDelete id={`deleteBtn_${row.id}`} />
-          </Badge>
+          {ability.can(USER_ACTION.DETAIL, USER_FEATURE.RENTAL_COMPANY) && (
+            <>
+              <Badge onClick={handleRedirectToViewPage(row.id)}>
+                <IconView id={`editBtn_${row.id}`} />
+              </Badge>
+              <UncontrolledTooltip placement="auto" target={`editBtn_${row.id}`}>
+                <FormattedMessage id="View Project" />
+              </UncontrolledTooltip>
+            </>
+          )}
+          {ability.can(USER_ACTION.EDIT, USER_FEATURE.RENTAL_COMPANY) && (
+            <>
+              <Badge onClick={handleRedirectToUpdatePage(row.id)}>
+                <IconEdit id={`updateBtn_${row.id}`} />
+              </Badge>
+              <UncontrolledTooltip placement="auto" target={`updateBtn_${row.id}`}>
+                <FormattedMessage id="Update Project" />
+              </UncontrolledTooltip>
+            </>
+          )}
+          {ability.can(USER_ACTION.DELETE, USER_FEATURE.RENTAL_COMPANY) && (
+            <>
+              <Badge onClick={handleDeleteRoofRentalUnit(row.id)}>
+                <IconDelete id={`deleteBtn_${row.id}`} />
+              </Badge>
+            </>
+          )}
         </>
       ),
       center: true

@@ -1,6 +1,6 @@
 import { ROUTER_URL, SET_FORM_DIRTY } from '@src/utility/constants'
 import { object } from 'prop-types'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { injectIntl, useIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
@@ -10,8 +10,12 @@ import { getOperationUnitById, putOperationUnit } from './store/actions'
 import BreadCrumbs from '@src/views/common/breadcrumbs'
 import ProjectTable from './ProjectTable'
 import { Tab, Tabs } from '@mui/material'
+import { AbilityContext } from '@src/utility/context/Can'
+import { USER_ACTION, USER_FEATURE } from '@src/utility/constants/permissions'
 
 const UpdateOperationUnit = ({ intl }) => {
+  const ability = useContext(AbilityContext)
+
   const [activeTab, setActiveTab] = useState(1)
   const history = useHistory()
   const dispatch = useDispatch()
@@ -68,6 +72,7 @@ const UpdateOperationUnit = ({ intl }) => {
       )
     }
   }
+  const checkUpdateAbility = ability.can(USER_ACTION.EDIT, USER_FEATURE.OPE_CO)
   return (
     <>
       {' '}
@@ -89,6 +94,7 @@ const UpdateOperationUnit = ({ intl }) => {
           onCancel={handleCancel}
           initValues={selectedCompany}
           isReadOnly={isReadOnly}
+          submitClassname={!checkUpdateAbility && 'd-none'}
         />
       )}
       {activeTab === 2 && <ProjectTable />}

@@ -1,10 +1,12 @@
 import '@src/@core/scss/billing-sweet-alert.scss'
 import { ISO_STANDARD_FORMAT, ROUTER_URL, SET_FORM_DIRTY } from '@src/utility/constants'
 import { VALUE_OF_ROOF_CONTRACT } from '@src/utility/constants/billing'
+import { USER_ACTION, USER_FEATURE } from '@src/utility/constants/permissions'
+import { AbilityContext } from '@src/utility/context/Can'
 import BreadCrumbs from '@src/views/common/breadcrumbs'
 import moment from 'moment'
 import { object } from 'prop-types'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { injectIntl, useIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useLocation, useParams } from 'react-router-dom'
@@ -13,6 +15,9 @@ import { getContractById, putContractRoofVendor } from '../store/actions'
 import RoofVendorContractCUForm from './RoofVendorContractCUForm'
 
 const UpdateRoofVendorContract = ({ intl }) => {
+  const ability = useContext(AbilityContext)
+  const checkUpdateAbility = ability.can(USER_ACTION.EDIT, USER_FEATURE.PROJECT)
+
   const {
     projects: { selectedProject: selectedBillingProject }
   } = useSelector((state) => state)
@@ -90,6 +95,8 @@ const UpdateRoofVendorContract = ({ intl }) => {
       onCancel={handleCancel}
       onSubmit={handleUpdateRoofVendorContract}
       initValues={cleanData}
+      submitClassname={!checkUpdateAbility && 'd-none'}
+
     />
   )
 }

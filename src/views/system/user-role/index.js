@@ -1,7 +1,8 @@
+/* eslint-disable implicit-arrow-linebreak */
 import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit.svg'
 import Table from '@src/views/common/table/CustomDataTable'
 import { object } from 'prop-types'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { FormattedMessage, injectIntl, useIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { Badge, Col, Row, UncontrolledTooltip } from 'reactstrap'
@@ -10,8 +11,12 @@ import './styles.scss'
 import { RESET_USER_ROLE, ROWS_PER_PAGE_DEFAULT } from '@src/utility/constants'
 import EditUserRoleModal from './EditUserRoleModal'
 import { getListUserRole } from './store/actions'
+import { AbilityContext } from '@src/utility/context/Can'
+import { USER_ACTION, USER_FEATURE } from '@src/utility/constants/permissions'
 
 const RoofVendor = () => {
+  const ability = useContext(AbilityContext)
+
   const [isOpen, setIsOpen] = useState(false)
   const dispatch = useDispatch()
   const { data, params, total } = useSelector((state) => state.userRole)
@@ -104,17 +109,18 @@ const RoofVendor = () => {
     {
       name: intl.formatMessage({ id: 'Actions' }),
       selector: '#',
-      cell: (row) => (
-        <>
-          {' '}
-          <Badge onClick={handldeClickIconEdit(row)}>
-            <IconEdit id={`updateBtn_${row.id}`} />
-          </Badge>
-          <UncontrolledTooltip placement="auto" target={`updateBtn_${row.id}`}>
-            <FormattedMessage id="Update Project" />
-          </UncontrolledTooltip>
-        </>
-      ),
+      cell: (row) =>
+        ability.can(USER_ACTION.EDIT, USER_FEATURE.ROLE_ASSIGNMENT) && (
+          <>
+            {' '}
+            <Badge onClick={handldeClickIconEdit(row)}>
+              <IconEdit id={`updateBtn_${row.id}`} />
+            </Badge>
+            <UncontrolledTooltip placement="auto" target={`updateBtn_${row.id}`}>
+              <FormattedMessage id="Update Project" />
+            </UncontrolledTooltip>
+          </>
+        ),
       center: true
     }
   ]

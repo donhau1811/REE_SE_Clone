@@ -229,3 +229,4 @@ export const API_GET_ALL_USER_FEATURE = `${BASE_API_URL_V2}/user-feature/all`
 export const API_POST_USER_ROLE = `${BASE_API_URL_V2}/user-role/update`
 
 export const API_GET_ALL_USER_ACTION = `${BASE_API_URL_V2}/user-action/all`
+export const API_PERMISSIONS_BY_USER = `${BASE_API_URL_V2}/user-role/current`

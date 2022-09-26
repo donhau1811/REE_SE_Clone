@@ -26,8 +26,12 @@ import VerticalLayout from '@src/layouts/VerticalLayout'
 import { getUserAbility } from '@src/auth/utils'
 import { ROUTER_URL } from '@constants/router'
 import useJwt from '@src/auth/jwt/useJwt'
+import { useSelector } from 'react-redux'
+import { isEqual } from 'lodash'
 
 const Router = () => {
+  const permissions = useSelector((state) => state.auth?.permissions, isEqual)
+
   // ** Hooks
   const [layout, setLayout] = useLayout()
   const [transition, setTransition] = useRouterTransition()
@@ -85,7 +89,13 @@ const Router = () => {
     if (useJwt.getIsUnauthorized()) {
       ability.update({})
     } else if (user) {
-      ability.update(getUserAbility(user?.group?.type))
+      ability.update([
+        ...getUserAbility(user?.group?.type),
+        ...permissions.map((per) => ({
+          action: per.action,
+          subject: per.feature
+        }))
+      ])
     }
 
     if (
@@ -103,7 +113,12 @@ const Router = () => {
     } else if (route.meta && route.meta.authRoute && isUserLoggedIn()) {
       // ** If route has meta and authRole and user is Logged in then redirect user to home page (DefaultRoute)
       return <Redirect to="/" />
-    } else if (isUserLoggedIn() && !ability.can(action || 'read', resource)) {
+    }
+    const checkAbilities =
+      (typeof action === 'string' && ability.can(action || 'read', resource)) ||
+      (Array.isArray(action) && action.some((item) => ability.can(item, resource)))
+
+    if (isUserLoggedIn() && !checkAbilities) {
       // ** If user is Logged in and doesn't have ability to visit the page redirect the user to Not Authorized
       return <Redirect to={ROUTER_URL.UNAUTHORIZED} />
     } else {

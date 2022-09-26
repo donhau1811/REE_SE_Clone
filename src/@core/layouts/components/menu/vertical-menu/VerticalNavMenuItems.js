@@ -1,4 +1,4 @@
-/* eslint no-unused-vars: 0 */  // --> OFF
+/* eslint no-unused-vars: 0 */ // --> OFF
 // ** React Imports
 import { useContext } from 'react'
 
@@ -17,7 +17,7 @@ import {
   canViewMenuItem
 } from '@layouts/utils'
 
-const VerticalMenuNavItems = props => {
+const VerticalMenuNavItems = (props) => {
   // ** Context
   const ability = useContext(AbilityContext)
 

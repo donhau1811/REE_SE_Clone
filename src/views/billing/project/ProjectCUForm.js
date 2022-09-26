@@ -23,6 +23,7 @@ import { useDispatch } from 'react-redux'
 import * as yup from 'yup'
 import Contract from './contract'
 import '@src/@core/scss/billing-sweet-alert.scss'
+import classNames from 'classnames'
 
 const ProjectCUForm = ({
   intl,
@@ -32,7 +33,8 @@ const ProjectCUForm = ({
   isReadOnly,
   submitText,
   submitButton,
-  cancelButton
+  cancelButton,
+  submitClassname
 }) => {
   const dispatch = useDispatch()
   const initState = { state: GENERAL_STATUS_OPTS[0] }
@@ -68,7 +70,7 @@ const ProjectCUForm = ({
         )
       }*/
     } catch (error) {
-      showToast('error',  intlNew.formatMessage({id: error.toString()}))
+      showToast('error', intlNew.formatMessage({ id: error.toString() }))
     }
   }, [])
 
@@ -192,7 +194,7 @@ const ProjectCUForm = ({
   const footerCOM = (
     <>
       {typeof submitButton === 'undefined' ? (
-        <Button type="submit" color="primary" className="mr-1 px-3">
+        <Button type="submit" color="primary" className={classNames('mr-1 px-3', submitClassname)}>
           {submitText || intl.formatMessage({ id: 'Save' })}
         </Button>
       ) : submitButton ? (
@@ -413,7 +415,8 @@ ProjectCUForm.propTypes = {
   submitText: string,
   submitButton: element,
   cancelButton: element,
-  cancelText: string
+  cancelText: string,
+  submitClassname: string
 }
 
 export default injectIntl(ProjectCUForm)

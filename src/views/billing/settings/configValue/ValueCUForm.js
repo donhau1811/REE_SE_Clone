@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { bool, func, object } from 'prop-types'
+import { bool, func, object, string } from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -15,7 +15,7 @@ import SweetAlert from 'sweetalert2'
 
 const MySweetAlert = withReactContent(SweetAlert)
 
-function ValueCUForm({ value, intl, onSubmit = () => {}, onCancel, isReadOnly }) {
+function ValueCUForm({ value, intl, onSubmit = () => {}, onCancel, isReadOnly, submitClassname }) {
   const {
     layout: { skin }
   } = useSelector((state) => state)
@@ -180,7 +180,11 @@ function ValueCUForm({ value, intl, onSubmit = () => {}, onCancel, isReadOnly })
             </Row>
             <Row>
               <Col className="d-flex justify-content-center align-items-center">
-                <Button onClick={handleSubmit(handleSubmitForm)} color="primary" className="mr-1 px-3">
+                <Button
+                  onClick={handleSubmit(handleSubmitForm)}
+                  color="primary"
+                  className={classNames('mr-1 px-3', submitClassname)}
+                >
                   {intl.formatMessage({ id: isReadOnly ? 'Update' : 'Finish' })}
                 </Button>{' '}
                 <Button color="secondary" onClick={toggle}>
@@ -200,7 +204,8 @@ ValueCUForm.propTypes = {
   intl: object,
   onSubmit: func,
   onCancel: func,
-  isReadOnly: bool
+  isReadOnly: bool,
+  submitClassname: string
 }
 
 export default injectIntl(ValueCUForm)

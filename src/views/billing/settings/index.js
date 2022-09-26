@@ -2,9 +2,11 @@ import { ROWS_PER_PAGE_DEFAULT } from '@constants/common'
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
 import { ROUTER_URL, SET_BILLING_SETTING_PARAMS } from '@src/utility/constants'
 import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
+import { USER_ACTION, USER_FEATURE } from '@src/utility/constants/permissions'
+import { AbilityContext } from '@src/utility/context/Can'
 import Table from '@src/views/common/table/CustomDataTable'
 import { object } from 'prop-types'
-import { useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -14,6 +16,7 @@ import PageHeader from './PageHeader'
 import { getListBillingSetting } from './store/actions'
 
 const OperationUnit = ({ intl }) => {
+  const ability = useContext(AbilityContext)
   const history = useHistory()
   const dispatch = useDispatch()
 
@@ -120,17 +123,22 @@ const OperationUnit = ({ intl }) => {
     {
       name: intl.formatMessage({ id: 'Actions' }),
       selector: '#',
-      cell: (row) => (
-        <>
-          {' '}
-          <Badge onClick={handleRedirectToUpdatePage(row.id)}>
-            <IconView id={`editBtn_${row.id}`} />
-          </Badge>
-          <UncontrolledTooltip placement="auto" target={`editBtn_${row.id}`}>
-            <FormattedMessage id="View Project" />
-          </UncontrolledTooltip>
-        </>
-      ),
+      cell: (row) => {
+        const checkDetailAbility = ability.can(USER_ACTION.DETAIL, USER_FEATURE.CONFIG)
+
+        return (
+          checkDetailAbility && (
+            <>
+              <Badge onClick={handleRedirectToUpdatePage(row.id)}>
+                <IconView id={`editBtn_${row.id}`} />
+              </Badge>
+              <UncontrolledTooltip placement="auto" target={`editBtn_${row.id}`}>
+                <FormattedMessage id="View Project" />
+              </UncontrolledTooltip>
+            </>
+          )
+        )
+      },
       center: true
     }
   ]

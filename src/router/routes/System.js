@@ -1,5 +1,6 @@
 import { lazy } from 'react'
 import { ROUTER_URL } from '@constants/router'
+import { USER_ACTION, USER_FEATURE } from '@src/utility/constants/permissions'
 
 export const SystemRoutes = [
   {
@@ -7,10 +8,9 @@ export const SystemRoutes = [
     exact: true,
     component: lazy(() => import('../../views/system/permission-group/index')),
     meta: {
-      action: 'manage',
-      resource: ROUTER_URL.SYSTEM_PERMISSION_GROUP,
+      action: [USER_ACTION.VIEW_ALL, USER_ACTION.VIEW],
+      resource: USER_FEATURE.GROUP_MANAGER,
       navLink: ROUTER_URL.SYSTEM_PERMISSION_GROUP
-
     }
   },
   {
@@ -19,10 +19,9 @@ export const SystemRoutes = [
     navbar: require('../../views/system/permission-group/update')?.Navbar,
     component: lazy(() => import('../../views/system/permission-group/update')),
     meta: {
-      action: 'manage',
-      resource: ROUTER_URL.SYSTEM_PERMISSION_GROUP,
+      action: USER_ACTION.EDIT,
+      resource: USER_FEATURE.GROUP_MANAGER,
       navLink: ROUTER_URL.SYSTEM_PERMISSION_GROUP
-
     }
   },
   {
@@ -30,12 +29,9 @@ export const SystemRoutes = [
     exact: true,
     component: lazy(() => import('../../views/system/user-role/index')),
     meta: {
-      action: 'manage',
-      resource: ROUTER_URL.SYSTEM_DECENTRALIZATION,
+      action: [USER_ACTION.VIEW_ALL, USER_ACTION.VIEW],
+      resource: USER_FEATURE.ROLE_ASSIGNMENT,
       navLink: ROUTER_URL.SYSTEM_DECENTRALIZATION
-
     }
   }
-
-
 ]

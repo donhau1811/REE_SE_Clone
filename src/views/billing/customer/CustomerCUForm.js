@@ -31,7 +31,9 @@ const OperationCUForm = ({
   initValues,
   submitText,
   cancelText,
-  contacts
+  contacts,
+  submitClassname,
+  allowedEdit
 }) => {
   const CUSTOMER_STATUS_OPTS = [
     { value: GENERAL_STATUS.ACTIVE, label: intl.formatMessage({ id: 'Active' }) },
@@ -373,11 +375,12 @@ const OperationCUForm = ({
           onChange={handleSubmitContactForm}
           data={watch('contacts')}
           type={intl.formatMessage({ id: 'customers' })}
+          allowedEdit={allowedEdit}
         />
 
         <Row>
           <Col className="d-flex justify-content-end align-items-center mb-2">
-            <Button type="submit" color="primary" className="mr-1 px-3">
+            <Button type="submit" color="primary" className={classNames('mr-1 px-3', submitClassname)}>
               {submitText || intl.formatMessage({ id: 'Save' })}
             </Button>{' '}
             <Button color="secondary" onClick={handleCancelForm}>
@@ -398,7 +401,9 @@ OperationCUForm.propTypes = {
   submitText: string,
   isViewed: bool,
   contacts: array,
-  cancelText: string
+  cancelText: string,
+  submitClassname: string,
+  allowedEdit: bool
 }
 
 export default injectIntl(OperationCUForm)
