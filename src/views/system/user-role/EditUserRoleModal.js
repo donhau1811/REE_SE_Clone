@@ -10,7 +10,7 @@ import { getRoleByUserId, postUserRole } from './store/actions'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 
-const EditUserRoleModal = ({ initValue, handldeOpenModal = () => {}, isOpen, handleFetchRoles = () => {} }) => {
+const EditUserRoleModal = ({ initValue, handldeOpenModal = () => {}, isOpen }) => {
   const dispatch = useDispatch()
   const { selectedRole } = useSelector((state) => state.userRole)
   const intl = useIntl()
@@ -40,15 +40,16 @@ const EditUserRoleModal = ({ initValue, handldeOpenModal = () => {}, isOpen, han
 
   const toggle = () => {
     handldeOpenModal(!isOpen)
+
   }
 
-  const handleSubmitFilterForm = async () => {
+  const handleSubmitFilterForm = () => {
     const payload = {}
     payload.userId = initValue?.id
     payload.roleId = getValues('newRole')?.value
-    await dispatch(postUserRole(payload))
-    handleFetchRoles()
+    dispatch(postUserRole(payload))
     toggle()
+
   }
   return (
     <>
@@ -121,8 +122,7 @@ const EditUserRoleModal = ({ initValue, handldeOpenModal = () => {}, isOpen, han
 EditUserRoleModal.propTypes = {
   initValue: object,
   handldeOpenModal: func,
-  isOpen: bool,
-  handleFetchRoles: func
+  isOpen: bool
 }
 
 export default injectIntl(EditUserRoleModal)
