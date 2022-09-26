@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+/* eslint-disable implicit-arrow-linebreak */
+import React, { useContext, useEffect, useState } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Badge, Button, Col, Row, UncontrolledTooltip } from 'reactstrap'
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
@@ -19,6 +20,8 @@ import {
   putSettingsValue
 } from '../store/actions/index'
 import './styles.scss'
+import { AbilityContext } from '@src/utility/context/Can'
+import { USER_ACTION, USER_FEATURE } from '@src/utility/constants/permissions'
 
 const MySweetAlert = withReactContent(SweetAlert)
 
@@ -32,6 +35,7 @@ const ValueTable = ({
   currValue,
   handldeSetCurrentValue = () => {}
 }) => {
+  const ability = useContext(AbilityContext)
   const [configValues, setConfigValues] = useState([])
   const dispatch = useDispatch()
   const {
@@ -68,7 +72,8 @@ const ValueTable = ({
   }
 
   const handleDeleteValue =
-    ({ id }) => () => {
+    ({ id }) =>
+    () => {
       return MySweetAlert.fire({
         title: intl.formatMessage({ id: 'Delete billing customer title' }),
         html: intl.formatMessage({ id: 'Delete billing settings message' }),
@@ -145,29 +150,41 @@ const ValueTable = ({
       selector: '#',
       center: true,
       isHidden: disabled,
-      cell: (row) => (
-        <>
-          {' '}
-          <Badge onClick={handleEditValue(row, true)}>
-            <IconView id={`viewBtn_${row.id}`} />
-          </Badge>
-          <UncontrolledTooltip placement="auto" target={`viewBtn_${row.id}`}>
-            <FormattedMessage id="View Project" />
-          </UncontrolledTooltip>
-          <Badge onClick={handleEditValue(row)}>
-            <IconEdit id={`editBtn_${row.id}`} />
-          </Badge>
-          <UncontrolledTooltip placement="auto" target={`editBtn_${row.id}`}>
-            <FormattedMessage id="Update Project" />
-          </UncontrolledTooltip>
-          <Badge onClick={handleDeleteValue(row)}>
-            <IconDelete id={`deleteBtn_${row.id}`} />
-          </Badge>
-          <UncontrolledTooltip placement="auto" target={`deleteBtn_${row.id}`}>
-            <FormattedMessage id="Delete Project" />
-          </UncontrolledTooltip>
-        </>
-      )
+      cell: (row) => {
+        const isModifyAbility = ability.can(USER_ACTION.EDIT, USER_FEATURE.CONFIG)
+        return (
+          <>
+            {ability.can(USER_ACTION.DETAIL, USER_FEATURE.CONFIG) && (
+              <>
+                {' '}
+                <Badge onClick={handleEditValue(row, true)}>
+                  <IconView id={`viewBtn_${row.id}`} />
+                </Badge>
+                <UncontrolledTooltip placement="auto" target={`viewBtn_${row.id}`}>
+                  <FormattedMessage id="View Project" />
+                </UncontrolledTooltip>
+              </>
+            )}
+
+            {isModifyAbility && (
+              <>
+                <Badge onClick={handleEditValue(row)}>
+                  <IconEdit id={`editBtn_${row.id}`} />
+                </Badge>
+                <UncontrolledTooltip placement="auto" target={`editBtn_${row.id}`}>
+                  <FormattedMessage id="Update Project" />
+                </UncontrolledTooltip>
+                <Badge onClick={handleDeleteValue(row)}>
+                  <IconDelete id={`deleteBtn_${row.id}`} />
+                </Badge>
+                <UncontrolledTooltip placement="auto" target={`deleteBtn_${row.id}`}>
+                  <FormattedMessage id="Delete Project" />
+                </UncontrolledTooltip>
+              </>
+            )}
+          </>
+        )
+      }
     }
   ]
   const handleSubmitValueForm = (values) => {
@@ -202,6 +219,8 @@ const ValueTable = ({
       )
     }
   }
+  const checkUpdateAbility = ability.can(USER_ACTION.EDIT, USER_FEATURE.CONFIG)
+
 
   return (
     <>
@@ -223,6 +242,8 @@ const ValueTable = ({
         value={currValue}
         onSubmit={handleSubmitValueForm}
         onCancel={handleCancelValueForm}
+        submitClassname={!checkUpdateAbility && 'd-none'}
+
       />
     </>
   )

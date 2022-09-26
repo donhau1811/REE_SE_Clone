@@ -1,7 +1,9 @@
+/* eslint-disable implicit-arrow-linebreak */
+/* eslint-disable no-confusing-arrow */
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
 import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit.svg'
 import Table from '@src/views/common/table/CustomDataTable'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { FormattedMessage, injectIntl, useIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -11,8 +13,12 @@ import './styles.scss'
 import { DISPLAY_DATE_FORMAT, ROUTER_URL } from '@src/utility/constants'
 import { getRoles } from './store/actions'
 import moment from 'moment'
+import { AbilityContext } from '@src/utility/context/Can'
+import { USER_ACTION, USER_FEATURE } from '@src/utility/constants/permissions'
 
 const PermissionGroup = () => {
+  const ability = useContext(AbilityContext)
+
   const [dataSearch, setDataSearch] = useState([])
   const [searchValue, setSearchValue] = useState('')
   const history = useHistory()
@@ -33,7 +39,8 @@ const PermissionGroup = () => {
 
   const handleSearch = (value) => {
     const dataAfterFilter = roles.filter(
-      (item) => item?.name?.toUpperCase()?.includes(value.toUpperCase()) ||
+      (item) =>
+        item?.name?.toUpperCase()?.includes(value.toUpperCase()) ||
         item?.code?.toUpperCase()?.includes(value.toUpperCase())
     )
     setDataSearch(dataAfterFilter)
@@ -92,9 +99,8 @@ const PermissionGroup = () => {
 
     {
       name: intl.formatMessage({ id: 'Application features' }),
-      cell: (row) => (
+      cell: (row) =>
         row.featuresApply?.length > 100 ? `${row.featuresApply?.substring(0, 100)}...` : row.featuresApply
-      )
     },
 
     {
@@ -102,19 +108,26 @@ const PermissionGroup = () => {
       selector: '#',
       cell: (row) => (
         <>
-          {' '}
-          <Badge onClick={handleRedirectToViewPage(row.id)}>
-            <IconView id={`editBtn_${row.id}`} />
-          </Badge>
-          <UncontrolledTooltip placement="auto" target={`editBtn_${row.id}`}>
-            <FormattedMessage id="View Project" />
-          </UncontrolledTooltip>
-          <Badge onClick={handleRedirectToUpdatePage(row.id)}>
-            <IconEdit id={`updateBtn_${row.id}`} />
-          </Badge>
-          <UncontrolledTooltip placement="auto" target={`updateBtn_${row.id}`}>
-            <FormattedMessage id="Update Project" />
-          </UncontrolledTooltip>
+          {ability.can(USER_ACTION.DETAIL, USER_FEATURE.GROUP_MANAGER) && (
+            <>
+              <Badge onClick={handleRedirectToViewPage(row.id)}>
+                <IconView id={`editBtn_${row.id}`} />
+              </Badge>
+              <UncontrolledTooltip placement="auto" target={`editBtn_${row.id}`}>
+                <FormattedMessage id="View Project" />
+              </UncontrolledTooltip>
+            </>
+          )}
+          {ability.can(USER_ACTION.EDIT, USER_FEATURE.GROUP_MANAGER) && (
+            <>
+              <Badge onClick={handleRedirectToUpdatePage(row.id)}>
+                <IconEdit id={`updateBtn_${row.id}`} />
+              </Badge>
+              <UncontrolledTooltip placement="auto" target={`updateBtn_${row.id}`}>
+                <FormattedMessage id="Update Project" />
+              </UncontrolledTooltip>
+            </>
+          )}
         </>
       ),
       center: true

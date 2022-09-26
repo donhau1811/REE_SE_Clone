@@ -1,6 +1,6 @@
 import { ROUTER_URL, SET_FORM_DIRTY, SET_SELECTED_ROLE } from '@src/utility/constants'
 import { object } from 'prop-types'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { injectIntl, useIntl } from 'react-intl'
 import { useHistory, useParams } from 'react-router-dom'
 import RoleGroupCUForm from './RoleGroupCUForm'
@@ -8,8 +8,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom/cjs/react-router-dom.min'
 import BreadCrumbs from '@src/views/common/breadcrumbs'
 import { getRoleByRoleId, putRoleGroup } from './store/actions'
+import { AbilityContext } from '@src/utility/context/Can'
+import { USER_ACTION, USER_FEATURE } from '@src/utility/constants/permissions'
 
 const UpdateRightsGroup = () => {
+  const ability = useContext(AbilityContext)
+
   const dispatch = useDispatch()
   const history = useHistory()
   const [isReadOnly, setIsReadOnly] = useState(true)
@@ -61,6 +65,8 @@ const UpdateRightsGroup = () => {
   const handleCancel = () => {
     history.push(`${ROUTER_URL.SYSTEM_PERMISSION_GROUP}`)
   }
+  const checkUpdateAbility = ability.can(USER_ACTION.EDIT, USER_FEATURE.GROUP_MANAGER)
+
   return (
     <>
       <RoleGroupCUForm
@@ -68,6 +74,7 @@ const UpdateRightsGroup = () => {
         onSubmit={handleUpdateRightsGroup}
         onCancel={handleCancel}
         initValues={selectedRole}
+        submitClassname={!checkUpdateAbility && 'd-none'}
       />
     </>
   )

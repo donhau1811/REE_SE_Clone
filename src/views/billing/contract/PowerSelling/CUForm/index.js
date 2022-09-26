@@ -52,7 +52,16 @@ import { getAllClockByContractId } from '@src/views/billing/clock/store/actions'
 import { ContractForm1 } from './ContractForm1'
 import { handleCRUDOfClocks } from '../../util'
 
-function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel, onSubmit, cancelText }) {
+function PowerSellingCUForm({
+  intl,
+  isReadOnly,
+  initValues,
+  submitText,
+  onCancel,
+  onSubmit,
+  cancelText,
+  submitClassname
+}) {
   const {
     projects: { selectedProject: selectedBillingProject },
     contractClock: { clocks }
@@ -450,7 +459,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
       roofVendorId: null,
       startDate: values.startDate ? moment.utc(values.startDate) : null,
       endDate: values.endDate ? moment.utc(values.endDate) : null,
-      files:[],
+      files: [],
       billingPeriods: (values.billingCycle || []).map((item, index) => {
         const returnedCycle = {
           id: index + 1,
@@ -1072,7 +1081,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
 
         <Row>
           <Col className="d-flex justify-content-end align-items-center mb-2">
-            <Button type="submit" color="primary" className="mr-1 px-3">
+            <Button type="submit" color="primary" className={classNames('mr-1 px-3', submitClassname)}>
               {submitText || intl.formatMessage({ id: 'Save' })}
             </Button>{' '}
             <Button color="secondary" onClick={handleCancel}>
@@ -1092,7 +1101,8 @@ PowerSellingCUForm.propTypes = {
   initValues: object,
   onCancel: func,
   onSubmit: func,
-  cancelText: string
+  cancelText: string,
+  submitClassname: string
 }
 
 export default injectIntl(PowerSellingCUForm)

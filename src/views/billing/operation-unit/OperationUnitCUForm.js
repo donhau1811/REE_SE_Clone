@@ -8,11 +8,24 @@ import { GENERAL_STATUS_OPTS } from '@src/utility/constants/billing'
 import { selectThemeColors, showToast } from '@src/utility/Utils'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { CHECK_DUPLICATE_OPRERATION_UNIT_CODE, CHECK_DUPLICATE_OPRERATION_UNIT_SIGN, NUMBER_REGEX, SET_FORM_DIRTY } from '@src/utility/constants'
+import {
+  CHECK_DUPLICATE_OPRERATION_UNIT_CODE,
+  CHECK_DUPLICATE_OPRERATION_UNIT_SIGN,
+  NUMBER_REGEX,
+  SET_FORM_DIRTY
+} from '@src/utility/constants'
 import axios from 'axios'
 import { useDispatch } from 'react-redux'
+import classNames from 'classnames'
 
-const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, isReadOnly }) => {
+const OperationCUForm = ({
+  intl,
+  onSubmit = () => {},
+  onCancel = () => {},
+  initValues,
+  isReadOnly,
+  submitClassname
+}) => {
   const initState = {
     state: GENERAL_STATUS_OPTS[0]
   }
@@ -102,12 +115,10 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
       if (checkDupCodeRes.status === 200 && checkDupCodeRes.data?.data) {
         setError('code', { type: 'custom', message: intl.formatMessage({ id: 'dubplicated-validate' }) })
         isDuplicate = true
-
       }
       if (checkDupSignRes.status === 200 && checkDupSignRes.data?.data) {
         setError('sign', { type: 'custom', message: intl.formatMessage({ id: 'dubplicated-validate' }) })
         isDuplicate = true
-
       }
       if (isDuplicate) {
         return
@@ -297,13 +308,15 @@ const OperationCUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initV
             />
           </Col>
         </Row>
-        <Row className="d-flex justify-content-end align-items-center">
-          <Button type="submit" color="primary" className="mr-1 px-3">
-            {intl.formatMessage({ id: isReadOnly ? 'Update' : 'Save' })}
-          </Button>{' '}
-          <Button color="secondary" onClick={handleCancel}>
-            {intl.formatMessage({ id: isReadOnly ? 'Back' : 'Cancel' })}
-          </Button>{' '}
+        <Row>
+          <Col xs={12} className="d-flex justify-content-end align-items-center">
+            <Button type="submit" color="primary" className={classNames('mr-1 px-3', submitClassname)}>
+              {intl.formatMessage({ id: isReadOnly ? 'Update' : 'Save' })}
+            </Button>
+            <Button color="secondary" onClick={handleCancel}>
+              {intl.formatMessage({ id: isReadOnly ? 'Back' : 'Cancel' })}
+            </Button>{' '}
+          </Col>
         </Row>
       </Form>
     </>
@@ -316,7 +329,8 @@ OperationCUForm.propTypes = {
   onCancel: func,
   initValues: object,
   isReadOnly: bool,
-  submitText: string
+  submitText: string,
+  submitClassname: string
 }
 
 export default injectIntl(OperationCUForm)

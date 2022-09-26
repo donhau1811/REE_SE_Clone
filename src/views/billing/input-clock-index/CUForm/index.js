@@ -25,8 +25,9 @@ import { Form5 } from './Form5'
 import { Form6 } from './Form6'
 import { Form7 } from './Form7'
 import qs from 'qs'
+import classNames from 'classnames'
 
-const CUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, isReadOnly }) => {
+const CUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, isReadOnly, submitClassname }) => {
   const initState = {}
   const dispatch = useDispatch()
   const [projects, setProjects] = useState([])
@@ -437,7 +438,7 @@ const CUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, is
 
         <Row>
           <Col xs={12} className="d-flex justify-content-end align-items-center mb-2">
-            <Button type="submit" color="primary" className="mr-1 px-3">
+            <Button type="submit" color="primary" className={classNames('mr-1 px-3', submitClassname)}>
               {intl.formatMessage({ id: isReadOnly ? 'Update' : 'Save' })}
             </Button>{' '}
             <Button color="secondary" onClick={handleCancel}>
@@ -456,7 +457,8 @@ CUForm.propTypes = {
   onCancel: func,
   initValues: object,
   isReadOnly: bool,
-  submitText: string
+  submitText: string,
+  submitClassname: string
 }
 
 export default injectIntl(CUForm)

@@ -1,6 +1,6 @@
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
 import Table from '@src/views/common/table/CustomDataTable'
-import { object, bool, func } from 'prop-types'
+import { object, bool, func, string } from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { Badge, Button, Col, Form, Input, Label, Row } from 'reactstrap'
@@ -24,7 +24,7 @@ import { showToast } from '@src/utility/Utils'
 
 const MySweetAlert = withReactContent(SweetAlert)
 
-const RoleGroupCUForm = ({ intl, isReadOnly, initValues, onSubmit, onCancel }) => {
+const RoleGroupCUForm = ({ intl, isReadOnly, initValues, onSubmit, onCancel, submitClassname }) => {
   const initState = {
     code: '',
     name: '',
@@ -275,7 +275,7 @@ const RoleGroupCUForm = ({ intl, isReadOnly, initValues, onSubmit, onCancel }) =
       </Row>
       <Row>
         <Col className="d-flex justify-content-end align-items-center mt-5 mb-2">
-          <Button type="submit" color="primary" className="mr-1 px-3">
+          <Button type="submit" color="primary" className={classnames('mr-1 px-3', submitClassname)}>
             {intl.formatMessage({ id: isReadOnly ? 'Update' : 'Save' })}
           </Button>
           <Button color="secondary" onClick={onCancel}>
@@ -292,7 +292,8 @@ RoleGroupCUForm.propTypes = {
   isReadOnly: bool,
   onSubmit: func,
   onCancel: func,
-  initValues: object
+  initValues: object,
+  submitClassname: string
 }
 
 export default injectIntl(RoleGroupCUForm)

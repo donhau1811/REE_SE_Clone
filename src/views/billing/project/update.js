@@ -1,7 +1,7 @@
 import { ISO_DISPLAY_DATE_TIME_FORMAT, ROUTER_URL, SET_FORM_DIRTY } from '@src/utility/constants'
 import moment from 'moment'
 import { object } from 'prop-types'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { injectIntl, useIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useLocation, useParams } from 'react-router-dom'
@@ -9,8 +9,12 @@ import ProjectCUForm from './ProjectCUForm'
 import { getBillingProjectById, putProject } from './store/actions'
 import '@src/@core/scss/billing-sweet-alert.scss'
 import BreadCrumbs from '@src/views/common/breadcrumbs'
+import { AbilityContext } from '@src/utility/context/Can'
+import { USER_ACTION, USER_FEATURE } from '@src/utility/constants/permissions'
 
 const UpdateOperationUnit = ({ intl }) => {
+  const ability = useContext(AbilityContext)
+
   const history = useHistory()
   const dispatch = useDispatch()
   const [isReadOnly, setIsReadOnly] = useState(true)
@@ -69,6 +73,9 @@ const UpdateOperationUnit = ({ intl }) => {
       )
     }
   }
+
+  const checkUpdateAbility = ability.can(USER_ACTION.EDIT, USER_FEATURE.PROJECT)
+
   return (
     <>
       <ProjectCUForm
@@ -83,6 +90,7 @@ const UpdateOperationUnit = ({ intl }) => {
           id: isReadOnly ? 'Back' : 'Cancel'
         })}
         cancelButton={location.state?.isFromCreateStep && null}
+        submitClassname={!checkUpdateAbility && 'd-none'}
       />
     </>
   )

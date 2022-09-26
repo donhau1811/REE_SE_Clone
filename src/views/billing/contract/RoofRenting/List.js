@@ -1,5 +1,5 @@
 import { array, bool, func, object } from 'prop-types'
-import React from 'react'
+import React, { useContext } from 'react'
 import { Plus } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Table from '@src/views/common/table/CustomDataTable'
@@ -10,9 +10,12 @@ import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-de
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
 import { useHistory, useParams } from 'react-router-dom'
 import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit.svg'
+import { AbilityContext } from '@src/utility/context/Can'
+import { USER_ACTION, USER_FEATURE } from '@src/utility/constants/permissions'
 
 function RoofRenting({ disabled, intl, data, onDelete }) {
   const { id } = useParams()
+  const ability = useContext(AbilityContext)
 
   const history = useHistory()
   const handleDeleteContract = (contractItem) => () => {
@@ -88,18 +91,25 @@ function RoofRenting({ disabled, intl, data, onDelete }) {
       center: true,
       cell: (row) => (
         <>
-          {' '}
-          <Badge onClick={handleRedirectUpdatePage(row.id)}>
-            <IconView id={`editBtn_${row.id}`} />
-          </Badge>
+          {ability.can(USER_ACTION.DETAIL, USER_FEATURE.PROJECT) && (
+            <Badge onClick={handleRedirectUpdatePage(row.id)}>
+              <IconView id={`editBtn_${row.id}`} />
+            </Badge>
+          )}
+
           {!disabled && (
             <>
-              <Badge>
-                <IconEdit id={`editBtn_${row.id}`} onClick={handleRedirectUpdatePage(row.id, true)} />
-              </Badge>
-              <Badge onClick={handleDeleteContract(row)}>
-                <IconDelete id={`deleteBtn_${row.id}`} />
-              </Badge>
+              {[USER_ACTION.EDIT, USER_ACTION.CREATE].some((item) => ability.can(item, USER_FEATURE.PROJECT)) && (
+                <>
+                  {' '}
+                  <Badge>
+                    <IconEdit id={`editBtn_${row.id}`} onClick={handleRedirectUpdatePage(row.id, true)} />
+                  </Badge>
+                  <Badge onClick={handleDeleteContract(row)}>
+                    <IconDelete id={`deleteBtn_${row.id}`} />
+                  </Badge>
+                </>
+              )}
             </>
           )}
         </>
@@ -118,14 +128,16 @@ function RoofRenting({ disabled, intl, data, onDelete }) {
             <FormattedMessage id="Contract of Roof Renting" />
           </h4>
 
-          <Button.Ripple
-            color="primary"
-            className="add-project add-contact-button"
-            onClick={handleRedirectToCreateContract}
-            hidden={disabled}
-          >
-            <Plus className="mr-1" /> <FormattedMessage id="Add roof renting contract" />
-          </Button.Ripple>
+          {[USER_ACTION.EDIT, USER_ACTION.CREATE].some((item) => ability.can(item, USER_FEATURE.PROJECT)) && (
+            <Button.Ripple
+              color="primary"
+              className="add-project add-contact-button"
+              onClick={handleRedirectToCreateContract}
+              hidden={disabled}
+            >
+              <Plus className="mr-1" /> <FormattedMessage id="Add roof renting contract" />
+            </Button.Ripple>
+          )}
         </Col>
         <Col xs={12}>
           <Table tableId="project" columns={columns} data={data} pagination={null} />

@@ -1,6 +1,6 @@
 import { ROUTER_URL, SET_FORM_DIRTY, SET_SELECTED_INPUT_CLOCK_INDEX } from '@src/utility/constants'
 import { object } from 'prop-types'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { injectIntl, useIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
@@ -9,8 +9,12 @@ import { useLocation } from 'react-router-dom/cjs/react-router-dom.min'
 import BreadCrumbs from '@src/views/common/breadcrumbs'
 import CUForm from './CUForm'
 import { getManualInputIndexById, updateManualInputIndex } from './store/actions'
+import { AbilityContext } from '@src/utility/context/Can'
+import { USER_ACTION, USER_FEATURE } from '@src/utility/constants/permissions'
 
 const UpdateInputClockIndex = () => {
+  const ability = useContext(AbilityContext)
+
   const history = useHistory()
   const dispatch = useDispatch()
   const [isReadOnly, setIsReadOnly] = useState(true)
@@ -67,6 +71,8 @@ const UpdateInputClockIndex = () => {
       )
     }
   }
+  const checkUpdateAbility = ability.can(USER_ACTION.EDIT, USER_FEATURE.BILL_PARAMS)
+
   return (
     <>
       {selectedInputClockIndex?.id && (
@@ -75,6 +81,7 @@ const UpdateInputClockIndex = () => {
           onCancel={handleCancel}
           initValues={selectedInputClockIndex}
           isReadOnly={isReadOnly}
+          submitClassname={!checkUpdateAbility && 'd-none'}
         />
       )}
     </>

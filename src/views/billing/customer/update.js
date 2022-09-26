@@ -1,6 +1,6 @@
 import { ROUTER_URL, SET_FORM_DIRTY } from '@src/utility/constants'
 import { object } from 'prop-types'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { injectIntl, useIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
@@ -11,8 +11,12 @@ import ProjectTable from './ProjectTable'
 import { useLocation } from 'react-router-dom/cjs/react-router-dom.min'
 
 import BreadCrumbs from '@src/views/common/breadcrumbs'
+import { AbilityContext } from '@src/utility/context/Can'
+import { USER_ACTION, USER_FEATURE } from '@src/utility/constants/permissions'
 
 const UpdateOperationUnit = ({ intl }) => {
+  const ability = useContext(AbilityContext)
+
   const history = useHistory()
 
   const dispatch = useDispatch()
@@ -67,6 +71,8 @@ const UpdateOperationUnit = ({ intl }) => {
     }
   }
 
+  const checkUpdateAbility = ability.can(USER_ACTION.EDIT, USER_FEATURE.CUSTOMER)
+
   return (
     <>
       {' '}
@@ -91,6 +97,8 @@ const UpdateOperationUnit = ({ intl }) => {
           contacts={contacts}
           submitText={intl.formatMessage({ id: isReadOnly ? 'Update' : 'Save' })}
           cancelText={intl.formatMessage({ id: isReadOnly ? 'Back' : 'Cancel' })}
+          submitClassname={!checkUpdateAbility && 'd-none'}
+          allowedEdit={checkUpdateAbility}
         />
       )}
       {activeTab === 2 && <ProjectTable />}

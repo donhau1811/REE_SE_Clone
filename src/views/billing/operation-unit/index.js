@@ -1,3 +1,5 @@
+/* eslint-disable implicit-arrow-linebreak */
+/* eslint-disable no-confusing-arrow */
 import { ReactComponent as IconDelete } from '@src/assets/images/svg/table/ic-delete.svg'
 import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit.svg'
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
@@ -8,11 +10,13 @@ import {
   SET_OPERATION_UNIT_PARAMS
 } from '@src/utility/constants'
 import { GENERAL_STATUS as OPERATION_UNIT_STATUS } from '@src/utility/constants/billing'
+import { USER_ACTION, USER_FEATURE } from '@src/utility/constants/permissions'
+import { AbilityContext } from '@src/utility/context/Can'
 import Table from '@src/views/common/table/CustomDataTable'
 import classnames from 'classnames'
 import moment from 'moment'
 import { object } from 'prop-types'
-import { useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -26,6 +30,8 @@ import { deleteOperationUnit, getListOperationUnit } from './store/actions/index
 const MySweetAlert = withReactContent(SweetAlert)
 
 const OperationUnit = ({ intl }) => {
+  const ability = useContext(AbilityContext)
+
   const history = useHistory()
   const dispatch = useDispatch()
   const { data, params, total } = useSelector((state) => state.company)
@@ -174,7 +180,12 @@ const OperationUnit = ({ intl }) => {
       name: intl.formatMessage({ id: 'operation-unit-form-name' }),
       sortable: true,
       selector: 'name',
-      cell: (row) => <Link to={`${ROUTER_URL.BILLING_OPERATION_UNIT}/${row.id}`}>{row?.name}</Link>,
+      cell: (row) =>
+        ability.can(USER_ACTION.DETAIL, USER_FEATURE.OPE_CO) ? (
+          <Link to={`${ROUTER_URL.BILLING_OPERATION_UNIT}/${row.id}`}>{row?.name}</Link>
+        ) : (
+          row?.name
+        ),
       minWidth: '200px'
     },
     {
@@ -242,24 +253,39 @@ const OperationUnit = ({ intl }) => {
       cell: (row) => (
         <>
           {' '}
-          <Badge onClick={handleRedirectToViewPage(row.id)}>
-            <IconView id={`editBtn_${row.id}`} />
-          </Badge>
-          <UncontrolledTooltip placement="auto" target={`editBtn_${row.id}`}>
-            <FormattedMessage id="View Project" />
-          </UncontrolledTooltip>
-          <Badge onClick={handleRedirectToUpdatePage(row.id)}>
-            <IconEdit id={`updateBtn_${row.id}`} />
-          </Badge>
-          <UncontrolledTooltip placement="auto" target={`updateBtn_${row.id}`}>
-            <FormattedMessage id="Update Project" />
-          </UncontrolledTooltip>
-          <Badge>
-            <IconDelete onClick={handleDeleteOperationCompany(row.id)} id={`deleteBtn_${row.id}`} />
-          </Badge>
-          <UncontrolledTooltip placement="auto" target={`deleteBtn_${row.id}`}>
-            <FormattedMessage id="Delete Project" />
-          </UncontrolledTooltip>
+          {ability.can(USER_ACTION.DETAIL, USER_FEATURE.OPE_CO) && (
+            <>
+              {' '}
+              <Badge onClick={handleRedirectToViewPage(row.id)}>
+                <IconView id={`editBtn_${row.id}`} />
+              </Badge>
+              <UncontrolledTooltip placement="auto" target={`editBtn_${row.id}`}>
+                <FormattedMessage id="View Project" />
+              </UncontrolledTooltip>
+            </>
+          )}
+          {ability.can(USER_ACTION.EDIT, USER_FEATURE.OPE_CO) && (
+            <>
+              {' '}
+              <Badge onClick={handleRedirectToUpdatePage(row.id)}>
+                <IconEdit id={`updateBtn_${row.id}`} />
+              </Badge>
+              <UncontrolledTooltip placement="auto" target={`updateBtn_${row.id}`}>
+                <FormattedMessage id="Update Project" />
+              </UncontrolledTooltip>
+            </>
+          )}
+          {ability.can(USER_ACTION.DELETE, USER_FEATURE.OPE_CO) && (
+            <>
+              {' '}
+              <Badge>
+                <IconDelete onClick={handleDeleteOperationCompany(row.id)} id={`deleteBtn_${row.id}`} />
+              </Badge>
+              <UncontrolledTooltip placement="auto" target={`deleteBtn_${row.id}`}>
+                <FormattedMessage id="Delete Project" />
+              </UncontrolledTooltip>
+            </>
+          )}
         </>
       ),
       center: true

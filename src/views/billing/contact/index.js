@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {  useState } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Badge, Button, Col, Row, UncontrolledTooltip } from 'reactstrap'
 import { Plus } from 'react-feather'
@@ -18,7 +18,7 @@ import { ReactComponent as CicleFailed } from '@src/assets/images/svg/circle-fai
 
 const MySweetAlert = withReactContent(SweetAlert)
 
-const Contact = ({ data, onChange, disabled, type }) => {
+const Contact = ({ data, onChange, disabled, type, allowedEdit }) => {
   const intl = useIntl()
   const [isReadOnly, setIsReadOnly] = useState(false)
   const [currContact, setCurrContact] = useState(null)
@@ -231,6 +231,7 @@ const Contact = ({ data, onChange, disabled, type }) => {
         contact={currContact}
         onSubmit={handleSubmitContactForm}
         onCancel={handleCancelContactForm}
+        submitClassname={!allowedEdit && 'd-none'}
       />
     </>
   )
@@ -239,7 +240,8 @@ Contact.propTypes = {
   data: array,
   onChange: func,
   disabled: bool,
-  type: string
+  type: string,
+  allowedEdit: bool
 }
 
 export default Contact

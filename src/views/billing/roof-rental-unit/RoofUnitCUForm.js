@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { NUMBER_REGEX, EMAIL_REGEX, SET_FORM_DIRTY, API_CHECK_CODE_ROOF_VENDORS } from '@src/utility/constants'
 import { selectThemeColors, showToast } from '@src/utility/Utils'
-import { func, object, bool } from 'prop-types'
+import { func, object, bool, string } from 'prop-types'
 import { Controller, useForm } from 'react-hook-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Select from 'react-select'
@@ -22,7 +22,15 @@ import axios from 'axios'
 
 const MySweetAlert = withReactContent(SweetAlert)
 
-const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, isReadOnly, contacts }) => {
+const RoofUnit = ({
+  intl,
+  onSubmit = () => {},
+  onCancel = () => {},
+  initValues,
+  isReadOnly,
+  contacts,
+  submitClassname
+}) => {
   const [contactsRoofVendor, setContactsRoofVendor] = useState([])
   const OPERATION_UNIT_STATUS_OPTS = [
     { value: OPERATION_UNIT_STATUS.ACTIVE, label: intl.formatMessage({ id: 'Active' }) },
@@ -110,12 +118,8 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
           excludeEmptyString: true
         }),
       note: yup.string().max(255, intl.formatMessage({ id: 'max-validate' })),
-      bankName: yup
-        .string()
-        .max(200, intl.formatMessage({ id: 'max-validate' })),
-        bankAccountNumber: yup
-        .string()
-        .max(50, intl.formatMessage({ id: 'max-validate' }))
+      bankName: yup.string().max(200, intl.formatMessage({ id: 'max-validate' })),
+      bankAccountNumber: yup.string().max(50, intl.formatMessage({ id: 'max-validate' }))
     },
     ['name', 'code', 'taxCode', 'address', 'phone', 'email', 'note', 'state']
   )
@@ -361,7 +365,7 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
           </Col>
         </Row>
         <Row>
-        <Col className="mb-2" md={4}>
+          <Col className="mb-2" md={4}>
             <Label className="general-label" for="bankName">
               <FormattedMessage id="bankName" />
             </Label>
@@ -377,7 +381,7 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
             />
             {errors?.bankName && <FormFeedback>{errors?.bankName?.message}</FormFeedback>}
           </Col>
-        <Col className="mb-2" md={4}>
+          <Col className="mb-2" md={4}>
             <Label className="general-label" for="accountNumber">
               <FormattedMessage id="account Number" />
             </Label>
@@ -393,8 +397,7 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
             />
             {errors?.bankAccountNumber && <FormFeedback>{errors?.bankAccountNumber?.message}</FormFeedback>}
           </Col>
-       
-          </Row>
+        </Row>
         <Input id="contacts" name="contacts" autoComplete="on" innerRef={register()} type="hidden" />
         <Contact
           disabled={isReadOnly}
@@ -405,7 +408,7 @@ const RoofUnit = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, 
 
         <Row>
           <Col className="d-flex justify-content-end align-items-center mt-5 mb-2">
-            <Button type="submit" color="primary" className="mr-1 px-3">
+            <Button type="submit" color="primary" className={classNames('mr-1 px-3', submitClassname)}>
               {intl.formatMessage({ id: isReadOnly ? 'Update' : 'Save' })}
             </Button>
             <Button onClick={handleCancel} color="secondary">
@@ -424,7 +427,8 @@ RoofUnit.propTypes = {
   onCancel: func,
   initValues: object,
   isReadOnly: bool,
-  contacts: object
+  contacts: object,
+  submitClassname: string
 }
 
 export default injectIntl(RoofUnit)

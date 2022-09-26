@@ -1,5 +1,6 @@
 import { lazy } from 'react'
 import { ROUTER_URL } from '@constants/router'
+import { USER_ACTION, USER_FEATURE } from '@src/utility/constants/permissions'
 
 export const BillingRoutes = [
   {
@@ -7,20 +8,21 @@ export const BillingRoutes = [
     exact: true,
     component: lazy(() => import('../../views/billing/operation-unit')),
     meta: {
-      action: 'manage',
-      resource: ROUTER_URL.BILLING_OPERATION_UNIT,
+      action: [USER_ACTION.VIEW_ALL, USER_ACTION.VIEW],
+      resource: USER_FEATURE.OPE_CO,
       navLink: ROUTER_URL.BILLING_OPERATION_UNIT
     }
   },
   {
     path: ROUTER_URL.BILLING_OPERATION_UNIT_CREATE,
+
     exact: true,
     component: lazy(() => import('../../views/billing/operation-unit/create')),
     navbar: require('../../views/billing/operation-unit/create')?.Navbar,
 
     meta: {
-      action: 'manage',
-      resource: ROUTER_URL.BILLING_OPERATION_UNIT,
+      action: USER_ACTION.CREATE,
+      resource: USER_FEATURE.OPE_CO,
       navLink: ROUTER_URL.BILLING_OPERATION_UNIT
     }
   },
@@ -30,8 +32,8 @@ export const BillingRoutes = [
     exact: true,
     navbar: require('../../views/billing/operation-unit/update')?.Navbar,
     meta: {
-      action: 'manage',
-      resource: ROUTER_URL.BILLING_OPERATION_UNIT,
+      action: [USER_ACTION.DETAIL, USER_ACTION.EDIT],
+      resource: USER_FEATURE.OPE_CO,
       navLink: ROUTER_URL.BILLING_OPERATION_UNIT
     }
   },
@@ -40,8 +42,8 @@ export const BillingRoutes = [
     component: lazy(() => import('../../views/billing/customer')),
     exact: true,
     meta: {
-      action: 'manage',
-      resource: ROUTER_URL.BILLING_CUSTOMER,
+      action: [USER_ACTION.VIEW_ALL, USER_ACTION.VIEW],
+      resource: USER_FEATURE.CUSTOMER,
       navLink: ROUTER_URL.BILLING_CUSTOMER
     }
   },
@@ -51,8 +53,8 @@ export const BillingRoutes = [
     exact: true,
     navbar: require('../../views/billing/customer/update')?.Navbar,
     meta: {
-      action: 'manage',
-      resource: ROUTER_URL.BILLING_CUSTOMER,
+      action: [USER_ACTION.DETAIL, USER_ACTION.EDIT],
+      resource: USER_FEATURE.CUSTOMER,
       navLink: ROUTER_URL.BILLING_CUSTOMER
     }
   },
@@ -62,8 +64,8 @@ export const BillingRoutes = [
     navbar: require('../../views/billing/customer/create')?.Navbar,
     component: lazy(() => import('../../views/billing/customer/create')),
     meta: {
-      action: 'manage',
-      resource: ROUTER_URL.BILLING_CUSTOMER,
+      action: USER_ACTION.CREATE,
+      resource: USER_FEATURE.CUSTOMER,
       navLink: ROUTER_URL.BILLING_CUSTOMER
     }
   },
@@ -72,8 +74,8 @@ export const BillingRoutes = [
     component: lazy(() => import('../../views/billing/roof-rental-unit/index')),
     exact: true,
     meta: {
-      action: 'manage',
-      resource: ROUTER_URL.BILLING_ROOF_RENTAL_UNIT,
+      action: [USER_ACTION.VIEW_ALL, USER_ACTION.VIEW],
+      resource: USER_FEATURE.RENTAL_COMPANY,
       navLink: ROUTER_URL.BILLING_ROOF_RENTAL_UNIT
     }
   },
@@ -83,8 +85,8 @@ export const BillingRoutes = [
     navbar: require('../../views/billing/roof-rental-unit/create')?.Navbar,
     exact: true,
     meta: {
-      action: 'manage',
-      resource: ROUTER_URL.BILLING_ROOF_RENTAL_UNIT,
+      action: USER_ACTION.CREATE,
+      resource: USER_FEATURE.RENTAL_COMPANY,
       navLink: ROUTER_URL.BILLING_ROOF_RENTAL_UNIT
     }
   },
@@ -94,8 +96,8 @@ export const BillingRoutes = [
     navbar: require('../../views/billing/roof-rental-unit/update')?.Navbar,
     exact: true,
     meta: {
-      action: 'manage',
-      resource: ROUTER_URL.BILLING_ROOF_RENTAL_UNIT,
+      action: [USER_ACTION.DETAIL, USER_ACTION.EDIT],
+      resource: USER_FEATURE.RENTAL_COMPANY,
       navLink: ROUTER_URL.BILLING_ROOF_RENTAL_UNIT
     }
   },
@@ -104,8 +106,8 @@ export const BillingRoutes = [
     component: lazy(() => import('../../views/billing/settings/index')),
     exact: true,
     meta: {
-      action: 'manage',
-      resource: ROUTER_URL.BILLING_SETTING,
+      action: [USER_ACTION.VIEW_ALL, USER_ACTION.VIEW],
+      resource: USER_FEATURE.CONFIG,
       navLink: ROUTER_URL.BILLING_SETTING
     }
   },
@@ -114,8 +116,8 @@ export const BillingRoutes = [
     component: lazy(() => import('../../views/billing/settings/update')),
     exact: true,
     meta: {
-      action: 'manage',
-      resource: ROUTER_URL.BILLING_SETTING,
+      action: [USER_ACTION.DETAIL, USER_ACTION.EDIT],
+      resource: USER_FEATURE.CONFIG,
       navLink: ROUTER_URL.BILLING_SETTING
     }
   },
@@ -124,8 +126,8 @@ export const BillingRoutes = [
     component: lazy(() => import('../../views/billing/project/index')),
     exact: true,
     meta: {
-      action: 'manage',
-      resource: ROUTER_URL.BILLING_PROJECT,
+      action: [USER_ACTION.VIEW_ALL, USER_ACTION.VIEW],
+      resource: USER_FEATURE.PROJECT,
       navLink: ROUTER_URL.BILLING_PROJECT
     }
   },
@@ -136,8 +138,8 @@ export const BillingRoutes = [
 
     exact: true,
     meta: {
-      action: 'manage',
-      resource: ROUTER_URL.BILLING_PROJECT,
+      action: [USER_ACTION.CREATE, USER_ACTION.EDIT],
+      resource: USER_FEATURE.PROJECT,
       navLink: ROUTER_URL.BILLING_PROJECT
     }
   },
@@ -148,8 +150,8 @@ export const BillingRoutes = [
 
     exact: true,
     meta: {
-      action: 'manage',
-      resource: ROUTER_URL.BILLING_PROJECT,
+      action: [USER_ACTION.CREATE, USER_ACTION.EDIT, USER_ACTION.DETAIL],
+      resource: USER_FEATURE.PROJECT,
       navLink: ROUTER_URL.BILLING_PROJECT
     }
   },
@@ -160,8 +162,8 @@ export const BillingRoutes = [
 
     exact: true,
     meta: {
-      action: 'manage',
-      resource: ROUTER_URL.BILLING_PROJECT,
+      action: USER_ACTION.CREATE,
+      resource: USER_FEATURE.PROJECT,
       navLink: ROUTER_URL.BILLING_PROJECT
     }
   },
@@ -171,8 +173,8 @@ export const BillingRoutes = [
     navbar: require('../../views/billing/project/update')?.Navbar,
     exact: true,
     meta: {
-      action: 'manage',
-      resource: ROUTER_URL.BILLING_PROJECT,
+      action: [USER_ACTION.DETAIL, USER_ACTION.EDIT],
+      resource: USER_FEATURE.PROJECT,
       navLink: ROUTER_URL.BILLING_PROJECT
     }
   },
@@ -182,8 +184,8 @@ export const BillingRoutes = [
     navbar: require('../../views/billing/contract/PowerSelling/create')?.Navbar,
     exact: true,
     meta: {
-      action: 'manage',
-      resource: ROUTER_URL.BILLING_PROJECT,
+      action: [USER_ACTION.CREATE, USER_ACTION.EDIT],
+      resource: USER_FEATURE.PROJECT,
       navLink: ROUTER_URL.BILLING_PROJECT
     }
   },
@@ -194,31 +196,30 @@ export const BillingRoutes = [
 
     exact: true,
     meta: {
-      action: 'manage',
-      resource: ROUTER_URL.BILLING_PROJECT,
+      action: [USER_ACTION.CREATE, USER_ACTION.EDIT, USER_ACTION.DETAIL],
+      resource: USER_FEATURE.PROJECT,
       navLink: ROUTER_URL.BILLING_PROJECT
     }
   },
-  {
-    path: ROUTER_URL.BILLING_PROJECT_UPDATE_CONTRACT_POWER_SELLING,
-    component: lazy(() => import('../../views/billing/contract/PowerSelling/update')),
-    navbar: require('../../views/billing/contract/PowerSelling/update')?.Navbar,
-
-    exact: true,
-    meta: {
-      action: 'manage',
-      resource: ROUTER_URL.BILLING_PROJECT,
-      navLink: ROUTER_URL.BILLING_PROJECT
-    }
-  },
+  // {
+  //   path: ROUTER_URL.BILLING_PROJECT_UPDATE_CONTRACT_POWER_SELLING,
+  //   component: lazy(() => import('../../views/billing/contract/PowerSelling/update')),
+  //   navbar: require('../../views/billing/contract/PowerSelling/update')?.Navbar,
+  //   exact: true,
+  //   meta: {
+  //     action: [USER_ACTION.DETAIL, USER_ACTION.EDIT],
+  //     resource: ROUTER_URL.BILLING_PROJECT,
+  //     navLink: ROUTER_URL.BILLING_PROJECT
+  //   }
+  // },
   {
     path: ROUTER_URL.BILLING_METRIC_CLOCK,
     component: lazy(() => import('../../views/billing/clock-metric/index')),
     navbar: require('../../views/billing/clock-metric/index')?.Navbar,
     exact: true,
     meta: {
-      action: 'manage',
-      resource: ROUTER_URL.BILLING_METRIC_CLOCK,
+      action: [USER_ACTION.VIEW_ALL, USER_ACTION.VIEW],
+      resource: USER_FEATURE.METER,
       navLink: ROUTER_URL.BILLING_METRIC_CLOCK
     }
   },
@@ -227,8 +228,8 @@ export const BillingRoutes = [
     component: lazy(() => import('../../views/billing/input-clock-index')),
     exact: true,
     meta: {
-      action: 'manage',
-      resource: ROUTER_URL.BILLING_MANUAL_INPUT_METRIC_CLOCK,
+      action: [USER_ACTION.VIEW_ALL, USER_ACTION.VIEW],
+      resource: USER_FEATURE.BILL_PARAMS,
       navLink: ROUTER_URL.BILLING_MANUAL_INPUT_METRIC_CLOCK
     }
   },
@@ -238,8 +239,8 @@ export const BillingRoutes = [
     navbar: require('../../views/billing/input-clock-index/create')?.Navbar,
     exact: true,
     meta: {
-      action: 'manage',
-      resource: ROUTER_URL.BILLING_MANUAL_INPUT_METRIC_CLOCK,
+      action: USER_ACTION.CREATE,
+      resource: USER_FEATURE.BILL_PARAMS,
       navLink: ROUTER_URL.BILLING_MANUAL_INPUT_METRIC_CLOCK
     }
   },
@@ -249,8 +250,8 @@ export const BillingRoutes = [
     navbar: require('../../views/billing/input-clock-index/update')?.Navbar,
     exact: true,
     meta: {
-      action: 'manage',
-      resource: ROUTER_URL.BILLING_MANUAL_INPUT_METRIC_CLOCK,
+      action: [USER_ACTION.DETAIL, USER_ACTION.EDIT],
+      resource: USER_FEATURE.BILL_PARAMS,
       navLink: ROUTER_URL.BILLING_MANUAL_INPUT_METRIC_CLOCK
     }
   }
