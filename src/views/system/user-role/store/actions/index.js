@@ -36,16 +36,16 @@ export const getPermisionRoleByRoleId = ({ id, isSavedToState, callback }) => {
 
 export const getListUserRole = (params = {}) => {
   return async (dispatch) => {
-    const { pagination = {}, searchValue, ...rest } = params
+    const { pagination = {}, searchValue, filterValue, ...rest } = params
     const payload = {
       ...rest,
       rowsPerPage: pagination.rowsPerPage,
       page: pagination.currentPage,
-      sortBy: rest?.sortBy ? rest?.sortBy : "createDate",
-      sortDirection: rest?.sortDirection ? rest?.sortDirection : "DESC"
+      sortBy: rest?.sortBy ? rest?.sortBy : 'createDate',
+      sortDirection: rest?.sortDirection ? rest?.sortDirection : 'DESC'
     }
-    payload.filterValue = {name:searchValue}
-    console.log('payload', payload)
+    payload.filterValue = { name: searchValue, roleId: filterValue }
+
     await axios
       .post(API_GET_USER_ROLE, payload)
       .then((response) => {
