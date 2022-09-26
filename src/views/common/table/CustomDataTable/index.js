@@ -42,8 +42,8 @@ const Table = ({
         className={classNames(`react-dataTable react-dataTable--projects hover react-dataTable-version-2`, {
           'overflow-hidden': data?.length <= 0
         })}
-        fixedHeader
-        fixedHeaderScrollHeight="calc(100vh - 340px)"
+        // fixedHeader
+        // fixedHeaderScrollHeight="calc(100vh - 340px)"
         columns={columns.filter((item) => !item.isHidden)}
         sortIcon={
           <div className="custom-sort-icon">

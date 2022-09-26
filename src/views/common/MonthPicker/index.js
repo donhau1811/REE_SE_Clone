@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import {  Input, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap'
+import { Input, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap'
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { ReactComponent as IconCalendar } from '@src/assets/images/svg/carlendar.svg'
@@ -13,7 +13,7 @@ import 'moment/locale/vi'
 export default function MonthPicker({ value, onChange }) {
   const intlContext = useContext(IntlContext)
   const [anchorEl, setAnchorEl] = useState(null)
-  const [valueState, setValueState] = useState()
+  const [valueState, setValueState] = useState(value)
 
   useEffect(() => {
     if (value !== valueState) setValueState(value)
@@ -24,22 +24,25 @@ export default function MonthPicker({ value, onChange }) {
   }
 
   const handleClose = () => {
-    setAnchorEl(null)
-    setValueState(valueState)
     onChange?.(valueState)
-  }
 
+  }
   const open = Boolean(anchorEl)
   const id = open ? 'simple-popover' : undefined
-
   const handleChangeDate = (newValue) => {
+    onChange?.(valueState)
     setValueState(newValue)
   }
-
   const handleKeyPress = (e) => {
     e.preventDefault()
   }
+  const handleYearChange = (value) => {
+    onChange?.(value)
 
+    setValueState(value)
+    setAnchorEl(null)
+  }
+ 
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale={intlContext.locale}>
@@ -51,17 +54,18 @@ export default function MonthPicker({ value, onChange }) {
             tabindex="1"
             onKeyDown={handleKeyPress}
             value={moment(valueState).format('MM/YYYY')}
+            onChange={handleYearChange}
           />
           <InputGroupAddon addonType="append">
             <InputGroupText>
-              <IconCalendar />
+              <IconCalendar  />
             </InputGroupText>
           </InputGroupAddon>
         </InputGroup>
 
         <Popover
           id={id}
-          open={open}
+          open={open }
           anchorEl={anchorEl}
           onClose={handleClose}
           anchorOrigin={{
@@ -70,6 +74,8 @@ export default function MonthPicker({ value, onChange }) {
           }}
         >
           <StaticDatePicker
+            onYearChange={handleYearChange}
+            onClose={handleClose}
             views={['month', 'year']}
             displayStaticWrapperAs="desktop"
             value={valueState}

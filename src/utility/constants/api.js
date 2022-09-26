@@ -222,8 +222,10 @@ export const API_ADD_ROLE_PERMISSION_BY_ROLE_ID = `${BASE_API_URL_V2}/role-permi
 
 // permission
 export const API_GET_ALL_PERMISSION = `${BASE_API_URL_V2}/permission/all`
-
+export const API_GET_ROLE_BY_USER_ID = `${BASE_API_URL_V2}/user-role/userId`
+export const API_GET_USER_ROLE = `${BASE_API_URL_V2}/user-role/search`
 // user-feature
 export const API_GET_ALL_USER_FEATURE = `${BASE_API_URL_V2}/user-feature/all`
+export const API_POST_USER_ROLE = `${BASE_API_URL_V2}/user-role/update`
 
 export const API_GET_ALL_USER_ACTION = `${BASE_API_URL_V2}/user-action/all`

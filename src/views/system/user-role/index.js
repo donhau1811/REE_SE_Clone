@@ -1,47 +1,45 @@
 import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit.svg'
 import Table from '@src/views/common/table/CustomDataTable'
 import { object } from 'prop-types'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { FormattedMessage, injectIntl, useIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
 import { Badge, Col, Row, UncontrolledTooltip } from 'reactstrap'
 import PageHeader from './PageHeader'
 import './styles.scss'
-import { ROUTER_URL, ROWS_PER_PAGE_DEFAULT, SET_ROOF_RENTAL_UNIT_PARAMS } from '@src/utility/constants'
-import { Link } from 'react-router-dom/cjs/react-router-dom.min'
+import { RESET_USER_ROLE, ROWS_PER_PAGE_DEFAULT } from '@src/utility/constants'
 import EditUserRoleModal from './EditUserRoleModal'
+import { getListUserRole } from './store/actions'
 
 const RoofVendor = () => {
-  const history = useHistory()
+  const [isOpen, setIsOpen] = useState(false)
   const dispatch = useDispatch()
-  // eslint-disable-next-line no-unused-vars
-  const { data, params, total } = useSelector((state) => state.roofUnit)
-
+  const { data, params, total } = useSelector((state) => state.userRole)
+  const [selectUser, setSelectUser] = useState()
   const { pagination = {}, searchValue } = params || {}
   const intl = useIntl()
+  const fetchRole = (param) => {
 
-  const fetchRole = () => {}
+    dispatch(getListUserRole({ ...params, ...param }))
+  }
 
   useEffect(() => {
     const initParams = {
       pagination: {
         rowsPerPage: ROWS_PER_PAGE_DEFAULT,
         currentPage: 1
-      },
-      sortBy: 'code',
-      sortDirection: 'asc'
+      }
     }
     fetchRole(initParams)
     return () => {
-      // hainm check
       dispatch({
-        type: SET_ROOF_RENTAL_UNIT_PARAMS,
+        type: RESET_USER_ROLE,
         payload: initParams
       })
     }
   }, [])
   const handleChangePage = (e) => {
+
     fetchRole({
       pagination: {
         ...pagination,
@@ -74,41 +72,34 @@ const RoofVendor = () => {
       sortDirection: direction
     })
   }
-  const handleRedirectToUpdatePage = (id) => () => {
-    if (id) {
-      history.push({
-        pathname: `${ROUTER_URL.BILLING_ROOF_RENTAL_UNIT}/${id}`,
-        state: {
-          allowUpdate: true
-        }
-      })
-    }
+  const handldeClickIconEdit = (row) => () => {
+    setSelectUser(row)
+    setIsOpen(true)
   }
-
   const columns = [
     {
       name: intl.formatMessage({ id: 'No.' }),
-      cell: (row, index) => index + 1,
+      // eslint-disable-next-line no-mixed-operators
+      cell: (row, index) => index + (pagination?.currentPage - 1) * pagination.rowsPerPage + 1,
       center: true,
       maxWidth: '50px'
     },
     {
       name: intl.formatMessage({ id: 'Username' }),
-      selector: 'code',
-      sortable: true,
-      maxWidth: '180px'
+      selector: 'username',
+      sortable: true
     },
     {
       name: intl.formatMessage({ id: 'Full name' }),
-      selector: 'name',
-      sortable: true,
-      cell: (row) => <Link to={`${ROUTER_URL.BILLING_ROOF_RENTAL_UNIT}/${row.id}`}>{row?.name}</Link>
+      selector: 'fullName',
+      sortable: true
     },
     {
       name: intl.formatMessage({ id: 'permission-group' }),
-      selector: 'taxCode',
+      selector: '',
       sortable: true,
-      maxWidth: '200px'
+      maxWidth: '200px',
+      cell: (row) => row?.role?.name
     },
 
     {
@@ -117,10 +108,8 @@ const RoofVendor = () => {
       cell: (row) => (
         <>
           {' '}
-          <Badge onClick={handleRedirectToUpdatePage(row.id)}>
-            <EditUserRoleModal>
-              <IconEdit id={`updateBtn_${row.id}`} />
-            </EditUserRoleModal>
+          <Badge onClick={handldeClickIconEdit(row)}>
+            <IconEdit id={`updateBtn_${row.id}`} />
           </Badge>
           <UncontrolledTooltip placement="auto" target={`updateBtn_${row.id}`}>
             <FormattedMessage id="Update Project" />
@@ -130,15 +119,20 @@ const RoofVendor = () => {
       center: true
     }
   ]
-
+  const handldeOpenModal = (value) => {
+    fetchRole(params)
+    setIsOpen(value)
+  }
   return (
     <>
+      <EditUserRoleModal initValue={selectUser} handldeOpenModal={handldeOpenModal} isOpen={isOpen} />
+
       <Row>
         <Col sm="12">
           <PageHeader onSearch={handleSearch} searchValue={searchValue} />
           <Table
             columns={columns}
-            data={[{}, {}]}
+            data={data}
             total={total}
             onPageChange={handleChangePage}
             onPerPageChange={handlePerPageChange}
