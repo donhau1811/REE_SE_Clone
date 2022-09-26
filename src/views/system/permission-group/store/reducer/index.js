@@ -1,13 +1,19 @@
 import { ROWS_PER_PAGE_DEFAULT } from '@constants/index'
 // haimn check
-import { FETCH_ROLE_REQUEST, SET_ALL_PERMISSION, SET_ALL_USER_ACTION, SET_ALL_USER_FEATURE } from '@constants/actions'
+import {
+  FETCH_ROLE_REQUEST,
+  SET_ALL_PERMISSION,
+  SET_ALL_USER_ACTION,
+  SET_ALL_USER_FEATURE,
+  SET_SELECTED_ROLE
+} from '@constants/actions'
 
 // ** Initial State
 const initialState = {
   data: [],
   total: 0,
   selectedRole: {},
-  roles:[],
+  roles: [],
   params: {
     pagination: {
       rowsPerPage: ROWS_PER_PAGE_DEFAULT,
@@ -43,6 +49,12 @@ const reducer = (state = initialState, action) => {
         ...state,
         allUserAction: action?.payload || state.allUserAction
       }
+    case SET_SELECTED_ROLE:
+      return {
+        ...state,
+        selectedRole: action?.payload || state.selectedRole
+      }
+
     default:
       return state
   }

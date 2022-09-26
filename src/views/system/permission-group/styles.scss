@@ -119,19 +119,18 @@
 }
 .badges {
   background-color: #7897b4 !important;
-  width: 120px;
   height: 35px;
   border-radius: 4px !important;
   color: #ffffff;
   font-family: 'Inter';
   font-style: normal;
   font-weight: 400;
-  font-size: 16px;
   line-height: 19px;
-  &icon-x {
-    font-size: 18px !important;
-    width: 18px;
-    height: 18px;
+  margin-bottom: 2px;
+  .icon-x {
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
   }
 }
 

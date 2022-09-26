@@ -1,9 +1,7 @@
+/* eslint-disable no-mixed-operators */
 import { forwardRef } from 'react'
 import { ROUTER_URL } from '@constants/router'
-import {
-  Slide,
-  toast
-} from 'react-toastify'
+import { Slide, toast } from 'react-toastify'
 import { FormText } from 'reactstrap'
 import { IMAGE_REGEX } from '@constants/regex'
 import _orderBy from 'lodash/orderBy'
@@ -23,13 +21,7 @@ import _sortBy from 'lodash/sortBy'
 export const isObjEmpty = (obj) => Object.keys(obj).length === 0
 
 // ** Returns K format from a number
-export const kFormatter = (num) => (
-  num > 999
-    ? `${(
-      num / 1000
-    ).toFixed(1)}k`
-    : num
-)
+export const kFormatter = (num) => (num > 999 ? `${(num / 1000).toFixed(1)}k` : num)
 
 // ** Converts HTML to string
 export const htmlToString = (html) => html.replace(/<\/?[^>]+(>|$)/g, '')
@@ -101,32 +93,24 @@ export const getHomeRouteForLoggedInUser = (userRole) => {
 }
 
 // ** React Select Theme Colors
-export const selectThemeColors = (theme) => (
-  {
-    ...theme,
-    colors: {
-      ...theme.colors,
-      primary25: '#7367f01a', // for option hover bg-color
-      primary: '#7367f0', // for selected option bg-color
-      neutral10: '#7367f0', // for tags bg-color
-      neutral20: '#ededed', // for input border-color
-      neutral30: '#ededed' // for input hover border-color
-    }
+export const selectThemeColors = (theme) => ({
+  ...theme,
+  colors: {
+    ...theme.colors,
+    primary25: '#7367f01a', // for option hover bg-color
+    primary: '#7367f0', // for selected option bg-color
+    neutral10: '#7367f0', // for tags bg-color
+    neutral20: '#ededed', // for input border-color
+    neutral30: '#ededed' // for input hover border-color
   }
-)
+})
 
 // ** Bootstrap Checkbox Component
 // eslint-disable-next-line react/display-name,react/prop-types
 export const BootstrapCheckbox = forwardRef(({ onClick, ...rest }, ref) => (
-  <div className='custom-control custom-checkbox'>
-    <input
-      type='checkbox'
-      className='custom-control-input'
-      ref={ref} {...rest} />
-    <label
-      className='custom-control-label'
-      onClick={onClick}
-    />
+  <div className="custom-control custom-checkbox">
+    <input type="checkbox" className="custom-control-input" ref={ref} {...rest} />
+    <label className="custom-control-label" onClick={onClick} />
   </div>
 ))
 
@@ -134,49 +118,28 @@ export const numberWithCommas = (number, numberToFix) => {
   return isNaN(number)
     ? '-'
     : Number(number)
-      .toFixed(numberToFix >= 0
-        ? numberToFix
-        : NUMBER_TO_FIXED)
-      .replace(
-        /\B(?=(\d{3})+(?!\d))/g,
-        ','
-      )
+        .toFixed(numberToFix >= 0 ? numberToFix : NUMBER_TO_FIXED)
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
 export const numberWithOneCommas = (number) => {
   return isNaN(number)
     ? 0
-    : Number((
-      Math.round((
-        Math.round(number * 10000) / 10
-      )) / 10
-    )).toFixed(NUMBER_TO_FIXED).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    : Number(Math.round(Math.round(number * 10000) / 10) / 10)
+        .toFixed(NUMBER_TO_FIXED)
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
 export const numberOneCommas = (number) => {
-  return isNaN(number)
-    ? 0
-    : Number((
-      Math.round((
-        Math.round(number * 10000) / 10
-      )) / 10
-    ))
+  return isNaN(number) ? 0 : Number(Math.round(Math.round(number * 10000) / 10) / 10)
 }
 export const numberWithThreeCommas = (number) => {
   return isNaN(number)
     ? 0
-    : Number((
-      Math.round((
-        Math.round(number * 1000000) / 10
-      )) / 1000
-    )).toFixed(NUMBER_TO_FIXED_THREE).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    : Number(Math.round(Math.round(number * 1000000) / 10) / 1000)
+        .toFixed(NUMBER_TO_FIXED_THREE)
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
 export const numberThreeCommas = (number) => {
-  return isNaN(number)
-    ? 0
-    : Number((
-      Math.round((
-        Math.round(number * 1000000) / 10
-      )) / 1000
-    ))
+  return isNaN(number) ? 0 : Number(Math.round(Math.round(number * 1000000) / 10) / 1000)
 }
 
 export const numberToFixed = (number, toFixed = NUMBER_TO_FIXED) => {
@@ -185,9 +148,7 @@ export const numberToFixed = (number, toFixed = NUMBER_TO_FIXED) => {
   }
 
   if (typeof number === 'string' && typeof Number(number) === 'number') {
-    return Number((
-      Number(number)
-    ).toFixed(toFixed))
+    return Number(Number(number).toFixed(toFixed))
   }
 
   return 0
@@ -200,9 +161,8 @@ export const sumProjectPower = (projects, key) => {
       return accumulator
     }
 
-    return accumulator + (
-      Number(currentValue[key]) / 1000
-    )
+    // eslint-disable-next-line no-mixed-operators
+    return accumulator + Number(currentValue[key]) / 1000
   }, 0)
 }
 
@@ -387,10 +347,13 @@ export const setLocalStorage = ({ key, value }) => {
   const tempValue = getLocalStorage(key)
 
   if (tempValue) {
-    localStorage.setItem(key, JSON.stringify({
-      ...tempValue,
-      ...value
-    }))
+    localStorage.setItem(
+      key,
+      JSON.stringify({
+        ...tempValue,
+        ...value
+      })
+    )
   } else {
     localStorage.setItem(key, JSON.stringify(value))
   }
@@ -400,9 +363,9 @@ export const setLocalStorage = ({ key, value }) => {
 export const getYears = (projects) => {
   const years = []
 
-  projects.forEach(project => {
+  projects.forEach((project) => {
     const startYear = moment(Number(project?.startDate) || Date.now()).year()
-    if (!years.some(year => year.id === startYear)) {
+    if (!years.some((year) => year.id === startYear)) {
       years.push({ id: startYear, name: `${startYear}` })
     }
   })
@@ -411,9 +374,7 @@ export const getYears = (projects) => {
 }
 
 // Get randomColor (HEX)
-export const randomColor = () => `#${(
-  Math.random() * 0xfffff * 1000000
-).toString(16).slice(0, 6)}`
+export const randomColor = () => `#${(Math.random() * 0xfffff * 1000000).toString(16).slice(0, 6)}`
 
 // Select unit time for moment
 export const selectUnitOfTime = (key) => {
@@ -480,7 +441,7 @@ export const sumByKey = ({ data, key, type, inverterType }) => {
       const result = []
 
       if (data.length) {
-        data.forEach(item => {
+        data.forEach((item) => {
           if (!result.includes(item[key])) {
             result.push(item[key])
           }
@@ -494,7 +455,7 @@ export const sumByKey = ({ data, key, type, inverterType }) => {
       const result = []
 
       if (data.length) {
-        data.forEach(item => {
+        data.forEach((item) => {
           result.push(item[key])
         })
       }
@@ -507,7 +468,7 @@ export const sumByKey = ({ data, key, type, inverterType }) => {
       const result = []
 
       if (data.length) {
-        data.forEach(item => {
+        data.forEach((item) => {
           tempResult.push(item[inverterType])
         })
       } else {
@@ -516,7 +477,7 @@ export const sumByKey = ({ data, key, type, inverterType }) => {
       }
 
       if (tempResult.length) {
-        tempResult.forEach(item => {
+        tempResult.forEach((item) => {
           if (item !== null && item !== undefined) {
             if (!isNaN(item[key])) {
               if (!result.includes(item[key] / 1000)) {
@@ -539,7 +500,7 @@ export const sumByKey = ({ data, key, type, inverterType }) => {
       const result = []
 
       if (data.length) {
-        data.forEach(item => {
+        data.forEach((item) => {
           if (Number(item[key])) {
             const formatDate = moment(Number(item[key])).format(DISPLAY_DATE_FORMAT)
             if (!result.includes(formatDate)) {
@@ -557,7 +518,7 @@ export const sumByKey = ({ data, key, type, inverterType }) => {
       let result = 0
 
       if (data.length) {
-        data.forEach(item => {
+        data.forEach((item) => {
           if (item[key]) {
             result += item[key]
           }
@@ -571,11 +532,7 @@ export const sumByKey = ({ data, key, type, inverterType }) => {
 
 // Calculate different between 2 items in array
 export const calculateDiffInArray = (array) => {
-  return array.map((item, i, originArray) => (
-    i === 0
-      ? i
-      : item - originArray[i - 1]
-  ))
+  return array.map((item, i, originArray) => (i === 0 ? i : item - originArray[i - 1]))
 }
 
 // Render time options
@@ -613,9 +570,9 @@ export const renderTimeOptions = ({ intl, type }) => {
 export const filterDataByKey = ({ projectAllData, items, key }) => {
   const tempData = []
 
-  projectAllData.forEach(project => {
-    items.forEach(item => {
-      if (!tempData.find(e => e.id === item.id) && project[key] === item.id) {
+  projectAllData.forEach((project) => {
+    items.forEach((item) => {
+      if (!tempData.find((e) => e.id === item.id) && project[key] === item.id) {
         tempData.push(item)
       }
     })
@@ -650,10 +607,14 @@ export const renderDynamicUnit = ({ value, milUnit, thousandUnit, originUnit }) 
  */
 export const getUnionCode = (codes) => {
   if (Array.isArray(codes) && codes.length > 0) {
-    const filteredCodes = codes.filter(code => code && code !== '')
+    const filteredCodes = codes.filter((code) => code && code !== '')
 
     return `# ${filteredCodes.join('-')}`
   }
 
   return ''
+}
+
+export const convertPermissionCodeToLabel = (per) => {
+  return <span className="text-capitalize ">{per?.replaceAll('_', ' ').toLowerCase()}</span>
 }

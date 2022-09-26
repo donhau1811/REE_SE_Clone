@@ -8,7 +8,12 @@ import {
   GET_ROLES,
   FETCH_ROLE_REQUEST,
   GET_ROLE_PERMISION_BY_ROLE_ID,
-  SET_SELECTED_ROOF_VENDOR
+  SET_SELECTED_ROOF_VENDOR,
+  API_GET_ROLE_BY_ROLE_ID,
+  SET_SELECTED_ROLE,
+  API_UPDATE_ROLE_BY_ROLE_ID,
+  API_DELETE_ROLE_PERMISSION_BY_ROLE_ID,
+  API_ADD_ROLE_PERMISSION_BY_ROLE_ID
 } from '@src/utility/constants'
 import { showToast } from '@src/utility/Utils'
 import axios from 'axios'
@@ -97,59 +102,30 @@ export const getAllUserAction = () => {
       })
   }
 }
-// export const getRoofVendor = (params) => {
-//   return async (dispatch) => {
-//     const { pagination = {}, searchValue, ...rest } = params
-//     const payload = {
-//       ...rest,
-//       limit: pagination.rowsPerPage,
-//       offset: pagination.rowsPerPage * (pagination.currentPage - 1)
-//     }
-//     if (searchValue?.trim()) {
-//       payload.searchValue = {
-//         value: searchValue,
-//         fields: ['name', 'code', 'phone', 'taxCode', 'address', 'phone'],
-//         type: 'contains'
-//       }
-//     }
-//     await axios
-//       .post(API_GET_ROOF_VENDOR, payload)
-//       .then((response) => {
-//         if (response?.status === 200 && response?.data?.data) {
-//           dispatch({
-//             type: FETCH_ROOF_RENTAL_UNIT_REQUEST,
-//             data: response.data.data,
-//             total: response.data.count,
-//             params
-//           })
-//         } else {
-//           throw new Error(response.data.message)
-//         }
-//       })
-//       .catch((err) => {
-//         console.log('err', err)
-//       })
-//   }
-// }
 
-// export const deleteBillingRoofRentalUnit = ({ id, callback }) => {
-//   return async () => {
-//     await axios
-//       .delete(`${API_DELETE_ROOF_VENDORS}/${id}`)
-//       .then((response) => {
-//         if (response.status === 200 && response.data?.data) {
-//           showToast('success', <FormattedMessage id="Delete info success" />)
-
-//           callback?.()
-//         } else {
-//           showToast('error', response.data?.message)
-//         }
-//       })
-//       .catch(() => {
-//         showToast('error', <FormattedMessage id="data delete failed, please try again" />)
-//       })
-//   }
-// }
+export const getRoleByRoleId = ({ id, isSavedToState, callback }) => {
+  return async (dispatch) => {
+    await axios
+      .get(`${API_GET_ROLE_BY_ROLE_ID}/${id}`)
+      .then((response) => {
+        if (response.status === 200 && response.data.data) {
+          const payload = get(response, 'data.data', {})
+          if (isSavedToState) {
+            dispatch({
+              type: SET_SELECTED_ROLE,
+              payload
+            })
+          }
+          callback?.(response.data.data)
+        } else {
+          throw new Error(response.data?.message)
+        }
+      })
+      .catch((err) => {
+        console.log('err', err)
+      })
+  }
+}
 
 export const getPermisionRoleByRoleId = ({ id, isSavedToState, callback }) => {
   return async (dispatch) => {
@@ -171,6 +147,59 @@ export const getPermisionRoleByRoleId = ({ id, isSavedToState, callback }) => {
       })
       .catch((err) => {
         console.log('err', err)
+      })
+  }
+}
+
+export const putRoleGroup = ({ payload, callback }) => {
+  return async (dispatch, getState) => {
+    const state = getState()
+    const {
+      permissionGroup: { selectedRole }
+    } = state
+
+    const { permissions } = payload
+    const requests = []
+    if (payload.name !== selectedRole.name) {
+      requests.push(
+        axios.put(API_UPDATE_ROLE_BY_ROLE_ID, {
+          id: payload.id,
+          name: payload.name,
+          code: selectedRole.code,
+          state: selectedRole.state
+        })
+      )
+    }
+    const oldPermission = selectedRole.permissions || []
+    const deletePers = oldPermission.filter((item) => !permissions.find((per) => per.id === item.id))
+
+    if (deletePers?.length > 0) {
+      requests.push(
+        axios.delete(`${API_DELETE_ROLE_PERMISSION_BY_ROLE_ID}/${payload.id}`, {
+          data: {
+            permissionIds: deletePers.map((item) => item.id)
+          }
+        })
+      )
+    }
+    const createPers = permissions.filter((item) => !oldPermission.find((per) => per.id === item.id))
+    if (createPers?.length > 0) {
+      requests.push(
+        axios.post(API_ADD_ROLE_PERMISSION_BY_ROLE_ID, {
+          roleId: payload.id,
+          permissionIds: createPers.map((item) => item.id)
+        })
+      )
+    }
+
+    await Promise.all(requests)
+      .then((res) => {
+        console.log('res', res)
+        callback?.()
+      })
+      .catch((err) => {
+        console.log('err', err)
+        showToast('error', <FormattedMessage id="Something went wrong" />)
       })
   }
 }
