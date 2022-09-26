@@ -225,3 +225,7 @@ export const API_GET_ALL_USER_FEATURE = `${BASE_API_URL_V2}/user-feature/all`
 export const API_POST_USER_ROLE = `${BASE_API_URL_V2}/user-role/update`
 
 export const API_GET_ALL_USER_ACTION = `${BASE_API_URL_V2}/user-action/all`
+
+//file 
+export const API_POST_FILES = `${BASE_API_URL_V2}/file/upload-multiple`
+export const API_FILES_GET_SINGED_URL = `${BASE_API_URL_V2}/file/signedUrl`

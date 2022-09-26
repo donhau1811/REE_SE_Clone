@@ -1,6 +1,7 @@
 import {
   API_ADD_CONTRACT,
   API_DELETE_CONTRACT,
+  API_FILES_GET_SINGED_URL,
   API_GET_ALL_CONTRACT,
   API_GET_ALL_CONTRACT_PROJECT_ID,
   API_GET_CONTRACT_BY_ID,
@@ -186,6 +187,28 @@ export const getAllContract = () => {
       })
       .catch((err) => {
         showToast('error', err.toString())
+      })
+  }
+}
+
+
+export const getSingedUrlFile = ({ fileName }) => {
+  return async (dispatch) => {
+    await axios
+      .get(`${API_FILES_GET_SINGED_URL}?fileName=${fileName}`)
+      .then((response) => {
+        if (response.status === 200 && response.data?.data) {
+          dispatch({
+            type: SET_SELECTED_CONTRACT,
+            payload: response.data?.data
+          })
+        } else {
+          throw new Error(response?.message)
+        }
+      })
+      .catch((err) => {
+       // showToast('error', err.toString())
+       console.log('err', err)
       })
   }
 }
