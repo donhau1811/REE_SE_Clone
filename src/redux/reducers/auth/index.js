@@ -1,6 +1,7 @@
 import {
   GET_ACCOUNT_INFO,
   GET_GROUP,
+  SET_IS_FETCHED_PERMISSION,
   SET_TOKEN_TIME_OUT,
   SET_USER_PERMISSIONS,
   UPDATE_ACCOUNT_AVATAR,
@@ -25,6 +26,7 @@ const initialState = {
     standardCoalRate: STANDARD_COAL_RATE,
     sessionTimeout: SESSION_TIMEOUT
   },
+  isFetchedPermision: false,
   isTokenTimeOut: false,
   permissions: []
 }
@@ -105,6 +107,9 @@ const authReducer = (state = initialState, action) => {
       return { ...state, isTokenTimeOut: action.value }
     case SET_USER_PERMISSIONS:
       return { ...state, permissions: action.payload }
+    case SET_IS_FETCHED_PERMISSION:
+      return { ...state, isFetchedPermision: action.payload }
+
     default:
       return state
   }

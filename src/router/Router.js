@@ -32,6 +32,7 @@ import { isEqual } from 'lodash'
 const Router = () => {
   const permissions = useSelector((state) => state.auth?.permissions, isEqual)
 
+
   // ** Hooks
   const [layout, setLayout] = useLayout()
   const [transition, setTransition] = useRouterTransition()

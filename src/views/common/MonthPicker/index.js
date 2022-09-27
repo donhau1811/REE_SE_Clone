@@ -25,7 +25,7 @@ export default function MonthPicker({ value, onChange }) {
 
   const handleClose = () => {
     onChange?.(valueState)
-
+    setAnchorEl(null)
   }
   const open = Boolean(anchorEl)
   const id = open ? 'simple-popover' : undefined
@@ -42,7 +42,7 @@ export default function MonthPicker({ value, onChange }) {
     setValueState(value)
     setAnchorEl(null)
   }
- 
+
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale={intlContext.locale}>
@@ -58,14 +58,14 @@ export default function MonthPicker({ value, onChange }) {
           />
           <InputGroupAddon addonType="append">
             <InputGroupText>
-              <IconCalendar  />
+              <IconCalendar />
             </InputGroupText>
           </InputGroupAddon>
         </InputGroup>
 
         <Popover
           id={id}
-          open={open }
+          open={open}
           anchorEl={anchorEl}
           onClose={handleClose}
           anchorOrigin={{

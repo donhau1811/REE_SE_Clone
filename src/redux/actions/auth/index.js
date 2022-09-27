@@ -165,7 +165,7 @@ export const getGroup = (params) => {
       })
   }
 }
-export const getPermissionsbyUserId = () => {
+export const getPermissionsbyUserId = ({ callback }) => {
   return async (dispatch) => {
     await axios
       .get(API_PERMISSIONS_BY_USER)
@@ -184,9 +184,11 @@ export const getPermissionsbyUserId = () => {
       .catch((err) => {
         dispatch({
           type: SET_USER_PERMISSIONS,
-          payload:  []
+          payload: []
         })
         showToast('error', `${err.response ? err.response.data.message : err.message}`)
       })
+
+    callback?.()
   }
 }

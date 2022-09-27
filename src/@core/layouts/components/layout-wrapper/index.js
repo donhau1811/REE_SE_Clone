@@ -14,12 +14,12 @@ import 'animate.css/animate.css'
 import PreventLeavePageModal from '@src/views/common/modal/PreventLeavePageModal'
 import { isUserLoggedIn } from '@src/utility/Utils'
 import { getPermissionsbyUserId } from '@src/redux/actions/auth'
+import { SET_IS_FETCHED_PERMISSION } from '@src/utility/constants'
 
 const LayoutWrapper = (props) => {
-
-  
   // ** Props
   const { layout, children, appLayout, wrapperClass, transition, routeMeta } = props
+  const isFetchedPermision = useSelector((state) => state.auth?.isFetchedPermision)
 
   // ** Store Vars
   const dispatch = useDispatch()
@@ -28,10 +28,18 @@ const LayoutWrapper = (props) => {
     layout: { contentWidth }
   } = useSelector((state) => state)
 
-
   useEffect(() => {
     if (isUserLoggedIn()) {
-      dispatch(getPermissionsbyUserId())
+      dispatch(
+        getPermissionsbyUserId({
+          callback: () => {
+            dispatch({
+              type: SET_IS_FETCHED_PERMISSION,
+              payload: true
+            })
+          }
+        })
+      )
     }
   }, [isUserLoggedIn()])
 
@@ -97,7 +105,7 @@ const LayoutWrapper = (props) => {
             : {})}
           /*eslint-enable */
         >
-          {children}
+          {isFetchedPermision && children}
         </Tag>
       </div>
     </div>

@@ -152,6 +152,7 @@ const Filter = ({ intl, children, onSubmit = () => {} }) => {
                     return (
                       <Select
                         {...field}
+                        blurInputOnSelect
                         noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
                         theme={selectThemeColors}
                         className="react-select"
