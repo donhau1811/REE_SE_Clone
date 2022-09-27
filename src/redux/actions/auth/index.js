@@ -175,13 +175,17 @@ export const getPermissionsbyUserId = () => {
 
           dispatch({
             type: SET_USER_PERMISSIONS,
-            payload: resData?.role?.permissions
+            payload: resData?.role?.permissions || []
           })
         } else {
           throw new Error(response.data.message)
         }
       })
       .catch((err) => {
+        dispatch({
+          type: SET_USER_PERMISSIONS,
+          payload:  []
+        })
         showToast('error', `${err.response ? err.response.data.message : err.message}`)
       })
   }
