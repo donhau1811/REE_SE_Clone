@@ -168,7 +168,7 @@ function ContactCUForm({ clock, intl, onSubmit = () => {}, onCancel }) {
                   classNamePrefix="select"
                   placeholder={intl.formatMessage({ id: 'Choose type of clock' })}
                   formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
-                  noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
+                  noOptionsMessage={() => <FormattedMessage id="There are no records to display" />} blurInputOnSelect
                 />
                 {errors?.type && <FormFeedback className="d-block">{errors?.type?.message}</FormFeedback>}
               </Col>
@@ -189,7 +189,7 @@ function ContactCUForm({ clock, intl, onSubmit = () => {}, onCancel }) {
                   classNamePrefix="select"
                   placeholder={intl.formatMessage({ id: 'Choose manufacturer' })}
                   formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
-                  noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
+                  noOptionsMessage={() => <FormattedMessage id="There are no records to display" />} blurInputOnSelect
                 />
                 {errors?.manufacturer && (
                   <FormFeedback className="d-block">{errors?.manufacturer?.message}</FormFeedback>

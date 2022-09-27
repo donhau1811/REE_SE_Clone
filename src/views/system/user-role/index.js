@@ -90,18 +90,16 @@ const RoofVendor = () => {
     },
     {
       name: intl.formatMessage({ id: 'Username' }),
-      selector: 'username',
-      sortable: true
+      selector: 'username'
     },
     {
       name: intl.formatMessage({ id: 'Full name' }),
-      selector: 'fullName',
-      sortable: true
+      selector: 'fullName'
     },
     {
       name: intl.formatMessage({ id: 'permission-group' }),
       selector: '',
-      sortable: true,
+
       maxWidth: '200px',
       cell: (row) => row?.role?.name
     },

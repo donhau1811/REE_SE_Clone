@@ -57,10 +57,33 @@ const RoleGroupCUForm = ({ intl, isReadOnly, initValues, onSubmit, onCancel, sub
     layout: { skin }
   } = useSelector((state) => state)
   const handleDeletePermissionOfFeature = (onChange, per) => () => {
-    const permissionsData = watch('permissions')
-    const newPermissionsData = permissionsData.filter((item) => item.id !== per.id)
+    MySweetAlert.fire({
+      title: intl.formatMessage({ id: 'Delete billing customer title' }),
+      html: intl.formatMessage({ id: 'Are you sure to delete permission ?' }),
+      showCancelButton: true,
+      showCloseButton: true,
+      confirmButtonText: intl.formatMessage({ id: 'Yes' }),
+      cancelButtonText: intl.formatMessage({ id: 'No, Thanks' }),
+      customClass: {
+        popup: classnames({
+          'sweet-alert-popup--dark': skin === 'dark',
+          'sweet-popup': true
+        }),
+        header: 'sweet-title',
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-outline-secondary ml-1',
+        actions: 'sweet-actions',
+        content: 'sweet-content'
+      },
+      buttonsStyling: false
+    }).then(({ isConfirmed }) => {
+      if (isConfirmed) {
+        const permissionsData = watch('permissions')
+        const newPermissionsData = permissionsData.filter((item) => item.id !== per.id)
 
-    onChange(newPermissionsData)
+        onChange(newPermissionsData)
+      }
+    })
   }
   const isDirty = isDirtyForm || !isEqual(watch('permissions'), initValues.permissions)
 
@@ -155,6 +178,7 @@ const RoleGroupCUForm = ({ intl, isReadOnly, initValues, onSubmit, onCancel, sub
     {
       name: intl.formatMessage({ id: 'Actions' }),
       selector: '#',
+      isHidden: isReadOnly,
       cell: (row) => (
         <>
           {' '}

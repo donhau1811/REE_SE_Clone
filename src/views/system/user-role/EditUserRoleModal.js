@@ -98,8 +98,8 @@ const EditUserRoleModal = ({ initValue, handldeOpenModal = () => {}, isOpen, han
                   valid={!!getValues('newRole')?.value}
                   invalid={!!errors.newRole}
                   placeholder={intl.formatMessage({ id: 'Select Role' })}
-                  formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
-                  noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
+                  formatOptionLabel={(option) => <>{option.label}</>}
+                  noOptionsMessage={() => <FormattedMessage id="There are no records to display" />} blurInputOnSelect
                 />
                 {!!errors?.newRole && (
                   <FormFeedback className="d-block">{errors?.newRole?.value?.message}</FormFeedback>

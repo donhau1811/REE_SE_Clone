@@ -153,7 +153,7 @@ const Filter = ({ intl, children, onSubmit = () => {} }) => {
                       <Select
                         {...field}
                         blurInputOnSelect
-                        noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
+                        noOptionsMessage={() => <FormattedMessage id="There are no records to display" />} 
                         theme={selectThemeColors}
                         className="react-select"
                         classNamePrefix="select"
@@ -179,7 +179,7 @@ const Filter = ({ intl, children, onSubmit = () => {} }) => {
                       <Select
                         {...field}
                         placeholder={intl.formatMessage({ id: 'Select customer' })}
-                        noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
+                        noOptionsMessage={() => <FormattedMessage id="There are no records to display" />} blurInputOnSelect
                         theme={selectThemeColors}
                         className="react-select"
                         classNamePrefix="select"

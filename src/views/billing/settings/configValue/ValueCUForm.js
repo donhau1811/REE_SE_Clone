@@ -155,7 +155,7 @@ function ValueCUForm({ value, intl, onSubmit = () => {}, onCancel, isReadOnly, s
                   className="react-select"
                   classNamePrefix="select"
                   formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
-                  noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
+                  noOptionsMessage={() => <FormattedMessage id="There are no records to display" />} blurInputOnSelect
                 />
                 {errors?.state && <FormFeedback>{errors?.state?.message}</FormFeedback>}
               </Col>

@@ -163,7 +163,7 @@ function ContactCUForm({ contact, intl, onSubmit = () => {}, onCancel, isReadOnl
                   placeholder={intl.formatMessage({ id: 'Choose position' })}
                   isDisabled={isReadOnly}
                   formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
-                  noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
+                  noOptionsMessage={() => <FormattedMessage id="There are no records to display" />} blurInputOnSelect
                 />
                 {errors?.position && <FormFeedback>{errors?.position?.message}</FormFeedback>}
               </Col>

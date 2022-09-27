@@ -70,8 +70,9 @@ const PageHeader = ({ onFilter, setSelectedClock }) => {
   }
   useEffect(() => {
     resetDataMeterMetric()
-    if (clock[0]) setValue('clock', { value: clock[0]?.seri, label: clock[0]?.name, contractId: clock[0]?.contractId })
-    else setValue('clock', null)
+    // if (clock[0]) setValue('clock', { value: clock[0]?.seri, label: clock[0]?.name, contractId: clock[0]?.contractId })
+    // else
+    setValue('clock', null)
   }, [watch('customer'), clock, watch('project')])
 
   useEffect(() => {
@@ -113,6 +114,7 @@ const PageHeader = ({ onFilter, setSelectedClock }) => {
               placeholder={intl.formatMessage({ id: 'Select projects' })}
               formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
               noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
+              blurInputOnSelect
             />
           </Col>
           <Col md="4">
@@ -132,6 +134,7 @@ const PageHeader = ({ onFilter, setSelectedClock }) => {
               placeholder={intl.formatMessage({ id: 'Select customer' })}
               formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
               noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
+              blurInputOnSelect
             />
           </Col>
         </Row>
@@ -170,6 +173,7 @@ const PageHeader = ({ onFilter, setSelectedClock }) => {
               placeholder={intl.formatMessage({ id: 'Select clock' })}
               formatOptionLabel={(option) => <>{option.label && intl.formatMessage({ id: option.label })}</>}
               noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
+              blurInputOnSelect
             />
           </Col>
 

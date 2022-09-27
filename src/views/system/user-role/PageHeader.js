@@ -15,6 +15,7 @@ const PageHeader = ({ onSearch = () => {}, searchValue }) => {
   const dispatch = useDispatch()
 
   const labelRoles = roles.map((item) => ({ value: item.id, label: item.name }))
+ 
   useEffect(() => {
     dispatch(getRoles())
   }, [])
@@ -32,7 +33,7 @@ const PageHeader = ({ onSearch = () => {}, searchValue }) => {
   }, [watch('roles')])
   return (
     <>
-      <Row className="mb-2">
+      <Row className="mb-2 billing-form">
         <Col lg="3" md="6" className="">
           <Controller
             as={Select}
@@ -45,8 +46,9 @@ const PageHeader = ({ onSearch = () => {}, searchValue }) => {
             className="react-select"
             classNamePrefix="select"
             placeholder={intl.formatMessage({ id: 'permission-group' })}
-            formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
+            formatOptionLabel={(option) => <>{option.label}</>}
             noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
+            blurInputOnSelect
           />
         </Col>
         <Col lg="4" md="8" className="my-lg-0 mb-1 d-flex justify-content-end align-items-center">

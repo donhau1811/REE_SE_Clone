@@ -127,6 +127,7 @@ const ProjectTable = ({ intl }) => {
     },
     {
       name: intl.formatMessage({ id: 'PatternBillElectricity' }),
+      selector: 'contractName',
       cell: (row) => row.contractName?.replaceAll(',', ',  ')?.replaceAll('"', ''),
       sortable: true
     },

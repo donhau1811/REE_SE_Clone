@@ -192,7 +192,7 @@ const CUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, is
         `${API_FETCH_CONTRACT_BY_QUERY}?${qs.stringify({
           projectId: Number(projectId?.value),
           customerId: Number(customerId?.value),
-          expired: false
+          expiredFor3Months: false
         })}`
       )
 
@@ -302,7 +302,7 @@ const CUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, is
                   classNamePrefix="select"
                   placeholder={intl.formatMessage({ id: 'Select projects' })}
                   formatOptionLabel={(option) => <>{option.label}</>}
-                  noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
+                  noOptionsMessage={() => <FormattedMessage id="There are no records to display" />} blurInputOnSelect
                   onChange={handleChangeProjectId(onChangeProjectId)}
                 />
               )}
@@ -329,7 +329,7 @@ const CUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, is
                   classNamePrefix="select"
                   placeholder={intl.formatMessage({ id: 'Select customer' })}
                   formatOptionLabel={(option) => <>{option.label}</>}
-                  noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
+                  noOptionsMessage={() => <FormattedMessage id="There are no records to display" />} blurInputOnSelect
                   onChange={handleChangeCustomerId(onChangeCustomerId)}
                 />
               )}
@@ -360,7 +360,7 @@ const CUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, is
                   classNamePrefix="select"
                   placeholder={intl.formatMessage({ id: 'Select contract' })}
                   formatOptionLabel={(option) => <>{option.label}</>}
-                  noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
+                  noOptionsMessage={() => <FormattedMessage id="There are no records to display" />} blurInputOnSelect
                 />
               )}
               control={control}
@@ -394,7 +394,7 @@ const CUForm = ({ intl, onSubmit = () => {}, onCancel = () => {}, initValues, is
               classNamePrefix="select"
               placeholder={intl.formatMessage({ id: 'Select billing cycle' })}
               formatOptionLabel={(option) => <>{option.label}</>}
-              noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
+              noOptionsMessage={() => <FormattedMessage id="There are no records to display" />} blurInputOnSelect
             />
             {errors?.cycleId && <FormFeedback className="d-block">{errors?.cycleId?.message}</FormFeedback>}
           </Col>
