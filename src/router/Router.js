@@ -1,5 +1,5 @@
 // ** React Imports
-import { Suspense, useContext, lazy, useEffect } from 'react'
+import { Suspense, useContext, lazy } from 'react'
 
 // ** Third party components
 import PropTypes from 'prop-types'
@@ -26,18 +26,11 @@ import VerticalLayout from '@src/layouts/VerticalLayout'
 import { getUserAbility } from '@src/auth/utils'
 import { ROUTER_URL } from '@constants/router'
 import useJwt from '@src/auth/jwt/useJwt'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { isEqual } from 'lodash'
-import { getPermissionsbyUserId } from '@src/redux/actions/auth'
 
 const Router = () => {
   const permissions = useSelector((state) => state.auth?.permissions, isEqual)
-  const dispatch = useDispatch()
-  useEffect(() => {
-    if (isUserLoggedIn()) {
-      dispatch(getPermissionsbyUserId())
-    }
-  }, [isUserLoggedIn()])
 
   // ** Hooks
   const [layout, setLayout] = useLayout()
