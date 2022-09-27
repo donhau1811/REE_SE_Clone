@@ -145,7 +145,7 @@ const EditRoleModal = ({ intl, children, onSubmit = () => {}, permissions }) => 
                 classNamePrefix="select"
                 placeholder={intl.formatMessage({ id: 'Choose Feature' })}
                 formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
-                noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
+                noOptionsMessage={() => <FormattedMessage id="There are no records to display" />} blurInputOnSelect
               />
             </Col>
             <Col md={2} className="mt-1">

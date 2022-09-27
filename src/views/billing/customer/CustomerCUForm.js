@@ -275,7 +275,7 @@ const OperationCUForm = ({
               className="react-select"
               classNamePrefix="select"
               formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
-              noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
+              noOptionsMessage={() => <FormattedMessage id="There are no records to display" />} blurInputOnSelect
             />
             {errors?.type && <FormFeedback>{errors?.type?.message}</FormFeedback>}
           </Col>
@@ -350,7 +350,7 @@ const OperationCUForm = ({
               classNamePrefix="select"
               placeholder={intl.formatMessage({ id: 'Select a status' })}
               formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
-              noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
+              noOptionsMessage={() => <FormattedMessage id="There are no records to display" />} blurInputOnSelect
             />
           </Col>
           <Col className="mb-2" md={8}>

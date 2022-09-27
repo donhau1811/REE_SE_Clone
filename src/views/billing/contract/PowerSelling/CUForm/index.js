@@ -698,7 +698,7 @@ function PowerSellingCUForm({
               classNamePrefix="select"
               placeholder={intl.formatMessage({ id: 'Select customer' })}
               formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
-              noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
+              noOptionsMessage={() => <FormattedMessage id="There are no records to display" />} blurInputOnSelect
             />
             {errors?.customerId && <FormFeedback className="d-block">{errors?.customerId?.message}</FormFeedback>}
           </Col>
@@ -875,7 +875,7 @@ function PowerSellingCUForm({
                   className="react-select"
                   classNamePrefix="select"
                   formatOptionLabel={(option) => <>{option.label}</>}
-                  noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
+                  noOptionsMessage={() => <FormattedMessage id="There are no records to display" />} blurInputOnSelect
                 />
                 {errors?.formType && <FormFeedback>{errors?.formType?.message}</FormFeedback>}
               </Col>

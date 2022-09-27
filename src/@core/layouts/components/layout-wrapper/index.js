@@ -29,7 +29,7 @@ const LayoutWrapper = (props) => {
   } = useSelector((state) => state)
 
   useEffect(() => {
-    if (isUserLoggedIn()) {
+    if (isUserLoggedIn() && !isFetchedPermision) {
       dispatch(
         getPermissionsbyUserId({
           callback: () => {

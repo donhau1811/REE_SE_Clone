@@ -226,7 +226,6 @@ const Project = ({ intl }) => {
     {
       name: intl.formatMessage({ id: 'Assigned accountant' }),
       selector: 'userIds',
-      sortable: true,
       minWidth: '200px'
     },
 
