@@ -18,7 +18,7 @@ import LayoutWrapper from '@layouts/components/layout-wrapper'
 import { BrowserRouter as AppRouter, Route, Switch, Redirect } from 'react-router-dom'
 
 // ** Routes & Default Routes
-import { DefaultRoute, Routes } from './routes'
+import { DefaultRoute, Routes, PublicRoutes } from './routes'
 
 // ** Layouts
 import BlankLayout from '@layouts/BlankLayout'
@@ -31,7 +31,6 @@ import { isEqual } from 'lodash'
 
 const Router = () => {
   const permissions = useSelector((state) => state.auth?.permissions, isEqual)
-
 
   // ** Hooks
   const [layout, setLayout] = useLayout()
@@ -236,6 +235,21 @@ const Router = () => {
             </Layouts.BlankLayout>
           )}
         />
+        {(PublicRoutes || []).map((route) => (
+          <Route
+            exact
+            path={route.path}
+            key={route.path}
+            render={() => {
+              const RouteLayout = Layouts[route.layout]
+              return (
+                <RouteLayout>
+                  {route.meta?.authRoute && isUserLoggedIn() ? <Redirect to="/" /> : <route.component />}
+                </RouteLayout>
+              )
+            }}
+          />
+        ))}
         {ResolveRoutes()}
 
         {/* NotFound Error page */}
