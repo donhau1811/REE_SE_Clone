@@ -55,7 +55,7 @@ import { getAllClockByContractId } from '@src/views/billing/clock/store/actions'
 import { ContractForm1 } from './ContractForm1'
 import { handleCRUDOfClocks } from '../../util'
 
-function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel, onSubmit, cancelText }) {
+function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel, onSubmit, cancelText, submitClassname }) {
   const {
     projects: { selectedProject: selectedBillingProject },
     contractClock: { clocks }
@@ -736,7 +736,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
               classNamePrefix="select"
               placeholder={intl.formatMessage({ id: 'Select customer' })}
               formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
-              noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
+              noOptionsMessage={() => <FormattedMessage id="There are no records to display" />} blurInputOnSelect
             />
             {errors?.customerId && <FormFeedback className="d-block">{errors?.customerId?.message}</FormFeedback>}
           </Col>
@@ -913,7 +913,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
                   className="react-select"
                   classNamePrefix="select"
                   formatOptionLabel={(option) => <>{option.label}</>}
-                  noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
+                  noOptionsMessage={() => <FormattedMessage id="There are no records to display" />} blurInputOnSelect
                 />
                 {errors?.formType && <FormFeedback>{errors?.formType?.message}</FormFeedback>}
               </Col>
@@ -1119,7 +1119,7 @@ function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel
 
         <Row>
           <Col className="d-flex justify-content-end align-items-center mb-2">
-            <Button type="submit" color="primary" className="mr-1 px-3">
+            <Button type="submit" color="primary" className={classNames('mr-1 px-3', submitClassname)}>
               {submitText || intl.formatMessage({ id: 'Save' })}
             </Button>{' '}
             <Button color="secondary" onClick={handleCancel}>
@@ -1139,7 +1139,10 @@ PowerSellingCUForm.propTypes = {
   initValues: object,
   onCancel: func,
   onSubmit: func,
-  cancelText: string
+  cancelText: string,
+  submitClassname: string
+
+
 }
 
 export default injectIntl(PowerSellingCUForm)
