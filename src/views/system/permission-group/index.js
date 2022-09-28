@@ -3,14 +3,14 @@
 import { ReactComponent as IconView } from '@src/assets/images/svg/table/ic-view.svg'
 import { ReactComponent as IconEdit } from '@src/assets/images/svg/table/ic-edit.svg'
 import Table from '@src/views/common/table/CustomDataTable'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect } from 'react'
 import { FormattedMessage, injectIntl, useIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { Badge, Col, Row, UncontrolledTooltip } from 'reactstrap'
 import PageHeader from './PageHeader'
 import './styles.scss'
-import { DISPLAY_DATE_FORMAT, ROUTER_URL } from '@src/utility/constants'
+import { DISPLAY_DATE_FORMAT, RESET_PERMISSION_GROUP_PARAM, ROUTER_URL, ROWS_PER_PAGE_DEFAULT } from '@src/utility/constants'
 import { getRoles } from './store/actions'
 import moment from 'moment'
 import { AbilityContext } from '@src/utility/context/Can'
@@ -18,35 +18,63 @@ import { USER_ACTION, USER_FEATURE } from '@src/utility/constants/permissions'
 
 const PermissionGroup = () => {
   const ability = useContext(AbilityContext)
-
-  const [dataSearch, setDataSearch] = useState([])
-  const [searchValue, setSearchValue] = useState('')
   const history = useHistory()
   const dispatch = useDispatch()
   const { roles, params, total } = useSelector((state) => state.permissionGroup)
+  const { pagination = {}, searchValue } = params || {}
 
-  useEffect(() => {
-    setDataSearch(roles)
-  }, [roles])
 
-  const fetchRole = (initParams) => {
-    dispatch(getRoles(initParams))
+  const fetchRole = (payload) => {
+    dispatch(getRoles({
+      ...params,
+      ...payload
+    }))
   }
   const intl = useIntl()
   useEffect(() => {
-    fetchRole()
+    const initParamsToFetch = {
+      pagination: {
+        rowsPerPage: ROWS_PER_PAGE_DEFAULT,
+        currentPage: 1
+      },
+      sortBy: 'code',
+      sortDirection: 'asc'
+    }
+    fetchRole(initParamsToFetch)
+    return () => {
+      dispatch({
+        type: RESET_PERMISSION_GROUP_PARAM,
+        payload: initParamsToFetch
+      })
+    }
   }, [])
 
   const handleSearch = (value) => {
-    const dataAfterFilter = roles.filter(
-      (item) =>
-        item?.name?.toUpperCase()?.includes(value.toUpperCase()) ||
-        item?.code?.toUpperCase()?.includes(value.toUpperCase())
-    )
-    setDataSearch(dataAfterFilter)
-    setSearchValue(value)
+    fetchRole({
+      pagination: {
+        ...pagination,
+        currentPage: 1
+      },
+      searchValue: value
+    })
+  }
+  const handleChangePage = (e) => {
+    fetchRole({
+      pagination: {
+        ...pagination,
+        currentPage: e.selected + 1
+      }
+    })
   }
 
+  const handlePerPageChange = (e) => {
+    fetchRole({
+      pagination: {
+        rowsPerPage: e.value,
+        currentPage: 1
+      }
+    })
+  }
   const handleRedirectToUpdatePage = (id) => () => {
     if (id) {
       history.push({
@@ -63,9 +91,7 @@ const PermissionGroup = () => {
       history.push(`${ROUTER_URL.SYSTEM_PERMISSION_GROUP}/${id}`)
     }
   }
-  const handleChangeValueSearch = (value) => {
-    setSearchValue(value)
-  }
+
 
   const columns = [
     {
@@ -139,14 +165,14 @@ const PermissionGroup = () => {
       <Row>
         <Col sm="12">
           <PageHeader
-            handleChangeValueSearch={handleChangeValueSearch}
             onSearch={handleSearch}
             searchValue={searchValue}
           />
           <Table
-            pagination={false}
             columns={columns}
-            data={dataSearch}
+            data={roles}
+            onPageChange={handleChangePage}
+            onPerPageChange={handlePerPageChange}
             total={total}
             defaultSortAsc={params?.sortDirection === 'asc'}
             isSearching={searchValue?.trim()}

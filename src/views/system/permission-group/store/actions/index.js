@@ -20,16 +20,30 @@ import axios from 'axios'
 import { get } from 'lodash'
 import { FormattedMessage } from 'react-intl'
 
-export const getRoles = () => {
+export const getRoles = (params = {}) => {
+  const { pagination = {}, searchValue, ...rest } = params
+  const payload = {
+    ...rest,
+    limit: pagination.rowsPerPage,
+    offset: pagination.rowsPerPage * (pagination.currentPage - 1)
+  }
+  if (searchValue?.trim()) {
+    payload.searchValue = {
+      value: searchValue,
+      fields:  ["name", "code"],
+      type: 'contains'
+    }
+  }
   return async (dispatch) => {
     await axios
-      .get(GET_ROLES)
+      .post(GET_ROLES, payload)
       .then((response) => {
         if (response?.status === 200 && response?.data?.data) {
           dispatch({
             type: FETCH_ROLE_REQUEST,
             data: response.data.data,
-            total: response.data.count
+            total: response.data.count,
+            params
           })
         } else {
           throw new Error(response.data.message)

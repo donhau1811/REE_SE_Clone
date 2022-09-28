@@ -2,6 +2,7 @@ import { ROWS_PER_PAGE_DEFAULT } from '@constants/index'
 // haimn check
 import {
   FETCH_ROLE_REQUEST,
+  RESET_PERMISSION_GROUP_PARAM,
   SET_ALL_PERMISSION,
   SET_ALL_USER_ACTION,
   SET_ALL_USER_FEATURE,
@@ -53,6 +54,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         selectedRole: action?.payload || state.selectedRole
+      }
+    case RESET_PERMISSION_GROUP_PARAM:
+      return {
+        ...state,
+        params: action.payload
       }
 
     default:

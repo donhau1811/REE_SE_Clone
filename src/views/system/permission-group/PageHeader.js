@@ -1,15 +1,17 @@
 import { object, string, func } from 'prop-types'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { injectIntl } from 'react-intl'
 import { Col, Row } from 'reactstrap'
 
 import SearchBar from '@src/views/common/SearchBar'
 
-const PageHeader = ({ onSearch = () => {}, searchValue, handleChangeValueSearch = () => {} }) => {
+const PageHeader = ({ onSearch = () => {}, searchValue }) => {
+  const [value, setValue] = useState('')
 
   useEffect(() => {
-    handleChangeValueSearch(searchValue)
+    if (searchValue !== value) setValue(searchValue)
   }, [searchValue])
+
 
   return (
     <>
