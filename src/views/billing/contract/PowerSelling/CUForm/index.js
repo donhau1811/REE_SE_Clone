@@ -1,3 +1,4 @@
+/* eslint-disable no-unreachable */
 import React, { useEffect, useState } from 'react'
 import { useForm, Controller, useFieldArray, FormProvider } from 'react-hook-form'
 import * as yup from 'yup'
@@ -8,7 +9,9 @@ import { bool, func, object, string } from 'prop-types'
 import { Button, Col, Form, FormFeedback, Input, Label, Row } from 'reactstrap'
 import {
   API_CHECK_CODE_CONTRACT,
+  API_FILES_GET_SINGED_URL,
   API_GET_ALL_CUSTOMER,
+  API_POST_FILES,
   ISO_STANDARD_FORMAT,
   SET_FORM_DIRTY,
   SET_SELECTED_CONTRACT
@@ -52,21 +55,11 @@ import { getAllClockByContractId } from '@src/views/billing/clock/store/actions'
 import { ContractForm1 } from './ContractForm1'
 import { handleCRUDOfClocks } from '../../util'
 
-function PowerSellingCUForm({
-  intl,
-  isReadOnly,
-  initValues,
-  submitText,
-  onCancel,
-  onSubmit,
-  cancelText,
-  submitClassname
-}) {
+function PowerSellingCUForm({ intl, isReadOnly, initValues, submitText, onCancel, onSubmit, cancelText }) {
   const {
     projects: { selectedProject: selectedBillingProject },
     contractClock: { clocks }
   } = useSelector((state) => state)
-
   const { setting } = useSelector((state) => state.settings)
 
   const formInitValues = {
@@ -315,7 +308,7 @@ function PowerSellingCUForm({
   }, [watch('customerId')])
 
   useEffect(() => {
-    register('file')
+    register('files')
     register('contacts')
     register('clocks')
   }, [register])
@@ -349,21 +342,21 @@ function PowerSellingCUForm({
       setValue('clocks', changeClocks)
     }
   }
-
-  const handleRemoveFile = (file) => (event) => {
+  const handleRemoveFile = (files) => (event) => {
     event.stopPropagation()
-    const filesList = getValues('file')
-
+    const filesList = getValues('files')
     setValue(
-      'file',
-      filesList.filter((item) => item.name !== file.name),
+      'files',
+      filesList.filter((item) => item.fileName !== files.fileName || item.name !== files.name),
       { shouldValidate: true }
     )
   }
 
   const handleChangeFiles = (event) => {
-    const files = Array.from(event.target.files)
-    setValue('file', files, { shouldValidate: true })
+    const filesNameCurent = watch('files')?.map((item) => item.fileName?.split(/\//)[1] || item.name)
+    let files = Array.from(event.target.files).filter((item) => !filesNameCurent?.includes(item.name))
+    files = files.concat(watch('files') || [])
+    setValue('files', files, { shouldValidate: true })
   }
 
   const handleRemoveCycle = (index) => () => {
@@ -416,6 +409,7 @@ function PowerSellingCUForm({
       onSubmit?.(initValues)
       return
     }
+    let listNamePostFile = []
 
     // if (validateBillingCycle()) {
     //   return
@@ -434,7 +428,30 @@ function PowerSellingCUForm({
         })
         return
       }
+
+      // handle on change file  ( --except remove file)
+
+      const formData = new FormData()
+      const curentListFileName = watch('files')?.map((item) => item.name || item.fileName)
+      const listNewFiles = watch('files')?.filter((item) => !initValues?.files?.includes(item)) || []
+      if (listNewFiles?.length > 0) {
+        for (const file of listNewFiles) {
+          formData.append('files', file)
+        }
+        const dataReponse = await axios.post(API_POST_FILES, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+        listNamePostFile = dataReponse?.data?.data
+      }
+
+      listNamePostFile = listNamePostFile.concat(
+        initValues?.files?.filter((item) => curentListFileName?.includes(item.name || item.fileName)) || []
+      )
+      //end
     } catch (err) {
+      console.log('err', err)
       const alert =
         initValues?.id > 0 ? 'Failed to update data. Please try again' : 'Failed to create data. Please try again'
       showToast(
@@ -449,7 +466,6 @@ function PowerSellingCUForm({
       showToast('error', <FormattedMessage id="Need at least 1 clock to add contract. Please try again" />)
       return
     }
-
     const payload = {
       state: GENERAL_STATUS.ACTIVE,
       code: values.code,
@@ -459,7 +475,7 @@ function PowerSellingCUForm({
       roofVendorId: null,
       startDate: values.startDate ? moment.utc(values.startDate) : null,
       endDate: values.endDate ? moment.utc(values.endDate) : null,
-      files: [],
+      files: listNamePostFile,
       billingPeriods: (values.billingCycle || []).map((item, index) => {
         const returnedCycle = {
           id: index + 1,
@@ -583,7 +599,20 @@ function PowerSellingCUForm({
   const handleClickToFileInput = (e) => {
     e.target.value = null
   }
+  const handleCLickFileName = (item) => async (e) => {
+    e.preventDefault()
 
+    const fileLink = await axios.get(`${API_FILES_GET_SINGED_URL}?fileName=${item?.fileName}`)
+
+    if (fileLink.status === 200 && fileLink.data?.data) {
+      if (item.url && isReadOnly) {
+        const aTag = document.createElement('a')
+        aTag.setAttribute('href', fileLink?.data?.data?.signedUrl)
+        aTag.setAttribute('target', '_blank')
+        aTag.click()
+      }
+    }
+  }
   return (
     <FormProvider {...methods}>
       <Form className="billing-form" onSubmit={handleSubmit(handleSubmitForm)}>
@@ -642,25 +671,34 @@ function PowerSellingCUForm({
           <Col xs={12} className=" mb-2 d-flex flex-column justify-content-end">
             <div className="d-flex align-items-end">
               <div className="mr-2">
-                {watch('file')?.map((item) => (
-                  <a key={item.name} href="#" className="d-block">
-                    {item.name}
-                    {!isReadOnly && (
-                      <span className="ml-1" role="button" onClick={handleRemoveFile(item)}>
-                        <XCircle size={14} color="#838A9C" />
-                      </span>
-                    )}
+                {watch('files')?.map((item) => (
+                  <a
+                    key={item?.fileName || item?.name}
+                    onClick={handleCLickFileName(item)}
+                    href={'#'}
+                    className="d-block"
+                  >
+                    <Row className='mb-1'>
+                      <Col xs={10}>{(item?.fileName && `${item?.fileName?.split(/\//)[1]}`) || item?.name}</Col>
+                      <Col xs={1}>
+                        {!isReadOnly && (
+                          <span className="ml-1" role="button" onClick={handleRemoveFile(item)}>
+                            <XCircle size={14} color="#838A9C" />
+                          </span>
+                        )}
+                      </Col>
+                    </Row>
                   </a>
                 ))}
               </div>
               <div className="d-flex align-items-center">
                 <Label
-                  className={classNames('file-attachment-label', isReadOnly && 'file-attachment-label-disabled')}
+                  className={classNames('files-attachment-label', isReadOnly && 'files-attachment-label-disabled cursor-pointer')}
                   for="file"
                   role="button"
                 >
-                  <span className="mr-1">
-                    <Attachment />
+                  <span >
+                    <Attachment className={classNames('mr-1', isReadOnly && "opacity-50")}/>
                   </span>
                   <FormattedMessage id="Đính kèm file hợp đồng" />
                 </Label>
@@ -675,7 +713,7 @@ function PowerSellingCUForm({
                 />
               </div>
             </div>
-            {errors?.file && <FormFeedback className="d-block">{errors?.file?.message}</FormFeedback>}
+            {errors?.files && <FormFeedback className="d-block">{errors?.files?.message}</FormFeedback>}
           </Col>
         </Row>
 
@@ -698,7 +736,7 @@ function PowerSellingCUForm({
               classNamePrefix="select"
               placeholder={intl.formatMessage({ id: 'Select customer' })}
               formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
-              noOptionsMessage={() => <FormattedMessage id="There are no records to display" />} blurInputOnSelect
+              noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
             />
             {errors?.customerId && <FormFeedback className="d-block">{errors?.customerId?.message}</FormFeedback>}
           </Col>
@@ -875,7 +913,7 @@ function PowerSellingCUForm({
                   className="react-select"
                   classNamePrefix="select"
                   formatOptionLabel={(option) => <>{option.label}</>}
-                  noOptionsMessage={() => <FormattedMessage id="There are no records to display" />} blurInputOnSelect
+                  noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
                 />
                 {errors?.formType && <FormFeedback>{errors?.formType?.message}</FormFeedback>}
               </Col>
@@ -1081,7 +1119,7 @@ function PowerSellingCUForm({
 
         <Row>
           <Col className="d-flex justify-content-end align-items-center mb-2">
-            <Button type="submit" color="primary" className={classNames('mr-1 px-3', submitClassname)}>
+            <Button type="submit" color="primary" className="mr-1 px-3">
               {submitText || intl.formatMessage({ id: 'Save' })}
             </Button>{' '}
             <Button color="secondary" onClick={handleCancel}>
@@ -1101,8 +1139,7 @@ PowerSellingCUForm.propTypes = {
   initValues: object,
   onCancel: func,
   onSubmit: func,
-  cancelText: string,
-  submitClassname: string
+  cancelText: string
 }
 
 export default injectIntl(PowerSellingCUForm)

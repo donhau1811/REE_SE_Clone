@@ -60,7 +60,9 @@ const UpdateRoofVendorContract = ({ intl }) => {
       announcementDate: selectedContract.alerts?.billingAlert,
       startDate: moment(selectedContract.details?.startDate).format(ISO_STANDARD_FORMAT),
       rentalAmount: selectedContract.details?.rentalAmount,
-      id: selectedContract.id
+      id: selectedContract.id,
+      files:selectedContract.files
+
     })
   }, [selectedContract])
 

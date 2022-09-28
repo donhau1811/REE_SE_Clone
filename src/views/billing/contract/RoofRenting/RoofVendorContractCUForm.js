@@ -1,5 +1,12 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { API_CHECK_CODE_CONTRACT, NUMBER_REGEX, REAL_NUMBER, SET_FORM_DIRTY } from '@src/utility/constants'
+import {
+  API_CHECK_CODE_CONTRACT,
+  API_FILES_GET_SINGED_URL,
+  API_POST_FILES,
+  NUMBER_REGEX,
+  REAL_NUMBER,
+  SET_FORM_DIRTY
+} from '@src/utility/constants'
 import { selectThemeColors, showToast } from '@src/utility/Utils'
 import Table from '@src/views/common/table/CustomDataTable'
 import axios from 'axios'
@@ -24,12 +31,10 @@ import classNames from 'classnames'
 
 const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSubmit, submitClassname }) => {
   const [valueSetting, setValueSetting] = useState([])
-
   const defaultValues = {
     contractType: valueSetting[0]
   }
   const { setting } = useSelector((state) => state.settings)
-
   const defaultValid = {
     roofVendorName: yup.object().shape({
       label: yup.string().required(intl.formatMessage({ id: 'required-validate' })),
@@ -226,6 +231,8 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
     reset(contractValue)
   }, [initValues])
   const handleProcessFormData = async (value) => {
+    let listNamePostFile = []
+
     const dataCheck = { code: value?.contractCode }
     if (initValues?.id) dataCheck.id = initValues?.id
     try {
@@ -234,7 +241,27 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
         setError('contractCode', { type: 'custom', message: intl.formatMessage({ id: 'dubplicated-validate' }) })
         return
       }
+
+      const formData = new FormData()
+      const curentListFileName = watch('files')?.map((item) => item.name || item.fileName)
+      const listNewFiles = watch('files')?.filter((item) => !initValues?.files?.includes(item)) || []
+      if (listNewFiles?.length > 0) {
+        for (const file of listNewFiles) {
+          formData.append('files', file)
+        }
+        const dataReponse = await axios.post(API_POST_FILES, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+        listNamePostFile = dataReponse?.data?.data
+      }
+
+      listNamePostFile = listNamePostFile.concat(
+        initValues?.files?.filter((item) => curentListFileName?.includes(item.name || item.fileName)) || []
+      )
     } catch (err) {
+      console.log('err', err)
       const alert = initValues?.id
         ? 'Failed to update data. Please try again'
         : 'Failed to create data. Please try again'
@@ -255,7 +282,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
       roofVendorId: Number(value?.roofVendorName?.value),
       startDate: value?.effectiveDate,
       endDate: value?.expirationDate,
-      files: [],
+      files: listNamePostFile,
       alerts: {
         confirmAlert: value?.confirmationReminder,
         billingAlert: value?.announcementDate
@@ -270,29 +297,45 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
     onSubmit?.(newValue)
   }
   useEffect(() => {
-    register('file')
+    register('files')
   }, [register])
   const handleCancelForm = () => {
     onCancel?.(isDirty)
   }
 
   const handleChangeFiles = (event) => {
-    const files = Array.from(event.target.files)
-    setValue('file', files, { shouldValidate: true })
+    const filesNameCurent = watch('files')?.map((item) => item.fileName?.split(/\//)[1] || item.name)
+    let files = Array.from(event.target.files).filter((item) => !filesNameCurent?.includes(item.name))
+    files = files.concat(watch('files') || [])
+    setValue('files', files, { shouldValidate: true })
   }
 
-  const handleRemoveFile = (file) => (event) => {
+  const handleRemoveFile = (files) => (event) => {
     event.stopPropagation()
-    const filesList = getValues('file')
-
+    const filesList = getValues('files')
     setValue(
-      'file',
-      filesList.filter((item) => item.name !== file.name),
+      'files',
+      filesList.filter((item) => item.fileName !== files.fileName || item.name !== files.name),
       { shouldValidate: true }
     )
   }
+
   const handleClickToFileInput = (e) => {
     e.target.value = null
+  }
+  const handleCLickFileName = (item) => async (e) => {
+    e.preventDefault()
+
+    const fileLink = await axios.get(`${API_FILES_GET_SINGED_URL}?fileName=${item?.fileName}`)
+
+    if (fileLink.status === 200 && fileLink.data?.data) {
+      if (item.url && isReadOnly) {
+        const aTag = document.createElement('a')
+        aTag.setAttribute('href', fileLink?.data?.data?.signedUrl)
+        aTag.setAttribute('target', '_blank')
+        aTag.click()
+      }
+    }
   }
 
   return (
@@ -358,41 +401,52 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
           <Col xs={12} className=" mb-2 d-flex flex-column justify-content-end">
             <div className="d-flex align-items-end">
               <div className="mr-2">
-                {watch('file')?.map((item) => (
-                  <a key={item.name} href="#" className="d-block">
-                    {item.name}
-                    {!isReadOnly && (
-                      <span className="ml-1" role="button" onClick={handleRemoveFile(item)}>
-                        <XCircle size={14} color="#838A9C" />
-                      </span>
-                    )}
+                {watch('files')?.map((item) => (
+                  <a
+                    key={item?.fileName || item?.name}
+                    onClick={handleCLickFileName(item)}
+                    href={'#'}
+                    className="d-block"
+                  >
+                    <Row className="mb-1">
+                      <Col xs={10}>{(item?.fileName && `${item?.fileName?.split(/\//)[1]}`) || item?.name}</Col>
+                      <Col xs={1}>
+                        {!isReadOnly && (
+                          <span className="ml-1" role="button" onClick={handleRemoveFile(item)}>
+                            <XCircle size={14} color="#838A9C" />
+                          </span>
+                        )}
+                      </Col>
+                    </Row>
                   </a>
                 ))}
               </div>
               <div className="d-flex align-items-center">
                 <Label
-                  className={classNames('file-attachment-label', isReadOnly && 'file-attachment-label-disabled')}
+                  className={classNames(
+                    'files-attachment-label ml-2',
+                    isReadOnly && 'files-attachment-label-disabled cursor-pointer'
+                  )}
                   for="file"
                   role="button"
                 >
-                  <span className="mr-1">
-                    <Attachment />
+                  <span>
+                    <Attachment className={classNames('mr-1', isReadOnly && 'opacity-50')} />
                   </span>
                   <FormattedMessage id="Đính kèm file hợp đồng" />
                 </Label>
                 <Input
                   type="file"
-                  autoComplete="on"
                   disabled={isReadOnly}
                   id="file"
+                  multiple
                   onChange={handleChangeFiles}
                   onClick={handleClickToFileInput}
-                  multiple
                   className="d-none"
                 />
               </div>
             </div>
-            {errors?.file && <FormFeedback className="d-block">{errors?.file?.message}</FormFeedback>}
+            {errors?.files && <FormFeedback className="d-block">{errors?.files?.message}</FormFeedback>}
           </Col>
         </Row>
         <Row>
@@ -418,6 +472,7 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
               placeholder={intl.formatMessage({ id: 'Select roof rental vendor' })}
               formatOptionLabel={(option) => <>{intl.formatMessage({ id: option.label })}</>}
               noOptionsMessage={() => <FormattedMessage id="There are no records to display" />} blurInputOnSelect
+              
             />
             {!!errors?.roofVendorName && (
               <FormFeedback className="d-block">{errors?.roofVendorName?.value?.message}</FormFeedback>
@@ -470,7 +525,8 @@ const RoofVendorContractCUForm = ({ intl, onCancel, initValues, isReadOnly, onSu
               valid={!!getValues('contractType')?.value}
               invalid={!!errors.contractType}
               formatOptionLabel={(option) => <> {option.label}</>}
-              noOptionsMessage={() => <FormattedMessage id="There are no records to display" />} blurInputOnSelect
+              noOptionsMessage={() => <FormattedMessage id="There are no records to display" />}
+              blurInputOnSelect
             />
             {!!errors?.contractType && (
               <FormFeedback className="d-block">{errors?.contractType?.value?.message}</FormFeedback>
