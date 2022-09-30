@@ -5,6 +5,7 @@ import { combineReducers } from 'redux'
 import auth from './auth'
 import navbar from './navbar'
 import layout from './layout'
+import form from './form'
 import customer from '@src/views/settings/customers/store/reducer'
 import billingCustomer from '@src/views/billing/customer/store/reducer'
 import customerProject from '@src/views/monitoring/projects/store/reducer'
@@ -23,6 +24,15 @@ import alert from '@src/views/alert/store/reducer'
 import report from '@src/views/report/store/reducer'
 import company from '@src/views/billing/operation-unit/store/reducer'
 import roofUnit from '@src/views/billing/roof-rental-unit/store/reducer'
+import settings from '@src/views/billing/settings/store/reducer'
+import billingContacts from '@src/views/billing/contact/store/reducer'
+import projects from '@src/views/billing/project/store/reducer'
+import projectContracts from '@src/views/billing/contract/store/reducer'
+import contractClock from '@src/views/billing/clock/store/reducer'
+import billingMeter from '@src/views/billing/clock-metric/store/reducer'
+import billingInputClockIndex from '@src/views/billing/input-clock-index/store/reducer'
+import permissionGroup from '@src/views/system/permission-group/store/reducer'
+import userRole from '@src/views/system/user-role/store/reducer'
 
 
 const rootReducer = combineReducers({
@@ -46,7 +56,17 @@ const rootReducer = combineReducers({
   sensorSetting,
   company,
   billingCustomer,
-  roofUnit
+  roofUnit,
+  settings,
+  billingContacts,
+  projects,
+  projectContracts,
+  contractClock,
+  form,
+  billingMeter,
+  billingInputClockIndex,
+  permissionGroup,
+  userRole
 })
 
 export default rootReducer

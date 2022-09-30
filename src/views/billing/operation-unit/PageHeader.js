@@ -1,64 +1,63 @@
-import { object } from 'prop-types'
-import React from 'react'
+import { func, object, string } from 'prop-types'
+import React, { useContext, useEffect, useState } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { Button, Col, Input, Row, UncontrolledTooltip } from 'reactstrap'
-import InputGroupAddon from 'reactstrap/es/InputGroupAddon'
-import InputGroupText from 'reactstrap/es/InputGroupText'
-import InputGroup from 'reactstrap/es/InputGroup'
-import { ReactComponent as IconSearch } from '@src/assets/images/svg/table/ic-search.svg'
+import { Button, Col, Row } from 'reactstrap'
 import { ReactComponent as IconFilter } from '@src/assets/images/svg/table/ic-filter.svg'
 import { useHistory } from 'react-router-dom'
 import { ROUTER_URL } from '@src/utility/constants'
 import Filter from './Filter'
+import SearchBar from '@src/views/common/SearchBar/index'
+import { AbilityContext } from '@src/utility/context/Can'
+import { USER_ACTION, USER_FEATURE } from '@src/utility/constants/permissions'
 
-const PageHeader = ({ intl }) => {
+const PageHeader = ({ onSearch = () => {}, onFilter, searchValue, filterValue }) => {
   const history = useHistory()
-  const onSubmit = () => {
-  }
+  const [value, setValue] = useState('')
+
+  useEffect(() => {
+    if (searchValue !== value) setValue(searchValue)
+  }, [searchValue])
+
   const handleRedirectToAddNewPage = () => {
     history.push(ROUTER_URL.BILLING_OPERATION_UNIT_CREATE)
   }
+
+  const ability = useContext(AbilityContext)
+
   return (
     <>
       <Row className="mb-2">
         <Col lg="4" md="8" className="my-lg-0 mb-1 d-flex justify-content-end align-items-center">
-          <Filter onSubmit={onSubmit}>
-            <span className="mr-2">
+          <Filter onSubmit={onFilter} filterValue={filterValue}>
+            <span className="mr-2 " role="button">
               <IconFilter />
             </span>
           </Filter>
-
-          <InputGroup className="input-group-merge">
-            <Input
-              className=""
-              type="search"
-              bsSize="sm"
-              id="search-input"
-              placeholder={intl.formatMessage({ id: 'operation-unit-list-search-input-placeholder' })}
-            />
-            <InputGroupAddon addonType="append">
-              <InputGroupText>
-                <IconSearch />
-              </InputGroupText>
-            </InputGroupAddon>
-          </InputGroup>
-          <UncontrolledTooltip placement="top" target={`search-input`}>
-            {intl.formatMessage({ id: 'operation-unit-list-search-input-placeholder' })}
-          </UncontrolledTooltip>
+          <SearchBar
+            onSearch={onSearch}
+            searchValue={searchValue}
+            placeholder={'operation-unit-list-search-input-placeholder'}
+          />
         </Col>
 
-        <Col lg={{ offset: 4, size: 4 }} md={4} className="d-flex justify-content-end align-items-center">
-          <Button.Ripple color="primary" className="add-project" onClick={handleRedirectToAddNewPage}>
-            <FormattedMessage id="Add new" />
-          </Button.Ripple>
-        </Col>
+        {ability.can(USER_ACTION.CREATE, USER_FEATURE.OPE_CO) && (
+          <Col lg={{ offset: 4, size: 4 }} md={4} className="d-flex justify-content-end align-items-center">
+            <Button.Ripple color="primary" className="add-project" onClick={handleRedirectToAddNewPage}>
+              <FormattedMessage id="Add new" />
+            </Button.Ripple>
+          </Col>
+        )}
       </Row>
     </>
   )
 }
 
 PageHeader.propTypes = {
-  intl: object.isRequired
+  intl: object.isRequired,
+  onSearch: func,
+  onFilter: func,
+  searchValue: string,
+  filterValue: object
 }
 
 export default injectIntl(PageHeader)

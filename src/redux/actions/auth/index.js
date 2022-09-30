@@ -3,12 +3,19 @@ import useJwt from '@src/auth/jwt/useJwt'
 import {
   GET_ACCOUNT_INFO,
   GET_GROUP,
+  SET_USER_PERMISSIONS,
   UPDATE_ACCOUNT_AVATAR,
   UPDATE_ACCOUNT_INFO,
   UPDATE_ACCOUNT_INFO_FROM_SETTING
 } from '@constants/actions'
 import axios from 'axios'
-import { API_GET_GROUP, API_POST_MEDIA, API_PUT_USER_INFO, API_RESET_PASSWORD } from '@constants/api'
+import {
+  API_GET_GROUP,
+  API_PERMISSIONS_BY_USER,
+  API_POST_MEDIA,
+  API_PUT_USER_INFO,
+  API_RESET_PASSWORD
+} from '@constants/api'
 import { showToast } from '@utils'
 import { deleteToken } from '@src/firebase'
 
@@ -156,5 +163,32 @@ export const getGroup = (params) => {
       .catch((err) => {
         showToast('error', `${err.response ? err.response.data.message : err.message}`)
       })
+  }
+}
+export const getPermissionsbyUserId = ({ callback }) => {
+  return async (dispatch) => {
+    await axios
+      .get(API_PERMISSIONS_BY_USER)
+      .then((response) => {
+        if (response.status === 200 && response.data.data) {
+          const resData = response.data.data
+
+          dispatch({
+            type: SET_USER_PERMISSIONS,
+            payload: resData?.role?.permissions || []
+          })
+        } else {
+          throw new Error(response.data.message)
+        }
+      })
+      .catch((err) => {
+        dispatch({
+          type: SET_USER_PERMISSIONS,
+          payload: []
+        })
+        showToast('error', `${err.response ? err.response.data.message : err.message}`)
+      })
+
+    callback?.()
   }
 }

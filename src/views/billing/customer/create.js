@@ -1,11 +1,13 @@
-import { ROUTER_URL } from '@src/utility/constants'
+import { ROUTER_URL, SET_FORM_DIRTY } from '@src/utility/constants'
 import { object } from 'prop-types'
 import React from 'react'
-import { injectIntl } from 'react-intl'
+import { injectIntl, useIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import CustomerCUForm from './CustomerCUForm'
 import { postCustomer } from './store/actions'
+
+import BreadCrumbs from '@src/views/common/breadcrumbs'
 
 const CreateCustomerCOM = ({ intl }) => {
   const dispatch = useDispatch()
@@ -16,8 +18,12 @@ const CreateCustomerCOM = ({ intl }) => {
   const handleAddCustomer = (values) => {
     dispatch(
       postCustomer({
-        params: values,
+        params: { ...values, state: values.state?.value, type: values.type?.value },
         callback: () => {
+          dispatch({
+            type: SET_FORM_DIRTY,
+            payload: false
+          })
           history.push(ROUTER_URL.BILLING_CUSTOMER)
         },
         intl,
@@ -29,11 +35,7 @@ const CreateCustomerCOM = ({ intl }) => {
   const handleCancel = () => {
     history.push(ROUTER_URL.BILLING_CUSTOMER)
   }
-  return (
-    <>
-      <CustomerCUForm onCancel={handleCancel} onSubmit={handleAddCustomer} />
-    </>
-  )
+  return <CustomerCUForm onCancel={handleCancel} onSubmit={handleAddCustomer} />
 }
 
 CreateCustomerCOM.propTypes = {
@@ -41,3 +43,24 @@ CreateCustomerCOM.propTypes = {
 }
 
 export default injectIntl(CreateCustomerCOM)
+
+export const Navbar = () => {
+  const intl = useIntl()
+
+  const tempItems = [
+    { name: intl.formatMessage({ id: 'billing' }), link: '' },
+    {
+      name: intl.formatMessage({ id: 'customers' }),
+      link: ROUTER_URL.BILLING_CUSTOMER
+    },
+    {
+      name: intl.formatMessage({ id: 'create-customer' }),
+      link: ''
+    }
+  ]
+  return (
+    <>
+      <BreadCrumbs breadCrumbItems={tempItems} />
+    </>
+  )
+}

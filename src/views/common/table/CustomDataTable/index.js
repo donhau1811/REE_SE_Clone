@@ -1,8 +1,10 @@
 import classNames from 'classnames'
-import { array, func, number, string } from 'prop-types'
+import { array, bool, element, func, number } from 'prop-types'
 import React from 'react'
 import DataTable from 'react-data-table-component'
 import { Code } from 'react-feather'
+import { FormattedMessage } from 'react-intl'
+import NoDataCOM from '../../NoDataCOM'
 import Pagination from './Pagination'
 import './style.scss'
 
@@ -10,12 +12,14 @@ const Table = ({
   data,
   columns,
   onSort,
-  total = 5,
+  total,
   rowsPerPage = 10,
   currentPage = 1,
   rowsPerPageOptions,
-  handlePerPage,
-  className,
+  onPerPageChange,
+  onPageChange,
+  noDataTitle,
+  isSearching,
   ...rest
 }) => {
   const paginationProps = {
@@ -23,7 +27,8 @@ const Table = ({
     rowsPerPage,
     currentPage,
     rowsPerPageOptions,
-    handlePerPage
+    handlePerPage: onPerPageChange,
+    onPageChange
   }
 
   const PaginationCOM = () => <Pagination {...paginationProps} />
@@ -31,17 +36,14 @@ const Table = ({
   return (
     <>
       <DataTable
-      style={{ overflow:'auto'}}
         noHeader
         pagination
         paginationServer
-        className={classNames('table-height react-dataTable react-dataTable--customers hover', {
-          'overflow-hidden': data?.length <= 0,
-          className
+        className={classNames(`react-dataTable react-dataTable--projects hover react-dataTable-version-2`, {
+          'overflow-hidden': data?.length <= 0
         })}
-        
-        fixedHeader
-        fixedHeaderScrollHeight="calc(100vh - 340px)"
+        // fixedHeader
+        // fixedHeaderScrollHeight="calc(100vh - 340px)"
         columns={columns.filter((item) => !item.isHidden)}
         sortIcon={
           <div className="custom-sort-icon">
@@ -56,6 +58,18 @@ const Table = ({
         sortServer
         {...rest}
       />
+      {!(data || []).length > 0 && (
+        <NoDataCOM
+          title={
+            noDataTitle ||
+            (isSearching ? (
+              <FormattedMessage id="Not found any result. Please try again" />
+            ) : (
+              <FormattedMessage id="Add or update record later" />
+            ))
+          }
+        />
+      )}
     </>
   )
 }
@@ -68,8 +82,10 @@ Table.propTypes = {
   rowsPerPage: number,
   currentPage: number,
   rowsPerPageOptions: array,
-  handlePerPage: func,
-  className: string
+  onPerPageChange: func,
+  onPageChange: func,
+  noDataTitle: element,
+  isSearching: bool
 }
 
 export default Table

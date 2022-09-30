@@ -11,6 +11,7 @@ const Pagination = ({
   handlePerPage = () => {},
   ...rest
 }) => {
+  
   const count = Math.ceil(total / rowsPerPage)
 
   return (

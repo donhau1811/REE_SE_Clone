@@ -1,4 +1,4 @@
-/* eslint no-unused-vars: 0 */  // --> OFF
+/* eslint no-unused-vars: 0 */ // --> OFF
 // ** React Imports
 import { useContext } from 'react'
 import { AbilityContext } from '@src/utility/context/Can'
@@ -7,7 +7,7 @@ import { AbilityContext } from '@src/utility/context/Can'
  * Return which component to render based on it's data/context
  * @param {Object} item nav menu item
  */
-export const resolveVerticalNavMenuItemComponent = item => {
+export const resolveVerticalNavMenuItemComponent = (item) => {
   if (item.header) return 'VerticalNavMenuSectionHeader'
   if (item.children) return 'VerticalNavMenuGroup'
   return 'VerticalNavMenuLink'
@@ -17,7 +17,7 @@ export const resolveVerticalNavMenuItemComponent = item => {
  * Return which component to render based on it's data/context
  * @param {Object} item nav menu item
  */
-export const resolveHorizontalNavMenuItemComponent = item => {
+export const resolveHorizontalNavMenuItemComponent = (item) => {
   if (item.children) return 'HorizontalNavMenuGroup'
   return 'HorizontalNavMenuLink'
 }
@@ -58,7 +58,7 @@ export const isNavLinkActive = (link, currentURL, routerProps) => {
 //   })
 // }
 export const isNavGroupActive = (children, currentURL, routerProps) => {
-  return children.some(child => {
+  return children.some((child) => {
     // If child have children => It's group => Go deeper(recursive)
     if (child.children) {
       return isNavGroupActive(child.children, currentURL, routerProps)
@@ -97,7 +97,7 @@ export const isNavGroupActive = (children, currentURL, routerProps) => {
 
 export const search = (navigation, currentURL, routerProps) => {
   let result
-  navigation.some(child => {
+  navigation.some((child) => {
     let children
     // If child have children => It's group => Go deeper(recursive)
     if (child.children && (children = search(child.children, currentURL, routerProps))) {
@@ -141,20 +141,24 @@ export const getAllParents = (obj, match) => {
   return res
 }
 
-export const canViewMenuGroup = item => {
+export const checkAbilityOfRouter = (route) => {
   const ability = useContext(AbilityContext)
+  if (typeof route.action === 'string') return ability.can(route.action, route.resource)
+  if (Array.isArray(route.action)) return route.action.some((act) => ability.can(act, route.resource))
+}
+
+export const canViewMenuGroup = (item) => {
   // ! This same logic is used in canViewHorizontalNavMenuGroup and canViewHorizontalNavMenuHeaderGroup. So make sure to update logic in them as well
-  const hasAnyVisibleChild = item.children && item.children.some(i => ability.can(i.action, i.resource))
+  const hasAnyVisibleChild = item.children && item.children.some((i) => checkAbilityOfRouter(i))
 
   // ** If resource and action is defined in item => Return based on children visibility (Hide group if no child is visible)
   // ** Else check for ability using provided resource and action along with checking if has any visible child
   if (!(item.action && item.resource)) {
     return hasAnyVisibleChild
   }
-  return ability.can(item.action, item.resource) && hasAnyVisibleChild
+  return checkAbilityOfRouter(item) && hasAnyVisibleChild
 }
 
-export const canViewMenuItem = item => {
-  const ability = useContext(AbilityContext)
-  return ability.can(item.action, item.resource)
+export const canViewMenuItem = (item) => {
+  return checkAbilityOfRouter(item)
 }

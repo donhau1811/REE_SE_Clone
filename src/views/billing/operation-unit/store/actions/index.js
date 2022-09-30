@@ -1,169 +1,127 @@
-import { API_COMPANY_UNIT, API_DELETE_OPERATING_COMPANY, API_OPERATION_UNIT } from '@src/utility/constants'
+import {
+  API_GET_OPERATION_UNIT,
+  API_CREATE_OPERATION_UNIT,
+  API_DELETE_OPERATING_COMPANY,
+  API_GET_OPERATION_UNIT_BY_ID,
+  API_UPDATE_OPERATION_UNIT
+} from '@src/utility/constants'
 import axios from 'axios'
-import withReactContent from 'sweetalert2-react-content'
-import SweetAlert from 'sweetalert2'
-import { ReactComponent as CicleSuccess } from '@src/assets/images/svg/circle-success.svg'
-import { ReactComponent as CicleFailed } from '@src/assets/images/svg/circle-failed.svg'
-import classNames from 'classnames'
-import { FETCH_COMPANY_REQUEST } from '@constants/actions'
+import { FETCH_COMPANY_REQUEST, SET_SELECTED_OPERATION_UNIT } from '@constants/actions'
+import { get } from 'lodash'
+import { showToast } from '@src/utility/Utils'
+import { FormattedMessage } from 'react-intl'
 
-const MySweetAlert = withReactContent(SweetAlert)
-
-export const postOperationUnit = ({ params, callback, skin, intl }) => {
+export const postOperationUnit = ({ params, callback }) => {
   return async () => {
     await axios
-      .post(API_OPERATION_UNIT, { params })
+      .post(API_CREATE_OPERATION_UNIT, params)
       .then((response) => {
-        if (response.data && response.data.status && response.data.data) {
-          MySweetAlert.fire({
-            iconHtml: <CicleSuccess />,
-            text: intl.formatMessage({ id: 'Operation unit is added successfully' }),
-            customClass: {
-              popup: classNames({
-                'sweet-alert-popup--dark': skin === 'dark'
-              }),
-              confirmButton: 'btn btn-primary mt-2',
-              icon: 'border-0'
-            },
-            width: 'max-content',
-            showCloseButton: true,
-            confirmButtonText: 'OK'
-          })
-          if (callback) callback()
-        } else {
-          throw new Error(response.data?.message)
-        }
-      })
-      .catch((err) => {
-        console.log('err', err)
-        MySweetAlert.fire({
-          iconHtml: <CicleFailed />,
-          text: intl.formatMessage({ id: 'Failed to update data. Please try again' }),
-          customClass: {
-            popup: classNames({
-              'sweet-alert-popup--dark': skin === 'dark'
-            }),
-            confirmButton: 'btn btn-primary mt-2',
-            icon: 'border-0'
-          },
-          width: 'max-content',
-          showCloseButton: true,
-          confirmButtonText: intl.formatMessage({ id: 'Try again' })
-        })
-      })
-  }
-}
-export const putOperationUnit = ({ params, callback, intl, skin }) => {
-  return async () => {
-    await axios
-      .put(API_OPERATION_UNIT, { params })
-      .then((response) => {
-        if (response.data && response.data.status && response.data.data) {
-          MySweetAlert.fire({
-            iconHtml: <CicleSuccess />,
-            text: intl.formatMessage({ id: 'Data is updated successfully' }),
-            customClass: {
-              popup: classNames({
-                'sweet-alert-popup--dark': skin === 'dark'
-              }),
-              confirmButton: 'btn btn-primary mt-2',
-              icon: 'border-0'
-            },
-            width: 'max-content',
-            showCloseButton: true,
-            confirmButtonText: 'OK'
-          })
-
+        if (response.status === 200 && response.data.data) {
+          showToast('success', <FormattedMessage id="Create new data successfully" />)
           callback?.()
         } else {
           throw new Error(response.data?.message)
         }
       })
-      .catch((err) => {
-        console.log('err', err)
-        MySweetAlert.fire({
-          iconHtml: <CicleFailed />,
-          text: intl.formatMessage({ id: 'Failed to update data. Please try again' }),
-          customClass: {
-            popup: classNames({
-              'sweet-alert-popup--dark': skin === 'dark'
-            }),
-            confirmButton: 'btn btn-primary mt-2',
-            icon: 'border-0'
-          },
-          width: 'max-content',
-          showCloseButton: true,
-          confirmButtonText: intl.formatMessage({ id: 'Try again' })
-        })
+      .catch(() => {
+        showToast('error', <FormattedMessage id="Failed to create data. Please try again" />)
       })
   }
 }
-
-export const getAllCompany = (params) => {
-  return async (dispatch) => {
+export const putOperationUnit = ({ params, callback }) => {
+  return async () => {
     await axios
-      .get(API_COMPANY_UNIT, { params })
+      .put(API_UPDATE_OPERATION_UNIT, params)
       .then((response) => {
-        if (response.data && response.data.data) {
-          dispatch({
-            type: FETCH_COMPANY_REQUEST,
-            data: response.data.data,
-            total: response.data.total
-          })
+        if (response.status === 200 && response.data.data) {
+          showToast('success', <FormattedMessage id="Update info success" />)
+          callback?.()
         } else {
-          throw new Error(response.data.message)
-        }
-      })
-      .catch((err) => {
-        console.log('err', err)
-      })
-  }
-}
-
-export const deleteCompany = ({ id, skin, intl }) => {
-  return async (dispatch) => {
-    await axios
-      .delete(`${API_DELETE_OPERATING_COMPANY}/${id}`)
-      .then((response) => {
-        if (response.data && response.data.success) {
-          MySweetAlert.fire({
-            iconHtml: <CicleSuccess />,
-            text: intl.formatMessage({ id: 'Delete operating customer success' }),
-            customClass: {
-              popup: classNames({
-                'sweet-alert-popup--dark': skin === 'dark'
-              }),
-              confirmButton: 'btn btn-primary mt-2',
-              icon: 'border-0'
-            },
-            width: 'max-content',
-            showCloseButton: true,
-            confirmButtonText: 'OK'
-          })
-          dispatch({
-            type: FETCH_COMPANY_REQUEST,
-            data: response.data.data,
-            total: response.data.total
-          })
-        } else {
-          throw new Error(response.data.message)
+          throw new Error(response.data?.message)
         }
       })
       .catch(() => {
-        MySweetAlert.fire({
-          iconHtml: <CicleFailed />,
-          text: intl.formatMessage({ id: 'Delete operating customer failed' }),
-          customClass: {
-            popup: classNames({
-              'sweet-alert-popup--dark': skin === 'dark'
-            }),
-            confirmButton: 'btn btn-primary mt-2',
-            icon: 'border-0'
-          },
-          width: 'max-content',
-          showCloseButton: true,
-          confirmButtonText: intl.formatMessage({ id: 'Yes' })
-        })
+        showToast('error', <FormattedMessage id="data update failed, please try again" />)
+      })
+  }
+}
+
+export const getListOperationUnit = (params = {}) => {
+  return async (dispatch) => {
+    const { pagination = {}, searchValue, ...rest } = params
+    const payload = {
+      ...rest,
+      limit: pagination.rowsPerPage,
+      offset: pagination.rowsPerPage * (pagination.currentPage - 1)
+    }
+    if (searchValue?.trim()) {
+      payload.searchValue = {
+        value: searchValue,
+        fields: ['name', 'code', 'taxCode', 'address', 'phone'],
+        type: 'contains'
+      }
+    }
+
+    await axios
+      .post(API_GET_OPERATION_UNIT, payload)
+      .then((response) => {
+        if (response.status === 200 && response.data.data) {
+          dispatch({
+            type: FETCH_COMPANY_REQUEST,
+            data: response.data.data,
+            total: response.data.count,
+            params
+          })
+        } else {
+          throw new Error(response.data.message)
+        }
+      })
+      .catch((err) => {
+        console.log('err', err)
+      })
+  }
+}
+
+export const deleteOperationUnit = ({ id, callback }) => {
+  return async () => {
+    await axios
+      .delete(`${API_DELETE_OPERATING_COMPANY}/${id}`)
+      .then((response) => {
+        if (response.status === 200 && response.data?.data) {
+          showToast('success', <FormattedMessage id="Delete info success" />)
+
+          callback?.()
+        } else {
+          // throw new Error(response.data?.message)
+          showToast('error', response.data?.message)
+        }
+      })
+      .catch(() => {
+        showToast('error', <FormattedMessage id="data delete failed, please try again" />)
+      })
+  }
+}
+
+export const getOperationUnitById = ({ id, isSavedToState, callback }) => {
+  return async (dispatch) => {
+    await axios
+      .get(`${API_GET_OPERATION_UNIT_BY_ID}/${id}`)
+      .then((response) => {
+        if (response.status === 200 && response.data.data) {
+          const payload = get(response, 'data.data', {})
+          if (isSavedToState) {
+            dispatch({
+              type: SET_SELECTED_OPERATION_UNIT,
+              payload
+            })
+          }
+          callback?.(response.data.data)
+        } else {
+          throw new Error(response.data?.message)
+        }
+      })
+      .catch((err) => {
+        console.log('err', err)
       })
   }
 }

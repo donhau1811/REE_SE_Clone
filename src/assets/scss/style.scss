@@ -1476,6 +1476,7 @@ footer.footer {
 
 .typo-section {
   color: $sub-text-level2;
+  text-transform: uppercase;
 }
 
 .general-label {
@@ -1488,4 +1489,114 @@ footer.footer {
   text-transform: none !important;
   font-size: 1rem !important;
   outline: none !important;
+}
+.tabs-border-bottom {
+  border-bottom: 1px solid $text-sub;
+}
+.add-contact-button {
+  background-color: #026894 !important;
+  border: 0;
+  border-radius: 3px;
+}
+
+.custom-icon-input-date::-webkit-calendar-picker-indicator {
+  background-image: url('@src/assets/images/svg/carlendar.svg');
+  font-size: 20px;
+}
+.file-attachment-label {
+  color: #026894;
+  font-size: 14px;
+  // cursor: default !important;
+}
+.file-attachment-label-disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: default !important;
+}
+.divider-dashed {
+  width: 100%;
+  border-bottom: 1px dashed $text-level2;
+}
+.divider-vertical {
+  height: auto;
+  border-right: 1px dashed $text-level2;
+}
+
+.billing-form {
+  input,
+  .select__single-value,
+  .multiple-value-container {
+    color: $dark-2 !important;
+  }
+  .select__control:hover {
+    border-color: $border-color;
+    box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.25);
+  }
+  .select__indicator {
+    color: #7897b4 !important;
+  }
+
+  .form-control:disabled,
+  .form-control[readonly] {
+    background-color: transparent;
+    color: #7897b4 !important;
+  }
+  .select--is-disabled,
+  .select__single-value--is-disabled {
+    color: #7897b4 !important;
+    .multiple-value-container {
+      color: #7897b4 !important;
+    }
+  }
+  .custom-input-flatpickr[readonly] {
+    color: #292d39 !important;
+  }
+}
+
+.custom-bagde {
+  cursor: default !important;
+}
+.custom-breadcrumb {
+  cursor: default !important;
+}
+.input-date-range {
+  background-image: url('@src/assets/images/svg/carlendar.svg');
+  font-size: 1px !important;
+  z-index: -1 !important;
+}
+.no-boder {
+  border: none !important;
+}
+
+.borderCustom {
+  height: 40px;
+  border: 1px solid #98aabb;
+  border-left: none;
+  border-radius: 0 5px 5px 0;
+}
+
+.input-group-merge {
+  &:focus-within .borderCustom {
+    border-color: #0394ff;
+  }
+  &:hover {
+    box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.25);
+  }
+}
+.el-date-editor {
+  &.el-date-editor--daterange {
+    &.el-input {
+      width: 100%;
+      background-color: 'transparent';
+    }
+  }
+}
+.el-input__inner {
+  background-color: transparent !important;
+}
+
+.custom-checked-input {
+  position: relative;
+  margin-left: 0;
+  margin-right: 0.5rem;
 }

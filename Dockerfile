@@ -1,11 +1,26 @@
-FROM node:14
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
-COPY ./package.json /usr/src/app/
-RUN npm install yarn && npm i
-COPY ./ /usr/src/app
-RUN npm run build
+FROM node:16 AS build-stage
+WORKDIR /temp
+
+COPY . .
+RUN npm rebuild node-sass
+RUN yarn
+RUN yarn build
+
+FROM node:16
+
+RUN yarn add serve --global
+WORKDIR /app
+COPY --from=build-stage temp/build ./build
+COPY --from=build-stage temp/package.json ./package.json
 ENV NODE_ENV production
 ENV PORT 4000
 EXPOSE 4000
-CMD ["yarn","run","serve"]
+RUN yarn global add serve 
+
+CMD ["npm","run", "serve"]
+
+
+
+
+
+

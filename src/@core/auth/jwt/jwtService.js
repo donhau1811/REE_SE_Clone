@@ -56,7 +56,9 @@ export default class JwtService {
         if (process.env.REACT_APP_X_DEV_DB_KEY_T) {
           config.headers['x-dev-db-key'] = process.env.REACT_APP_X_DEV_DB_KEY_T
         }
-
+        if (this.getUserData()?.id) {
+          config.headers['ree_user_id'] = this.getUserData()?.id
+        }
         // Language
         config.headers.language = localStorage.getItem('language')
 
@@ -102,7 +104,7 @@ export default class JwtService {
         }
 
         // ** if (status === 401) {
-        if (response && response.status === 401) {
+        if (response && response.status === 401 && window.location.href !== ROUTER_URL.UNAUTHORIZED) {
           window.location.href = ROUTER_URL.UNAUTHORIZED
           this.isUnauthorized = true
 
@@ -150,6 +152,9 @@ export default class JwtService {
 
   getRefreshToken() {
     return JSON.parse(localStorage.getItem(this.jwtConfig.storageRefreshTokenKeyName))
+  }
+  getUserData() {
+    return JSON.parse(localStorage.getItem(this.jwtConfig.userDataKeyName))
   }
 
   setToken(value) {

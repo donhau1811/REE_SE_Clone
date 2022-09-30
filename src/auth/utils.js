@@ -122,6 +122,15 @@ export const getUserAbility = (userRole) => {
         { action: 'manage', subject: ROUTER_URL.BILLING_OPERATION_UNIT },
         { action: 'manage', subject: ROUTER_URL.BILLING_CUSTOMER },
         { action: 'manage', subject: ROUTER_URL.BILLING_ROOF_RENTAL_UNIT },
+        { action: 'manage', subject: ROUTER_URL.BILLING_SETTING },
+        { action: 'manage', subject: ROUTER_URL.BILLING_PROJECT },
+        { action: 'manage', subject: ROUTER_URL.BILLING_PROJECT_CREATE_ROOF_VENDOR },
+        { action: 'manage', subject: ROUTER_URL.BILLING_PROJECT_UPDATE_ROOF_VENDOR },
+        { action: 'manage', subject: ROUTER_URL.BILLING_METRIC_CLOCK },
+        { action: 'manage', subject: ROUTER_URL.BILLING_MANUAL_INPUT_METRIC_CLOCK },
+        { action: 'manage', subject: ROUTER_URL.SYSTEM_PERMISSION_GROUP },
+        { action: 'manage', subject: ROUTER_URL.SYSTEM_PERMISSION_GROUP_UPDATE },
+        { action: 'manage', subject: ROUTER_URL.SYSTEM_DECENTRALIZATION },
         { action: 'manage', subject: USER_ABILITY.CAN_VIEW_USER_ACTIVITIES_REPORT }
       ]
     }

@@ -22,10 +22,14 @@ import axios from 'axios'
 import { API_GET_GENERAL_SETTING, API_POST_GENERAL_SETTING } from '@constants/api'
 import { UPDATE_GENERAL_SETTING } from '@constants/actions'
 import { showToast } from '@utils'
+import { useRouteMatch } from 'react-router-dom'
+import { Routes } from '@src/router/routes'
 
 const VerticalLayout = (props) => {
   // ** Ability Context
   const ability = useContext(AbilityContext)
+
+  const routerObject = Routes.find((route) => useRouteMatch(route.path)?.isExact)
 
   const dispatch = useDispatch()
 
@@ -33,7 +37,10 @@ const VerticalLayout = (props) => {
   const [isTimeout, setIsTimeout] = useState(false)
 
   // ** Layout store
-  const { layout: layoutStore, auth: { generalSetting, isTokenTimeOut } } = useSelector((state) => state)
+  const {
+    layout: layoutStore,
+    auth: { generalSetting, isTokenTimeOut }
+  } = useSelector((state) => state)
   const sessionTimeout = generalSetting?.sessionTimeout > 0 ? generalSetting.sessionTimeout : SESSION_TIMEOUT
 
   // ** Setting idle timer
@@ -61,14 +68,8 @@ const VerticalLayout = (props) => {
         .get(API_GET_GENERAL_SETTING, { params: { userId: userData?.id } })
         .then(async (response) => {
           if (response?.data?.data) {
-            const {
-              defaultLanguage,
-              theme,
-              treesSavedRate,
-              co2ReductionRate,
-              standardCoalRate,
-              sessionTimeout
-            } = response.data.data
+            const { defaultLanguage, theme, treesSavedRate, co2ReductionRate, standardCoalRate, sessionTimeout } =
+              response.data.data
 
             dispatch({
               type: UPDATE_GENERAL_SETTING,
@@ -102,10 +103,12 @@ const VerticalLayout = (props) => {
 
   return (
     <>
-      <Layout {...props}>{props.children}</Layout>
-      {(
-        isTimeout || isTokenTimeOut
-      ) && <SessionTimeout isOpen={isTimeout || isTokenTimeOut} toggle={() => setIsTimeout(false)} />}
+      <Layout {...props} navbar={routerObject?.navbar ? <routerObject.navbar /> : null}>
+        {props.children}
+      </Layout>
+      {(isTimeout || isTokenTimeOut) && (
+        <SessionTimeout isOpen={isTimeout || isTokenTimeOut} toggle={() => setIsTimeout(false)} />
+      )}
       {layoutStore.requestCount > 0 && <Spinner />}
     </>
   )
