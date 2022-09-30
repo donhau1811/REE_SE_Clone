@@ -5,6 +5,7 @@ export const ROUTER_URL = {
   MAP: '/dashboard/map',
   CUSTOMERS: '/dashboard/customers',
   INFORMATION: '/operation/information',
+  CONTROL: '/operation/project/control', //create a new sub-menu item //done
   PROJECTS: '/operation/monitoring',
   PROJECT: '/operation/project',
   PROJECT_OVERVIEW: '/operation/project/overview',
@@ -65,5 +66,4 @@ export const ROUTER_URL = {
   BILLING_ROOF_RENTAL_UNIT_CREATE: '/billing/roof-rental-unit/create-rental-unit',
   BILLING_ROOF_RENTAL_UNIT_UPDATE: '/billing/roof-rental-unit/update-rental-unit',
   BILLING_CUSTOMER_VIEW: '/billing/customers/view-customer'
-
 }

@@ -1,5 +1,6 @@
 import { lazy } from 'react'
 import { ROUTER_URL } from '@constants/router'
+// import BlankLayout from '@src/@core/layouts/BlankLayout'
 
 export const MonitoringRoutes = [
   {
@@ -18,6 +19,15 @@ export const MonitoringRoutes = [
     meta: {
       action: 'manage',
       resource: ROUTER_URL.PROJECTS
+    }
+  },
+  {
+    path: ROUTER_URL.CONTROL,
+    exact: true,
+    component: lazy(() => import('../../views/monitoring/project/devices/inverters/index2')),
+    meta: {
+      action: 'manage',
+      resource: ROUTER_URL.CONTROL
     }
   },
   {

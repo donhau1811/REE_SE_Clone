@@ -9,7 +9,9 @@ import {
   SET_INVERTER_DATA,
   ACTIVATE_INVERTER,
   ROWS_PER_PAGE_DEFAULT,
-  LOGOUT, GET_INVERTER_TYPES
+  LOGOUT,
+  GET_INVERTER_TYPES,
+  SEND_COMMAND_TO_INVERTER
 } from '@constants/index'
 import _orderBy from 'lodash/orderBy'
 import { filterData } from '@utils'
@@ -31,6 +33,10 @@ const initialState = {
 
 const DataTablesReducer = (state = initialState, action) => {
   switch (action.type) {
+    case SEND_COMMAND_TO_INVERTER:
+      return {
+
+      }
     case GET_INVERTERS:
       return {
         ...state,
@@ -126,7 +132,7 @@ const DataTablesReducer = (state = initialState, action) => {
         total: action.total
       }
     }
-    case GET_INVERTER_TYPES : {
+    case GET_INVERTER_TYPES: {
       return {
         ...state,
         types: action.data

@@ -22,13 +22,12 @@ import Panels from '@src/views/monitoring/project/devices/panels'
 import ProjectSetting from '@src/views/monitoring/project/ProjectSetting'
 import ProjectChart from '@src/views/monitoring/project/chart'
 import { GET_PROJECT_MONITORING } from '@constants/actions'
-import AdjustInverter from '../devices/inverter/AdjustInverter'
 
 const ProjectDetail = () => {
   // ** history
   const history = useHistory(),
-    query = useQuery(),
-    projectId = query.get('projectId')
+  query = useQuery(),
+  projectId = query.get('projectId')
 
   // ** Store Vars
   const dispatch = useDispatch()
@@ -72,9 +71,6 @@ const ProjectDetail = () => {
 
       case ROUTER_URL.PROJECT_OVERVIEW:
         return <ProjectOverview setIsShowSideBar={setIsShowSideBar} />
-
-      case ROUTER_URL.PROJECT_CONTROL: //add UI to control the inverters
-        return <AdjustInverter />
     }
   }
 

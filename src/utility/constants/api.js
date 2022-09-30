@@ -1,4 +1,6 @@
 const BASE_API_URL = process.env.REACT_APP_BASE_API_URL
+//Base URL for sending command to control power of inverter
+const BASE_API_CLOUD_FUNCTION = process.env.BASE_API_CLOUD_FUNCTION
 
 export const API_GET_USERS = `${BASE_API_URL}/glf_user`
 export const API_GET_USERS_ACTIVITIES = `${BASE_API_URL}/glf_activity`
@@ -134,3 +136,5 @@ export const API_CONTACT_ROOF_RETAL_UNIT = `${BASE_API_URL}/api/v1/billing/roof-
 
 export const API_DELETE_ROOF_RETAL_UNIT = `${BASE_API_URL}/api/v1/billing/customer`
 
+//API to send command to inverters
+export const API_SEND_COMMAND_TO_INVERTER = `${BASE_API_CLOUD_FUNCTION}/send_command_to_inverter`

@@ -23,6 +23,13 @@ export default [
         navLink: ROUTER_URL.PROJECTS
       },
       {
+        id: 'control',
+        title: 'Control',
+        action: 'manage',
+        resource: ROUTER_URL.CONTROL,
+        navLink: ROUTER_URL.CONTROL
+      },
+      {
         id: 'alert',
         title: 'Alert',
         action: 'manage',
