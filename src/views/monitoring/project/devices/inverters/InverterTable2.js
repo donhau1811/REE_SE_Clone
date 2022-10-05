@@ -65,11 +65,12 @@ const InverterTable2 = ({
     const onSubmit = (data)  => {
       const entries = Object.entries(data)
       const dataNeeded = entries.find(item => item[1] !== '')  
+      // console.log(dataNeeded)
       const body = {
-        control_type : "power_control",
-        site: projectId,
+        control_type : 'power-control',
+        site: 'local-debug',
         inverter_type: inverterType,
-        device_sn : dataNeeded[0],
+        device_sn : 'A2004250015',
         control_values: {absolute_output_number : dataNeeded[1], percentage_output_number : null}       
       }
       const dataToSend = JSON.stringify(body)
@@ -77,7 +78,7 @@ const InverterTable2 = ({
       .post(
         'https://asia-southeast1-rse-sep-ii.cloudfunctions.net/send_command_to_inverter',
         dataToSend,
-        { headers: {  'Content-Type' : 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET, PUT, POST, DELETE, OPTIONS' }}
+        { headers: { 'access-control-allow-origin': '*', 'content-type' : 'application/json', Authorization: 'Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6ImVkMzZjMjU3YzQ3ZWJhYmI0N2I0NTY4MjhhODU4YWE1ZmNkYTEyZGQiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiIzMjU1NTk0MDU1OS5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsImF1ZCI6IjMyNTU1OTQwNTU5LmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTE1MTY5NjUwNDY5NjI5NTY3NjQxIiwiaGQiOiJyZWVkaWdpdGFsLmlvIiwiZW1haWwiOiJsb25nLm5kQHJlZWRpZ2l0YWwuaW8iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYXRfaGFzaCI6Ijk4WlhDbjhMc1JEYzhDdXRFRnJ3VkEiLCJpYXQiOjE2NjQ5NDE3MjAsImV4cCI6MTY2NDk0NTMyMH0.xtVksoH3lpJfmrXilFf3ao9hzkMXHYCqbUadagkJ1WIzI4p00cLyik9uv-f1elRbLcV5Qy2S8pUi0l1PVKPM75VFvN8_OIlZN7BcFVPUxrXAHisDNnYi9oBfNQwK4KnWj5T9pjPJU5xeF3TTFBrqFqjpFB5ZASYKDgRngk3YE8Bu4Nfhns48_S1Su6Ifsl_zT02MzcZH7z57C8rI4M0tcHD36l61L9hfL5gX29DqKJTtuk0qcZR5GLG1opbowdZ7RalnGgPW0V9WRC-8dFeUEyP9rYzFb3O0J-OlmoViiF5BJvUIXnGjANrvbWJoDETjKLgxqWJmW6fy1u1uKr6Rww' }}
       )
       .then(response => console.log(response))
       .catch(error => console.log(error))
