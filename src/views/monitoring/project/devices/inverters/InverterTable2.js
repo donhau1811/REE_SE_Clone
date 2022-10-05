@@ -1,5 +1,6 @@
 // ** React Imports
 import React, { useEffect, useState } from 'react'
+import axios from 'axios'
 
 // ** Store & Actions
 import { useSelector, useDispatch } from 'react-redux'
@@ -30,8 +31,6 @@ import {
 import { useQuery } from '@hooks/useQuery'
 import CP from '@src/views/common/pagination'
 import { numberWithCommas } from '@utils'
-
-//React-hook-form
 import { useForm } from 'react-hook-form'
 
 
@@ -46,6 +45,9 @@ const InverterTable2 = ({
       inverter: store
     } = useSelector((state) => state)
 
+    const inverterType = useSelector((state) => state?.inverter?.data[0]?.inverterType?.manufacturer)
+
+
   // ** States
   const [currentPage, setCurrentPage] = useState(store?.params?.page),
     [rowsPerPage, setRowsPerPage] = useState(store?.params?.rowsPerPage),
@@ -57,6 +59,30 @@ const InverterTable2 = ({
       store?.params?.order && store?.params?.order.length ? store?.params?.order.split(' ')[1] : 'asc'
     )
 
+    //Form
+    const { register, handleSubmit } = useForm()
+
+    const onSubmit = (data)  => {
+      const entries = Object.entries(data)
+      const dataNeeded = entries.find(item => item[1] !== '')  
+      const body = {
+        control_type : "power_control",
+        site: projectId,
+        inverter_type: inverterType,
+        device_sn : dataNeeded[0],
+        control_values: {absolute_output_number : dataNeeded[1], percentage_output_number : null}       
+      }
+      const dataToSend = JSON.stringify(body)
+      axios
+      .post(
+        'https://asia-southeast1-rse-sep-ii.cloudfunctions.net/send_command_to_inverter',
+        dataToSend,
+        { headers: {  'Content-Type' : 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET, PUT, POST, DELETE, OPTIONS' }}
+      )
+      .then(response => console.log(response))
+      .catch(error => console.log(error))
+    }
+     
   // Fetch inverter API
   const fetchInverters = (queryParam) => {
     if (!queryParam?.page) {
@@ -85,15 +111,6 @@ const InverterTable2 = ({
       dispatch(getInverterTypes({ rowsPerPage: -1, state: STATE.ACTIVE }))
     ])
   }, [projectId])
-
-   //Form
-   const {register, handleSubmit} = useForm()
-   const onSubmit = (d) => {
-     alert(JSON.stringify(d))
-    // console.log(d)
-     const dataToSend = store.data[0].todayActivePower
-     console.log(dataToSend)
-   }
 
 
   // ** Function to handle Pagination and get data
@@ -225,9 +242,15 @@ const InverterTable2 = ({
       name: 'Công suất giới hạn (kW)',
       cell: (row) => { 
         return  row.state === STATE.ACTIVE ?  
-        (<Form onSubmit={handleSubmit(onSubmit)}>
-           <Input type='number' name={row.id} {...register(`${row.id}`)} innerRef={register} />
-         </Form>) : (<div>U LÀ TRỜI</div>)
+       (<Form onSubmit={handleSubmit(onSubmit)}>
+       <Input
+        
+         type="number"
+         name={row.serialNumber}
+         {...register(`${row.serialNumber}`)}
+         innerRef={register}
+       />
+     </Form>) : (<div>U LÀ TRỜI</div>)
         },
         sortable: true,
         center: true,
@@ -240,7 +263,7 @@ const InverterTable2 = ({
         return  row.state === STATE.ACTIVE ?  
         (<>
           <div>100</div>
-        </>) : (<div>CÁI QUẦN QUÈ</div>)
+        </>) : (<div>Ô MAI GÓT</div>)
         },
         sortable: true,
         center: true,
