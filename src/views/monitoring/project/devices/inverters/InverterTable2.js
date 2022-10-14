@@ -1,18 +1,16 @@
+/* eslint-disable no-confusing-arrow */
 // ** React Imports
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+// import axios from 'axios'
 
 // ** Store & Actions
 import { useSelector, useDispatch } from 'react-redux'
-import {
-  getInverters,
-  getInverterTypes
-} from './store/actions'
+import { getInverters, getInverterTypes } from './store/actions'
 
 // ** Third Party Components
 import { ChevronDown } from 'react-feather'
 import DataTable from 'react-data-table-component'
-import { Card, Form, Input } from 'reactstrap'
+import { Button, Card, Col, Form, Input, Row } from 'reactstrap'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
@@ -33,21 +31,14 @@ import CP from '@src/views/common/pagination'
 import { numberWithCommas } from '@utils'
 import { useForm } from 'react-hook-form'
 
-
-const InverterTable2 = ({
-  intl
-}) => {
+const InverterTable2 = ({ intl, openForValueModal, selectedInverters }) => {
   // ** Store Vars
   const dispatch = useDispatch(),
     query = useQuery(),
     projectId = query.get('projectId'),
-    {
-      inverter: store
-    } = useSelector((state) => state)
+    { inverter: store } = useSelector((state) => state)
 
-    const inverterType = useSelector((state) => state?.inverter?.data[0]?.inverterType?.manufacturer)
-    // const serialNumber = useSelector((state) => state?.inverter?.data?.serialNumber)
-
+  const inverterType = useSelector((state) => state?.inverter?.data[0]?.inverterType?.manufacturer)
 
   // ** States
   const [currentPage, setCurrentPage] = useState(store?.params?.page),
@@ -60,51 +51,53 @@ const InverterTable2 = ({
       store?.params?.order && store?.params?.order.length ? store?.params?.order.split(' ')[1] : 'asc'
     )
 
-    //Form
-    const { register, handleSubmit } = useForm()
 
-    const { register: register2, handleSubmit: handleSubmit2 } = useForm()
+  //Form
+  const { register, handleSubmit } = useForm()
 
-    const onSubmit = (data)  => {
-      const entries = Object.entries(data)
-      const dataNeeded = entries.find(item => item[1] !== '')  
-      const body = {
-        control_type : 'power_control',
-        site: 'local-debug',
-        inverter_type: inverterType,
-        device_sn : 'A2004250015',
-        control_values: {absolute_output_power : dataNeeded[1], percentage_output_power : null}       
-      }
-      console.log(body)
-      axios
-      .post(
-        'http://localhost:5001/api/remote/send_command_to_inverter',
-        body
-      )
-      .then(response => alert(response.data.status.commandExecutionStatus))
-      .catch(error => console.log(error))
+  const { register: register2, handleSubmit: handleSubmit2 } = useForm()
+
+  const onSubmit = (data) => {
+    console.log(data)
+    const entries = Object.entries(data)
+    const dataNeeded = entries.find((item) => item[1] !== '')
+    const body = {
+      control_type: 'power_control',
+      site: projectId,
+      inverter_type: inverterType,
+      device_sn: dataNeeded[0],
+      control_values: { absolute_output_power: dataNeeded[1], percentage_output_power: null }
     }
+    console.log(body)
+    // axios
+    // .post(
+    //   'http://localhost:5001/api/remote/send_command_to_inverter',
+    //   body
+    // )
+    // .then(response => alert(response.data.status.commandExecutionStatus))
+    // .catch(error => console.log(error))
+  }
 
-    const onSubmit2 = (data)  => {
-      const entries = Object.entries(data)
-      const dataNeeded = entries.find(item => item[1] !== '')  
-      const body = {
-        control_type : 'power_control',
-        site: 'local-debug',
-        inverter_type: inverterType,
-        device_sn : 'A2004250015',
-        control_values: {absolute_output_power : null, percentage_output_power : dataNeeded[1]}       
-      }
-      console.log(body)
-      axios
-      .post(
-        'http://localhost:5001/api/remote/send_command_to_inverter',
-        body
-      )
-      .then(response => alert(response.data.status.commandExecutionStatus))
-      .catch(error => console.log(error))
+  const onSubmit2 = (data) => {
+    const entries = Object.entries(data)
+    const dataNeeded = entries.find((item) => item[1] !== '')
+    const body = {
+      control_type: 'power_control',
+      site: projectId,
+      inverter_type: inverterType,
+      device_sn: dataNeeded[0],
+      control_values: { absolute_output_power: null, percentage_output_power: dataNeeded[1] }
     }
-     
+    console.log(body)
+    // axios
+    // .post(
+    //   'http://localhost:5001/api/remote/send_command_to_inverter',
+    //   body
+    // )
+    // .then(response => alert(response.data.status.commandExecutionStatus))
+    // .catch(error => console.log(error))
+  }
+
   // Fetch inverter API
   const fetchInverters = (queryParam) => {
     if (!queryParam?.page) {
@@ -128,12 +121,8 @@ const InverterTable2 = ({
 
   // ** Get data on mount
   useEffect(async () => {
-    await Promise.all([
-      fetchInverters(),
-      dispatch(getInverterTypes({ rowsPerPage: -1, state: STATE.ACTIVE }))
-    ])
+    await Promise.all([fetchInverters(), dispatch(getInverterTypes({ rowsPerPage: -1, state: STATE.ACTIVE }))])
   }, [projectId])
-
 
   // ** Function to handle Pagination and get data
   const handlePagination = (page) => {
@@ -166,11 +155,11 @@ const InverterTable2 = ({
         totalRows={store?.total || 1}
         previousLabel={''}
         nextLabel={''}
-        breakLabel='...'
+        breakLabel="..."
         pageCount={count || 1}
         marginPagesDisplayed={2}
         pageRangeDisplayed={2}
-        activeClassName='active'
+        activeClassName="active"
         forcePage={currentPage !== 0 ? currentPage - 1 : 0}
         onPageChange={(page) => handlePagination(page)}
         pageClassName={'page-item'}
@@ -179,8 +168,8 @@ const InverterTable2 = ({
         previousClassName={'page-item prev'}
         previousLinkClassName={'page-link'}
         pageLinkClassName={'page-link'}
-        breakClassName='page-item'
-        breakLinkClassName='page-link'
+        breakClassName="page-item"
+        breakLinkClassName="page-link"
         containerClassName={'pagination react-paginate px-1'}
         pageRange={2}
         nextPagesClassName={'page-item next'}
@@ -207,6 +196,29 @@ const InverterTable2 = ({
   // ** Column header
   const serverSideColumns = [
     {
+      name: 'Lựa chọn biến tần',
+      cell: (row) => {
+        return row.state === STATE.ACTIVE ? (
+            <Input
+              type="checkbox"
+              name={row.serialNumber}
+              onChange={(e) => {
+                const selectedInverter = row.serialNumber
+                if (e.target.checked) {
+                  selectedInverters.push(selectedInverter)
+                } else selectedInverters.pop(selectedInverter)
+              }}
+            />
+        ) : (
+          <Input type="checkbox" disabled />
+        )
+      },
+      sortable: true,
+      center: true,
+      minWidth: '130px',
+      maxWidth: '130px'
+    },
+    {
       name: '',
       selector: 'status',
       // eslint-disable-next-line react/display-name
@@ -219,9 +231,8 @@ const InverterTable2 = ({
       name: intl.formatMessage({ id: 'Device name' }),
       selector: 'name',
       // eslint-disable-next-line react/display-name
-      cell: (row) => (
-        row.state === STATE.ACTIVE
-          ? <Link
+      cell: (row) => row.state === STATE.ACTIVE ? (
+          <Link
             to={{
               pathname: ROUTER_URL.PROJECT_INVERTER_DETAIL,
               search: `projectId=${projectId}&deviceId=${row.id}&typeModel=${row.typeModel}`
@@ -229,8 +240,9 @@ const InverterTable2 = ({
           >
             {row.name}
           </Link>
-          : row.name
-      ),
+        ) : (
+          row.name
+        ),
       sortable: true,
       minWidth: '50px'
     },
@@ -243,9 +255,7 @@ const InverterTable2 = ({
     {
       name: `${intl.formatMessage({ id: 'Rated power' })} (kW)`,
       selector: 'nominalActivePower',
-      cell: (row) => (
-        row?.inverterType?.power ? numberWithCommas(row?.inverterType?.power / 1000) : '-'
-      ),
+      cell: (row) => (row?.inverterType?.power ? numberWithCommas(row?.inverterType?.power / 1000) : '-'),
       sortable: true,
       center: true,
       minWidth: '130px',
@@ -262,70 +272,56 @@ const InverterTable2 = ({
     },
     {
       name: 'Công suất giới hạn (kW)',
-      cell: (row) => { 
-        return  row.state === STATE.ACTIVE ?  
-       (<Form onSubmit={handleSubmit(onSubmit)}>
-       <Input
-         type="number"
-         name={row.serialNumber}
-         {...register(`${row.serialNumber}`)}
-         innerRef={register}
-         defaultValue='100'
-       />
-     </Form>) : (<div>U LÀ TRỜI</div>)
-        },
-        sortable: true,
-        center: true,
-        minWidth: '130px',
-        maxWidth: '130px'
+      cell: (row) => {
+        return row.state === STATE.ACTIVE ? (
+          <Form onSubmit={handleSubmit(onSubmit)}>
+            <Input
+              type="number"
+              name={row.serialNumber}
+              {...register(`${row.serialNumber}`)}
+              // ref will only get you a reference to the Input component, use innerRef to get a reference to the DOM input (for things like focus management).
+              innerRef={register}
+            />
+          </Form>
+        ) : (
+          <Input type="number" disabled />
+        )
+      },
+      sortable: true,
+      center: true,
+      minWidth: '130px',
+      maxWidth: '130px'
     },
     {
       name: 'Tỉ lệ giới hạn (%)',
-      cell: (row) => { 
-        return  row.state === STATE.ACTIVE ?  
-        (<Form onSubmit={handleSubmit2(onSubmit2)}>
-        <Input
-          type="number"
-          name={row.serialNumber}
-          {...register2(`${row.serialNumber}`)}
-          innerRef={register2}
-          defaultValue='100'
-        />
-      </Form>) : (<div>Ô MAI GÓT</div>)
-        },
-        sortable: true,
-        center: true,
-        minWidth: '130px',
-        maxWidth: '130px'
+      cell: (row) => {
+        return row.state === STATE.ACTIVE ? (
+          <Form onSubmit={handleSubmit2(onSubmit2)}>
+            <Input type="number" name={row.serialNumber} {...register2(`${row.serialNumber}`)} innerRef={register2} />
+          </Form>
+        ) : (
+          <Input type="number" disabled />
+        )
+      },
+      sortable: true,
+      center: true,
+      minWidth: '130px',
+      maxWidth: '130px'
     },
-    // {
-    //   name: 'Lựa chọn biến tần',
-    //   cell: (row) => {
-    //     return row.state === STATE.ACTIVE ? 
-    //     (<Input type='checkbox' onChange={(e) => console.log(e.target.checked)} />) 
-    //     : (<div>BỎ ĐI MÀ LÀM NGƯỜI</div>)
-    //   },
-    //   sortable: true,
-    //   center: true,
-    //   minWidth: '130px',
-    //   maxWidth: '130px'
-    // },
     {
       name: intl.formatMessage({ id: 'Status' }),
       selector: 'activated',
       // eslint-disable-next-line react/display-name
       cell: (row) => {
-        return row.state === STATE.ACTIVE
-          ? (
-            <div className='text-success'>
-              <FormattedMessage id='Active'/>
-            </div>
-          )
-          : (
-            <div className='text-dark'>
-              <FormattedMessage id='Inactive'/>
-            </div>
-          )
+        return row.state === STATE.ACTIVE ? (
+          <div className="text-success">
+            <FormattedMessage id="Active" />
+          </div>
+        ) : (
+          <div className="text-dark">
+            <FormattedMessage id="Inactive" />
+          </div>
+        )
       },
       sortable: true,
       center: true,
@@ -336,19 +332,27 @@ const InverterTable2 = ({
 
   return (
     <Card>
+      <Row className="mt-1 mb-1">
+        <Col md="10"></Col>
+        <Col md="2">
+          <Button.Ripple color="primary" onClick={openForValueModal}>
+            Lựa chọn 1 vì sao
+          </Button.Ripple>
+        </Col>
+      </Row>
+
       <DataTable
         noHeader
         pagination
         paginationServer
         striped
-        className={classnames(
-          'react-dataTable react-dataTable--inverters hover',
-          { 'overflow-hidden': store?.data?.length <= 0 }
-        )}
+        className={classnames('react-dataTable react-dataTable--inverters hover', {
+          'overflow-hidden': store?.data?.length <= 0
+        })}
         fixedHeader
-        fixedHeaderScrollHeight='calc(100vh - 400px)'
+        fixedHeaderScrollHeight="calc(100vh - 400px)"
         columns={serverSideColumns}
-        sortIcon={<ChevronDown size={10}/>}
+        sortIcon={<ChevronDown size={10} />}
         paginationComponent={CustomPagination}
         data={store?.data || []}
         persistTableHead
@@ -363,7 +367,9 @@ const InverterTable2 = ({
 }
 
 InverterTable2.propTypes = {
-  intl: PropTypes.object.isRequired
+  intl: PropTypes.object.isRequired,
+  openForValueModal: PropTypes.func.isRequired,
+  selectedInverters: PropTypes.array.isRequired
 }
 
 export default injectIntl(InverterTable2)

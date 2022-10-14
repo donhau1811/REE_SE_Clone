@@ -4,11 +4,7 @@ import { renderItems } from '@src/views/settings/common'
 import { useForm } from 'react-hook-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import PropTypes from 'prop-types'
-import {
-  API_GET_SYSTEM_ALERT_SETTING,
-  API_POST_SYSTEM_ALERT_SETTING,
-  API_GET_SENSOR
-} from '@constants/api'
+import { API_GET_SYSTEM_ALERT_SETTING, API_POST_SYSTEM_ALERT_SETTING, API_GET_SENSOR } from '@constants/api'
 import { GET_SENSOR } from '@constants/index'
 import axios from 'axios'
 import { showToast } from '@utils'
@@ -22,11 +18,7 @@ import Select from 'react-select'
 import { editProject } from '@src/views/monitoring/projects/store/actions'
 import { useQuery } from '@hooks/useQuery'
 
-const boolKeys = [
-  'inverterOverheatActive',
-  'lowEfficiencyActive',
-  'lowEffOfEachInverterActive'
-]
+const boolKeys = ['inverterOverheatActive', 'lowEfficiencyActive', 'lowEffOfEachInverterActive', 'zeroExportActive']
 
 const ProjectSetting = ({ intl }) => {
   const ability = useContext(AbilityContext)
@@ -36,7 +28,7 @@ const ProjectSetting = ({ intl }) => {
     {
       sensorSetting: { data: sensorData },
       customerProject: { selectedProject }
-    } = useSelector(store => store),
+    } = useSelector((store) => store),
     query = useQuery(),
     projectId = query.get('projectId')
 
@@ -48,7 +40,9 @@ const ProjectSetting = ({ intl }) => {
       lowEffOfEachInverterActive: false,
       lowEffOfEachInverterValue: 0,
       inverterOverheatActive: false,
-      inverterOverheatValue: 0
+      inverterOverheatValue: 0,
+      zeroExportActive: false,
+      zeroExportValue: 0
     }),
     [sensorOptions, setSensorOptions] = useState([]),
     [selectedSensor, setSelectedSensor] = useState(null),
@@ -105,6 +99,24 @@ const ProjectSetting = ({ intl }) => {
         defaultValue: settingData.lowEffOfEachInverterValue,
         isReadOnly: ability.cannot('manage', USER_ABILITY.CAN_UPDATE_SYSTEM_ALERT_SETTING),
         isShow: true
+      },
+      {
+        id: 'manageZeroExport',
+        name: 'manageZeroExport',
+        switch: true,
+        // isDisableSwitch: ability.can('manage', USER_ABILITY.MANAGE_ZERO_EXPORT),
+        swId: 'manageZeroExport',
+        swName: 'manageZeroExport',
+        swDefaultValue: settingData.zeroExportActive,
+        color: 'light-success',
+        title: 'Zero export of the project',
+        label: 'Zero export of the project setting',
+        multiSelect: true,
+        unit: '%',
+        inputType: 'select',
+        defaultValue: settingData.zeroExportValue,
+        isReadOnly: ability.cannot('manage', USER_ABILITY.MANAGE_ZERO_EXPORT),
+        isShow: true
       }
     ]
 
@@ -127,12 +139,10 @@ const ProjectSetting = ({ intl }) => {
             convertedData[key] = convertedData[key] === SW_STATUS.YES
           })
 
-          setSettingData((currentData) => (
-            {
-              ...currentData,
-              ...convertedData
-            }
-          ))
+          setSettingData((currentData) => ({
+            ...currentData,
+            ...convertedData
+          }))
 
           reset({ ...convertedData })
         }
@@ -145,7 +155,8 @@ const ProjectSetting = ({ intl }) => {
   // Dispatch sensor list
   useEffect(() => {
     const getSensors = async () => {
-      await axios.get(API_GET_SENSOR)
+      await axios
+        .get(API_GET_SENSOR)
         .then((response) => {
           if (response.data && response.data.status && response.data.data) {
             dispatch({
@@ -155,7 +166,8 @@ const ProjectSetting = ({ intl }) => {
           } else {
             throw new Error(response.data.message)
           }
-        }).catch(err => {
+        })
+        .catch((err) => {
           showToast('error', `${err.response ? err.response.data.message : err.message}`)
         })
     }
@@ -166,15 +178,15 @@ const ProjectSetting = ({ intl }) => {
   // Set sensor options for creatableSelect
   useEffect(() => {
     if (sensorData && sensorData.length > 0) {
-      setSensorOptions(sensorData.map((sensor) => (
-        {
+      setSensorOptions(
+        sensorData.map((sensor) => ({
           label: sensor?.name,
           value: sensor?.dtuId
-        }
-      )))
+        }))
+      )
 
       if (selectedProject?.sensorDtuId) {
-        const currentSensor = sensorData.find(sensor => sensor.dtuId === selectedProject.sensorDtuId)
+        const currentSensor = sensorData.find((sensor) => sensor.dtuId === selectedProject.sensorDtuId)
 
         if (currentSensor) {
           setSelectedSensor({
@@ -210,13 +222,11 @@ const ProjectSetting = ({ intl }) => {
 
     await Promise.all([
       dispatch(
-        editProject(
-          {
-            id: selectedProject.id,
-            sensorDtuId: selectedSensor ? selectedSensor.value : '',
-            pendingTimeLimit
-          }
-        )
+        editProject({
+          id: selectedProject.id,
+          sensorDtuId: selectedSensor ? selectedSensor.value : '',
+          pendingTimeLimit
+        })
       ),
       axios
         .post(API_POST_SYSTEM_ALERT_SETTING, { ...convertedData, projectId })
@@ -227,12 +237,10 @@ const ProjectSetting = ({ intl }) => {
             boolKeys.forEach((key) => {
               convertedData[key] = convertedData[key] === SW_STATUS.YES
             })
-            setSettingData((currentData) => (
-              {
-                ...currentData,
-                ...convertedData
-              }
-            ))
+            setSettingData((currentData) => ({
+              ...currentData,
+              ...convertedData
+            }))
           }
         })
         .catch((err) => {
@@ -244,42 +252,42 @@ const ProjectSetting = ({ intl }) => {
   const onReset = () => {
     reset({})
     setPendingTimeLimit(selectedProject?.pendingTimeLimit)
-    setSelectedSensor(sensorOptions.find(sensor => sensor.value === selectedProject?.sensorDtuId) || null)
+    setSelectedSensor(sensorOptions.find((sensor) => sensor.value === selectedProject?.sensorDtuId) || null)
   }
 
   return (
     <div>
-      <Form onSubmit={handleSubmit(onSubmit)} className='system-alert-setting'>
-        <Row className='mb-3'>
+      <Form onSubmit={handleSubmit(onSubmit)} className="system-alert-setting">
+        <Row className="mb-3">
           <Col md={6}>
-            <h5 className='mb-1 font-weight-bolder'>
-              <FormattedMessage id='Radiation sensor reference ' />
+            <h5 className="mb-1 font-weight-bolder">
+              <FormattedMessage id="Radiation sensor reference " />
             </h5>
             <Select
-              name='sensor'
+              name="sensor"
               isClearable
               isDisabled={ability.cannot('manage', USER_ABILITY.CAN_UPDATE_SYSTEM_ALERT_SETTING)}
               defaultValue={selectedSensor}
               value={selectedSensor}
               options={sensorOptions}
-              className='react-select--project line-select'
-              classNamePrefix='select'
-              placeholder={<FormattedMessage id='Select sensor' />}
+              className="react-select--project line-select"
+              classNamePrefix="select"
+              placeholder={<FormattedMessage id="Select sensor" />}
               onChange={onChangeSelect}
             />
           </Col>
           <Col md={6}>
-            <h5 className='mb-1 font-weight-bolder'>
-              <FormattedMessage id='Pending time limit' />&nbsp;
-              (<FormattedMessage id='minutes' />)
+            <h5 className="mb-1 font-weight-bolder">
+              <FormattedMessage id="Pending time limit" />
+              &nbsp; (<FormattedMessage id="minutes" />)
             </h5>
             <Input
-              type='number'
+              type="number"
               min={0}
               step={1}
               readOnly={ability.cannot('manage', USER_ABILITY.CAN_UPDATE_SYSTEM_ALERT_SETTING)}
-              id='pendingTimeLimit'
-              name='pendingTimeLimit'
+              id="pendingTimeLimit"
+              name="pendingTimeLimit"
               value={pendingTimeLimit}
               onChange={(e) => setPendingTimeLimit(e.target.value)}
             />
@@ -296,17 +304,16 @@ const ProjectSetting = ({ intl }) => {
             isWrap: width < 770
           })}
         </Row>
-        {
-          ability.can('manage', USER_ABILITY.CAN_UPDATE_SYSTEM_ALERT_SETTING) &&
-          <div className='group-button'>
-            <Button.Ripple color='primary' className='mr-2' type='submit'>
-              <FormattedMessage id='Save' />
+        {ability.can('manage', USER_ABILITY.CAN_UPDATE_SYSTEM_ALERT_SETTING) && (
+          <div className="group-button">
+            <Button.Ripple color="primary" className="mr-2" type="submit">
+              <FormattedMessage id="Save" />
             </Button.Ripple>
-            <Button.Ripple color='secondary' onClick={onReset}>
-              <FormattedMessage id='Cancel' />
+            <Button.Ripple color="secondary" onClick={onReset}>
+              <FormattedMessage id="Cancel" />
             </Button.Ripple>
           </div>
-        }
+        )}
       </Form>
     </div>
   )
@@ -317,4 +324,3 @@ ProjectSetting.propTypes = {
 }
 
 export default injectIntl(ProjectSetting)
-

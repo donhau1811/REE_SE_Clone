@@ -43,7 +43,8 @@ export const USER_ABILITY = {
   CAN_UPDATE_SYSTEM_ALERT_SETTING: 'Can update system alert setting',
   CAN_UPDATE_SEND_EMAIL_TO_MANAGERS_SETTING: 'Can update send email to managers',
   CAN_VIEW_USER_ACTIVITIES_REPORT: 'Can view user activities report',
-  CAN_DELETE: 'Can delete forever'
+  CAN_DELETE: 'Can delete forever',
+  MANAGE_ZERO_EXPORT: 'Turn on/off zero export' //New ability here
 }
 
 export const COMPANY = {
