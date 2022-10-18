@@ -55,8 +55,7 @@ const ModalForCommonValue = ({ modalForCommonValue, setModalForCommonValue, sele
     // }
 
     const listInv = ['A2004250015', 'B2004250015', 'C2004250015']
-    // const listOfBodies = []
-    // const listOfRequests = []
+    const listOfBodies = []
     for (let i = 0; i < listInv.length; i++) {
       if (entries[0][1] !== '') {
         const body = {
@@ -66,25 +65,25 @@ const ModalForCommonValue = ({ modalForCommonValue, setModalForCommonValue, sele
           device_sn: listInv[i],
           control_values: { absolute_output_power: entries[0][1], percentage_output_power: null }
         }
-        // Promise.all(axios.post('http://localhost:5001/api/remote/send_command_to_inverter', body)).then((values) => {
-        //   console.log(values)
-        // })
-        // listOfBodies.push(body)
-        axios
+        listOfBodies.push(body)
+      }
+    }
+
+    async function sendRequestToMultipleInverters() {
+      for (const body of listOfBodies) {
+        await axios
           .post('http://localhost:5001/api/remote/send_command_to_inverter', body)
           .then((response) => alert(response.data.status.commandExecutionStatus))
           .catch((error) => console.log(error))
       }
     }
-    // for (let i = 0; i < listOfBodies.length; i++) {
-    //   const request = axios.post('http://localhost:5001/api/remote/send_command_to_inverter', listOfBodies[i])
-    //   listOfRequests.push(request)
-    // }
 
-    // Promise.allSettled(listOfRequests).then((values) => {
-    //   console.log(values)
-    // })
+    sendRequestToMultipleInverters()
 
+    // axios
+    //   .post('http://localhost:5001/api/remote/send_command_to_inverter', body)
+    //   .then((response) => alert(response.data.status.commandExecutionStatus))
+    //   .catch((error) => console.log(error))
     setModalForCommonValue(false)
     reset({})
   }

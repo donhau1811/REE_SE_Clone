@@ -1759,6 +1759,8 @@
   "last day of electricity bill":"last day of electricity bill",
   "date of sending notice of electricity bill":"date of sending notice of electricity bill",
   "date of sending notice of roof rent":"date of sending notice of roof rent",
-  "Filter project information":"Filter project information"
-
+  "Filter project information":"Filter project information",
+  "Capacity limit": "Capacity limit",
+  "Rate limit" : "Rate limit",
+  "Choose the inverter" : "Choose the inverter"
 }

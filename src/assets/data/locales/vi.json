@@ -1946,5 +1946,8 @@
   "Application features": "Tính năng áp dụng",
   "Need at least 1 permission": "Phải tồn tại ít nhất 1 quyền",
   "Need at least 1 feature": "Phải tồn tại ít nhất 1 tính năng",
-  "Something went wrong": "Đã có lỗi xảy ra"
+  "Something went wrong": "Đã có lỗi xảy ra",
+  "Capacity limit" : "Công suất giới hạn",
+  "Rate limit" : "Tỉ lệ giới hạn",
+  "Choose the inverter" : "Lựa chọn biến tần"
 }

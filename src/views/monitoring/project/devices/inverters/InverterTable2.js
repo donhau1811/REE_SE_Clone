@@ -1,7 +1,7 @@
 /* eslint-disable no-confusing-arrow */
 // ** React Imports
 import React, { useEffect, useState } from 'react'
-// import axios from 'axios'
+import axios from 'axios'
 
 // ** Store & Actions
 import { useSelector, useDispatch } from 'react-redux'
@@ -11,6 +11,7 @@ import { getInverters, getInverterTypes } from './store/actions'
 import { ChevronDown } from 'react-feather'
 import DataTable from 'react-data-table-component'
 import { Button, Card, Col, Form, Input, Row } from 'reactstrap'
+import Select from 'react-select'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
@@ -31,11 +32,11 @@ import CP from '@src/views/common/pagination'
 import { numberWithCommas } from '@utils'
 import { useForm } from 'react-hook-form'
 
-const InverterTable2 = ({ intl, openForValueModal, selectedInverters }) => {
+const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) => {
   // ** Store Vars
   const dispatch = useDispatch(),
     query = useQuery(),
-    projectId = query.get('projectId'),
+    projectId = query.get('projectId') || 137,
     { inverter: store } = useSelector((state) => state)
 
   const inverterType = useSelector((state) => state?.inverter?.data[0]?.inverterType?.manufacturer)
@@ -51,7 +52,6 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters }) => {
       store?.params?.order && store?.params?.order.length ? store?.params?.order.split(' ')[1] : 'asc'
     )
 
-
   //Form
   const { register, handleSubmit } = useForm()
 
@@ -63,19 +63,18 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters }) => {
     const dataNeeded = entries.find((item) => item[1] !== '')
     const body = {
       control_type: 'power_control',
-      site: projectId,
+      // site: projectId,
+      site: 'local-debug',
       inverter_type: inverterType,
-      device_sn: dataNeeded[0],
+      // device_sn: dataNeeded[0],
+      device_sn: 'A2004250015',
       control_values: { absolute_output_power: dataNeeded[1], percentage_output_power: null }
     }
     console.log(body)
-    // axios
-    // .post(
-    //   'http://localhost:5001/api/remote/send_command_to_inverter',
-    //   body
-    // )
-    // .then(response => alert(response.data.status.commandExecutionStatus))
-    // .catch(error => console.log(error))
+    axios
+      .post('http://localhost:5001/api/remote/send_command_to_inverter', body)
+      .then((response) => alert(response.data.status.commandExecutionStatus))
+      .catch((error) => console.log(error))
   }
 
   const onSubmit2 = (data) => {
@@ -83,19 +82,18 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters }) => {
     const dataNeeded = entries.find((item) => item[1] !== '')
     const body = {
       control_type: 'power_control',
-      site: projectId,
+      // site: projectId,
+      site: 'local-debug',
       inverter_type: inverterType,
-      device_sn: dataNeeded[0],
+      // device_sn: dataNeeded[0],
+      device_sn: 'B2004250015',
       control_values: { absolute_output_power: null, percentage_output_power: dataNeeded[1] }
     }
     console.log(body)
-    // axios
-    // .post(
-    //   'http://localhost:5001/api/remote/send_command_to_inverter',
-    //   body
-    // )
-    // .then(response => alert(response.data.status.commandExecutionStatus))
-    // .catch(error => console.log(error))
+    axios
+      .post('http://localhost:5001/api/remote/send_command_to_inverter', body)
+      .then((response) => alert(response.data.status.commandExecutionStatus))
+      .catch((error) => console.log(error))
   }
 
   // Fetch inverter API
@@ -196,19 +194,19 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters }) => {
   // ** Column header
   const serverSideColumns = [
     {
-      name: 'Lựa chọn biến tần',
+      name: `${intl.formatMessage({ id: 'Choose the inverter' })}`,
       cell: (row) => {
         return row.state === STATE.ACTIVE ? (
-            <Input
-              type="checkbox"
-              name={row.serialNumber}
-              onChange={(e) => {
-                const selectedInverter = row.serialNumber
-                if (e.target.checked) {
-                  selectedInverters.push(selectedInverter)
-                } else selectedInverters.pop(selectedInverter)
-              }}
-            />
+          <Input
+            type="checkbox"
+            name={row.serialNumber}
+            onChange={(e) => {
+              const selectedInverter = row.serialNumber
+              if (e.target.checked) {
+                selectedInverters.push(selectedInverter)
+              } else selectedInverters.pop(selectedInverter)
+            }}
+          />
         ) : (
           <Input type="checkbox" disabled />
         )
@@ -271,7 +269,7 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters }) => {
       maxWidth: '130px'
     },
     {
-      name: 'Công suất giới hạn (kW)',
+      name: `${intl.formatMessage({ id: 'Capacity limit' })} (W)`,
       cell: (row) => {
         return row.state === STATE.ACTIVE ? (
           <Form onSubmit={handleSubmit(onSubmit)}>
@@ -293,7 +291,7 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters }) => {
       maxWidth: '130px'
     },
     {
-      name: 'Tỉ lệ giới hạn (%)',
+      name: `${intl.formatMessage({ id: 'Rate limit' })} (%)`,
       cell: (row) => {
         return row.state === STATE.ACTIVE ? (
           <Form onSubmit={handleSubmit2(onSubmit2)}>
@@ -330,14 +328,31 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters }) => {
     }
   ]
 
+  const visibilityState = state === true ? 'visible' : 'hidden'
+
+  const options2 = [
+    { value: 'site', label: 'Dự án' },
+    { value: 'device', label: 'Thiết bị' }
+  ]
+
+  const options3 = [
+    { value: 'absolute_output_power', label: 'Tuyệt đối' },
+    { value: 'percentage_output_power', label: 'Tỷ lệ' }
+  ]
+
   return (
     <Card>
       <Row className="mt-1 mb-1">
-        <Col md="10"></Col>
-        <Col md="2">
+        <Col md='9' style={{ visibility: visibilityState, display: 'flex' }}>
+          <Select classnames options={options2} placeholder="Chọn loại giảm"></Select>
+          <Select options={options3} placeholder="Phương thức giới hạn"></Select>
+        </Col>
+
+        <Col md="3" style={{ display: 'flex', justifyContent: 'space-around' }}>
           <Button.Ripple color="primary" onClick={openForValueModal}>
-            Lựa chọn 1 vì sao
+            Cấu hình
           </Button.Ripple>
+          <Button.Ripple color="primary">Đặt lịch</Button.Ripple>
         </Col>
       </Row>
 
@@ -369,7 +384,8 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters }) => {
 InverterTable2.propTypes = {
   intl: PropTypes.object.isRequired,
   openForValueModal: PropTypes.func.isRequired,
-  selectedInverters: PropTypes.array.isRequired
+  selectedInverters: PropTypes.array.isRequired,
+  state: PropTypes.bool.isRequired
 }
 
 export default injectIntl(InverterTable2)

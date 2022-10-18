@@ -22,6 +22,7 @@ import Panels from '@src/views/monitoring/project/devices/panels'
 import ProjectSetting from '@src/views/monitoring/project/ProjectSetting'
 import ProjectChart from '@src/views/monitoring/project/chart'
 import { GET_PROJECT_MONITORING } from '@constants/actions'
+import Inverters2 from './devices/inverters/index2'
 
 const ProjectDetail = () => {
   // ** history
@@ -71,6 +72,9 @@ const ProjectDetail = () => {
 
       case ROUTER_URL.PROJECT_OVERVIEW:
         return <ProjectOverview setIsShowSideBar={setIsShowSideBar} />
+
+      case ROUTER_URL.CONTROL: 
+        return <Inverters2 />
     }
   }
 
