@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 
 // ** Third Party Components
 import Select from 'react-select'
-import { Col, Row } from 'reactstrap'
+import { Button, Col, Row } from 'reactstrap'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Switch from '@material-ui/core/Switch'
 
@@ -13,13 +13,14 @@ import Switch from '@material-ui/core/Switch'
 import InverterTable2 from './InverterTable2'
 
 import ModalForCommonValue from './ModalForCommonValue'
+import FilterAltIcon from '@mui/icons-material/FilterAlt'
 
 //Styles
 import './styles.scss'
 
-const Inverters2 = () => { 
+const Inverters2 = () => {
   const [userChoice, setUserChoice] = useQueryState('projectId')
- 
+
   // const [values, setValues] = useState()
   const [modalForCommonValue, setModalForCommonValue] = useState(false)
   const [selectedInverters, setSelecterInverters] = useState([])
@@ -27,15 +28,14 @@ const Inverters2 = () => {
   const [state, setState] = useState({ status: false })
   const listOfProjects = useSelector((state) => state?.auth?.userData?.user?.projects)
   const options = []
-  
-  
+
   for (let i = 0; i < listOfProjects?.length; i++) {
     const value = `${listOfProjects[i].id}`
     const label = `${listOfProjects[i].name}`
     const option = { value, label }
     options.push(option)
   }
-  
+
   const handleChange = (e) => {
     setState({ ...state, [e.target.name]: e.target.checked })
     console.log(userChoice)
@@ -68,7 +68,7 @@ const Inverters2 = () => {
   return (
     <Fragment>
       <Row className="mb-1">
-        <Col md="2">
+        <Col lg="2">
           <div
             style={{
               margin: 'auto',
@@ -78,17 +78,33 @@ const Inverters2 = () => {
           >
             <FormControlLabel
               label="Giới hạn công suất"
-              control={<Switch checked={state.status} onChange={handleChange} color="primary" name="status" />}
+              control={
+                <Switch size="large" checked={state.status} onChange={handleChange} color="primary" name="status" />
+              }
             />
           </div>
         </Col>
-        <Col md="6"></Col>
-        <Col md="4">
-          <Select options={options} onChange={(choice) => setUserChoice(choice.value)} defaultValue={options[7]} />
+        <Col lg="6"></Col>
+        <Col md="3">
+          <Select
+            style={{ background: 'transparent' }}
+            options={options}
+            onChange={(choice) => setUserChoice(choice.value)}
+            defaultValue={options[7]}
+          />
+        </Col>
+        <Col lg="1">
+          <Button>
+            <FilterAltIcon fontSize="large" />
+          </Button>
         </Col>
       </Row>
 
-      <InverterTable2 state={state.status} openForValueModal={openForValueModal} selectedInverters={selectedInverters} />
+      <InverterTable2
+        state={state.status}
+        openForValueModal={openForValueModal}
+        selectedInverters={selectedInverters}
+      />
       <ModalForCommonValue
         modalForCommonValue={modalForCommonValue}
         setModalForCommonValue={setModalForCommonValue}

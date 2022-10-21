@@ -16,6 +16,10 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { Link } from 'react-router-dom'
+import { ReactComponent as LockIcon } from '@src/assets/images/svg/table/ic-lock.svg'
+import { ReactComponent as UnlockIcon } from '@src/assets/images/svg/table/ic-unlock.svg'
+import SettingsIcon from '@mui/icons-material/Settings'
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 
 // Constants
 import {
@@ -337,11 +341,7 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) =
       cell: (row) => {
         return (
           <div className="d-flex">
-            {row.state === STATE.ACTIVE ? (
-              <Button className="btn-icon">HUHU</Button>
-            ) : (
-              <Button className="btn-icon text-success">HAHA</Button>
-            )}
+            {row.state === STATE.ACTIVE ? <LockIcon /> : <UnlockIcon />}
           </div>
         )
       }
@@ -352,7 +352,8 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) =
 
   const handleChange1 = (e) => {
     setSelect1(e.target.value)
-    if (e.target.value === 'site') setDisabled(!disabled)
+    if (e.target.value === 'site') setDisabled(false)
+    if (e.target.value === 'device') setDisabled(true)
   }
 
   const handleChange2 = (e) => {
@@ -372,10 +373,11 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) =
           percentage_output_power: null
         }
       }
-      axios
-        .post('http://localhost:5001/api/remote/send_command_to_inverter', body)
-        .then((response) => console.log(response))
-        .catch((error) => console.log(error))
+      console.log(body)
+      // axios
+      //   .post('http://localhost:5001/api/remote/send_command_to_inverter', body)
+      //   .then((response) => console.log(response))
+      //   .catch((error) => console.log(error))
     }
     if (select2 === 'percentage_output_power') {
       const body = {
@@ -387,18 +389,19 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) =
           percentage_output_power: valueForProject
         }
       }
-      axios
-        .post('http://localhost:5001/api/remote/send_command_to_inverter', body)
-        .then((response) => console.log(response))
-        .catch((error) => console.log(error))
+      // axios
+      //   .post('http://localhost:5001/api/remote/send_command_to_inverter', body)
+      //   .then((response) => console.log(response))
+      //   .catch((error) => console.log(error))
+      console.log(body)
     }
   }
 
   return (
-    <Card style={{ background: '#dfe7f2'}}>
-      <Row className="mt-1 mb-1">
-        <Col md="8" style={{ visibility: visibilityState }}>
-          <form onSubmit={handleSubmitProject} className="d-flex justify-content-around">
+    <Card style={{ background: '#dfe7f2' }}>
+      <Row className="mt-1 mb-1 ml-2">
+        <Col className="customCol" lg="7" style={{ visibility: visibilityState }}>
+          <form onSubmit={handleSubmitProject} className="d-flex justify-content-between align-items-center">
             <select defaultValue={'none'} id="reduction type" name="reduction type" onChange={handleChange1}>
               <option value="none" disabled>
                 Chọn loại giảm
@@ -406,6 +409,7 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) =
               <option value="site">Dự án</option>
               <option value="device">Thiết bị</option>
             </select>
+            <div className="divider"></div>
             <select defaultValue={'none'} id="reduction method" name="reduction method" onChange={handleChange2}>
               <option value="none" disabled>
                 Phương thức giới hạn
@@ -413,12 +417,13 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) =
               <option value="absolute_output_power">Tuyệt đối</option>
               <option value="percentage_output_power">Tỉ lệ</option>
             </select>
-            <input
+            <Input
               type="number"
               name="value"
               id="value"
               disabled={disabled}
               onChange={(e) => setValueForProject(e.target.value)}
+              className="customInp"
             />
             <Button outline color="primary" type="submit">
               Áp dụng
@@ -426,13 +431,24 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) =
           </form>
         </Col>
 
-        <Col md="1"></Col>
+        <Col lg="2"></Col>
 
-        <Col md="3" className="d-flex justify-content-between">
-          <Button.Ripple onClick={openForValueModal}>
+        <Col lg="3" className="d-flex justify-content-around align-items-center">
+          <button
+            className="btn-settings1 d-flex justify-content-around align-items-center"
+            onClick={openForValueModal}
+          >
+            <span>
+              <SettingsIcon />
+            </span>
             Cấu hình
-          </Button.Ripple>
-          <Button.Ripple className='btn-outline-microsoft'>Đặt lịch</Button.Ripple>
+          </button>
+          <button className="btn-settings2 d-flex justify-content-around align-items-center">
+            <span>
+              <CalendarMonthIcon />
+            </span>
+            Đặt lịch
+          </button>
         </Col>
       </Row>
 
