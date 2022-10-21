@@ -8,13 +8,11 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import axios from 'axios'
 
 // ** Store & Actions
-import { useSelector } from 'react-redux'
 // import axios from 'axios'
 
 const ModalForCommonValue = ({ modalForCommonValue, setModalForCommonValue, selectedInverters }) => {
   // const query = useQuery()
   // const projectId = query.get('projectId')
-  const inverterType = useSelector((state) => state?.inverter?.data[0]?.inverterType?.manufacturer)
 
   const { register, handleSubmit, reset } = useForm()
   const onSubmit = (data) => {
@@ -61,7 +59,6 @@ const ModalForCommonValue = ({ modalForCommonValue, setModalForCommonValue, sele
         const body = {
           control_type: 'power_control',
           site: 'local-debug',
-          inverter_type: inverterType,
           device_sn: listInv[i],
           control_values: { absolute_output_power: entries[0][1], percentage_output_power: null }
         }

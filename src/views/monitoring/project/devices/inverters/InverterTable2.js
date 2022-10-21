@@ -11,7 +11,7 @@ import { getInverters, getInverterTypes } from './store/actions'
 import { ChevronDown } from 'react-feather'
 import DataTable from 'react-data-table-component'
 import { Button, Card, Col, Form, Input, Row } from 'reactstrap'
-import Select from 'react-select'
+// import Select from 'react-select'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
@@ -39,8 +39,6 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) =
     projectId = query.get('projectId') || 137,
     { inverter: store } = useSelector((state) => state)
 
-  const inverterType = useSelector((state) => state?.inverter?.data[0]?.inverterType?.manufacturer)
-
   // ** States
   const [currentPage, setCurrentPage] = useState(store?.params?.page),
     [rowsPerPage, setRowsPerPage] = useState(store?.params?.rowsPerPage),
@@ -50,7 +48,11 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) =
     ),
     [sortDirection, setSortDirection] = useState(
       store?.params?.order && store?.params?.order.length ? store?.params?.order.split(' ')[1] : 'asc'
-    )
+    ),
+    [select1, setSelect1] = useState(),
+    [select2, setSelect2] = useState(),
+    [valueForProject, setValueForProject] = useState(),
+    [disabled, setDisabled] = useState(true)
 
   //Form
   const { register, handleSubmit } = useForm()
@@ -65,7 +67,7 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) =
       control_type: 'power_control',
       // site: projectId,
       site: 'local-debug',
-      inverter_type: inverterType,
+      // inverter_type: inverterType,
       // device_sn: dataNeeded[0],
       device_sn: 'A2004250015',
       control_values: { absolute_output_power: dataNeeded[1], percentage_output_power: null }
@@ -84,7 +86,6 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) =
       control_type: 'power_control',
       // site: projectId,
       site: 'local-debug',
-      inverter_type: inverterType,
       // device_sn: dataNeeded[0],
       device_sn: 'B2004250015',
       control_values: { absolute_output_power: null, percentage_output_power: dataNeeded[1] }
@@ -242,12 +243,14 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) =
           row.name
         ),
       sortable: true,
+      center: true,
       minWidth: '50px'
     },
     {
       name: intl.formatMessage({ id: 'Serial number' }),
       selector: 'serialNumber',
       sortable: true,
+      center: true,
       minWidth: '200px'
     },
     {
@@ -325,34 +328,111 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) =
       center: true,
       minWidth: '200px',
       maxWidth: '200px'
+    },
+    {
+      name: intl.formatMessage({ id: 'Actions' }),
+      selector: 'action',
+      center: true,
+      minWidth: '200px',
+      cell: (row) => {
+        return (
+          <div className="d-flex">
+            {row.state === STATE.ACTIVE ? (
+              <Button className="btn-icon">HUHU</Button>
+            ) : (
+              <Button className="btn-icon text-success">HAHA</Button>
+            )}
+          </div>
+        )
+      }
     }
   ]
 
   const visibilityState = state === true ? 'visible' : 'hidden'
 
-  const options2 = [
-    { value: 'site', label: 'Dự án' },
-    { value: 'device', label: 'Thiết bị' }
-  ]
+  const handleChange1 = (e) => {
+    setSelect1(e.target.value)
+    if (e.target.value === 'site') setDisabled(!disabled)
+  }
 
-  const options3 = [
-    { value: 'absolute_output_power', label: 'Tuyệt đối' },
-    { value: 'percentage_output_power', label: 'Tỷ lệ' }
-  ]
+  const handleChange2 = (e) => {
+    setSelect2(e.target.value)
+  }
+
+  const handleSubmitProject = (e) => {
+    e.preventDefault()
+    console.log(select1, select2, valueForProject)
+    if (select2 === 'absolute_output_power') {
+      const body = {
+        control_type: 'power_control',
+        // site: projectId,
+        site: 'local-debug',
+        control_values: {
+          absolute_output_power: valueForProject,
+          percentage_output_power: null
+        }
+      }
+      axios
+        .post('http://localhost:5001/api/remote/send_command_to_inverter', body)
+        .then((response) => console.log(response))
+        .catch((error) => console.log(error))
+    }
+    if (select2 === 'percentage_output_power') {
+      const body = {
+        control_type: 'power_control',
+        // site: projectId,
+        site: 'local-debug',
+        control_values: {
+          absolute_output_power: null,
+          percentage_output_power: valueForProject
+        }
+      }
+      axios
+        .post('http://localhost:5001/api/remote/send_command_to_inverter', body)
+        .then((response) => console.log(response))
+        .catch((error) => console.log(error))
+    }
+  }
 
   return (
-    <Card>
+    <Card style={{ background: '#dfe7f2'}}>
       <Row className="mt-1 mb-1">
-        <Col md='9' style={{ visibility: visibilityState, display: 'flex' }}>
-          <Select classnames options={options2} placeholder="Chọn loại giảm"></Select>
-          <Select options={options3} placeholder="Phương thức giới hạn"></Select>
+        <Col md="8" style={{ visibility: visibilityState }}>
+          <form onSubmit={handleSubmitProject} className="d-flex justify-content-around">
+            <select defaultValue={'none'} id="reduction type" name="reduction type" onChange={handleChange1}>
+              <option value="none" disabled>
+                Chọn loại giảm
+              </option>
+              <option value="site">Dự án</option>
+              <option value="device">Thiết bị</option>
+            </select>
+            <select defaultValue={'none'} id="reduction method" name="reduction method" onChange={handleChange2}>
+              <option value="none" disabled>
+                Phương thức giới hạn
+              </option>
+              <option value="absolute_output_power">Tuyệt đối</option>
+              <option value="percentage_output_power">Tỉ lệ</option>
+            </select>
+            <input
+              type="number"
+              name="value"
+              id="value"
+              disabled={disabled}
+              onChange={(e) => setValueForProject(e.target.value)}
+            />
+            <Button outline color="primary" type="submit">
+              Áp dụng
+            </Button>
+          </form>
         </Col>
 
-        <Col md="3" style={{ display: 'flex', justifyContent: 'space-around' }}>
-          <Button.Ripple color="primary" onClick={openForValueModal}>
+        <Col md="1"></Col>
+
+        <Col md="3" className="d-flex justify-content-between">
+          <Button.Ripple onClick={openForValueModal}>
             Cấu hình
           </Button.Ripple>
-          <Button.Ripple color="primary">Đặt lịch</Button.Ripple>
+          <Button.Ripple className='btn-outline-microsoft'>Đặt lịch</Button.Ripple>
         </Col>
       </Row>
 

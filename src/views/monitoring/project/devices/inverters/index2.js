@@ -14,6 +14,8 @@ import InverterTable2 from './InverterTable2'
 
 import ModalForCommonValue from './ModalForCommonValue'
 
+//Styles
+import './styles.scss'
 
 const Inverters2 = () => { 
   const [userChoice, setUserChoice] = useQueryState('projectId')
@@ -67,27 +69,16 @@ const Inverters2 = () => {
     <Fragment>
       <Row className="mb-1">
         <Col md="2">
-          {/* <Form onSubmit={handleSubmit}>
-            <Input
-              type="number"
-              placeholder="Điều chỉnh công suất toàn dự án"
-              // eslint-disable-next-line no-return-assign
-              onFocus={(e) => (e.target.placeholder = '')}
-              name={userChoice}
-              value={values}
-              onChange={(e) => setValues(e.target.value)}
-            />
-          </Form> */}
           <div
             style={{
               margin: 'auto',
-              display: 'block',
-              width: 'fit-content'
+              display: 'inline-block',
+              width: 'max-content'
             }}
           >
             <FormControlLabel
-              control={<Switch checked={state.status} onChange={handleChange} color="primary" name="status" />}
               label="Giới hạn công suất"
+              control={<Switch checked={state.status} onChange={handleChange} color="primary" name="status" />}
             />
           </div>
         </Col>
