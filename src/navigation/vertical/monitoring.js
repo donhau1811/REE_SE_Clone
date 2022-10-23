@@ -30,13 +30,6 @@ export default [
         navLink: ROUTER_URL.CONTROL
       },
       {
-        id: 'booking',
-        title: 'Booking',
-        action: 'manage',
-        resource: ROUTER_URL.BOOKING,
-        navLink: ROUTER_URL.BOOKING
-      },
-      {
         id: 'alert',
         title: 'Alert',
         action: 'manage',
