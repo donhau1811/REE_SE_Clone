@@ -31,15 +31,6 @@ export const MonitoringRoutes = [
     }
   },
   {
-    path: ROUTER_URL.BOOKING,
-    exact: true,
-    component: lazy(() => import('../../views/monitoring/project/devices/inverters/BookingCalendar')),
-    meta: {
-      action: 'manage',
-      resource: ROUTER_URL.BOOKING
-    }
-  },
-  {
     path: ROUTER_URL.PROJECT_INFO_GENERAL,
     exact: true,
     component: lazy(() => import('../../views/monitoring/project')),
