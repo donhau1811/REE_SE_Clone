@@ -1,16 +1,20 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-undef */
 /* eslint-disable no-confusing-arrow */
 // ** React Imports
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
 
 // ** Store & Actions
 import { useSelector, useDispatch } from 'react-redux'
 import { getInverters, getInverterTypes } from './store/actions'
 
+import { AbilityContext } from '@src/utility/context/Can'
+
 // ** Third Party Components
 import { ChevronDown } from 'react-feather'
 import DataTable from 'react-data-table-component'
-import { Button, Card, Col, Form, Input, Row } from 'reactstrap'
+import { Button, Card, UncontrolledTooltip, Col, Form, Input, Row } from 'reactstrap'
 // import Select from 'react-select'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import PropTypes from 'prop-types'
@@ -23,12 +27,12 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 
 // Constants
 import {
-  // NORMAL_CHARACTER,
+  NORMAL_CHARACTER,
   renderDeviceStatus,
   ROUTER_URL,
   ROWS_PER_PAGE_OPTIONS,
-  STATE
-  // USER_ABILITY
+  STATE,
+  USER_ABILITY
 } from '@constants/index'
 
 import { useQuery } from '@hooks/useQuery'
@@ -42,6 +46,9 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) =
     query = useQuery(),
     projectId = query.get('projectId') || 137,
     { inverter: store } = useSelector((state) => state)
+
+  // ** Ability Context
+  const ability = useContext(AbilityContext)
 
   // ** States
   const [currentPage, setCurrentPage] = useState(store?.params?.page),
@@ -57,6 +64,8 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) =
     [select2, setSelect2] = useState(),
     [valueForProject, setValueForProject] = useState(),
     [disabled, setDisabled] = useState(true)
+    // [disabled1, setDisabled1] = useState(true)
+  // [value1, setValue1] = useState()
 
   //Form
   const { register, handleSubmit } = useForm()
@@ -196,6 +205,23 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) =
     fetchInverters({ order: `${column.selector} ${direction}` })
   }
 
+  const handleClick = (e) => {
+    // setDisabled1(!disabled1)
+    const idClicked = e.currentTarget.id
+  }
+
+  const CustomInput = () => {
+    const attributes = {
+      type: 'number',
+      id,
+      ...rest
+    }
+  if (id === idClicked) {
+    attributes.disabled = false
+  }
+  return <Input {...attributes} />
+  }
+  
   // ** Column header
   const serverSideColumns = [
     {
@@ -280,12 +306,21 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) =
       cell: (row) => {
         return row.state === STATE.ACTIVE ? (
           <Form onSubmit={handleSubmit(onSubmit)}>
-            <Input
+            {/* <Input
               type="number"
               name={row.serialNumber}
+              id={row.serialNumber}
               {...register(`${row.serialNumber}`)}
               // ref will only get you a reference to the Input component, use innerRef to get a reference to the DOM input (for things like focus management).
               innerRef={register}
+              disabled={disabled1}
+            /> */}
+            <CustomInput
+            name={row.serialNumber}
+            id={row.serialNumber}
+            {...register(`${row.serialNumber}`)}
+            innerRef={register}
+            disabled
             />
           </Form>
         ) : (
@@ -302,7 +337,14 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) =
       cell: (row) => {
         return row.state === STATE.ACTIVE ? (
           <Form onSubmit={handleSubmit2(onSubmit2)}>
-            <Input type="number" name={row.serialNumber} {...register2(`${row.serialNumber}`)} innerRef={register2} />
+            <Input
+              type="number"
+              name={row.serialNumber}
+              id={row.serialNumber}
+              {...register2(`${row.serialNumber}`)}
+              innerRef={register2}
+              // disabled={disabled1}
+            />
           </Form>
         ) : (
           <Input type="number" disabled />
@@ -341,7 +383,27 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) =
       cell: (row) => {
         return (
           <div className="d-flex">
-            {row.state === STATE.ACTIVE ? <LockIcon /> : <UnlockIcon />}
+            <>
+              <Button.Ripple id={row.serialNumber} className="btn-icon" color="flat" onClick={handleClick}>
+                <SettingsIcon />
+              </Button.Ripple>
+            </>
+
+            {ability.can('manage', USER_ABILITY.MANAGE_DEVICE) && (
+              <>
+                <Button.Ripple
+                  className="btn-icon"
+                  color="flat"
+                  // onClick={() => handleClick(row)}
+                  id={`${row.id.replaceAll(NORMAL_CHARACTER, '')}`}
+                >
+                  {row.state === STATE.ACTIVE ? <UnlockIcon /> : <LockIcon />}
+                </Button.Ripple>
+                <UncontrolledTooltip placement="auto" target={`${row.id.replaceAll(NORMAL_CHARACTER, '')}`}>
+                  <FormattedMessage id={row.state === STATE.ACTIVE ? 'Inactivate inverter' : 'Activate inverter'} />
+                </UncontrolledTooltip>{' '}
+              </>
+            )}
           </div>
         )
       }
@@ -352,8 +414,12 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) =
 
   const handleChange1 = (e) => {
     setSelect1(e.target.value)
-    if (e.target.value === 'site') setDisabled(false)
-    if (e.target.value === 'device') setDisabled(true)
+    if (e.target.value === 'site') {
+      setDisabled(false)
+    }
+    if (e.target.value === 'device') {
+      setDisabled(true)
+    }
   }
 
   const handleChange2 = (e) => {
@@ -401,7 +467,7 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) =
     <Card style={{ background: '#dfe7f2' }}>
       <Row className="mt-1 mb-1 ml-2">
         <Col className="customCol" lg="7" style={{ visibility: visibilityState }}>
-          <form onSubmit={handleSubmitProject} className="d-flex justify-content-between align-items-center">
+          <Form onSubmit={handleSubmitProject} className="d-flex justify-content-between align-items-center">
             <select defaultValue={'none'} id="reduction type" name="reduction type" onChange={handleChange1}>
               <option value="none" disabled>
                 Chọn loại giảm
@@ -428,7 +494,7 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) =
             <Button outline color="primary" type="submit">
               Áp dụng
             </Button>
-          </form>
+          </Form>
         </Col>
 
         <Col lg="2"></Col>

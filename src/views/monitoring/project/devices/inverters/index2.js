@@ -79,7 +79,7 @@ const Inverters2 = () => {
             <FormControlLabel
               label="Giới hạn công suất"
               control={
-                <Switch size="large" checked={state.status} onChange={handleChange} color="primary" name="status" />
+                <Switch size="medium" checked={state.status} onChange={handleChange} color="primary" name="status" />
               }
             />
           </div>
