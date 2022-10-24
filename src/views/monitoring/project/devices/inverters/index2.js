@@ -12,7 +12,6 @@ import Switch from '@material-ui/core/Switch'
 // ** Tables
 import InverterTable2 from './InverterTable2'
 
-import ModalForCommonValue from './ModalForCommonValue'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
 
 //Styles
@@ -21,9 +20,6 @@ import './styles.scss'
 const Inverters2 = () => {
   const [userChoice, setUserChoice] = useQueryState('projectId')
 
-  // const [values, setValues] = useState()
-  const [modalForCommonValue, setModalForCommonValue] = useState(false)
-  const [selectedInverters, setSelecterInverters] = useState([])
   // state of the Toggle Button
   const [state, setState] = useState({ status: false })
   const listOfProjects = useSelector((state) => state?.auth?.userData?.user?.projects)
@@ -41,10 +37,10 @@ const Inverters2 = () => {
     console.log(userChoice)
   }
 
-  const openForValueModal = () => {
-    setModalForCommonValue(true)
-    setSelecterInverters(selectedInverters)
-  }
+  // const openForValueModal = () => {
+  //   setModalForCommonValue(true)
+  //   setSelecterInverters(selectedInverters)
+  // }
 
   //Handle control power of whole site
   // const handleSubmit = (e) => {
@@ -102,13 +98,6 @@ const Inverters2 = () => {
 
       <InverterTable2
         state={state.status}
-        openForValueModal={openForValueModal}
-        selectedInverters={selectedInverters}
-      />
-      <ModalForCommonValue
-        modalForCommonValue={modalForCommonValue}
-        setModalForCommonValue={setModalForCommonValue}
-        selectedInverters={selectedInverters}
       />
     </Fragment>
   )

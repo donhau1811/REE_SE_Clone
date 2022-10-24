@@ -3,11 +3,11 @@
 /* eslint-disable no-confusing-arrow */
 // ** React Imports
 import React, { useContext, useEffect, useState } from 'react'
-import axios from 'axios'
+// import axios from 'axios'
 
 // ** Store & Actions
 import { useSelector, useDispatch } from 'react-redux'
-import { getInverters, getInverterTypes } from './store/actions'
+import { getInverters, getInverterTypes, setSelectedInverter } from './store/actions'
 
 import { AbilityContext } from '@src/utility/context/Can'
 
@@ -22,7 +22,6 @@ import classnames from 'classnames'
 import { Link } from 'react-router-dom'
 import { ReactComponent as LockIcon } from '@src/assets/images/svg/table/ic-lock.svg'
 import { ReactComponent as UnlockIcon } from '@src/assets/images/svg/table/ic-unlock.svg'
-import SettingsIcon from '@mui/icons-material/Settings'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 
 // Constants
@@ -38,9 +37,9 @@ import {
 import { useQuery } from '@hooks/useQuery'
 import CP from '@src/views/common/pagination'
 import { numberWithCommas } from '@utils'
-import { useForm } from 'react-hook-form'
+// import { useForm } from 'react-hook-form'
 
-const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) => {
+const InverterTable2 = ({ intl, state }) => {
   // ** Store Vars
   const dispatch = useDispatch(),
     query = useQuery(),
@@ -62,53 +61,55 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) =
     ),
     [select1, setSelect1] = useState(),
     [select2, setSelect2] = useState(),
-    [valueForProject, setValueForProject] = useState(),
-    [disabled, setDisabled] = useState(true)
-    // [disabled1, setDisabled1] = useState(true)
+    [commonValue, setCommonValue] = useState(),
+    [selectedInverters, setSelecterInverters] = useState([])
+
+  // [disabled, setDisabled] = useState(true)
+  // [disabled1, setDisabled1] = useState(true)
   // [value1, setValue1] = useState()
 
   //Form
-  const { register, handleSubmit } = useForm()
+  // const { register, handleSubmit } = useForm()
 
-  const { register: register2, handleSubmit: handleSubmit2 } = useForm()
+  // const { register: register2, handleSubmit: handleSubmit2 } = useForm()
 
-  const onSubmit = (data) => {
-    console.log(data)
-    const entries = Object.entries(data)
-    const dataNeeded = entries.find((item) => item[1] !== '')
-    const body = {
-      control_type: 'power_control',
-      // site: projectId,
-      site: 'local-debug',
-      // inverter_type: inverterType,
-      // device_sn: dataNeeded[0],
-      device_sn: 'A2004250015',
-      control_values: { absolute_output_power: dataNeeded[1], percentage_output_power: null }
-    }
-    console.log(body)
-    axios
-      .post('http://localhost:5001/api/remote/send_command_to_inverter', body)
-      .then((response) => alert(response.data.status.commandExecutionStatus))
-      .catch((error) => console.log(error))
-  }
+  // const onSubmit = (data) => {
+  //   console.log(data)
+  //   const entries = Object.entries(data)
+  //   const dataNeeded = entries.find((item) => item[1] !== '')
+  //   const body = {
+  //     control_type: 'power_control',
+  //     // site: projectId,
+  //     site: 'local-debug',
+  //     // inverter_type: inverterType,
+  //     // device_sn: dataNeeded[0],
+  //     device_sn: 'A2004250015',
+  //     control_values: { absolute_output_power: dataNeeded[1], percentage_output_power: null }
+  //   }
+  //   console.log(body)
+  //   axios
+  //     .post('http://localhost:5001/api/remote/send_command_to_inverter', body)
+  //     .then((response) => alert(response.data.status.commandExecutionStatus))
+  //     .catch((error) => console.log(error))
+  // }
 
-  const onSubmit2 = (data) => {
-    const entries = Object.entries(data)
-    const dataNeeded = entries.find((item) => item[1] !== '')
-    const body = {
-      control_type: 'power_control',
-      // site: projectId,
-      site: 'local-debug',
-      // device_sn: dataNeeded[0],
-      device_sn: 'B2004250015',
-      control_values: { absolute_output_power: null, percentage_output_power: dataNeeded[1] }
-    }
-    console.log(body)
-    axios
-      .post('http://localhost:5001/api/remote/send_command_to_inverter', body)
-      .then((response) => alert(response.data.status.commandExecutionStatus))
-      .catch((error) => console.log(error))
-  }
+  // const onSubmit2 = (data) => {
+  //   const entries = Object.entries(data)
+  //   const dataNeeded = entries.find((item) => item[1] !== '')
+  //   const body = {
+  //     control_type: 'power_control',
+  //     // site: projectId,
+  //     site: 'local-debug',
+  //     // device_sn: dataNeeded[0],
+  //     device_sn: 'B2004250015',
+  //     control_values: { absolute_output_power: null, percentage_output_power: dataNeeded[1] }
+  //   }
+  //   console.log(body)
+  //   axios
+  //     .post('http://localhost:5001/api/remote/send_command_to_inverter', body)
+  //     .then((response) => alert(response.data.status.commandExecutionStatus))
+  //     .catch((error) => console.log(error))
+  // }
 
   // Fetch inverter API
   const fetchInverters = (queryParam) => {
@@ -205,23 +206,18 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) =
     fetchInverters({ order: `${column.selector} ${direction}` })
   }
 
-  const handleClick = (e) => {
-    // setDisabled1(!disabled1)
-    const idClicked = e.currentTarget.id
-  }
+  // const handleClick = (e) => {
+  //   // setDisabled1(!disabled1)
+  //   const idClicked = e.currentTarget.id
+  // }
 
-  const CustomInput = () => {
-    const attributes = {
-      type: 'number',
-      id,
-      ...rest
-    }
-  if (id === idClicked) {
-    attributes.disabled = false
-  }
-  return <Input {...attributes} />
-  }
-  
+  // const CustomInput = ({ ...props }) => {
+  //   if (props.id === idClicked) {
+  //     props.disabled = false
+  //   }
+  //   return <Input {...props} />
+  // }
+
   // ** Column header
   const serverSideColumns = [
     {
@@ -235,7 +231,11 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) =
               const selectedInverter = row.serialNumber
               if (e.target.checked) {
                 selectedInverters.push(selectedInverter)
-              } else selectedInverters.pop(selectedInverter)
+                setSelecterInverters(selectedInverters)
+              } else {
+                selectedInverters.pop(selectedInverter)
+                setSelecterInverters(selectedInverters)
+              }
             }}
           />
         ) : (
@@ -301,60 +301,60 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) =
       minWidth: '130px',
       maxWidth: '130px'
     },
-    {
-      name: `${intl.formatMessage({ id: 'Capacity limit' })} (W)`,
-      cell: (row) => {
-        return row.state === STATE.ACTIVE ? (
-          <Form onSubmit={handleSubmit(onSubmit)}>
-            {/* <Input
-              type="number"
-              name={row.serialNumber}
-              id={row.serialNumber}
-              {...register(`${row.serialNumber}`)}
-              // ref will only get you a reference to the Input component, use innerRef to get a reference to the DOM input (for things like focus management).
-              innerRef={register}
-              disabled={disabled1}
-            /> */}
-            <CustomInput
-            name={row.serialNumber}
-            id={row.serialNumber}
-            {...register(`${row.serialNumber}`)}
-            innerRef={register}
-            disabled
-            />
-          </Form>
-        ) : (
-          <Input type="number" disabled />
-        )
-      },
-      sortable: true,
-      center: true,
-      minWidth: '130px',
-      maxWidth: '130px'
-    },
-    {
-      name: `${intl.formatMessage({ id: 'Rate limit' })} (%)`,
-      cell: (row) => {
-        return row.state === STATE.ACTIVE ? (
-          <Form onSubmit={handleSubmit2(onSubmit2)}>
-            <Input
-              type="number"
-              name={row.serialNumber}
-              id={row.serialNumber}
-              {...register2(`${row.serialNumber}`)}
-              innerRef={register2}
-              // disabled={disabled1}
-            />
-          </Form>
-        ) : (
-          <Input type="number" disabled />
-        )
-      },
-      sortable: true,
-      center: true,
-      minWidth: '130px',
-      maxWidth: '130px'
-    },
+    // {
+    //   name: `${intl.formatMessage({ id: 'Capacity limit' })} (W)`,
+    //   cell: (row) => {
+    //     return row.state === STATE.ACTIVE ? (
+    //       <Form onSubmit={handleSubmit(onSubmit)}>
+    //         {/* <Input
+    //           type="number"
+    //           name={row.serialNumber}
+    //           id={row.serialNumber}
+    //           {...register(`${row.serialNumber}`)}
+    //           // ref will only get you a reference to the Input component, use innerRef to get a reference to the DOM input (for things like focus management).
+    //           innerRef={register}
+    //           disabled={disabled1}
+    //         /> */}
+    //         <CustomInput
+    //           name={row.serialNumber}
+    //           id={row.serialNumber}
+    //           {...register(`${row.serialNumber}`)}
+    //           innerRef={register}
+    //           disabled
+    //         />
+    //       </Form>
+    //     ) : (
+    //       <Input type="number" disabled />
+    //     )
+    //   },
+    //   sortable: true,
+    //   center: true,
+    //   minWidth: '130px',
+    //   maxWidth: '130px'
+    // },
+    // {
+    //   name: `${intl.formatMessage({ id: 'Rate limit' })} (%)`,
+    //   cell: (row) => {
+    //     return row.state === STATE.ACTIVE ? (
+    //       <Form onSubmit={handleSubmit2(onSubmit2)}>
+    //         <Input
+    //           type="number"
+    //           name={row.serialNumber}
+    //           id={row.serialNumber}
+    //           {...register2(`${row.serialNumber}`)}
+    //           innerRef={register2}
+    //           // disabled={disabled1}
+    //         />
+    //       </Form>
+    //     ) : (
+    //       <Input type="number" disabled />
+    //     )
+    //   },
+    //   sortable: true,
+    //   center: true,
+    //   minWidth: '130px',
+    //   maxWidth: '130px'
+    // },
     {
       name: intl.formatMessage({ id: 'Status' }),
       selector: 'activated',
@@ -383,11 +383,11 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) =
       cell: (row) => {
         return (
           <div className="d-flex">
-            <>
-              <Button.Ripple id={row.serialNumber} className="btn-icon" color="flat" onClick={handleClick}>
-                <SettingsIcon />
-              </Button.Ripple>
-            </>
+            {/* //   <>
+          //     <Button.Ripple id={row.serialNumber} className="btn-icon" color="flat" onClick={handleClick}>
+          //       <SettingsIcon />
+          //     </Button.Ripple>
+          //   </> */}
 
             {ability.can('manage', USER_ABILITY.MANAGE_DEVICE) && (
               <>
@@ -414,12 +414,6 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) =
 
   const handleChange1 = (e) => {
     setSelect1(e.target.value)
-    if (e.target.value === 'site') {
-      setDisabled(false)
-    }
-    if (e.target.value === 'device') {
-      setDisabled(true)
-    }
   }
 
   const handleChange2 = (e) => {
@@ -428,14 +422,14 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) =
 
   const handleSubmitProject = (e) => {
     e.preventDefault()
-    console.log(select1, select2, valueForProject)
+    console.log(select1, select2, commonValue)
     if (select2 === 'absolute_output_power') {
       const body = {
         control_type: 'power_control',
         // site: projectId,
         site: 'local-debug',
         control_values: {
-          absolute_output_power: valueForProject,
+          absolute_output_power: commonValue,
           percentage_output_power: null
         }
       }
@@ -452,7 +446,7 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) =
         site: 'local-debug',
         control_values: {
           absolute_output_power: null,
-          percentage_output_power: valueForProject
+          percentage_output_power: commonValue
         }
       }
       // axios
@@ -487,8 +481,8 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) =
               type="number"
               name="value"
               id="value"
-              disabled={disabled}
-              onChange={(e) => setValueForProject(e.target.value)}
+              // disabled={disabled}
+              onChange={(e) => setCommonValue(e.target.value)}
               className="customInp"
             />
             <Button outline color="primary" type="submit">
@@ -497,18 +491,9 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) =
           </Form>
         </Col>
 
-        <Col lg="2"></Col>
+        <Col lg="3"></Col>
 
-        <Col lg="3" className="d-flex justify-content-around align-items-center">
-          <button
-            className="btn-settings1 d-flex justify-content-around align-items-center"
-            onClick={openForValueModal}
-          >
-            <span>
-              <SettingsIcon />
-            </span>
-            Cấu hình
-          </button>
+        <Col lg="2" className="d-flex justify-content-end">
           <button className="btn-settings2 d-flex justify-content-around align-items-center">
             <span>
               <CalendarMonthIcon />
@@ -545,8 +530,6 @@ const InverterTable2 = ({ intl, openForValueModal, selectedInverters, state }) =
 
 InverterTable2.propTypes = {
   intl: PropTypes.object.isRequired,
-  openForValueModal: PropTypes.func.isRequired,
-  selectedInverters: PropTypes.array.isRequired,
   state: PropTypes.bool.isRequired
 }
 
