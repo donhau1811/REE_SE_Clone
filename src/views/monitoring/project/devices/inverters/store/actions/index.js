@@ -14,8 +14,8 @@ import {
   API_GET_INVERTER,
   API_GET_INVERTERS,
   API_POST_INVERTER,
-  API_PUT_INVERTER,
-  API_SEND_COMMAND_TO_INVERTER
+  API_PUT_INVERTER
+  // API_SEND_COMMAND_TO_INVERTER
 } from '@constants/api'
 import { showToast } from '@utils'
 
@@ -244,22 +244,22 @@ export const getInverterTypes = (params) => {
 }
 
 // ** Send commands to inverters
-export const sendCommandToInverters = (inverter, params) => {
-  return async (dispatch) => {
-    await axios
-      .post(API_SEND_COMMAND_TO_INVERTER, {
-        ...inverter
-      })
-      .then((response) => {
-        if (response.data && response.data.data) {
-          showToast('success', response.data.commandExecutionStatus)
-          dispatch(getInverters(params))
-        } else {
-          throw new Error(response.data.message)
-        }
-      })
-      .catch((err) => {
-        showToast('error', `${err.response ? err.response.data.message : err.message}`)
-      })
-  }
-}
+// export const sendCommandToInverters = (inverter, params) => {
+//   return async (dispatch) => {
+//     await axios
+//       .post(API_SEND_COMMAND_TO_INVERTER, {
+//         ...inverter
+//       })
+//       .then((response) => {
+//         if (response.data && response.data.data) {
+//           showToast('success', response.data.commandExecutionStatus)
+//           dispatch(getInverters(params))
+//         } else {
+//           throw new Error(response.data.message)
+//         }
+//       })
+//       .catch((err) => {
+//         showToast('error', `${err.response ? err.response.data.message : err.message}`)
+//       })
+//   }
+// }

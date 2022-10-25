@@ -11,7 +11,7 @@ import Switch from '@material-ui/core/Switch'
 
 // ** Tables
 import InverterTable2 from './InverterTable2'
-
+import ModalForFiltering from './ModalForFiltering'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
 
 //Styles
@@ -22,9 +22,10 @@ const Inverters2 = () => {
 
   // state of the Toggle Button
   const [state, setState] = useState({ status: false })
+  const [modalForFiltering, setModalForFiltering] = useState(false)
+
   const listOfProjects = useSelector((state) => state?.auth?.userData?.user?.projects)
   const options = []
-
   for (let i = 0; i < listOfProjects?.length; i++) {
     const value = `${listOfProjects[i].id}`
     const label = `${listOfProjects[i].name}`
@@ -35,6 +36,10 @@ const Inverters2 = () => {
   const handleChange = (e) => {
     setState({ ...state, [e.target.name]: e.target.checked })
     console.log(userChoice)
+  }
+
+  const openModalForFiltering = () => {
+    setModalForFiltering(true)
   }
 
   // const openForValueModal = () => {
@@ -82,23 +87,17 @@ const Inverters2 = () => {
         </Col>
         <Col lg="6"></Col>
         <Col md="3">
-          <Select
-            style={{ background: 'transparent' }}
-            options={options}
-            onChange={(choice) => setUserChoice(choice.value)}
-            defaultValue={options[7]}
-          />
+          <Select options={options} onChange={(choice) => setUserChoice(choice.value)} defaultValue={options[7]} />
         </Col>
         <Col lg="1">
           <Button>
-            <FilterAltIcon fontSize="large" />
+            <FilterAltIcon fontSize="large" onClick={openModalForFiltering} />
           </Button>
         </Col>
       </Row>
 
-      <InverterTable2
-        state={state.status}
-      />
+      <InverterTable2 state={state.status} />
+      <ModalForFiltering modalForFiltering={modalForFiltering} setModalForFiltering={setModalForFiltering} />
     </Fragment>
   )
 }

@@ -2,7 +2,7 @@ const BASE_API_URL = process.env.REACT_APP_BASE_API_URL
 const BASE_API_URL_V2 = process.env.REACT_APP_BASE_API_URL_V2
 
 //Base URL for sending command to control power of inverter
-const BASE_API_CLOUD_FUNCTION = process.env.BASE_API_CLOUD_FUNCTION
+// const BASE_API_CLOUD_FUNCTION = process.env.BASE_API_CLOUD_FUNCTION
 
 export const API_GET_USERS = `${BASE_API_URL}/glf_user`
 export const API_GET_USERS_ACTIVITIES = `${BASE_API_URL}/glf_activity`
@@ -240,4 +240,4 @@ export const API_POST_FILES = `${BASE_API_URL_V2}/file/upload-multiple`
 export const API_FILES_GET_SINGED_URL = `${BASE_API_URL_V2}/file/signedUrl`
 
 //API to send command to inverters
-export const API_SEND_COMMAND_TO_INVERTER = `${BASE_API_CLOUD_FUNCTION}/send_command_to_inverter`
+// export const API_SEND_COMMAND_TO_INVERTER = `${BASE_API_CLOUD_FUNCTION}/send_command_to_inverter`

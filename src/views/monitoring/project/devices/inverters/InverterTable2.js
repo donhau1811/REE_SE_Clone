@@ -7,7 +7,7 @@ import React, { useContext, useEffect, useState } from 'react'
 
 // ** Store & Actions
 import { useSelector, useDispatch } from 'react-redux'
-import { getInverters, getInverterTypes, setSelectedInverter } from './store/actions'
+import { getInverters, getInverterTypes } from './store/actions'
 
 import { AbilityContext } from '@src/utility/context/Can'
 
@@ -62,9 +62,7 @@ const InverterTable2 = ({ intl, state }) => {
     [select1, setSelect1] = useState(),
     [select2, setSelect2] = useState(),
     [commonValue, setCommonValue] = useState(),
-    [selectedInverters, setSelecterInverters] = useState([])
-
-  // [disabled, setDisabled] = useState(true)
+    [selectedInverters, setSelectedInverters] = useState([])
   // [disabled1, setDisabled1] = useState(true)
   // [value1, setValue1] = useState()
 
@@ -136,6 +134,10 @@ const InverterTable2 = ({ intl, state }) => {
   useEffect(async () => {
     await Promise.all([fetchInverters(), dispatch(getInverterTypes({ rowsPerPage: -1, state: STATE.ACTIVE }))])
   }, [projectId])
+
+  // useEffect(() => {
+  //   selectedInverters.length = 0
+  // })
 
   // ** Function to handle Pagination and get data
   const handlePagination = (page) => {
@@ -220,33 +222,33 @@ const InverterTable2 = ({ intl, state }) => {
 
   // ** Column header
   const serverSideColumns = [
-    {
-      name: `${intl.formatMessage({ id: 'Choose the inverter' })}`,
-      cell: (row) => {
-        return row.state === STATE.ACTIVE ? (
-          <Input
-            type="checkbox"
-            name={row.serialNumber}
-            onChange={(e) => {
-              const selectedInverter = row.serialNumber
-              if (e.target.checked) {
-                selectedInverters.push(selectedInverter)
-                setSelecterInverters(selectedInverters)
-              } else {
-                selectedInverters.pop(selectedInverter)
-                setSelecterInverters(selectedInverters)
-              }
-            }}
-          />
-        ) : (
-          <Input type="checkbox" disabled />
-        )
-      },
-      sortable: true,
-      center: true,
-      minWidth: '130px',
-      maxWidth: '130px'
-    },
+    // {
+    //   name: `${intl.formatMessage({ id: 'Choose the inverter' })}`,
+    //   cell: (row) => {
+    //     return row.state === STATE.ACTIVE ? (
+    //       <Input
+    //         type="checkbox"
+    //         name={row.serialNumber}
+    //         onChange={(e) => {
+    //           const selectedInverter = row.serialNumber
+    //           if (e.target.checked) {
+    //             selectedInverters.push(selectedInverter)
+    //             // setSelectedInverters(selectedInverters)
+    //           } else {
+    //             selectedInverters.pop(selectedInverter)
+    //             // setSelectedInverters(selectedInverters)
+    //           }
+    //         }}
+    //       />
+    //     ) : (
+    //       <Input type="checkbox" disabled />
+    //     )
+    //   },
+    //   sortable: true,
+    //   center: true,
+    //   minWidth: '130px',
+    //   maxWidth: '130px'
+    // },
     {
       name: '',
       selector: 'status',
@@ -260,8 +262,9 @@ const InverterTable2 = ({ intl, state }) => {
       name: intl.formatMessage({ id: 'Device name' }),
       selector: 'name',
       // eslint-disable-next-line react/display-name
-      cell: (row) => row.state === STATE.ACTIVE ? (
-          <Link
+      cell: (row) => (
+        row.state === STATE.ACTIVE
+          ? <Link
             to={{
               pathname: ROUTER_URL.PROJECT_INVERTER_DETAIL,
               search: `projectId=${projectId}&deviceId=${row.id}&typeModel=${row.typeModel}`
@@ -269,18 +272,15 @@ const InverterTable2 = ({ intl, state }) => {
           >
             {row.name}
           </Link>
-        ) : (
-          row.name
-        ),
+          : row.name
+      ),
       sortable: true,
-      center: true,
       minWidth: '50px'
     },
     {
       name: intl.formatMessage({ id: 'Serial number' }),
       selector: 'serialNumber',
       sortable: true,
-      center: true,
       minWidth: '200px'
     },
     {
@@ -410,6 +410,11 @@ const InverterTable2 = ({ intl, state }) => {
     }
   ]
 
+  const handleChange = ({selectedRows}) => {
+    // setSelectedField(state.selectedRows)
+    setSelectedInverters(selectedRows.map((e) => e.serialNumber))
+  }
+
   const visibilityState = state === true ? 'visible' : 'hidden'
 
   const handleChange1 = (e) => {
@@ -420,14 +425,14 @@ const InverterTable2 = ({ intl, state }) => {
     setSelect2(e.target.value)
   }
 
-  const handleSubmitProject = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
-    console.log(select1, select2, commonValue)
+    console.log(select1, select2, commonValue, selectedInverters)
     if (select2 === 'absolute_output_power') {
       const body = {
         control_type: 'power_control',
-        // site: projectId,
-        site: 'local-debug',
+        site: projectId,
+        // site: 'local-debug',
         control_values: {
           absolute_output_power: commonValue,
           percentage_output_power: null
@@ -461,7 +466,7 @@ const InverterTable2 = ({ intl, state }) => {
     <Card style={{ background: '#dfe7f2' }}>
       <Row className="mt-1 mb-1 ml-2">
         <Col className="customCol" lg="7" style={{ visibility: visibilityState }}>
-          <Form onSubmit={handleSubmitProject} className="d-flex justify-content-between align-items-center">
+          <Form onSubmit={handleSubmit} className="d-flex justify-content-between align-items-center">
             <select defaultValue={'none'} id="reduction type" name="reduction type" onChange={handleChange1}>
               <option value="none" disabled>
                 Chọn loại giảm
@@ -481,7 +486,6 @@ const InverterTable2 = ({ intl, state }) => {
               type="number"
               name="value"
               id="value"
-              // disabled={disabled}
               onChange={(e) => setCommonValue(e.target.value)}
               className="customInp"
             />
@@ -523,6 +527,8 @@ const InverterTable2 = ({ intl, state }) => {
         sortServer
         defaultSortAsc={sortDirection === 'asc'}
         defaultSortField={orderBy}
+        selectableRows
+        onSelectedRowsChange={handleChange}
       />
     </Card>
   )
