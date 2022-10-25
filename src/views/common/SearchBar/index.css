@@ -1,0 +1,15 @@
+Input:-moz-placeholder-shown {
+  text-overflow: ellipsis;
+}
+
+Input:-ms-input-placeholder {
+  text-overflow: ellipsis;
+}
+
+Input:placeholder-shown {
+  text-overflow: ellipsis;
+}
+
+.disable {
+  pointer-events: none;
+}/*# sourceMappingURL=index.css.map */

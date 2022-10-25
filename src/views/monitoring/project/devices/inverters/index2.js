@@ -42,6 +42,13 @@ const Inverters2 = () => {
     setModalForFiltering(true)
   }
 
+  const customStyles = {
+    control: (base) => ({
+      ...base,
+      background: '#dfe7f2'
+    })
+  }
+
   // const openForValueModal = () => {
   //   setModalForCommonValue(true)
   //   setSelecterInverters(selectedInverters)
@@ -85,11 +92,16 @@ const Inverters2 = () => {
             />
           </div>
         </Col>
-        <Col lg="6"></Col>
-        <Col md="3">
-          <Select options={options} onChange={(choice) => setUserChoice(choice.value)} defaultValue={options[7]} />
+        <Col lg="4"></Col>
+        <Col lg="5">
+          <Select
+            styles={customStyles}
+            options={options}
+            onChange={(choice) => setUserChoice(choice.value)}
+            defaultValue={options[7]}
+          />
         </Col>
-        <Col lg="1">
+        <Col lg="1" className="d-flex justify-content-end">
           <Button>
             <FilterAltIcon fontSize="large" onClick={openModalForFiltering} />
           </Button>

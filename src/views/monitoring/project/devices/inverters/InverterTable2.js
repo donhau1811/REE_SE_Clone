@@ -465,7 +465,7 @@ const InverterTable2 = ({ intl, state }) => {
   return (
     <Card style={{ background: '#dfe7f2' }}>
       <Row className="mt-1 mb-1 ml-2">
-        <Col className="customCol" lg="7" style={{ visibility: visibilityState }}>
+        <Col className="customCol" lg="9" style={{ visibility: visibilityState }}>
           <Form onSubmit={handleSubmit} className="d-flex justify-content-between align-items-center">
             <select defaultValue={'none'} id="reduction type" name="reduction type" onChange={handleChange1}>
               <option value="none" disabled>
@@ -495,7 +495,7 @@ const InverterTable2 = ({ intl, state }) => {
           </Form>
         </Col>
 
-        <Col lg="3"></Col>
+        <Col lg="1"></Col>
 
         <Col lg="2" className="d-flex justify-content-end">
           <button className="btn-settings2 d-flex justify-content-around align-items-center">
