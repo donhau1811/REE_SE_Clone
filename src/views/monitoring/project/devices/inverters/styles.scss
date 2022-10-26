@@ -41,12 +41,10 @@ select {
     width: 110px;
 }
 
-$theme-color: (
-    'primary' : #ffb800
-);
+.btn-filter {
+    background-color: #dfe7f2 !important;
+}
 
-$btn-border-radius: 3000px;
-$btn-border-radius: 3000px;
-$btn-border-radius: 3000px;
-
-
+.btn-filter:hover {
+    background-color: rgb(117, 114, 114) !important;
+}

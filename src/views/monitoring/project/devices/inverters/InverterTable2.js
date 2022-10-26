@@ -79,7 +79,6 @@ const InverterTable2 = ({ intl, state }) => {
   //     control_type: 'power_control',
   //     // site: projectId,
   //     site: 'local-debug',
-  //     // inverter_type: inverterType,
   //     // device_sn: dataNeeded[0],
   //     device_sn: 'A2004250015',
   //     control_values: { absolute_output_power: dataNeeded[1], percentage_output_power: null }
@@ -208,47 +207,8 @@ const InverterTable2 = ({ intl, state }) => {
     fetchInverters({ order: `${column.selector} ${direction}` })
   }
 
-  // const handleClick = (e) => {
-  //   // setDisabled1(!disabled1)
-  //   const idClicked = e.currentTarget.id
-  // }
-
-  // const CustomInput = ({ ...props }) => {
-  //   if (props.id === idClicked) {
-  //     props.disabled = false
-  //   }
-  //   return <Input {...props} />
-  // }
-
   // ** Column header
   const serverSideColumns = [
-    // {
-    //   name: `${intl.formatMessage({ id: 'Choose the inverter' })}`,
-    //   cell: (row) => {
-    //     return row.state === STATE.ACTIVE ? (
-    //       <Input
-    //         type="checkbox"
-    //         name={row.serialNumber}
-    //         onChange={(e) => {
-    //           const selectedInverter = row.serialNumber
-    //           if (e.target.checked) {
-    //             selectedInverters.push(selectedInverter)
-    //             // setSelectedInverters(selectedInverters)
-    //           } else {
-    //             selectedInverters.pop(selectedInverter)
-    //             // setSelectedInverters(selectedInverters)
-    //           }
-    //         }}
-    //       />
-    //     ) : (
-    //       <Input type="checkbox" disabled />
-    //     )
-    //   },
-    //   sortable: true,
-    //   center: true,
-    //   minWidth: '130px',
-    //   maxWidth: '130px'
-    // },
     {
       name: '',
       selector: 'status',
@@ -383,12 +343,6 @@ const InverterTable2 = ({ intl, state }) => {
       cell: (row) => {
         return (
           <div className="d-flex">
-            {/* //   <>
-          //     <Button.Ripple id={row.serialNumber} className="btn-icon" color="flat" onClick={handleClick}>
-          //       <SettingsIcon />
-          //     </Button.Ripple>
-          //   </> */}
-
             {ability.can('manage', USER_ABILITY.MANAGE_DEVICE) && (
               <>
                 <Button.Ripple
@@ -419,6 +373,7 @@ const InverterTable2 = ({ intl, state }) => {
 
   const handleChange1 = (e) => {
     setSelect1(e.target.value)
+    console.log(typeof searchValue)
   }
 
   const handleChange2 = (e) => {

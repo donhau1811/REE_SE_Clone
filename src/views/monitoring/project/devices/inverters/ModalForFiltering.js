@@ -1,14 +1,17 @@
 /* eslint-disable no-return-assign */
 import React, { useState } from 'react'
-import { Button, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
+import { Button, Form, FormGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
 import Select from 'react-select'
+// import { useForm } from 'react-hook-form'
 import { useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 import axios from 'axios'
 
 const ModalForFiltering = ({ modalForFiltering, setModalForFiltering }) => {
+  // const { register, handleSubmit, reset } = useForm()
+
   const [select1, setSelect1] = useState()
-  const [select2, setSelect2] = useState()
+  const [select2, setSelect2] = useState([])
   const [select3, setSelect3] = useState()
   const [listOfInverters, setListOfInverters] = useState([])
 
@@ -47,32 +50,57 @@ const ModalForFiltering = ({ modalForFiltering, setModalForFiltering }) => {
     options2.push(option2)
   }
 
+  const handleChange2 = (choice) => {
+    setSelect2(choice.value)
+  }
+
+  const handleChange3 = (choice) => {
+    setSelect3(choice.value)
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    console.log(select1, select2, select3)
+  }
+
   const toggle = () => {
     setModalForFiltering(false)
-    console.log(select1)
-    console.log(select2)
-    console.log(select3)
   }
 
   return (
-    <>
-      <Modal isOpen={modalForFiltering} backdrop="static" className="modal-dialog-centered">
+    <Modal isOpen={modalForFiltering} backdrop="static" className="modal-dialog-centered">
+      <Form onSubmit={handleSubmit}>
         <ModalHeader toggle={toggle}>LỌC DỮ LIỆU</ModalHeader>
         <ModalBody>
-          <Label for="project">Dự án</Label>
-          <Select options={options1} onChange={handleChange1} defaultValue={options1[0]} />
-          <Label for="devices">Thiết bị</Label>
-          <Select options={options2} onChange={(choice) => setSelect2(choice.value)} />
-          <Label for="status">Trạng thái</Label>
-          <Select options={options3} onChange={(choice) => setSelect3(choice.value)} />
+          <FormGroup>
+            <Label for="project">
+              <h5>Dự án</h5>
+            </Label>
+            <Select options={options1} onChange={handleChange1} defaultValue={options1[0]} />
+          </FormGroup>
+          <FormGroup>
+            <Label for="devices">
+              <h5>Thiết bị</h5>
+            </Label>
+            <Select isMulti options={options2} onChange={handleChange2} />
+          </FormGroup>
+          <FormGroup>
+            <Label for="status">
+              <h5>Trạng thái</h5>
+            </Label>
+            <Select options={options3} onChange={handleChange3} />
+          </FormGroup>
         </ModalBody>
         <ModalFooter>
+          <Button color="primary" type="submit">
+            ĐỒNG Ý LÀM VỢ ANH NHÉ
+          </Button>
           <Button color="secondary" onClick={toggle}>
             CANCEL
           </Button>
         </ModalFooter>
-      </Modal>
-    </>
+      </Form>
+    </Modal>
   )
 }
 

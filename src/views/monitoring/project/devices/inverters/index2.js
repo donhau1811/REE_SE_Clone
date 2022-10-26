@@ -102,7 +102,7 @@ const Inverters2 = () => {
           />
         </Col>
         <Col lg="1" className="d-flex justify-content-end">
-          <Button>
+          <Button className='btn-filter'>
             <FilterAltIcon fontSize="large" onClick={openModalForFiltering} />
           </Button>
         </Col>
