@@ -41,12 +41,12 @@ const ProjectNavbar = ({ projectId }) => {
       title: 'Alarm',
       isActive: history.location.pathname === ROUTER_URL.PROJECT_ALARM
     },
-    {
-      pathname: ROUTER_URL.PROJECT_CONTROL,
-      search: `?projectId=${projectId}`,
-      title: 'Control',
-      isActive: history.location.pathname === ROUTER_URL.PROJECT_CONTROL
-    },
+    // {
+    //   pathname: ROUTER_URL.PROJECT_CONTROL,
+    //   search: `?projectId=${projectId}`,
+    //   title: 'Control',
+    //   isActive: history.location.pathname === ROUTER_URL.PROJECT_CONTROL
+    // },
     {
       pathname: ROUTER_URL.PROJECT_INFO_GENERAL,
       search: `?projectId=${projectId}`,

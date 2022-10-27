@@ -14,12 +14,12 @@ import { AbilityContext } from '@src/utility/context/Can'
 // ** Third Party Components
 import { ChevronDown } from 'react-feather'
 import DataTable from 'react-data-table-component'
-import { Button, Card, UncontrolledTooltip, Col, Form, Input, Row } from 'reactstrap'
+import { Button, Badge, Card, UncontrolledTooltip, Col, Form, Input, Row } from 'reactstrap'
 // import Select from 'react-select'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { ReactComponent as LockIcon } from '@src/assets/images/svg/table/ic-lock.svg'
 import { ReactComponent as UnlockIcon } from '@src/assets/images/svg/table/ic-unlock.svg'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
@@ -45,6 +45,9 @@ const InverterTable2 = ({ intl, state }) => {
     query = useQuery(),
     projectId = query.get('projectId') || 137,
     { inverter: store } = useSelector((state) => state)
+
+  // History
+  const history = useHistory()
 
   // ** Ability Context
   const ability = useContext(AbilityContext)
@@ -222,9 +225,8 @@ const InverterTable2 = ({ intl, state }) => {
       name: intl.formatMessage({ id: 'Device name' }),
       selector: 'name',
       // eslint-disable-next-line react/display-name
-      cell: (row) => (
-        row.state === STATE.ACTIVE
-          ? <Link
+      cell: (row) => row.state === STATE.ACTIVE ? (
+          <Link
             to={{
               pathname: ROUTER_URL.PROJECT_INVERTER_DETAIL,
               search: `projectId=${projectId}&deviceId=${row.id}&typeModel=${row.typeModel}`
@@ -232,8 +234,9 @@ const InverterTable2 = ({ intl, state }) => {
           >
             {row.name}
           </Link>
-          : row.name
-      ),
+        ) : (
+          row.name
+        ),
       sortable: true,
       minWidth: '50px'
     },
@@ -321,25 +324,30 @@ const InverterTable2 = ({ intl, state }) => {
       // eslint-disable-next-line react/display-name
       cell: (row) => {
         return row.state === STATE.ACTIVE ? (
-          <div className="text-success">
+          <Badge
+            className="text-success custom-bagde"
+            pill
+            style={{ border: '2px solid rgb(121, 212, 20)', color: 'rgb(121, 212, 20)' }}
+          >
             <FormattedMessage id="Active" />
-          </div>
+          </Badge>
         ) : (
-          <div className="text-dark">
+          <Badge className="custom-bagde" pill style={{ border: '2px solid #7897B4', color: '#7897B4' }}>
             <FormattedMessage id="Inactive" />
-          </div>
+          </Badge>
         )
       },
       sortable: true,
       center: true,
-      minWidth: '200px',
-      maxWidth: '200px'
+      minWidth: '150px',
+      maxWidth: '150px'
     },
     {
       name: intl.formatMessage({ id: 'Actions' }),
       selector: 'action',
       center: true,
-      minWidth: '200px',
+      minWidth: '150px',
+      maxWidth: '150px',
       cell: (row) => {
         return (
           <div className="d-flex">
@@ -364,7 +372,7 @@ const InverterTable2 = ({ intl, state }) => {
     }
   ]
 
-  const handleChange = ({selectedRows}) => {
+  const handleChange = ({ selectedRows }) => {
     // setSelectedField(state.selectedRows)
     setSelectedInverters(selectedRows.map((e) => e.serialNumber))
   }
@@ -453,7 +461,10 @@ const InverterTable2 = ({ intl, state }) => {
         <Col lg="1"></Col>
 
         <Col lg="2" className="d-flex justify-content-end">
-          <button className="btn-settings2 d-flex justify-content-around align-items-center">
+          <button
+            className="btn-settings2 d-flex justify-content-around align-items-center"
+            onClick={() => history.push({ pathname: ROUTER_URL.SCHEDULE })}
+          >
             <span>
               <CalendarMonthIcon />
             </span>

@@ -5,14 +5,15 @@ import { useSelector } from 'react-redux'
 
 // ** Third Party Components
 import Select from 'react-select'
-import { Button, Col, Row } from 'reactstrap'
+import { Col, Row } from 'reactstrap'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Switch from '@material-ui/core/Switch'
 
 // ** Tables
 import InverterTable2 from './InverterTable2'
 import ModalForFiltering from './ModalForFiltering'
-import FilterAltIcon from '@mui/icons-material/FilterAlt'
+// import FilterAltIcon from '@mui/icons-material/FilterAlt'
+import { ReactComponent as IconFilter } from '@src/assets/images/svg/table/ic-filter.svg'
 
 //Styles
 import './styles.scss'
@@ -39,7 +40,7 @@ const Inverters2 = () => {
   }
 
   const openModalForFiltering = () => {
-    setModalForFiltering(true)
+    setModalForFiltering(!modalForFiltering)
   }
 
   const customStyles = {
@@ -92,8 +93,8 @@ const Inverters2 = () => {
             />
           </div>
         </Col>
-        <Col lg="4"></Col>
-        <Col lg="5">
+        <Col lg="6"></Col>
+        <Col lg="3">
           <Select
             styles={customStyles}
             options={options}
@@ -102,9 +103,7 @@ const Inverters2 = () => {
           />
         </Col>
         <Col lg="1" className="d-flex justify-content-end">
-          <Button className='btn-filter'>
-            <FilterAltIcon fontSize="large" onClick={openModalForFiltering} />
-          </Button>
+          <IconFilter onClick={openModalForFiltering} role="button" />
         </Col>
       </Row>
 

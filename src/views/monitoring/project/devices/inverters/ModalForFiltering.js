@@ -3,17 +3,24 @@ import React, { useState } from 'react'
 import { Button, Form, FormGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
 import Select from 'react-select'
 // import { useForm } from 'react-hook-form'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
+import { useQueryState } from '@src/utility/hooks/useQueryState'
+import { getInverters } from './store/actions'
 import axios from 'axios'
 
 const ModalForFiltering = ({ modalForFiltering, setModalForFiltering }) => {
   // const { register, handleSubmit, reset } = useForm()
+  const dispatch = useDispatch()
 
-  const [select1, setSelect1] = useState()
-  const [select2, setSelect2] = useState([])
+  const toggle = () => {
+    setModalForFiltering(!modalForFiltering)
+  }
+
+  const [select1, setSelect1] = useQueryState('projectId')
+  const [select2, setSelect2] = useState()
   const [select3, setSelect3] = useState()
-  const [listOfInverters, setListOfInverters] = useState([])
+  const [listOfInverters, setListOfInverters] = useState('')
 
   const listOfProjects = useSelector((state) => state?.auth?.userData?.user?.projects)
   const options1 = []
@@ -51,26 +58,34 @@ const ModalForFiltering = ({ modalForFiltering, setModalForFiltering }) => {
   }
 
   const handleChange2 = (choice) => {
-    setSelect2(choice.value)
+    setSelect2(choice.label)
   }
 
   const handleChange3 = (choice) => {
     setSelect3(choice.value)
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log(select1, select2, select3)
+  const fetchInverters = () => {
+    const initParam = {
+      q: select2,
+      state: select3,
+      projectId: select1
+    }
+
+    dispatch(getInverters(initParam))
   }
 
-  const toggle = () => {
-    setModalForFiltering(false)
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    fetchInverters()
+    toggle()
+    console.log(select1, select2, select3)
   }
 
   return (
     <Modal isOpen={modalForFiltering} backdrop="static" className="modal-dialog-centered">
+      <ModalHeader toggle={toggle}>LỌC DỮ LIỆU</ModalHeader>
       <Form onSubmit={handleSubmit}>
-        <ModalHeader toggle={toggle}>LỌC DỮ LIỆU</ModalHeader>
         <ModalBody>
           <FormGroup>
             <Label for="project">
@@ -82,7 +97,7 @@ const ModalForFiltering = ({ modalForFiltering, setModalForFiltering }) => {
             <Label for="devices">
               <h5>Thiết bị</h5>
             </Label>
-            <Select isMulti options={options2} onChange={handleChange2} />
+            <Select options={options2} onChange={handleChange2} />
           </FormGroup>
           <FormGroup>
             <Label for="status">

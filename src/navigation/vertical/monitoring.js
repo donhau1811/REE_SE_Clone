@@ -6,7 +6,7 @@ export default [
   {
     id: 'operation',
     title: 'Operation',
-    icon: <img src={monitoring} alt='operation'/>,
+    icon: <img src={monitoring} alt="operation" />,
     children: [
       {
         id: 'projectInformation',
@@ -28,6 +28,13 @@ export default [
         action: 'manage',
         resource: ROUTER_URL.CONTROL,
         navLink: ROUTER_URL.CONTROL
+      },
+      {
+        id: 'schedule',
+        title: 'Đặt lịch',
+        action: 'manage',
+        resource: ROUTER_URL.SCHEDULE,
+        navLink: ROUTER_URL.SCHEDULE
       },
       {
         id: 'alert',

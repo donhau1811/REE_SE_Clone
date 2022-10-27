@@ -6,6 +6,7 @@ export const ROUTER_URL = {
   CUSTOMERS: '/dashboard/customers',
   INFORMATION: '/operation/information',
   CONTROL: '/operation/project/control', //create a new sub-menu item //done
+  SCHEDULE: '/operation/schedule',
   PROJECTS: '/operation/monitoring',
   PROJECT: '/operation/project',
   PROJECT_OVERVIEW: '/operation/project/overview',
